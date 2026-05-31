@@ -18,6 +18,13 @@ const PALETTE: Record<string, { color: string; ink: string }> = {
   uranium: { color: '#10b981', ink: 'var(--nd-black)' }, // emerald-500
   lead: { color: '#52525b', ink: 'var(--nd-black)' }, // zinc-600
   zinc: { color: '#0284c7', ink: 'var(--nd-black)' }, // sky-600
+  // Spanish aliases (SIACAM / minerals API return Spanish commodity names).
+  plata: { color: '#64748b', ink: 'var(--nd-black)' },
+  oro: { color: '#eab308', ink: 'var(--nd-black)' },
+  cobre: { color: '#f97316', ink: 'var(--nd-black)' },
+  litio: { color: '#8b5cf6', ink: 'var(--nd-black)' },
+  uranio: { color: '#10b981', ink: 'var(--nd-black)' },
+  plomo: { color: '#52525b', ink: 'var(--nd-black)' },
 }
 
 const FALLBACK = { color: '#71717a', ink: 'var(--nd-black)' } // zinc-500

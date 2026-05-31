@@ -8,8 +8,12 @@
     "mineralsFull": "Minerals Tracker",
     "uranium": "URANIUM",
     "uraniumFull": "Uranium",
-    "research": "RESEARCH",
-    "researchFull": "Research",
+    "trade": "TRADE",
+    "tradeFull": "Trade",
+    "companies": "COMPANIES",
+    "companiesFull": "Companies",
+    "provinces": "PROVINCES",
+    "provincesFull": "Provinces",
     "menu": "Menu",
     "openMenu": "Open navigation menu",
     "closeMenu": "Close navigation menu",
@@ -394,6 +398,98 @@
       "today": "Today Argentina imports uranium for its three nuclear plants while developing new projects.",
       "exploreProjects": "See active projects"
     }
+  },
+  "trade": {
+    "eyebrow": "MINERAL TRADE",
+    "title": "Trade flow",
+    "blurb": "Origins → Argentina → destinations. Trade value by country and year.",
+    "mineral": "Mineral",
+    "year": "Year",
+    "show": "Show",
+    "topN": "Top {n}",
+    "all": "All",
+    "origins": "Origins",
+    "argentina": "Argentina",
+    "destinations": "Destinations",
+    "imports": "Imports",
+    "exports": "Exports",
+    "balance": "Trade balance",
+    "surplus": "Surplus",
+    "deficit": "Deficit",
+    "noData": "No trade data for this selection.",
+    "play": "Play",
+    "pause": "Pause",
+    "valueUsd": "USD"
+  },
+  "companies": {
+    "listEyebrow": "COMPANIES",
+    "listTitle": "Mining companies",
+    "listBlurb": "Project portfolios by company in Argentina.",
+    "search": "Search company…",
+    "filterCommodity": "Mineral",
+    "filterOrigin": "Origin",
+    "all": "All",
+    "projects": "projects",
+    "noResults": "No company matches the search.",
+    "backToList": "All companies",
+    "summary": "{projects} projects · {provinces} provinces · {commodities}",
+    "stats": {
+      "projects": "Projects",
+      "advanced": "Advanced",
+      "provinces": "Provinces",
+      "commodities": "Minerals"
+    },
+    "portfolio": { "eyebrow": "PORTFOLIO", "title": "Projects map", "mapped": "{n} projects" },
+    "table": {
+      "eyebrow": "PROJECTS",
+      "title": "Project portfolio",
+      "noResults": "No projects.",
+      "columns": {
+        "index": "#",
+        "project": "Project",
+        "province": "Province",
+        "commodity": "Mineral",
+        "status": "Status",
+        "resource": "Resource"
+      }
+    },
+    "timeline": { "eyebrow": "PROGRESSION", "title": "Project stages" },
+    "origin": "Origin"
+  },
+  "provinces": {
+    "listEyebrow": "PROVINCES",
+    "listTitle": "Mining provinces",
+    "listBlurb": "Mining activity by province in Argentina.",
+    "all": "All",
+    "filterCommodity": "Mineral",
+    "projects": "projects",
+    "companies": "companies",
+    "noResults": "No province matches.",
+    "backToList": "All provinces",
+    "summary": "{projects} projects · {companies} companies",
+    "stats": {
+      "projects": "Projects",
+      "advanced": "Advanced",
+      "companies": "Companies",
+      "exploration": "Exploration"
+    },
+    "map": { "eyebrow": "MAP", "title": "Province projects", "mapped": "{n} projects" },
+    "breakdown": { "eyebrow": "MINERALS", "title": "Breakdown by mineral" },
+    "table": {
+      "eyebrow": "PROJECTS",
+      "title": "Projects",
+      "noResults": "No projects.",
+      "columns": {
+        "index": "#",
+        "project": "Project",
+        "commodity": "Mineral",
+        "status": "Status",
+        "company": "Company"
+      }
+    },
+    "tradeStats": { "eyebrow": "TRADE", "title": "Top exports", "employment": "Employment" },
+    "operators": { "eyebrow": "COMPANIES", "title": "Operating companies" },
+    "navAll": "See all provinces"
   },
   "metadata": {
     "homeTitle": "Petrodata — Argentina oil, gas, minerals & rare-earths tracker",

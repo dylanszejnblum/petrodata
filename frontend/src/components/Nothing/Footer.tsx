@@ -92,10 +92,22 @@ export function NothingFooter() {
                 {tNav('mineralsFull')}
               </Link>
               <Link
-                href="/research"
+                href="/minerals/uranium"
                 className="text-nd-text-secondary hover:text-nd-text-display text-sm transition-colors font-sans"
               >
-                {tNav('researchFull')}
+                {tNav('uraniumFull')}
+              </Link>
+              <Link
+                href="/companies"
+                className="text-nd-text-secondary hover:text-nd-text-display text-sm transition-colors font-sans"
+              >
+                {tNav('companiesFull')}
+              </Link>
+              <Link
+                href="/provincias"
+                className="text-nd-text-secondary hover:text-nd-text-display text-sm transition-colors font-sans"
+              >
+                {tNav('provincesFull')}
               </Link>
             </div>
 

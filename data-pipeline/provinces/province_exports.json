@@ -1,0 +1,40 @@
+{
+  "total_annual_export_usd": 17050000000,
+  "by_sector": [
+    {
+      "sector": "petróleo",
+      "product": "Petróleo crudo",
+      "value_annual_usd": 8500000000
+    },
+    {
+      "sector": "gas",
+      "product": "Gas natural",
+      "value_annual_usd": 3200000000
+    },
+    {
+      "sector": "minería",
+      "product": "Oro",
+      "value_annual_usd": 2100000000
+    },
+    {
+      "sector": "minería",
+      "product": "Litio",
+      "value_annual_usd": 1800000000
+    },
+    {
+      "sector": "minería",
+      "product": "Plata",
+      "value_annual_usd": 900000000
+    },
+    {
+      "sector": "minería",
+      "product": "Cobre",
+      "value_annual_usd": 500000000
+    },
+    {
+      "sector": "minería",
+      "product": "Uranio",
+      "value_annual_usd": 50000000
+    }
+  ]
+}

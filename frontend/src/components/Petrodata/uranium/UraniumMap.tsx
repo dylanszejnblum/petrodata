@@ -19,6 +19,7 @@ import { useTheme } from '@/providers/Theme'
 import { popIn, utils } from './anim'
 import { uraniumStatusColor } from './theme'
 import type { ProjectPoint } from './types'
+import { CompanyLink } from '@/components/Petrodata/entities/CompanyLink'
 
 const CARTO_FONTS_PREFIX = 'https://tiles.basemaps.cartocdn.com/fonts/'
 
@@ -126,7 +127,14 @@ function UraniumPopupBody({ p }: { p: ProjectPoint }) {
       <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1.5 px-4 py-3 font-mono text-[11px]">
         <PopupRow label={t('status')} value={p.statusLabel} dot={color} />
         <PopupRow label={t('province')} value={p.province} />
-        <PopupRow label={t('company')} value={p.company} />
+        {p.company && p.company !== '—' && (
+          <>
+            <dt className="uppercase text-nd-text-disabled">{t('company')}</dt>
+            <dd className="text-nd-text-secondary">
+              <CompanyLink name={p.company} className="hover:underline" />
+            </dd>
+          </>
+        )}
         <PopupRow label={t('origin')} value={p.origin} />
       </dl>
     </div>

@@ -32,40 +32,35 @@ export function TopOperatorsMini({ rows }: { rows: TopOperatorRow[] }) {
 
       <ul className="mt-4 flex flex-col divide-y divide-nd-border border-y border-nd-border">
         {rows.slice(0, 5).map((row, i) => (
-          <li
-            key={row.slug}
-            className="grid grid-cols-[1.25rem_auto_minmax(0,1fr)_auto] items-center gap-3 py-2.5"
-          >
-            <span
-              className="text-nd-text-disabled text-[10px] tabular-nums font-mono"
+          <li key={row.slug}>
+            <Link
+              href={`/map?operator=${row.slug}`}
+              className="grid grid-cols-[1.25rem_auto_minmax(0,1fr)_auto] items-center gap-3 py-2.5 -mx-2 px-2 transition-colors hover:bg-nd-surface-raised"
+              title={row.name}
             >
-              0{i + 1}
-            </span>
-            <OperatorAvatar slug={row.slug} name={row.name} size="sm" />
-            <div className="min-w-0">
-              <span
-                className="block text-nd-text-display text-[13px] truncate font-sans"
-                title={row.name}
-              >
-                {row.name}
+              <span className="text-nd-text-disabled text-[10px] tabular-nums font-mono">
+                0{i + 1}
               </span>
-              <div className="mt-1 h-[2px] w-full bg-nd-surface-raised">
-                <div
-                  className="h-full"
-                  style={{
-                    width: `${Math.max(4, (row.boe / max) * 100)}%`,
-                    backgroundColor:
-                      i === 0 ? 'var(--nd-success)' : 'var(--nd-text-display)',
-                    opacity: i === 0 ? 1 : 0.55,
-                  }}
-                />
+              <OperatorAvatar slug={row.slug} name={row.name} size="sm" />
+              <div className="min-w-0">
+                <span className="block text-nd-text-display text-[13px] truncate font-sans">
+                  {row.name}
+                </span>
+                <div className="mt-1 h-[2px] w-full bg-nd-surface-raised">
+                  <div
+                    className="h-full"
+                    style={{
+                      width: `${Math.max(4, (row.boe / max) * 100)}%`,
+                      backgroundColor: i === 0 ? 'var(--nd-success)' : 'var(--nd-text-display)',
+                      opacity: i === 0 ? 1 : 0.55,
+                    }}
+                  />
+                </div>
               </div>
-            </div>
-            <span
-              className="text-nd-text-secondary text-[11px] tabular-nums font-mono"
-            >
-              {formatCompact(row.boe)}
-            </span>
+              <span className="text-nd-text-secondary text-[11px] tabular-nums font-mono">
+                {formatCompact(row.boe)}
+              </span>
+            </Link>
           </li>
         ))}
       </ul>

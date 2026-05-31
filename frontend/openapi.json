@@ -1515,6 +1515,63 @@
         ]
       }
     },
+    "/api/v2/minerals/trade/flow": {
+      "get": {
+        "description": "Imports (exporting countries → Argentina) and exports (Argentina → importing countries) for a commodity, aggregated by country and sorted by value. Filter by `year`; omit to aggregate all years.",
+        "operationId": "TradeFlowController_flow_v2",
+        "parameters": [
+          {
+            "name": "mineral",
+            "required": false,
+            "in": "query",
+            "description": "Commodity name. Currently only uranium trade data is available; other minerals return empty flows.",
+            "schema": {
+              "default": "Uranio",
+              "example": "Uranio",
+              "type": "string"
+            }
+          },
+          {
+            "name": "year",
+            "required": false,
+            "in": "query",
+            "description": "Filter the flow to a single year. Omit to aggregate across all available years.",
+            "schema": {
+              "example": 2024,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/TradeFlowDto"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/MetaDto"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "summary": "Mineral trade flow (Sankey)",
+        "tags": [
+          "minerals"
+        ]
+      }
+    },
     "/api/v1/prices/commodities": {
       "get": {
         "description": "One row per tracked commodity series (gold, silver, copper, lithium_etf, uranium_etf) with the most recent monthly value. Sourced from Yahoo Finance (monthly snapshot fetched upstream).",
@@ -2023,6 +2080,234 @@
         "summary": "Latest rig-count snapshot",
         "tags": [
           "macro"
+        ]
+      }
+    },
+    "/api/v2/companies": {
+      "get": {
+        "description": "Every controlling company / operator across all commodities, with project counts and the commodities they operate in. Sorted by project count. Filter by `q`, `commodity`, `origin_country`.",
+        "operationId": "CompaniesController_list_v2",
+        "parameters": [
+          {
+            "name": "q",
+            "required": false,
+            "in": "query",
+            "description": "Case-insensitive substring search across company name.",
+            "schema": {
+              "example": "cnea",
+              "type": "string"
+            }
+          },
+          {
+            "name": "commodity",
+            "required": false,
+            "in": "query",
+            "description": "Only companies with at least one project of this commodity (case-insensitive).",
+            "schema": {
+              "example": "Uranio",
+              "type": "string"
+            }
+          },
+          {
+            "name": "origin_country",
+            "required": false,
+            "in": "query",
+            "description": "Filter by origin country (case-insensitive exact match).",
+            "schema": {
+              "example": "Canadá",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/CompanyListItemDto"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/MetaDto"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "summary": "List companies",
+        "tags": [
+          "companies"
+        ]
+      }
+    },
+    "/api/v2/companies/{slug}": {
+      "get": {
+        "description": "Full project portfolio for one company across commodities and provinces, with a stage timeline.",
+        "operationId": "CompaniesController_detail_v2",
+        "parameters": [
+          {
+            "name": "slug",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "example": "cnea",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/CompanyDetailDto"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/MetaDto"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Company slug not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Company detail",
+        "tags": [
+          "companies"
+        ]
+      }
+    },
+    "/api/v2/provinces": {
+      "get": {
+        "description": "Every province with mining or uranium activity, with project counts and the commodities present. Filter by `commodity`.",
+        "operationId": "ProvincesController_list_v2",
+        "parameters": [
+          {
+            "name": "commodity",
+            "required": false,
+            "in": "query",
+            "description": "Only provinces with at least one project of this commodity (case-insensitive).",
+            "schema": {
+              "example": "Uranio",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ProvinceListItemDto"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/MetaDto"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "summary": "List provinces",
+        "tags": [
+          "provinces"
+        ]
+      }
+    },
+    "/api/v2/provinces/{slug}": {
+      "get": {
+        "description": "All projects in one province, broken down by commodity, with operating companies and exploration / active-mine counts.",
+        "operationId": "ProvincesController_detail_v2",
+        "parameters": [
+          {
+            "name": "slug",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "example": "chubut",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ProvinceDetailDto"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/MetaDto"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Province slug not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Province detail",
+        "tags": [
+          "provinces"
         ]
       }
     }
@@ -4200,6 +4485,87 @@
           "priceStats"
         ]
       },
+      "TradeFlowEdgeDto": {
+        "type": "object",
+        "properties": {
+          "country": {
+            "type": "string",
+            "example": "Canadá"
+          },
+          "value_usd": {
+            "type": "number",
+            "example": 29747
+          }
+        },
+        "required": [
+          "country",
+          "value_usd"
+        ]
+      },
+      "TradeFlowDto": {
+        "type": "object",
+        "properties": {
+          "mineral": {
+            "type": "string",
+            "example": "Uranio"
+          },
+          "year": {
+            "type": "object",
+            "example": 2024,
+            "nullable": true,
+            "description": "The requested year, or null when aggregated across all years."
+          },
+          "imports": {
+            "description": "Exporting countries → Argentina, sorted by value descending.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TradeFlowEdgeDto"
+            }
+          },
+          "exports": {
+            "description": "Argentina → importing countries, sorted by value descending.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TradeFlowEdgeDto"
+            }
+          },
+          "total_import_usd": {
+            "type": "number",
+            "example": 30712
+          },
+          "total_export_usd": {
+            "type": "number",
+            "example": 1500
+          },
+          "balance_usd": {
+            "type": "number",
+            "example": -29212,
+            "description": "total_export_usd − total_import_usd. Negative = trade deficit."
+          },
+          "available_years": {
+            "example": [
+              1994,
+              1995,
+              2024
+            ],
+            "description": "Years with trade data for this mineral (for year-slider bounds).",
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          }
+        },
+        "required": [
+          "mineral",
+          "year",
+          "imports",
+          "exports",
+          "total_import_usd",
+          "total_export_usd",
+          "balance_usd",
+          "available_years"
+        ]
+      },
       "CommodityLatestDto": {
         "type": "object",
         "properties": {
@@ -4490,6 +4856,459 @@
           "oil_rigs",
           "gas_rigs",
           "total_rigs"
+        ]
+      },
+      "CompanyListItemDto": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "example": "cnea"
+          },
+          "name": {
+            "type": "string",
+            "example": "CNEA"
+          },
+          "origin_country": {
+            "type": "object",
+            "example": "Argentina",
+            "nullable": true
+          },
+          "project_count": {
+            "type": "number",
+            "example": 8
+          },
+          "commodities": {
+            "example": [
+              "Uranio"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "image_url": {
+            "type": "object",
+            "example": null,
+            "nullable": true,
+            "description": "Always null — logos are not scraped; the frontend renders first-letter avatars."
+          }
+        },
+        "required": [
+          "slug",
+          "name",
+          "origin_country",
+          "project_count",
+          "commodities",
+          "image_url"
+        ]
+      },
+      "CoordinatesDto": {
+        "type": "object",
+        "properties": {
+          "lat": {
+            "type": "object",
+            "example": -43.37,
+            "nullable": true
+          },
+          "lng": {
+            "type": "object",
+            "example": -68.688,
+            "nullable": true
+          }
+        },
+        "required": [
+          "lat",
+          "lng"
+        ]
+      },
+      "CompanyProjectDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Cerro Solo"
+          },
+          "commodity": {
+            "type": "string",
+            "example": "Uranio"
+          },
+          "province": {
+            "type": "object",
+            "example": "Chubut",
+            "nullable": true
+          },
+          "status": {
+            "type": "object",
+            "example": "Exploración avanzada",
+            "nullable": true
+          },
+          "coordinates": {
+            "$ref": "#/components/schemas/CoordinatesDto"
+          },
+          "resources_summary": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number"
+            },
+            "nullable": true,
+            "example": {
+              "m_and_i_Ag_kOz": 198643,
+              "m_and_i_Au_kOz": 1715
+            },
+            "description": "Headline resource figures keyed by category+unit, or null when the source has no resource table."
+          }
+        },
+        "required": [
+          "name",
+          "commodity",
+          "province",
+          "status",
+          "coordinates",
+          "resources_summary"
+        ]
+      },
+      "TimelineStageDto": {
+        "type": "object",
+        "properties": {
+          "stage": {
+            "type": "string",
+            "example": "Exploración avanzada"
+          },
+          "date": {
+            "type": "object",
+            "example": null,
+            "nullable": true,
+            "description": "Source data has no stage dates; always null for now."
+          }
+        },
+        "required": [
+          "stage",
+          "date"
+        ]
+      },
+      "CompanyDetailDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "CNEA"
+          },
+          "slug": {
+            "type": "string",
+            "example": "cnea"
+          },
+          "origin_country": {
+            "type": "object",
+            "example": "Argentina",
+            "nullable": true
+          },
+          "description": {
+            "type": "object",
+            "example": null,
+            "nullable": true
+          },
+          "projects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CompanyProjectDto"
+            }
+          },
+          "total_projects": {
+            "type": "number",
+            "example": 8
+          },
+          "commodities_involved": {
+            "example": [
+              "Uranio"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "provinces": {
+            "example": [
+              "Chubut",
+              "Salta"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "project_timeline": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TimelineStageDto"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "slug",
+          "origin_country",
+          "description",
+          "projects",
+          "total_projects",
+          "commodities_involved",
+          "provinces",
+          "project_timeline"
+        ]
+      },
+      "ProvinceListItemDto": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "example": "chubut"
+          },
+          "name": {
+            "type": "string",
+            "example": "Chubut"
+          },
+          "iso_code": {
+            "type": "object",
+            "example": "CT",
+            "nullable": true
+          },
+          "project_count": {
+            "type": "number",
+            "example": 8
+          },
+          "commodities": {
+            "example": [
+              "Uranio"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "total_resources": {
+            "type": "object",
+            "example": null,
+            "nullable": true,
+            "description": "Reserved for a province-level resource total; null until a comparable per-province aggregate exists."
+          }
+        },
+        "required": [
+          "slug",
+          "name",
+          "iso_code",
+          "project_count",
+          "commodities",
+          "total_resources"
+        ]
+      },
+      "ProvinceCommodityDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Uranio"
+          },
+          "project_count": {
+            "type": "number",
+            "example": 8
+          },
+          "total_resources": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": true,
+            "description": "Per-commodity resource total when derivable, else null.",
+            "example": null
+          }
+        },
+        "required": [
+          "name",
+          "project_count",
+          "total_resources"
+        ]
+      },
+      "ProvinceControllerDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "CNEA"
+          },
+          "slug": {
+            "type": "string",
+            "example": "cnea"
+          },
+          "origin_country": {
+            "type": "object",
+            "example": "Argentina",
+            "nullable": true
+          },
+          "ownership_pct": {
+            "type": "object",
+            "example": "1.0",
+            "nullable": true
+          }
+        },
+        "required": [
+          "name",
+          "slug",
+          "origin_country",
+          "ownership_pct"
+        ]
+      },
+      "ProvinceCoordinatesDto": {
+        "type": "object",
+        "properties": {
+          "lat": {
+            "type": "object",
+            "example": -43.37,
+            "nullable": true
+          },
+          "lng": {
+            "type": "object",
+            "example": -68.688,
+            "nullable": true
+          }
+        },
+        "required": [
+          "lat",
+          "lng"
+        ]
+      },
+      "ProvinceProjectDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Cerro Solo"
+          },
+          "status": {
+            "type": "object",
+            "example": "Exploración avanzada",
+            "nullable": true
+          },
+          "commodity": {
+            "type": "string",
+            "example": "Uranio"
+          },
+          "controllers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProvinceControllerDto"
+            }
+          },
+          "coordinates": {
+            "$ref": "#/components/schemas/ProvinceCoordinatesDto"
+          },
+          "resources_summary": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number"
+            },
+            "nullable": true,
+            "example": null
+          }
+        },
+        "required": [
+          "name",
+          "status",
+          "commodity",
+          "controllers",
+          "coordinates",
+          "resources_summary"
+        ]
+      },
+      "ProvinceTradeStatsDto": {
+        "type": "object",
+        "properties": {
+          "major_exports": {
+            "example": [],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "employment": {
+            "type": "object",
+            "example": null,
+            "nullable": true
+          }
+        },
+        "required": [
+          "major_exports",
+          "employment"
+        ]
+      },
+      "ProvinceDetailDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Chubut"
+          },
+          "slug": {
+            "type": "string",
+            "example": "chubut"
+          },
+          "iso_code": {
+            "type": "object",
+            "example": "CT",
+            "nullable": true
+          },
+          "project_count": {
+            "type": "number",
+            "example": 8
+          },
+          "commodities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProvinceCommodityDto"
+            }
+          },
+          "projects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProvinceProjectDto"
+            }
+          },
+          "trade_stats": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ProvinceTradeStatsDto"
+              }
+            ]
+          },
+          "active_mines": {
+            "type": "number",
+            "example": 0
+          },
+          "exploration_projects": {
+            "type": "number",
+            "example": 6
+          },
+          "companies_operating": {
+            "example": [
+              "CNEA",
+              "UrAmérica Ltd."
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "slug",
+          "iso_code",
+          "project_count",
+          "commodities",
+          "projects",
+          "trade_stats",
+          "active_mines",
+          "exploration_projects",
+          "companies_operating"
         ]
       }
     }

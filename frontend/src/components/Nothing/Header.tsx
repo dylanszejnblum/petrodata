@@ -7,13 +7,15 @@ import { useTheme } from '../../providers/Theme'
 import { LanguageSwitcher } from './LanguageSwitcher'
 
 type NavItem = {
-  href: '/' | '/map' | '/minerals' | '/minerals/uranium' | '/research'
+  href: '/' | '/map' | '/minerals' | '/minerals/uranium' | '/minerals/comercio' | '/companies' | '/provincias'
   labelKey:
     | 'dashboard'
     | 'oilGas'
     | 'minerals'
     | 'uranium'
-    | 'research'
+    | 'trade'
+    | 'companies'
+    | 'provinces'
   shortLabelKey: NavItem['labelKey']
   match: (pathname: string) => boolean
 }
@@ -36,7 +38,9 @@ const NAV_ITEMS: NavItem[] = [
     labelKey: 'minerals',
     shortLabelKey: 'minerals',
     match: (p) =>
-      (p === '/minerals' || p.startsWith('/minerals/')) && !p.startsWith('/minerals/uranium'),
+      (p === '/minerals' || p.startsWith('/minerals/')) &&
+      !p.startsWith('/minerals/uranium') &&
+      !p.startsWith('/minerals/comercio'),
   },
   {
     href: '/minerals/uranium',
@@ -45,10 +49,16 @@ const NAV_ITEMS: NavItem[] = [
     match: (p) => p === '/minerals/uranium' || p.startsWith('/minerals/uranium/'),
   },
   {
-    href: '/research',
-    labelKey: 'research',
-    shortLabelKey: 'research',
-    match: (p) => p === '/research' || p.startsWith('/research/'),
+    href: '/companies',
+    labelKey: 'companies',
+    shortLabelKey: 'companies',
+    match: (p) => p === '/companies' || p.startsWith('/companies/'),
+  },
+  {
+    href: '/provincias',
+    labelKey: 'provinces',
+    shortLabelKey: 'provinces',
+    match: (p) => p === '/provincias' || p.startsWith('/provincias/'),
   },
 ]
 
@@ -216,7 +226,7 @@ export function NothingHeader() {
           </div>
         </div>
 
-        <nav className="hidden md:flex items-center gap-6">
+        <nav className="hidden md:flex flex-wrap items-center gap-x-6 gap-y-2">
           {NAV_ITEMS.map((item, i) => {
             const isActive = item.match(pathname)
             return (
@@ -276,7 +286,9 @@ export function NothingHeader() {
                   | 'oilGasFull'
                   | 'mineralsFull'
                   | 'uraniumFull'
-                  | 'researchFull'
+                  | 'tradeFull'
+                  | 'companiesFull'
+                  | 'provincesFull'
                 const isActive = item.match(pathname)
                 return (
                   <Link

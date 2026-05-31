@@ -1,0 +1,565 @@
+{
+  "total": 11,
+  "provinces": [
+    {
+      "slug": "chubut",
+      "name": "Chubut",
+      "iso_code": "CT",
+      "oil_gas": {
+        "production_oil_m3": 2247635.19,
+        "production_gas_mm3": 670.26,
+        "active_wells": 6714,
+        "operators": [
+          "cap",
+          "capetrol_argentina_sa",
+          "capetrol_sa",
+          "capex",
+          "colhue_huapi_sa",
+          "copesa_cia_constructora_petrolera_sa",
+          "crown_point",
+          "interoil",
+          "pae",
+          "patagonia_resources_sa",
+          "pecom_servicios_energia_sau",
+          "petrolera_el_trebol",
+          "phoenix_global_resources_sa",
+          "pilgrim_energy_sa",
+          "ypf"
+        ],
+        "basins": [
+          "CAÑADON ASFALTO",
+          "GOLFO SAN JORGE",
+          "ÑIRIHUAU"
+        ]
+      },
+      "mining": {
+        "projects": [
+          "Arroyo Perdido",
+          "Cerro Solo",
+          "Hope",
+          "Lago Seco",
+          "Laguna Colorada",
+          "Laguna Salada",
+          "Meseta Central",
+          "Sierra Cuadrada"
+        ],
+        "commodities": [
+          "Uranio"
+        ]
+      },
+      "key_exports": [
+        {
+          "sector": "petróleo",
+          "product": "Petróleo crudo",
+          "value_annual_usd": 781080206
+        },
+        {
+          "sector": "gas",
+          "product": "Gas natural",
+          "value_annual_usd": 41422488
+        },
+        {
+          "sector": "minería",
+          "product": "Uranio",
+          "value_annual_usd": 0
+        }
+      ],
+      "combined_projects": 6714
+    },
+    {
+      "slug": "estado-nacional",
+      "name": "Estado Nacional",
+      "iso_code": "",
+      "oil_gas": {
+        "production_oil_m3": 79900.86,
+        "production_gas_mm3": 2175.66,
+        "active_wells": 20,
+        "operators": [
+          "petrolera_santa_maria_sau",
+          "totalenergies"
+        ],
+        "basins": [
+          "AUSTRAL"
+        ]
+      },
+      "mining": {
+        "projects": [],
+        "commodities": []
+      },
+      "key_exports": [
+        {
+          "sector": "petróleo",
+          "product": "Petróleo crudo",
+          "value_annual_usd": 27766507
+        },
+        {
+          "sector": "gas",
+          "product": "Gas natural",
+          "value_annual_usd": 134457354
+        },
+        {
+          "sector": "minería",
+          "product": "Uranio",
+          "value_annual_usd": 0
+        }
+      ],
+      "combined_projects": 20
+    },
+    {
+      "slug": "formosa",
+      "name": "Formosa",
+      "iso_code": "FM",
+      "oil_gas": {
+        "production_oil_m3": 8605.3,
+        "production_gas_mm3": 1.1,
+        "active_wells": 10,
+        "operators": [
+          "recursos_y_energia_formosa_sa"
+        ],
+        "basins": [
+          "NOROESTE"
+        ]
+      },
+      "mining": {
+        "projects": [],
+        "commodities": []
+      },
+      "key_exports": [
+        {
+          "sector": "petróleo",
+          "product": "Petróleo crudo",
+          "value_annual_usd": 2990445
+        },
+        {
+          "sector": "gas",
+          "product": "Gas natural",
+          "value_annual_usd": 68042
+        },
+        {
+          "sector": "minería",
+          "product": "Uranio",
+          "value_annual_usd": 0
+        }
+      ],
+      "combined_projects": 10
+    },
+    {
+      "slug": "jujuy",
+      "name": "Jujuy",
+      "iso_code": "JY",
+      "oil_gas": {
+        "production_oil_m3": 3256.46,
+        "production_gas_mm3": 1.01,
+        "active_wells": 11,
+        "operators": [
+          "jujuy_hidrocarburos_sau",
+          "selva_maria_oil_sa"
+        ],
+        "basins": [
+          "NORESTE",
+          "NOROESTE"
+        ]
+      },
+      "mining": {
+        "projects": [],
+        "commodities": []
+      },
+      "key_exports": [
+        {
+          "sector": "petróleo",
+          "product": "Petróleo crudo",
+          "value_annual_usd": 1131659
+        },
+        {
+          "sector": "gas",
+          "product": "Gas natural",
+          "value_annual_usd": 62688
+        },
+        {
+          "sector": "minería",
+          "product": "Uranio",
+          "value_annual_usd": 0
+        }
+      ],
+      "combined_projects": 11
+    },
+    {
+      "slug": "la-pampa",
+      "name": "La Pampa",
+      "iso_code": "",
+      "oil_gas": {
+        "production_oil_m3": 198440.35,
+        "production_gas_mm3": 52.22,
+        "active_wells": 1379,
+        "operators": [
+          "pampetrol_sapem",
+          "pcr",
+          "pluspetrol"
+        ],
+        "basins": [
+          "NEUQUINA"
+        ]
+      },
+      "mining": {
+        "projects": [],
+        "commodities": []
+      },
+      "key_exports": [
+        {
+          "sector": "petróleo",
+          "product": "Petróleo crudo",
+          "value_annual_usd": 68960404
+        },
+        {
+          "sector": "gas",
+          "product": "Gas natural",
+          "value_annual_usd": 3227453
+        },
+        {
+          "sector": "minería",
+          "product": "Uranio",
+          "value_annual_usd": 0
+        }
+      ],
+      "combined_projects": 1379
+    },
+    {
+      "slug": "mendoza",
+      "name": "Mendoza",
+      "iso_code": "MZ",
+      "oil_gas": {
+        "production_oil_m3": 953655.11,
+        "production_gas_mm3": 138.96,
+        "active_wells": 2677,
+        "operators": [
+          "aconcagua",
+          "crown_point",
+          "emesa",
+          "g_y_g_oil_service_srl",
+          "hattrick_energy_sas",
+          "pcr",
+          "petroleos_sudamericanos_sa",
+          "petrolera_el_trebol",
+          "phoenix_global_resources_sa",
+          "pluspetrol",
+          "quintana_e_p_argentina_srl",
+          "roch_sa",
+          "tango_energy_argentina_sa",
+          "venoil_sa",
+          "ypf"
+        ],
+        "basins": [
+          "CUYANA",
+          "NEUQUINA"
+        ]
+      },
+      "mining": {
+        "projects": [
+          "Corcovo",
+          "Huemules",
+          "Sierra Pintada"
+        ],
+        "commodities": [
+          "Uranio"
+        ]
+      },
+      "key_exports": [
+        {
+          "sector": "petróleo",
+          "product": "Petróleo crudo",
+          "value_annual_usd": 331406597
+        },
+        {
+          "sector": "gas",
+          "product": "Gas natural",
+          "value_annual_usd": 8587948
+        },
+        {
+          "sector": "minería",
+          "product": "Uranio",
+          "value_annual_usd": 0
+        }
+      ],
+      "combined_projects": 2677
+    },
+    {
+      "slug": "neuquen",
+      "name": "Neuquén",
+      "iso_code": "NQ",
+      "oil_gas": {
+        "production_oil_m3": 11703263.2,
+        "production_gas_mm3": 11742.86,
+        "active_wells": 7238,
+        "operators": [
+          "aconcagua",
+          "argenta_energia_sa",
+          "bentia_energy_sa",
+          "capex",
+          "chevron",
+          "continental_resources_argentina_sau",
+          "flxs_oge_sa",
+          "geopark",
+          "geopark_argentina_ltd_sucursal_argentina",
+          "ingenieria_sima_sa",
+          "oilstone_energia_sa",
+          "pae",
+          "pampa",
+          "patagonia_energy_sa",
+          "petroleos_sudamericanos_sa",
+          "petrolera_el_trebol",
+          "petrolera_pampa",
+          "petrolsur_energia_sa",
+          "phoenix_global_resources_sa",
+          "pluspetrol",
+          "quintana_e_p_argentina_srl",
+          "san_jorge_petroleum",
+          "shell",
+          "tango_energy_argentina_sa",
+          "tecpetrol",
+          "totalenergies",
+          "vista",
+          "vm_inversiones",
+          "ypf"
+        ],
+        "basins": [
+          "NEUQUINA"
+        ]
+      },
+      "mining": {
+        "projects": [
+          "Cateos",
+          "Chihuidos"
+        ],
+        "commodities": [
+          "Uranio"
+        ]
+      },
+      "key_exports": [
+        {
+          "sector": "petróleo",
+          "product": "Petróleo crudo",
+          "value_annual_usd": 4067024430
+        },
+        {
+          "sector": "gas",
+          "product": "Gas natural",
+          "value_annual_usd": 725717400
+        },
+        {
+          "sector": "minería",
+          "product": "Uranio",
+          "value_annual_usd": 0
+        }
+      ],
+      "combined_projects": 7238
+    },
+    {
+      "slug": "rio-negro",
+      "name": "Rio Negro",
+      "iso_code": "",
+      "oil_gas": {
+        "production_oil_m3": 443548.73,
+        "production_gas_mm3": 280.08,
+        "active_wells": 1617,
+        "operators": [
+          "aconcagua",
+          "capex",
+          "edhipsa",
+          "geopetrol_drilling_sa",
+          "madalena_energy_argentina_srl",
+          "medanito",
+          "pae",
+          "petroleos_sudamericanos_sa",
+          "petrolera_el_trebol",
+          "phoenix_global_resources_sa",
+          "quintana_e_p_argentina_srl",
+          "tango_energy_argentina_sa",
+          "tecpetrol",
+          "ypf"
+        ],
+        "basins": [
+          "NEUQUINA"
+        ]
+      },
+      "mining": {
+        "projects": [
+          "Amarillo Grande (Anit, Sta. Bárbara)",
+          "Catriel (Mari)",
+          "Ivana (Amarillo Grande)",
+          "Kaia",
+          "Lucho U"
+        ],
+        "commodities": [
+          "Uranio"
+        ]
+      },
+      "key_exports": [
+        {
+          "sector": "petróleo",
+          "product": "Petróleo crudo",
+          "value_annual_usd": 154138506
+        },
+        {
+          "sector": "gas",
+          "product": "Gas natural",
+          "value_annual_usd": 17309043
+        },
+        {
+          "sector": "minería",
+          "product": "Uranio",
+          "value_annual_usd": 0
+        }
+      ],
+      "combined_projects": 1617
+    },
+    {
+      "slug": "salta",
+      "name": "Salta",
+      "iso_code": "SA",
+      "oil_gas": {
+        "production_oil_m3": 36713.31,
+        "production_gas_mm3": 322.88,
+        "active_wells": 42,
+        "operators": [
+          "high_luck_group_ltd___sucursal_argentina",
+          "madalena_energy_argentina_srl",
+          "pae",
+          "petrolera_el_trebol",
+          "petrolera_san_miguel_sa",
+          "tecpetrol"
+        ],
+        "basins": [
+          "NOROESTE"
+        ]
+      },
+      "mining": {
+        "projects": [
+          "Don Otto"
+        ],
+        "commodities": [
+          "Uranio"
+        ]
+      },
+      "key_exports": [
+        {
+          "sector": "petróleo",
+          "product": "Petróleo crudo",
+          "value_annual_usd": 12758315
+        },
+        {
+          "sector": "gas",
+          "product": "Gas natural",
+          "value_annual_usd": 19954313
+        },
+        {
+          "sector": "minería",
+          "product": "Uranio",
+          "value_annual_usd": 0
+        }
+      ],
+      "combined_projects": 42
+    },
+    {
+      "slug": "santa-cruz",
+      "name": "Santa Cruz",
+      "iso_code": "",
+      "oil_gas": {
+        "production_oil_m3": 1113394.2,
+        "production_gas_mm3": 792.25,
+        "active_wells": 6686,
+        "operators": [
+          "alianza_petrolera_argentina_sa",
+          "azruge_sa",
+          "brest_sa_de_servicios_petroleros",
+          "cgc",
+          "clear_petroleum_sa",
+          "copesa_cia_constructora_petrolera_sa",
+          "crown_point",
+          "fomicruz",
+          "ingenieria_alpa_sa",
+          "interoil",
+          "pae",
+          "patagonia_resources_sa",
+          "petrofaro_sa",
+          "petrolera_santa_maria_sau",
+          "quintana_e_p_argentina_srl",
+          "roch_sa",
+          "selva_maria_oil_sa",
+          "venoil_sa"
+        ],
+        "basins": [
+          "AUSTRAL",
+          "GOLFO SAN JORGE"
+        ]
+      },
+      "mining": {
+        "projects": [
+          "Meseta Sirven (Laguna Sirve)",
+          "Sofia"
+        ],
+        "commodities": [
+          "Uranio"
+        ]
+      },
+      "key_exports": [
+        {
+          "sector": "petróleo",
+          "product": "Petróleo crudo",
+          "value_annual_usd": 386917848
+        },
+        {
+          "sector": "gas",
+          "product": "Gas natural",
+          "value_annual_usd": 48961788
+        },
+        {
+          "sector": "minería",
+          "product": "Uranio",
+          "value_annual_usd": 0
+        }
+      ],
+      "combined_projects": 6686
+    },
+    {
+      "slug": "tierra-del-fuego",
+      "name": "Tierra del Fuego",
+      "iso_code": "",
+      "oil_gas": {
+        "production_oil_m3": 58958.35,
+        "production_gas_mm3": 440.43,
+        "active_wells": 225,
+        "operators": [
+          "petrolera_santa_maria_sau",
+          "roch_sa",
+          "totalenergies",
+          "ypf"
+        ],
+        "basins": [
+          "AUSTRAL"
+        ]
+      },
+      "mining": {
+        "projects": [],
+        "commodities": []
+      },
+      "key_exports": [
+        {
+          "sector": "petróleo",
+          "product": "Petróleo crudo",
+          "value_annual_usd": 20488733
+        },
+        {
+          "sector": "gas",
+          "product": "Gas natural",
+          "value_annual_usd": 27219144
+        },
+        {
+          "sector": "minería",
+          "product": "Uranio",
+          "value_annual_usd": 0
+        }
+      ],
+      "combined_projects": 225
+    }
+  ]
+}

@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl'
 import { staggerIn, useInView } from './anim'
 import { URANIUM, uraniumStatusColor } from './theme'
 import type { ProjectPoint } from './types'
+import { CompanyLink } from '@/components/Petrodata/entities/CompanyLink'
 
 type SortKey = 'project' | 'province' | 'status' | 'company' | 'origin'
 type SortState = { key: SortKey; dir: 'asc' | 'desc' }
@@ -180,7 +181,9 @@ export function UraniumProjectsTable({ projects }: { projects: ProjectPoint[] })
                       <span>{p.statusLabel || '—'}</span>
                     </span>
                   </td>
-                  <td className="px-5 py-3 text-nd-text-secondary">{p.company || '—'}</td>
+                  <td className="px-5 py-3 text-nd-text-secondary">
+                    <CompanyLink name={p.company} />
+                  </td>
                   <td className="px-5 py-3 text-nd-text-secondary">{p.origin || '—'}</td>
                 </tr>
               ))

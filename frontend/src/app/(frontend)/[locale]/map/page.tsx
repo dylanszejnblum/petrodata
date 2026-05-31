@@ -33,10 +33,10 @@ const EMPTY_WELLS: WellFeatureCollection = {
   features: [],
 } as WellFeatureCollection
 
-async function getInitialWells(): Promise<WellFeatureCollection> {
+async function getInitialWells(operator?: string): Promise<WellFeatureCollection> {
   try {
     const { data, error } = await api.GET('/api/v1/geo/wells', {
-      params: { query: { limit: 1000 } },
+      params: { query: operator ? { limit: 1000, operator } : { limit: 1000 } },
       cache: 'no-store',
     })
     if (error || !data) return EMPTY_WELLS
@@ -82,10 +82,15 @@ async function getOperatorSeries(slug: string): Promise<OperatorPoint[]> {
   }
 }
 
-export default async function MapPage() {
+export default async function MapPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ operator?: string }>
+}) {
+  const { operator } = await searchParams
   const [tCommon, wells, latest, operators] = await Promise.all([
     getTranslations('common'),
-    getInitialWells(),
+    getInitialWells(operator),
     getLatest(),
     getOperators(),
   ])
@@ -114,6 +119,7 @@ export default async function MapPage() {
           latest={latest}
           operators={operators}
           topOperatorTimeSeries={topSeries}
+          initialOperator={operator ?? null}
         />
       </main>
     </div>

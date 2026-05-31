@@ -7,6 +7,7 @@ import { NothingHeader } from '@/components/Nothing/Header'
 import { NothingFooter } from '@/components/Nothing/Footer'
 import { api, type ApiSchemas } from '@/api/client'
 import { commodityColor, commoditySlug } from '@/components/Petrodata/minerals/commodityColors'
+import { slugify } from '@/components/Petrodata/entities/types'
 import { PriceCard } from '@/components/Petrodata/minerals/PriceCard'
 import { formatCompact } from '@/utilities/formatNumber'
 import { buildAlternates } from '@/i18n/alternates'
@@ -105,6 +106,31 @@ function asOptionalString(v: unknown): string | null {
   return null
 }
 
+/** Known minerals-company slugs, to safely link operator/owner names. */
+async function getCompanySlugs(): Promise<Set<string>> {
+  try {
+    const { data, error } = await api.GET('/api/v2/companies', { cache: 'no-store' })
+    if (error || !data) return new Set()
+    return new Set(data.data.map((c) => c.slug))
+  } catch {
+    return new Set()
+  }
+}
+
+/**
+ * Resolve a (display-name) operator/owner to a real company slug — only returns
+ * a slug that actually exists, so links never 404. Tries the slugified name and,
+ * since these fields are often long names with the acronym in parentheses
+ * ("National Atomic Energy Commission (CNEA)"), the slugified acronym too.
+ */
+function resolveCompanySlug(name: string | null, known: Set<string>): string | null {
+  if (!name) return null
+  const candidates = [slugify(name)]
+  const paren = name.match(/\(([^)]+)\)/)
+  if (paren) candidates.push(slugify(paren[1]))
+  return candidates.find((c) => c && known.has(c)) ?? null
+}
+
 function readTechEcon(raw: unknown, key: string): string | null {
   if (typeof raw !== 'object' || raw === null) return null
   const v = (raw as Record<string, unknown>)[key]
@@ -118,10 +144,11 @@ export default async function ProjectDetailPage({
 }) {
   const { name } = await params
   const decoded = decodeURIComponent(name)
-  const [t, tCommodity, project] = await Promise.all([
+  const [t, tCommodity, project, companySlugs] = await Promise.all([
     getTranslations('projectDetail'),
     getTranslations('commodityPage'),
     getProject(decoded),
+    getCompanySlugs(),
   ])
   if (!project) notFound()
 
@@ -132,6 +159,8 @@ export default async function ProjectDetailPage({
   const country = asOptionalString(project.country)
   const operator = asOptionalString(project.operator)
   const owner = asOptionalString(project.owner_controller)
+  const operatorSlug = resolveCompanySlug(operator, companySlugs)
+  const ownerSlug = resolveCompanySlug(owner, companySlugs)
   const status = asOptionalString(project.status)
   const depositType = asOptionalString(project.deposit_type)
   const areaHa = project.area_ha as unknown as number | null
@@ -195,8 +224,16 @@ export default async function ProjectDetailPage({
               <dl
                 className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-3 px-5 py-5 text-[11px] font-mono"
               >
-                <MetaRow label={t('meta.operator')} value={operator} />
-                <MetaRow label={t('meta.owner')} value={owner} />
+                <MetaRow
+                  label={t('meta.operator')}
+                  value={operator}
+                  href={operatorSlug ? `/companies/${operatorSlug}` : null}
+                />
+                <MetaRow
+                  label={t('meta.owner')}
+                  value={owner}
+                  href={ownerSlug ? `/companies/${ownerSlug}` : null}
+                />
                 <MetaRow
                   label={t('meta.location')}
                   value={[province, country].filter(Boolean).join(', ') || null}
@@ -410,12 +447,20 @@ function Chip({ children }: { children: React.ReactNode }) {
   )
 }
 
-function MetaRow({ label, value }: { label: string; value: string | null }) {
+function MetaRow({ label, value, href }: { label: string; value: string | null; href?: string | null }) {
   return (
     <div className="flex flex-col gap-0.5">
       <dt className="text-nd-text-disabled text-[10px] uppercase tracking-[0.08em]">{label}</dt>
       <dd className="text-nd-text-display truncate" title={value ?? undefined}>
-        {value ?? '—'}
+        {value == null ? (
+          '—'
+        ) : href ? (
+          <Link href={href} className="text-nd-text-display hover:underline">
+            {value}
+          </Link>
+        ) : (
+          value
+        )}
       </dd>
     </div>
   )

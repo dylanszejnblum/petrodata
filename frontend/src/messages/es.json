@@ -1,15 +1,19 @@
 {
   "nav": {
-    "dashboard": "PANEL",
-    "dashboardFull": "Panel",
+    "dashboard": "DASHBOARD",
+    "dashboardFull": "Dashboard",
     "oilGas": "PETRÓLEO Y GAS",
     "oilGasFull": "Petróleo y gas",
     "minerals": "MINERALES",
     "mineralsFull": "Minerales",
     "uranium": "URANIO",
     "uraniumFull": "Uranio",
-    "research": "INVESTIGACIÓN",
-    "researchFull": "Investigación",
+    "trade": "COMERCIO",
+    "tradeFull": "Comercio",
+    "companies": "EMPRESAS",
+    "companiesFull": "Empresas",
+    "provinces": "PROVINCIAS",
+    "provincesFull": "Provincias",
     "menu": "Menú",
     "openMenu": "Abrir menú de navegación",
     "closeMenu": "Cerrar menú de navegación",
@@ -394,6 +398,98 @@
       "today": "Hoy Argentina importa uranio para sus tres centrales nucleares mientras desarrolla nuevos proyectos.",
       "exploreProjects": "Ver proyectos activos"
     }
+  },
+  "trade": {
+    "eyebrow": "COMERCIO DE MINERALES",
+    "title": "Flujo de comercio",
+    "blurb": "Orígenes → Argentina → destinos. Valor del comercio por país y año.",
+    "mineral": "Mineral",
+    "year": "Año",
+    "show": "Mostrar",
+    "topN": "Top {n}",
+    "all": "Todos",
+    "origins": "Orígenes",
+    "argentina": "Argentina",
+    "destinations": "Destinos",
+    "imports": "Importaciones",
+    "exports": "Exportaciones",
+    "balance": "Balanza comercial",
+    "surplus": "Superávit",
+    "deficit": "Déficit",
+    "noData": "Sin datos de comercio para esta selección.",
+    "play": "Reproducir",
+    "pause": "Pausar",
+    "valueUsd": "USD"
+  },
+  "companies": {
+    "listEyebrow": "EMPRESAS",
+    "listTitle": "Empresas mineras",
+    "listBlurb": "Carteras de proyectos por empresa en Argentina.",
+    "search": "Buscar empresa…",
+    "filterCommodity": "Mineral",
+    "filterOrigin": "Origen",
+    "all": "Todos",
+    "projects": "proyectos",
+    "noResults": "Ninguna empresa coincide con la búsqueda.",
+    "backToList": "Todas las empresas",
+    "summary": "{projects} proyectos · {provinces} provincias · {commodities}",
+    "stats": {
+      "projects": "Proyectos",
+      "advanced": "Avanzados",
+      "provinces": "Provincias",
+      "commodities": "Minerales"
+    },
+    "portfolio": { "eyebrow": "CARTERA", "title": "Mapa de proyectos", "mapped": "{n} proyectos" },
+    "table": {
+      "eyebrow": "PROYECTOS",
+      "title": "Cartera de proyectos",
+      "noResults": "Sin proyectos.",
+      "columns": {
+        "index": "#",
+        "project": "Proyecto",
+        "province": "Provincia",
+        "commodity": "Mineral",
+        "status": "Estado",
+        "resource": "Recurso"
+      }
+    },
+    "timeline": { "eyebrow": "PROGRESIÓN", "title": "Etapas de los proyectos" },
+    "origin": "Origen"
+  },
+  "provinces": {
+    "listEyebrow": "PROVINCIAS",
+    "listTitle": "Provincias mineras",
+    "listBlurb": "Actividad minera por provincia en Argentina.",
+    "all": "Todas",
+    "filterCommodity": "Mineral",
+    "projects": "proyectos",
+    "companies": "empresas",
+    "noResults": "Ninguna provincia coincide.",
+    "backToList": "Todas las provincias",
+    "summary": "{projects} proyectos · {companies} empresas",
+    "stats": {
+      "projects": "Proyectos",
+      "advanced": "Avanzados",
+      "companies": "Empresas",
+      "exploration": "Exploración"
+    },
+    "map": { "eyebrow": "MAPA", "title": "Proyectos de la provincia", "mapped": "{n} proyectos" },
+    "breakdown": { "eyebrow": "MINERALES", "title": "Desglose por mineral" },
+    "table": {
+      "eyebrow": "PROYECTOS",
+      "title": "Proyectos",
+      "noResults": "Sin proyectos.",
+      "columns": {
+        "index": "#",
+        "project": "Proyecto",
+        "commodity": "Mineral",
+        "status": "Estado",
+        "company": "Empresa"
+      }
+    },
+    "tradeStats": { "eyebrow": "COMERCIO", "title": "Exportaciones principales", "employment": "Empleo" },
+    "operators": { "eyebrow": "EMPRESAS", "title": "Empresas que operan" },
+    "navAll": "Ver todas las provincias"
   },
   "metadata": {
     "homeTitle": "Petrodata — seguimiento de petróleo, gas, minerales y tierras raras de Argentina",

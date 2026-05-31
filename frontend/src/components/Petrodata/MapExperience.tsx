@@ -84,11 +84,14 @@ export function MapExperience({
   latest,
   operators,
   topOperatorTimeSeries,
+  initialOperator = null,
 }: {
   initialWells: WellFeatureCollection
   latest: LatestSummary
   operators: OperatorItem[]
   topOperatorTimeSeries: OperatorPoint[]
+  /** Preselect an operator filter (e.g. deep-linked from the dashboard). */
+  initialOperator?: string | null
 }) {
   const { theme } = useTheme()
   const mapRef = useRef<MapRef | null>(null)
@@ -103,7 +106,9 @@ export function MapExperience({
   })
 
   const [features, setFeatures] = useState<WellFeatureCollection>(initialWells)
-  const [filters, setFilters] = useState<WellFilters>(DEFAULT_FILTERS)
+  const [filters, setFilters] = useState<WellFilters>(() =>
+    initialOperator ? { ...DEFAULT_FILTERS, operator: initialOperator } : DEFAULT_FILTERS,
+  )
   const [bbox, setBbox] = useState<[number, number, number, number] | null>(null)
   const [loading, setLoading] = useState(false)
   const [selected, setSelected] = useState<Selected | null>(null)
@@ -165,8 +170,9 @@ export function MapExperience({
   // refetch when filters change (immediate, no debounce), and fly to province/basin bounds
   useEffect(() => {
     if (lastQueryKey.current === '') {
-      // seed key from initial filters + null bbox so server data isn't re-fetched on mount
-      lastQueryKey.current = JSON.stringify(buildQuery(DEFAULT_FILTERS, null))
+      // seed key from the initial filters + null bbox so the server data (which the
+      // page fetched with the same operator filter) isn't re-fetched on mount
+      lastQueryKey.current = JSON.stringify(buildQuery(filters, null))
       return
     }
 

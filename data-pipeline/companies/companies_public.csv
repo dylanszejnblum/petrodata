@@ -1,0 +1,10 @@
+slug,name,stock_ticker,stock_exchange,website,sector,country
+ypf,YPF S.A.,YPF,NYSE,https://www.ypf.com,petroleum,Argentina
+capex,CAPEX S.A.,CAPX,BCBA,https://www.capex.com.ar,petroleum,Argentina
+vista,Vista Energy,VIST,NYSE,https://www.vistaenergy.com,petroleum,Argentina
+totalenergies,TotalEnergies,TTE,NYSE,https://www.totalenergies.com,petroleum,Francia
+pampa,Pampa Energía S.A.,PAM,NYSE,https://www.pampaenergia.com,petroleum,Argentina
+shell,Shell Argentina,SHEL,NYSE,https://www.shell.com.ar,petroleum,Países Bajos
+chevron,Chevron Argentina,CVX,NYSE,https://www.chevron.com,petroleum,Estados Unidos
+geopark,GeoPark Argentina,GPRK,NYSE,https://www.geo-park.com,petroleum,Chile
+blue-sky-uranium-corp,Blue Sky Uranium Corp.,BSK,TSX-V,https://www.blueskyuranium.com,mining,Canadá

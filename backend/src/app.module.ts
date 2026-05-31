@@ -10,6 +10,8 @@ import { DataStatusModule } from './modules/data-status/data-status.module';
 import { MineralsModule } from './modules/minerals/minerals.module';
 import { PricesModule } from './modules/prices/prices.module';
 import { MacroModule } from './modules/macro/macro.module';
+import { CompaniesModule } from './modules/companies/companies.module';
+import { ProvincesModule } from './modules/provinces/provinces.module';
 
 @Module({
   imports: [
@@ -23,6 +25,8 @@ import { MacroModule } from './modules/macro/macro.module';
     MineralsModule,
     PricesModule,
     MacroModule,
+    CompaniesModule,
+    ProvincesModule,
   ],
   controllers: [AppController],
 })
