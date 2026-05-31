@@ -1,0 +1,109 @@
+[
+  {
+    "group_idx": 0,
+    "project_name": "preamble",
+    "page_numbers": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "md_path": "ocr/0000_preamble.md"
+  },
+  {
+    "group_idx": 1,
+    "project_name": "Vicu\u00f1a (Josemaria)",
+    "page_numbers": [
+      6,
+      7,
+      8
+    ],
+    "md_path": "ocr/0001_Vicu_a_Josemaria.md"
+  },
+  {
+    "group_idx": 2,
+    "project_name": "Vicu\u00f1a (Filo del Sol)",
+    "page_numbers": [
+      9,
+      10,
+      11,
+      12
+    ],
+    "md_path": "ocr/0002_Vicu_a_Filo_del_Sol.md"
+  },
+  {
+    "group_idx": 3,
+    "project_name": "Cu Pach\u00f3n",
+    "page_numbers": [
+      13,
+      14,
+      15,
+      16
+    ],
+    "md_path": "ocr/0003_Cu_Pach_n.md"
+  },
+  {
+    "group_idx": 4,
+    "project_name": "Cu Los Azules",
+    "page_numbers": [
+      17,
+      18,
+      19,
+      20
+    ],
+    "md_path": "ocr/0004_Cu_Los_Azules.md"
+  },
+  {
+    "group_idx": 5,
+    "project_name": "Mara - Agua Rica",
+    "page_numbers": [
+      21,
+      22,
+      23,
+      24
+    ],
+    "md_path": "ocr/0005_Mara_-_Agua_Rica.md"
+  },
+  {
+    "group_idx": 6,
+    "project_name": "Cu Taca Taca",
+    "page_numbers": [
+      25,
+      26,
+      27,
+      28
+    ],
+    "md_path": "ocr/0006_Cu_Taca_Taca.md"
+  },
+  {
+    "group_idx": 7,
+    "project_name": "Cu PSJ Cobre Mendocino",
+    "page_numbers": [
+      29,
+      30,
+      31,
+      32
+    ],
+    "md_path": "ocr/0007_Cu_PSJ_Cobre_Mendocino.md"
+  },
+  {
+    "group_idx": 8,
+    "project_name": "Altar",
+    "page_numbers": [
+      33,
+      34,
+      35,
+      36
+    ],
+    "md_path": "ocr/0008_Altar.md"
+  },
+  {
+    "group_idx": 9,
+    "project_name": "Ministerio de Econom\u00eda",
+    "page_numbers": [
+      37
+    ],
+    "md_path": "ocr/0009_Ministerio_de_Econom_a.md"
+  }
+]

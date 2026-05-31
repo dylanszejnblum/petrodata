@@ -1,0 +1,668 @@
+[
+  {
+    "project_name": "Vicuña (Josemaria)",
+    "primary_commodity": "Copper",
+    "by_products": [
+      "Gold",
+      "silver",
+      "Silver"
+    ],
+    "status": "Construction",
+    "location": {
+      "province": "San Juan",
+      "country": null,
+      "description": "Vicuña is a project made up of the Josemaria deposit, an advanced copper project located in the province of San Juan, Argentina; and the Filo del Sol deposit, a copper, gold and silver resource located in the province of San Juan, Argentina, and in the adjacent III Region of Chile. Josemaria project is located the 471 km from the city of San Juan by the current route.",
+      "latitude_dms": null,
+      "longitude_dms": null,
+      "latitude": null,
+      "longitude": null
+    },
+    "deposit_type": "Copper and gold porphyry",
+    "owner_controller": "Lundin Mining Corp. (50%) BHP Group Corp. (50%) Vicuña Corp.",
+    "operator": "Lundin Mining Corp. (50%) BHP Group Corp. (50%) Vicuña Corp.",
+    "area_ha": 16715,
+    "technical_economic": {
+      "since_production": 2030,
+      "estimated_lom_years": null,
+      "productive_capacity": null,
+      "estimated_annual_production": null,
+      "capex": null,
+      "mining_method": "Open-Pit",
+      "product": "Copper concentrate"
+    },
+    "resources": [
+      {
+        "category": "M&I",
+        "values": {
+          "pct_Cu": 0.28,
+          "Au_g_t": 0.19,
+          "Ag_g_t": 1.1,
+          "Cu_kt": 4579,
+          "Au_kOz": 9700,
+          "Ag_kOz": 58000
+        }
+      },
+      {
+        "category": "Inferred",
+        "values": {
+          "pct_Cu": 0.32,
+          "Au_g_t": 0.11,
+          "Ag_g_t": 1,
+          "Cu_kt": 1515,
+          "Au_kOz": 2500,
+          "Ag_kOz": 22000
+        }
+      }
+    ],
+    "reserves": [
+      {
+        "category": "Proven",
+        "values": {
+          "pct_Cu": 0.43,
+          "Au_g_t": 0.34,
+          "Ag_g_t": 1.33,
+          "Cu_kt": 837,
+          "Au_kOz": 2143,
+          "Ag_kOz": 8430
+        }
+      },
+      {
+        "category": "Probable",
+        "values": {
+          "pct_Cu": 0.27,
+          "Au_g_t": 0.19,
+          "Ag_g_t": 0.85,
+          "Cu_kt": 2205,
+          "Au_kOz": 4872,
+          "Ag_kOz": 22285
+        }
+      }
+    ],
+    "resources_year": null,
+    "geology": {
+      "regional": "The mining property is located within the Frontal Cordillera on the eastern flank of the Andes and its host rock is the Permian-Triassic batolithic rocks of the Choiyoi Formation. There are also volcanic rocks from the Tertiary period assigned to the Doña Ana Group. The latter are intruded by quartz-dioritic porphyry of estimated Miocene age. It is a copper-gold porphyry type deposit. The geological characteristics, which include the tenor and the style of mineralization, the lithology of the host rock and the patterns of alteration and distribution of the mineralization, are similar to other Andean porphyry of the metallogenetic belt.",
+      "deposit": "At Josemaría, associated gold-copper mineralization occurs within altered intrusive dacitic rocks and hydrothermal breccias, accompanied by anhydrite, magnetite, pyrite, hematite, gypsum, quartz and sericite. Most of the copper and gold mineralization is within the Miocene porphyry system, which forms an elongated body, with dimensions at least 900 m NS and 600-700 m EW and 600-700 m vertically. The deposit is open both to the south and to the north. In fact, in the 2012/13 season the company carried out a program of more than 7,000 meters of diamond with the intention of checking said extension. According to the results already published, it is very likely that the north-south size of the deposit will increase considerably. Ministerio de Economía República Argentina Secretaría de Minería"
+    },
+    "sources_consulted": [
+      "Lundin Mining Corp. Vicuña Project",
+      "Lundin Mining Corp. Technical Report Presentation February 16, 2026",
+      "Lundin Mining Corp. NI 43-101 Technical report. Vicuña Project, Argentina and Chile. June 2025",
+      "Lundin Mining Corp. Reserves and Resources 2024",
+      "Lundin Mining Corp. Corporate presentation. December 2025"
+    ],
+    "source_pages": [
+      6,
+      7,
+      8
+    ]
+  },
+  {
+    "project_name": "Vicuña (Filo del Sol)",
+    "primary_commodity": "Copper",
+    "by_products": [
+      "Gold",
+      "silver",
+      "Silver"
+    ],
+    "status": "Prefeasibility",
+    "location": {
+      "province": "San Juan",
+      "country": null,
+      "description": "The Filo del Sol Project is located in the Atacama Region, in northern Chile and in the adjacent province of San Juan, Argentina, 140 kilometers southeast of the city of Copiapó, Chile, and extends to both sides of the border between Argentina and Chile. The average altitudes are from 4,000 to 4,900 m.a.s.l.",
+      "latitude_dms": "28° 29' 41\" S",
+      "longitude_dms": "69° 39' 43\" W",
+      "latitude": -28.494722,
+      "longitude": -69.661944
+    },
+    "deposit_type": "High Sulphidation Epithermal",
+    "owner_controller": null,
+    "operator": null,
+    "area_ha": 14014,
+    "technical_economic": {
+      "since_production": 2032,
+      "estimated_lom_years": 14,
+      "productive_capacity": null,
+      "estimated_annual_production": null,
+      "capex": null,
+      "mining_method": "Open-Pit",
+      "product": "Copper, gold and silver cathodes, silver in doré and copper concentrates"
+    },
+    "resources": [],
+    "reserves": [
+      {
+        "category": "Gold oxide",
+        "values": {
+          "pct_Cu": 0.38,
+          "Au_g_t": 0.32,
+          "Ag_g_t": 8.1,
+          "Cu_kt": 9759,
+          "Au_kOz": 26500,
+          "Ag_kOz": 672000
+        }
+      },
+      {
+        "category": "Probable",
+        "values": {
+          "pct_Cu": 0.39,
+          "Au_g_t": 0.34,
+          "Ag_g_t": 16,
+          "Cu_kt": 1007,
+          "Au_kOz": 2867,
+          "Ag_kOz": 133334
+        }
+      }
+    ],
+    "resources_year": null,
+    "geology": {
+      "regional": "It is found in the post-accretionary metallogenic belt of the magmatic arc during the neogene (Tertiary). Between 30° and 34° Lat. S, during the middle Miocene (18-15 Ma) a horizontalization of the Nazca plate begins with the consequent cortical thickening. The magmatic activity reaches a great development in the provinces of San Juan and the center of Mendoza. With the progressive horizontalization of the plate, the arch migrated eastward. These particular conditions generated a magmatism that culminated in episodes of hydrothermal alteration, high sulphidation gold mineralization, porphyry copper and molybdenum, and locally associated vetiform polymetallic deposits.",
+      "deposit": "The Filo del Sol Project shows a complete transition between a high sulphidation epithermal environment and a porphyry system, and both types of deposits are represented. Weathering and supergenic processes have created high-grade copper and silver oxide zones. Mineralization, of potential economic interest, within the Filo del Sol deposit includes high grade leached oxide / mixed copper mineralization, structurally controlled gold and silver mineralization, sub-horizontal \"mantle type\" high grade silver mineralization and mineralization of scattered sulfides of copper, gold, silver and molybdenum. Ministerio de Economía República Argentina Secretaría de Minería"
+    },
+    "sources_consulted": [
+      "Lundin Mining Corp. Vicuña Project",
+      "Lundin Mining Corp. Technical Report Presentation February 16, 2026",
+      "Lundin Mining Corp. NI 43-101 Technical report. Vicuña Project, Argentina and Chile. June 2025",
+      "Lundin Mining Corp. Reserves and Resources 2024",
+      "Lundin Mining Corp. Corporate presentation. December 2025"
+    ],
+    "source_pages": [
+      9,
+      10,
+      11,
+      12
+    ]
+  },
+  {
+    "project_name": "Cu Pachón",
+    "primary_commodity": "Copper",
+    "by_products": [
+      "Silver",
+      "molybdenum",
+      "Molybdenum"
+    ],
+    "status": "Feasibility",
+    "location": {
+      "province": "San Juan",
+      "country": null,
+      "description": "It is located in the province of San Juan, in the department of Calingasta; approximately 300 km west of the city of San Juan and 5 km from the border with Chile. It covers elevations from 3,600 to 4,200 meters above sea level.",
+      "latitude_dms": "31° 44' 38\" S",
+      "longitude_dms": "70° 25' 52\" W",
+      "latitude": -31.743889,
+      "longitude": -70.431111
+    },
+    "deposit_type": "Copper Porphyry",
+    "owner_controller": "Glencore Plc.",
+    "operator": "El Pachón S.A",
+    "area_ha": 1004,
+    "technical_economic": {
+      "since_production": 2034,
+      "estimated_lom_years": null,
+      "productive_capacity": "185 ktpd",
+      "estimated_annual_production": null,
+      "capex": "9,460 MUSD",
+      "mining_method": "Open-Pit",
+      "product": "Copper, molybdenum and silver concentrates"
+    },
+    "resources": [
+      {
+        "category": "Measured",
+        "values": {
+          "pct_Cu": 0.66,
+          "Ag_g_t": 2.3,
+          "pct_Mo": 0.01
+        }
+      },
+      {
+        "category": "Indicated",
+        "values": {
+          "pct_Cu": 0.47,
+          "Ag_g_t": 1.9,
+          "pct_Mo": 0.01
+        }
+      },
+      {
+        "category": "Inferred",
+        "values": {
+          "pct_Cu": 0.36,
+          "Ag_g_t": 1.4,
+          "pct_Mo": 0.01
+        }
+      }
+    ],
+    "reserves": [],
+    "resources_year": null,
+    "geology": {
+      "regional": "It is found in the post-accretionary metallogenetic belt of the magmatic arc during the neogene (Tertiary). Between 30° and 34° Lat. S, during the middle Miocene (18–15 Ma) a horizontalization of the Nazca plate began and its consequent cortical thickening. Magmatic activity reaches a great development in the provinces of San Juan and center of Mendoza. With the progressive horizontalization of the plate produces a migration of the arch towards the east. These particular conditions give rise to a magmatism that culminates with episodes of hydrothermal alteration and high sulfurization gold mineralization. Another important type of mineralization is the Copper-Molybdenum porphyry such as Pachón, Mercerdario in San Juan; Paramillos, San Jorge and San Benicio in Mendoza; with locally associated vetiform polymetallic deposits.",
+      "deposit": "The deposit is located in the Cordillera Principal, formed by a basement of granitoids and vulcanites (Gr. Choiyoi), above in discordance there are jurassic sedimentary units, on them – also in discordance – lie stratified and andesitic vulcanites and to a lesser extent rhyolitic and riodacitics (Fm. Pachón). The latter is locally intruded by mesosilicic bodies, granular to porphyric, with which mineralization is linked. The sequence of deposit formation was synthesized by Lencinas and Tonel (1994): 1-Intrusion of the Diorita Pachón stock. 2-Formation of the porphyric copper system. 3-Posthumous intrusion of dioritic porphyry in whose intrusive dome there is magmatic breccia with accumulation of hydrothermal fluids. 4-Hydrothermal brecciation, alteration and mineralization of the breccia. 5-Intrusion of the dacitic porphyry at the northern limit of the hydrothermal breccia. 6-Formation of poorly mineralized tourmaline breccias. 7-Leaching and supergenic enrichment. The formation stage of the hydrothermal breccia is accompanied by a sinking of 50 to 70 m from the breccia body relative to the surrounding volcanoes. Ministerio de Economía República Argentina Secretaría de Minería"
+    },
+    "sources_consulted": [
+      "Glencore Pachón. Pachón Project. https://www.elpachon.com.ar/",
+      "Glencore. Capital Markets Day. December 3, 2025",
+      "Glencore Pachón. Publications. https://www.glencore.com/publications",
+      "Glencore. Resources and Reserves. December 2025"
+    ],
+    "source_pages": [
+      13,
+      14,
+      15,
+      16
+    ]
+  },
+  {
+    "project_name": "Cu Los Azules",
+    "primary_commodity": "Copper",
+    "by_products": [
+      "Gold",
+      "silver",
+      "Silver"
+    ],
+    "status": "Feasibility",
+    "location": {
+      "province": "San Juan",
+      "country": null,
+      "description": "he project is located approximately 80 km west-northwest of the Calingasta town and 6 km east of the border with Chile, at 3,500 m elevation in the Andes Mountains.",
+      "latitude_dms": "31° 4' 53\" S",
+      "longitude_dms": "70° 10' 7\" W",
+      "latitude": -31.081389,
+      "longitude": -70.168611
+    },
+    "deposit_type": "Porphyry, Supergene Copper",
+    "owner_controller": "McEwen Mining (47,7%), Stellantis (19,4%), Others (32,9%)",
+    "operator": "Minera Andes Inc.",
+    "area_ha": 18000,
+    "technical_economic": {
+      "since_production": 2030,
+      "estimated_lom_years": 21,
+      "productive_capacity": "240,000 t/y",
+      "estimated_annual_production": null,
+      "capex": "3,168 MUSD",
+      "mining_method": "Open-Pit",
+      "product": "Copper cathode"
+    },
+    "resources": [
+      {
+        "category": "M&I",
+        "values": {
+          "Cu_Blbs": 5.4,
+          "Au_MOz": 1,
+          "Ag_MOz": 26.6
+        }
+      },
+      {
+        "category": "Inferred",
+        "values": {
+          "Cu_Blbs": 20,
+          "Au_MOz": 5.7,
+          "Ag_MOz": 149.9
+        }
+      }
+    ],
+    "reserves": [
+      {
+        "category": "Proven",
+        "values": {
+          "Cu_Blbs": 3463
+        }
+      },
+      {
+        "category": "Probable",
+        "values": {
+          "Cu_Blbs": 6754
+        }
+      }
+    ],
+    "resources_year": null,
+    "geology": {
+      "regional": "The geological province in which it is located is the Cordillera Principal, is composed of strongly folded, faulted, and elevated Paleozoic-Mesozoic sedimentary and volcanic lithologies (Gondwanide orogeny) overlain by extensive Upper Miocene ignimbrites (Andean orogeny). Eocene to early Miocene volcaniclastic strata in the region accumulated in an extensional basin followed by plutonic intrusion and contractional deformation from 19 Mya to 16 Mya. These units were overlain and intruded by 16 Mya to 7 Mya volcanic flows and pyroclastic units with comagmatic 12 Mya to 8 Mya plutons and porphyry systems. This was followed by a compressional event at 8 Mya to 5 Mya with important crustal shortening, thickening, and regional uplift. The mineralization and hydrothermal alteration typical of porphyric copper is spatial, temporal and genetically related to the dikes. Copper mineralization (chalcocite + pyrite + chalcopyrite) is associated with intrusive bodies of dacitic composition to diorite of tertiary age.",
+      "deposit": "In the project area, geology is composed of volcanic rocks intruded by a dioritic stock, in turn, it is intruded by a system of sub-parallel dikes of dioritic to dacitic composition of faults of dominant NNW heading. The mineralization and alteration of the porphyry type system is temporary, spatial and genetically linked to the dikes. The system has zoning: - Leaching zone between 60 and 180 meters deep with jarosite, goethite and hematite. - Supergenic enrichment zone between 60 and 300 meters with the presence of calcosine +/- covellite. - Primary sulfide zone with chalcopyrite, bornite, pyrite +/- calcosine and primary covellite. The Los Azules hydrothermal alteration system has a minimum length of 5 km and a minimum width of 4 km, and is extended in an NNW direction along an important structural corridor. The system disappears into a volcanic cover to the north, so its final extension is unknown. The altered area surrounding the Los Azules deposit is approximately 4 km long by 2.5 km wide. The limits of mineralization have not been fully defined by drilling. Ministerio de Economía República Argentina Secretaría de Minería"
+    },
+    "sources_consulted": [
+      "McEwen Inc. Los Azules Project",
+      "Canadian National instrument 43-101 Technical Report Feasibility Study Los Azules Copper Project. Nov 7, 2025.",
+      "McEwen Inc. Corporate Presentation. December 2025"
+    ],
+    "source_pages": [
+      17,
+      18,
+      19,
+      20
+    ]
+  },
+  {
+    "project_name": "Mara - Agua Rica",
+    "primary_commodity": "Copper",
+    "by_products": [
+      "Gold",
+      "silver",
+      "molybdenum",
+      "Silver",
+      "Molybdenum"
+    ],
+    "status": "Feasibility",
+    "location": {
+      "province": "Catamarca",
+      "country": null,
+      "description": "It is located in the province of Catamarca, department of Andalgalá, 35 km east of the Bajo de la Alumbrera deposit. It is an area of difficult access, with heights of up to 3,300 m.a.s.l.",
+      "latitude_dms": null,
+      "longitude_dms": null,
+      "latitude": null,
+      "longitude": null
+    },
+    "deposit_type": "Copper-Gold-Silver-Molybdenum porphyry system",
+    "owner_controller": "Glencore Plc.",
+    "operator": "Minera Agua Rica (Suc. Argentina)",
+    "area_ha": 15485,
+    "technical_economic": {
+      "since_production": 2031,
+      "estimated_lom_years": 23,
+      "productive_capacity": "204 Average CuEq prod. p.a. (kt)",
+      "estimated_annual_production": null,
+      "capex": "4,000 MUSD",
+      "mining_method": "Open-Pit",
+      "product": "Copper and molybdenum concentrates"
+    },
+    "resources": [
+      {
+        "category": "Measured",
+        "values": {
+          "Cu_kt": 0.75,
+          "Au_g_t": 0.27,
+          "Ag_g_t": 3.6,
+          "pct_Mo": 0.03
+        }
+      },
+      {
+        "category": "Indicated",
+        "values": {
+          "Cu_kt": 0.44,
+          "Au_g_t": 0.19,
+          "Ag_g_t": 3.3,
+          "pct_Mo": 0.03
+        }
+      },
+      {
+        "category": "Inferred",
+        "values": {
+          "Cu_kt": 0.29,
+          "Au_g_t": 0.09,
+          "Ag_g_t": 1.9,
+          "pct_Mo": 0.03
+        }
+      }
+    ],
+    "reserves": [],
+    "resources_year": null,
+    "geology": {
+      "regional": "Corresponds to the Post-accretionary Metallogenetic Belt associated with the Neogene Magmatic arc (Tertiary), linked to transtensional areas with NE-SW orientation. This belt in the transition zone (26°-30°) is characterized by a little evolved volcanism of the middle Miocene that widens to the east, linked to particular geotectonic conditions. It includes northwest corridors that control magmatic and hydrothermal activity, including Agua Rica and Bajo la Alumbrera. These corridors host polymetallic mineralizations in the north (Farallón Negro in Catamarca) and porphyries with subtypes linked to the characteristics of magmatism and the structural mechanisms with which they are associated.",
+      "deposit": "The property is prospective for both high grade gold-copper-silver veins and large tonnage copper-gold porphyry mineralization. Cerro Atajo is centered on an intrusive complex within the same host rock as the nearby Alumbrera mine. (Yamana MD&amp;A June 30, 2016) The Agua Rica deposit is a Cu-Mo-Au porphyry deposit with a polymetallic epithermal overprint. Three major stages of alteration/mineralization are clearly recognized: early porphyry Cu-Mo-Au, later epithermal Cu-Au-Ag-As-Pb-Zn, and supergene Cu enrichment. Supergene leaching and enrichment has replaced pyrite, chalcopyrite and bornite with near surface high-grade chalcocite, covellite and digenite which grades down to a zone of covellite and digenite without chalcocite, and then into primary chalcopyrite-pyrite mineralization below the defined open pit. Almost all copper ore is covellite or chalcocite. Ministerio de Economía República Argentina Secretaría de Minería"
+    },
+    "sources_consulted": [
+      "Minera Agua Rica LLC Sucursal Argentina y Minera Alumbrera Limited. Mara project",
+      "Glencore. Capital Markets Day. December 3, 2025",
+      "Glencore Pachón. Publications. https://www.glencore.com/publications",
+      "Glencore. Resources and Reserves. December 2025",
+      "CIBC World Markets Inc. Valuation report. August 30, 2022"
+    ],
+    "source_pages": [
+      21,
+      22,
+      23,
+      24
+    ]
+  },
+  {
+    "project_name": "Cu Taca Taca",
+    "primary_commodity": "Copper",
+    "by_products": [
+      "Gold",
+      "molybdenum",
+      "Molybdenum"
+    ],
+    "status": "Feasibility",
+    "location": {
+      "province": "Salta",
+      "country": null,
+      "description": "It is located in the Puna de Salta, at the central-western end of the Salar de Arizaro, department of Los Andes, 240 km west of the city of Salta and 55 km east of the border with Chile, at 3,600 m.a.s.l.",
+      "latitude_dms": "24° 34' 21\" S",
+      "longitude_dms": "67° 44' 9\" W",
+      "latitude": -24.5725,
+      "longitude": -67.735833
+    },
+    "deposit_type": "Porphyry copper-gold-moly deposit",
+    "owner_controller": "First Quantum Minerals LTD",
+    "operator": "Corriente Argentina S.A.",
+    "area_ha": 2546,
+    "technical_economic": {
+      "since_production": null,
+      "estimated_lom_years": 35,
+      "productive_capacity": "Stage 1: 40 Mtpa | Stage 2: 60 Mtpa",
+      "estimated_annual_production": null,
+      "capex": "Stage 1: USD 4,232 M | Stage 2: USD 1,019 M",
+      "mining_method": "Open-Pit",
+      "product": "Copper and gold concentrates"
+    },
+    "resources": [
+      {
+        "category": "M&I",
+        "values": {
+          "pct_Cu": 0.42,
+          "Au_g_t": 0.09,
+          "pct_Mo": 0.012,
+          "Cu_kt": 8716,
+          "Au_kOz": 5715,
+          "Mo_kt": 253
+        }
+      },
+      {
+        "category": "Inferred",
+        "values": {
+          "pct_Cu": 0.27,
+          "Au_g_t": 0.06,
+          "pct_Mo": 0.007,
+          "Cu_kt": 389,
+          "Au_kOz": 263,
+          "Mo_kt": 10
+        }
+      }
+    ],
+    "reserves": [
+      {
+        "category": "Proven",
+        "values": {
+          "pct_Cu": 0.58,
+          "Au_g_t": 0.13,
+          "pct_Mo": 0.015,
+          "Cu_kt": 2509.5,
+          "Au_kOz": 1835.6,
+          "Mo_kt": 66.8
+        }
+      },
+      {
+        "category": "Probable",
+        "values": {
+          "pct_Cu": 0.38,
+          "Au_g_t": 0.07,
+          "pct_Mo": 0.011,
+          "Cu_kt": 5919,
+          "Au_kOz": 3696.6,
+          "Mo_kt": 177.6
+        }
+      }
+    ],
+    "resources_year": null,
+    "geology": {
+      "regional": "It is included in the copper porphyry-type paleogenous (Tertiary) mineralization belt, of recognized economic importance in Chile. This mineralization is associated with the advance of the paleogenic magmatic arc over the Argentine Puna. Oligocene riodacitic intrusions of the Santa Inés Formation are responsible for the mineralization and alteration of the copper porphyry in Taca Taca.",
+      "deposit": "In the project area, porphyry type mineralizations of Cu-Mo (Taca-Taca alto and Taca Taca bajo) and low sulphidation epithermal (Taca Taca sur) have been defined. The alterations are represented by early potassium type, in some sectors of the deposit with intercalation of propylitic, and a subsequent alteration of philic type of heterogeneous intensity. Locally advanced argillic alteration zones were defined with which the hydrothermal process would culminate. Taca Taca was defined as \"an Andean Cu-Au-Mo porphyry system\". Ministerio de Economía República Argentina Secretaría de Minería"
+    },
+    "sources_consulted": [
+      "First Quantum Minerals Ltd., Taca Taca project First Quatum Minerals Ltd. Investor Presentation. January 2026 First Quantum Minerals Ltd. NI 43-101 Technical Report. February 2026 First Quantum. Third Quarter 2025 Financial &amp; Operating Results First Quantum. Annual information form. December 2024"
+    ],
+    "source_pages": [
+      25,
+      26,
+      27,
+      28
+    ]
+  },
+  {
+    "project_name": "Cu PSJ Cobre Mendocino",
+    "primary_commodity": "Copper",
+    "by_products": [
+      "Gold",
+      "molybdenum"
+    ],
+    "status": "Prefeasibility",
+    "location": {
+      "province": "Mendoza",
+      "country": null,
+      "description": "It is located in the department of Las Heras, province of Mendoza, 110 km to the northwest of the city of Mendoza, by National Route No. 7, and whose access door is 37 km from the district of Uspallata, by National Route No. 149. The Project is located at 2,600 meters above sea level.",
+      "latitude_dms": null,
+      "longitude_dms": null,
+      "latitude": null,
+      "longitude": null
+    },
+    "deposit_type": "Copper and gold porphyry",
+    "owner_controller": "Zonda Metals GmBH, Grupo Alberdi",
+    "operator": "Minera San Jorge S.A.",
+    "area_ha": 10000,
+    "technical_economic": {
+      "since_production": 2029,
+      "estimated_lom_years": 16,
+      "productive_capacity": "10 Mt/year",
+      "estimated_annual_production": null,
+      "capex": "560 MUSD",
+      "mining_method": "Open-Pit",
+      "product": "Copper and gold concentrates"
+    },
+    "resources": [
+      {
+        "category": "Measured",
+        "values": {
+          "pct_Cu": 0.57,
+          "Au_g_t": 0.22,
+          "Cu_klb": 999194,
+          "Au_kOz": 586
+        }
+      },
+      {
+        "category": "Indicated",
+        "values": {
+          "pct_Cu": 0.42,
+          "Au_g_t": 0.18,
+          "Cu_klb": 1501785,
+          "Au_kOz": 672
+        }
+      },
+      {
+        "category": "Inferred",
+        "values": {
+          "pct_Cu": 0.37,
+          "Au_g_t": 0.14,
+          "Cu_klb": 592182,
+          "Au_kOz": 337
+        }
+      }
+    ],
+    "reserves": [],
+    "resources_year": null,
+    "geology": {
+      "regional": "The property of San Jorge is located on the western periphery of the Graben de Uspallata-Calingasta-Iglesia. To the east of the graben is the Pre-Cordillera and to the west is the Cordillera Frontal.",
+      "deposit": "In the project area, rocks of the Yalguaraz Formation emerge: sandstones, conglomerates, limolites and clays. Sedimentites are intruded by a porphyry granite, stocks and dykes of the Perm - Triassic. On the western edge of the granitic bodies there are small tourmaline (crackling) holes. The contacts are subvertical and irregular. The San Jorge porphyry system shows a vertical zonation from hypogene mineralization at depth, passing upwards into a supergene enriched zone, which is overlain by a zone of oxide mineralization and finally by a poorly developed leached cap. Superimposed on this basic zonation are lateral variations in the distribution of the mineralization types that relate to the main north to south and north-northeast striking fault zones. The porphyry system is ovoid in shape and covers an area of 1.1 km north-northeast by 700 m north northwest. Ministerio de Economía República Argentina Secretaría de Minería"
+    },
+    "sources_consulted": [
+      "PSJ Cobre Mendocino Project",
+      "PSJ Cobre Mendocino. Environmental impact report, chapter III. Project Description, December 2024",
+      "Government of the Province of Mendoza. E/EIA project \"PSJ Cobre Mendocino\""
+    ],
+    "source_pages": [
+      29,
+      30,
+      31,
+      32
+    ]
+  },
+  {
+    "project_name": "Altar",
+    "primary_commodity": "Copper",
+    "by_products": [
+      "Gold",
+      "silver",
+      "Silver"
+    ],
+    "status": "PEA",
+    "location": {
+      "province": "San Juan",
+      "country": null,
+      "description": "The Altar Project is located in Argentina, within the Province of San Juan, about 10 km from the Argentina-Chile border, and approximately 180 km in direct line west of the city of San Juan. Elevations within the Project area range between 3,100 meters above sea level (masl) and 4,000 masl.",
+      "latitude_dms": "31° 29' 00\" S",
+      "longitude_dms": "70° 28' 00\" W",
+      "latitude": -31.483333,
+      "longitude": -70.466667
+    },
+    "deposit_type": "Porphyry, Supergene Copper",
+    "owner_controller": "Aldebaran Resources Inc. (80%), Sibanye-Stillwater Limited (20%)",
+    "operator": "Aldebaran Resources Inc.",
+    "area_ha": 8443.7,
+    "technical_economic": {
+      "since_production": null,
+      "estimated_lom_years": 48,
+      "productive_capacity": "60.000 tpd",
+      "estimated_annual_production": null,
+      "capex": "1,593 M US",
+      "mining_method": "Open-Pit &amp; Underground",
+      "product": "Copper concentrate"
+    },
+    "resources": [
+      {
+        "category": "Measured",
+        "values": {
+          "pct_Cu": 0.43,
+          "Au_g_t": 0.09,
+          "Ag_g_t": 1.03,
+          "Cu_MIbs": 7854,
+          "Au_MOz": 2.3,
+          "Ag_MOz": 25.8
+        }
+      },
+      {
+        "category": "Indicated",
+        "values": {
+          "pct_Cu": 0.41,
+          "Au_g_t": 0.05,
+          "Ag_g_t": 1.31,
+          "Cu_MIbs": 14657,
+          "Au_MOz": 2.8,
+          "Ag_MOz": 68
+        }
+      },
+      {
+        "category": "Inferred",
+        "values": {
+          "pct_Cu": 0.37,
+          "Au_g_t": 0.04,
+          "Ag_g_t": 1.25,
+          "Cu_MIbs": 9.832,
+          "Au_MOz": 1.7,
+          "Ag_MOz": 49
+        }
+      }
+    ],
+    "reserves": [],
+    "resources_year": null,
+    "geology": {
+      "regional": "The Altar Project is located within the southern flat-slab sub-domain of the Central Andes (28°S–33°30'S), specifically in the Cordillera Principal, which represents an inactive magmatic arc and associated thrust belt. The regional basement is dominated by the Permo-Triassic Choiyoi Group, comprising a lower calc-alkaline volcanic sequence related to subduction-related arc magmatism, overlain by peraluminous rhyolitic volcanics associated with post-orogenic extensional collapse. These volcanic sequences are intruded by coeval A-type and S-type granites and display widespread low-grade propylitic alteration. Within the project area, the Choiyoi basement is overlain by rhyolitic ignimbrites and andesitic volcanics of the Pachón Formation. Regionally, the Altar-Rio Cenicero district is structurally bounded by two major north-south striking faults: the Pelambres Fault to the west and the Rio Teatinos Fault to the east, juxtaposing the Pachón Formation against Paleogene units and Paleozoic to Lower Mesozoic basement rocks, respectively.",
+      "deposit": "The Altar project represents a Miocene porphyry Cu-Au system, formed by multiple intermediate-composition subvolcanic porphyries emplaced between 11.9 and 8.9 Ma within volcanic rocks of the Pachón Formation. Mineralization is strongly controlled by inherited extensional structures that were later inverted, focusing magma emplacement and hydrothermal fluid flow. The system displays typical Andean porphyry-style alteration zoning (potassic, propylitic and phyllic), with locally developed moderate supergene enrichment. Upper portions of the system are overlain and flanked by high- to intermediate-sulphidation epithermal mineralization, characterized by advanced argillic alteration and vein-style mineralization, reflecting the vertical continuity of the magmatic-hydrothermal system. Ministerio de Economía República Argentina Secretaría de Minería"
+    },
+    "sources_consulted": [
+      "Aldebaran Resources. Altar project",
+      "Aldebaran Resources. The Altar Copper Gold Project, January 2026",
+      "Aldebaran Resources. Technical report estimated mineral resources. Altar project, San Juan province, Argentina, December 2024.",
+      "Canadian National instrument NI-43-101 Technical Report – Altar PEA (2023)"
+    ],
+    "source_pages": [
+      33,
+      34,
+      35,
+      36
+    ]
+  }
+]

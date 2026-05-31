@@ -1,0 +1,465 @@
+[
+  {
+    "project_name": "La Providencia",
+    "primary_commodity": "Silver",
+    "by_products": [
+      "Lead-copper-zinc"
+    ],
+    "status": "Operation",
+    "location": {
+      "province": "Jujuy",
+      "country": null,
+      "description": "The Providencia Project is located in the Puna region, between 4,000 and 4,500 meters above sea level, in the Susques Department, Province of Jujuy.",
+      "latitude_dms": "23° 15' 41\" S",
+      "longitude_dms": null,
+      "latitude": -23.261389,
+      "longitude": null
+    },
+    "deposit_type": "Sulphidation Epithermal Style",
+    "owner_controller": "Hanaq Group. / Hanaq Argentina S.A.",
+    "operator": "Hanaq Group. / Hanaq Argentina S.A.",
+    "area_ha": 1600.18,
+    "technical_economic": {
+      "since_production": 2025,
+      "estimated_lom_years": 8,
+      "productive_capacity": "500 tpd",
+      "estimated_annual_production": null,
+      "capex": "10 M USD",
+      "mining_method": "Open pit",
+      "product": "Silver and copper concentrate"
+    },
+    "resources": [],
+    "reserves": [],
+    "resources_year": null,
+    "geology": {
+      "regional": "The geological province of the Puna was described by Turner (1970). It forms the southern end of the Bolivian Altiplano and corresponds to a belt, morphologically between the \"Cordillera Oriental\" to the east and passing transitionally into the \"Sierras Pampeanas Septentrionales\" to the south. The Puna is characterized by an elevated plateau with an average altitude of 4,000 meters above sea level. The border between Argentina and Chile forms the western boundary, defined by volcanoes of the upper Cenozoic volcanic arc. The basement is composed of marine sediments and low-grade metamorphic rocks, which are Ordovician in age and are highly deformed along the western margin. These sediments overlie a metamorphic basement, which is identified in the north by the presence of xenoliths brought to surface by Tertiary volcanics, while in the south these metamorphic rocks are found in outcrop. The geological province of the Puna has been subdivided into two sectors (Alonso et al. 1984) according to their regional geological characteristics, namely the Puna Septentrional or Puna Jujena and the Puna Austral or Puna Salto catamarquena. The oldest rocks outcropping in the Puna Jujena are Ordovician in age, while those in the Puna Saltocatamarquena are Proterozoic metamorphic rocks. The Calama-Olacapato-El Toro lineament forms the boundary between the two sub-provinces. Other differences are an Ordovician eruptive belt in the south and the development of lower Quaternary basaltic volcanism related to an extensional event.",
+      "deposit": "The properties are located within a basin-and-range type terrane with north-trending linear blocks bounded by high angle reverse faults separating Tertiary-age strike-slip (pull-apart) basins, many of which have developed salt flats or salars. All lithologies in the vicinity of La Providencia have been altered to a varying degree both locally and on a property scale. Pervasive hematization has resulted in the red hue evident in the Dark Red Conglomerate and the Eocene sandstones. Approaching the mineralized zones, carbonate content in the rocks becomes higher and, as mineralization increases, there is an increase in the abundance of sericite until, in the core of the higher grade zone, sericite appears to replace biotite and plagioclase. Calcite, on the other hand, appears depleted in the higher grade core zones."
+    },
+    "sources_consulted": [
+      "HANAQ Group. Providencia Project",
+      "SEGEMAR",
+      "Report Control Form. NI 43-101 Repor. Technical Report on the Providencia Silver Project, Jujuy province, Argentina."
+    ],
+    "source_pages": [
+      6,
+      7,
+      8
+    ]
+  },
+  {
+    "project_name": "Puna Operation",
+    "primary_commodity": "Silver",
+    "by_products": [
+      "Lead-copper-zinc",
+      "Lead",
+      "Zinc"
+    ],
+    "status": "Operation",
+    "location": {
+      "province": "Jujuy",
+      "country": null,
+      "description": "The Puna Operations are comprised of the Chinchillas mine and the Pirquitas property, which includes the Pirquitas processing facilities. The project is located in the Rinconada department, in the Jujuy province.",
+      "latitude_dms": null,
+      "longitude_dms": null,
+      "latitude": null,
+      "longitude": null
+    },
+    "deposit_type": "Sulphidation Epithermal Style",
+    "owner_controller": "SSR Mining Inc. / Mina Pirquitas S.A",
+    "operator": "SSR Mining Inc. / Mina Pirquitas S.A",
+    "area_ha": 9742,
+    "technical_economic": {
+      "since_production": 1997,
+      "estimated_lom_years": 2,
+      "productive_capacity": "5,000 tpd processing capacity",
+      "estimated_annual_production": null,
+      "capex": null,
+      "mining_method": "Open pit",
+      "product": "Silver, lead and zinc concentrate"
+    },
+    "resources": [
+      {
+        "category": "Measured",
+        "values": {
+          "Ag_g_t": 239,
+          "pct_Pb": 1.12,
+          "pct_Zn": 3.85,
+          "Ag_kOz": 17959,
+          "Pb_MLbs": 22.7,
+          "Zn_MLbs": 185
+        }
+      },
+      {
+        "category": "Indicated",
+        "values": {
+          "Ag_g_t": 147.22,
+          "pct_Pb": 0.94,
+          "pct_Zn": 2.02,
+          "Ag_kOz": 17985,
+          "Pb_MLbs": 46.9,
+          "Zn_MLbs": 156.1
+        }
+      },
+      {
+        "category": "Inferred",
+        "values": {
+          "Ag_g_t": 157.15,
+          "pct_Pb": 1.05,
+          "pct_Zn": 6.88,
+          "Ag_kOz": 8566,
+          "Pb_MLbs": 1.8,
+          "Zn_MLbs": 212
+        }
+      }
+    ],
+    "reserves": [
+      {
+        "category": "Proven",
+        "values": {
+          "Ag_g_t": 145.25,
+          "pct_Pb": 1.19,
+          "pct_Zn": 0.181,
+          "Ag_kOz": 3940,
+          "Pb_MLbs": 22.1,
+          "Zn_MLbs": 3.3
+        }
+      },
+      {
+        "category": "Probable",
+        "values": {
+          "Ag_g_t": 141.3,
+          "pct_Pb": 11.17,
+          "pct_Zn": 0.18,
+          "Ag_kOz": 15588,
+          "Pb_MLbs": 110.8,
+          "Zn_MLbs": 13.5
+        }
+      }
+    ],
+    "resources_year": null,
+    "geology": {
+      "regional": "The Chinchillas and Pirquitas deposits occur within the Bolivian tin-silver-zinc belt which occupies the back-arc portion of the central Andes and extends from southern Peru to northern Argentina. Northwestern Argentina geology consists of three main geological belts, or terranes, that together trend north-northeast: the Sub-Andean Range (Sierras Subandinas), the Eastern Cordillera (Cordillera Oriental), and the Argentine Altiplano or Puna belt. The Pirquitas and Chinchillas deposits are located in the Puna belt and are hosted in the Ordovician Acoite Formation. The Acoite Formation is an interbedded sandstone, siltstone, and mudstone turbidite sequence deposited in a back-arc basin.",
+      "deposit": "The Chinchillas deposit occurs within a $13 \\pm 1$ Ma dacitic volcanic center and is the product of a phreatomagmatic diatreme. The deposit is controlled by an east-west trending regional scale fault where dilatation accommodated magma to intrude through the Acoite Formation. The Pirquitas mine consists of exposures of the Acoite and Tiomayo formations. Folding plays an important role in vein formation and geometry; at the San Miguel pit, veins are intimately related to the San Miguel anticline, occurring proximal to the fold apex and most commonly striking perpendicular to the fold planes. West-northwest striking regional faults are also observed throughout the property. This structural fabric is interpreted to control the geometry and location of the Cortaderas breccia body. There are two types of mineralization at Pirquitas: (1) polymetallic veins with peripheral disseminated mineralization; and (2) mineralized hydrothermal breccia. Vein type is the dominant mineralization style and has been the main source of extracted ore. Ministerio de Economía República Argentina Secretaría de Minería"
+    },
+    "sources_consulted": [
+      "SSR Mining Inc. Puna Project",
+      "SSR Mining Inc. Technical Report Summary on the Puna Operations, Argentina. February 2024",
+      "SSR Mining Inc. Resources and Reserves 2024"
+    ],
+    "source_pages": [
+      9,
+      10,
+      11,
+      12
+    ]
+  },
+  {
+    "project_name": "San José",
+    "primary_commodity": "Silver",
+    "by_products": [
+      "Gold"
+    ],
+    "status": "Operation",
+    "location": {
+      "province": "Santa Cruz",
+      "country": null,
+      "description": "The San José project is located the Santa Cruz province. The mine is situated 350 kilometers southwest of Comodoro Rivadavia. In production since 2007.",
+      "latitude_dms": null,
+      "longitude_dms": null,
+      "latitude": null,
+      "longitude": null
+    },
+    "deposit_type": "Low Sulphidation Epithermal Style",
+    "owner_controller": "Hochschild Mining Plc (51%) McEwen Mining Inc. (49%) / Minera Santa Cruz S.A.",
+    "operator": "Hochschild Mining Plc (51%) McEwen Mining Inc. (49%) / Minera Santa Cruz S.A.",
+    "area_ha": 50491,
+    "technical_economic": {
+      "since_production": 2007,
+      "estimated_lom_years": 3.5,
+      "productive_capacity": "1.650 tpd",
+      "estimated_annual_production": null,
+      "capex": null,
+      "mining_method": "Underground",
+      "product": "Concentrate and doré"
+    },
+    "resources": [
+      {
+        "category": "Measured",
+        "values": {
+          "Ag_g_t": 412,
+          "Au_g_t": 6.66,
+          "Ag_kOz": 12600,
+          "Au_kOz": 204.2
+        }
+      },
+      {
+        "category": "Indicated",
+        "values": {
+          "Ag_g_t": 269,
+          "Au_g_t": 5.53,
+          "Ag_kOz": 6100,
+          "Au_kOz": 125.7
+        }
+      },
+      {
+        "category": "Inferred",
+        "values": {
+          "Ag_g_t": 252,
+          "Au_g_t": 4.59,
+          "Ag_kOz": 9500,
+          "Au_kOz": 171.8
+        }
+      }
+    ],
+    "reserves": [
+      {
+        "category": "Proven",
+        "values": {
+          "Ag_g_t": 295,
+          "Au_g_t": 4.72,
+          "Ag_kOz": 3400,
+          "Au_kOz": 54.1
+        }
+      },
+      {
+        "category": "Probable",
+        "values": {
+          "Ag_g_t": 272,
+          "Au_g_t": 5.5,
+          "Ag_kOz": 2000,
+          "Au_kOz": 39.7
+        }
+      }
+    ],
+    "resources_year": null,
+    "geology": {
+      "regional": "The San José mine is located in Deseado Massif of the Santa Cruz province. The massif consists of the Paleozoic metamorphic basement unconformably overlain by Middle to Upper Jurassic bimodal andesitic and rhyolitic volcanics and volcaniclastics. Cretaceous sediments and Tertiary to Quaternary basalt overlie the Jurassic volcanic.",
+      "deposit": "The San José mine is located in the northwest corner of the Deseado Massiff, where Jurassic bimodal volcanics host numerous quartz veins bearing gold and silver. Low sulphidation silver-gold and polymetallic mineralization accompanied Jurassic magmatism and deformation in the Deseado Massif. The Jurassic rocks are divided into the Bajo Pobre Formation, predominantly of intermediate composition, and the felsic Bahia Laura Group. The Jurassic units are overlain by Cretaceous sedimentary rocks and Tertiary flood basalts. The Bajo Pobre Formation is the main host for gold and silver mineralization, where veins are typically developed in competent andesite flows at the Huevos Verdes, Frea and Kospi deposits on the San José Property and to a lesser extent in volcaniclastic units. The San José deposits are considered to be typical LS Ag-Au epithermal vein deposits. The main structural trend of fault and vein systems is north-west to north-northwest. Less prominent are east-striking faults and veins and those north to northeast striking. Mineralization in the San José area occurs as low sulfidation epithermal quartz veins, breccias and stockwork systems accompanying normal-sinistral faults. The main structural trend of fault and vein systems on the property is northwest to north-northwest, together with less prominent east striking and north to northeast striking faults and veins. Ministerio de Economía República Argentina Secretaría de Minería"
+    },
+    "sources_consulted": [
+      "McEwen Mining. San Jose Project Hochs Child. San Jose Project McEwen Mining Inc. Technical Report on the San José silver-gold mine Santa Cruz, Argentina. August 15, 2014. McEwen Mining Inc. AU &amp; AG production enhancing productivity developing large cu asset significant insider ownership. December 12, 2024 Hochs Child. Resources and Reserves"
+    ],
+    "source_pages": [
+      13,
+      14,
+      15,
+      16
+    ]
+  },
+  {
+    "project_name": "Diablillos",
+    "primary_commodity": "Silver",
+    "by_products": [
+      "Gold"
+    ],
+    "status": "Feasibility",
+    "location": {
+      "province": "Catamarca",
+      "country": null,
+      "description": "The Diablillos property is located in the high Puna and Altiplano region of north-western Argentina. It is approximately 160 km southwest of the city of Salta and 375 km northwest of the city of Catamarca, along the border between the Provinces of Salta and Catamarca, Argentina.",
+      "latitude_dms": "25° 18' 00\" S",
+      "longitude_dms": "66° 50' 00\" W",
+      "latitude": -25.3,
+      "longitude": -66.833333
+    },
+    "deposit_type": "High Sulphidation Epithermal Style",
+    "owner_controller": "AbraSilver Resource Corp. / Abra Plata Argentina S.A.",
+    "operator": "AbraSilver Resource Corp. / Abra Plata Argentina S.A.",
+    "area_ha": 7919,
+    "technical_economic": {
+      "since_production": 2029,
+      "estimated_lom_years": 28,
+      "productive_capacity": "9000 tpd",
+      "estimated_annual_production": null,
+      "capex": "620 M USD",
+      "mining_method": "Open pit",
+      "product": "Concentrate and doré"
+    },
+    "resources": [
+      {
+        "category": "M&I",
+        "values": {
+          "Ag_g_t": 59,
+          "Au_g_t": 0.51,
+          "Ag_kOz": 198643,
+          "Au_kOz": 1715
+        }
+      },
+      {
+        "category": "Inferred",
+        "values": {
+          "Ag_g_t": 21,
+          "Au_g_t": 0.38,
+          "Ag_kOz": 13427,
+          "Au_kOz": 241
+        }
+      }
+    ],
+    "reserves": [
+      {
+        "category": "Proven",
+        "values": {
+          "Ag_g_t": 118,
+          "Au_g_t": 0.86,
+          "Ag_kOz": 46796,
+          "Au_kOz": 341
+        }
+      },
+      {
+        "category": "Probable",
+        "values": {
+          "Ag_g_t": 80,
+          "Au_g_t": 0.8,
+          "Ag_kOz": 76684,
+          "Au_kOz": 766
+        }
+      }
+    ],
+    "resources_year": null,
+    "geology": {
+      "regional": "The project is located in the Postacretionary Metalogenetic Belt associated with the Neogene magmatic arc, linked to NE-SO transtensional zones. It is characterized by a vulcanism that has not evolved much in the Miocene period. It includes corridors to the NE that control the magmatic and hydrothermal activity, where polymetallic mineralizations in the N (Farallón Negro) and porphyries with subtypes linked to the characteristics of magmatism such as Agua Rica and Alumbrera are located. The dissected volcanoes of the upper Miocene in the Puna usually host areas with intermediate argillic alteration and silicification. In the highest levels of these systems, in their final episodes, golden manifestations such as Diablillos and Organullo were recognized.",
+      "deposit": "In the vicinity of the project, the Diablillos-Cerro Galán fault zone is approximately 10 km wide. Magmatism and hydrothermal activity often occur at the intersection of the faults with shear structures, such as the Cerro Ratones line. Tertiary andesitic flows and flow breccias develop with intermediate tufa and pelic units, and subvolcanic porphyry rocks. Precambrian granitic and granodioritic rocks underlie most of the volcanic sequence. Drilling by Silver Standard Resources identified a highly permeable erosive discordance that would control hydrothermal fluids. The recognized alteration contains silica clay-alunite-jarosite, indicative of strong acid leaching, which is related to the presence of gold in silica. Ministerio de Economía República Argentina Secretaría de Minería"
+    },
+    "sources_consulted": [
+      "AbraSilver Source Corp. Diablillos Project",
+      "AbraSilver Source Corp. NI 43-101 Technical Report, Mineral Resource Estimate for the Diablillos Au-Ag Project, Salta &amp; Catamarca Provinces, Argentina. Date: September 12, 2025."
+    ],
+    "source_pages": [
+      17,
+      18,
+      19,
+      20
+    ]
+  },
+  {
+    "project_name": "El Quevar",
+    "primary_commodity": "Silver",
+    "by_products": [
+      "Lead-copper-zinc"
+    ],
+    "status": "PEA",
+    "location": {
+      "province": "Salta",
+      "country": null,
+      "description": "The project is located in the department of Los Andes, at 4,800 m.a.s.l, about 300 km NW of the city of Salta. It can be accessed from Salta city through RN 51 to the detour with RP 27, continuing for 30 km.",
+      "latitude_dms": "24° 20' 08\" S",
+      "longitude_dms": "66° 46' 57\" W",
+      "latitude": -24.335556,
+      "longitude": -66.7825
+    },
+    "deposit_type": "High Sulphidation Epithermal Style",
+    "owner_controller": "Argenta Silver Corp. / SILEX Argentina S.A.",
+    "operator": "Argenta Silver Corp. / SILEX Argentina S.A.",
+    "area_ha": 56700,
+    "technical_economic": {
+      "since_production": 2029,
+      "estimated_lom_years": 28,
+      "productive_capacity": "1200 tpd",
+      "estimated_annual_production": null,
+      "capex": "96.8 M USD",
+      "mining_method": "Underground",
+      "product": "Silver concentrate"
+    },
+    "resources": [],
+    "reserves": [],
+    "resources_year": null,
+    "geology": {
+      "regional": "The project is located at the eastern end of the Puna unit in Argentina. Dominated by tertiary rocks of the El Quevar volcanic complex, these Shoshone rocks result from a rift basin during the Cretaceous to the Paleocene. It is bounded by structural lines (120° heading) to the north (Calama-Olacapato-Toro) and another parallel to the south. An older, secondary lineament system of 25° heading is interpreted to be associated with folding of the basement rocks during the Palaeozoic. The El Quevar volcanic complex was formed from the Miocene to the early Quaternary in several events. The dominant product was ignimbritic flows covered by rhyolithic flows and followed by andesitic flows and dacitic intrusions (domes). The latter related to alteration and mineralization events. Erosion windows expose the intrusive and extensive areas of alteration. The southern window includes the mineralized areas of El Quevar. And to the North the Campo Viejo target.",
+      "deposit": "The geology of the project is characterized by the presence of dacite domes associated with breccia complexes. These cover hematetic breccias and slope to the southwest. The ensemble is overprinted by argillic alteration and silicification controlled by E-W structures and later NE-SW faults. Along the earlier structures mineralization is associated with Vuggy Silica and Silico Pyrite alteration in brecciated rock (auto-breccia). In the Yaxtché deposit the mineralization is associated with intensely altered and structurally controlled zones within the older volcanic rocks. Silver-bearing sulfides are mostly in gap-filling veins and less frequently disseminated. Ministerio de Economía República Argentina Secretaría de Minería"
+    },
+    "sources_consulted": [
+      "Argenta Silver Corp. El Quevar Project",
+      "Argenta Silver Corp. NI 43-101 Technical Report on the Mineral Resource Estimate of the El Quevar Project Salta Province, Argentina. September 30, 2024"
+    ],
+    "source_pages": [
+      21,
+      22,
+      23,
+      24
+    ]
+  },
+  {
+    "project_name": "Navidad",
+    "primary_commodity": "Silver",
+    "by_products": [
+      "Lead-copper",
+      "Lead",
+      "Copper"
+    ],
+    "status": "PEA",
+    "location": {
+      "province": "Chubut",
+      "country": null,
+      "description": "The Navidad Project is located about 35 km from the town of Gastre, in the department of the same name, in the north of the province of Chubut.",
+      "latitude_dms": "42° 24' 54\" S",
+      "longitude_dms": "68° 49' 12\" W",
+      "latitude": -42.415,
+      "longitude": -68.82
+    },
+    "deposit_type": "Intermediate Sulphidation Epithermal Style",
+    "owner_controller": "Pan American Silver Corp. / Minera Argenta S.A.",
+    "operator": "Pan American Silver Corp. / Minera Argenta S.A.",
+    "area_ha": 10000,
+    "technical_economic": {
+      "since_production": null,
+      "estimated_lom_years": 17,
+      "productive_capacity": "15000 tpd",
+      "estimated_annual_production": null,
+      "capex": "760 M USD",
+      "mining_method": "Open pit",
+      "product": "Silver concentrate"
+    },
+    "resources": [
+      {
+        "category": "Measured",
+        "values": {
+          "Ag_g_l": 137,
+          "pct_Pb": 1.44,
+          "pct_Cu": 0.1,
+          "Ag_kOz": 67000,
+          "Pb_MLbs": 489,
+          "Cu_MLbs": 34
+        }
+      },
+      {
+        "category": "Indicated",
+        "values": {
+          "Ag_g_l": 126,
+          "pct_Pb": 0.79,
+          "pct_Cu": 0.04,
+          "Ag_kOz": 565000,
+          "Pb_MLbs": 2434,
+          "Cu_MLbs": 123
+        }
+      },
+      {
+        "category": "Inferred",
+        "values": {
+          "Ag_g_l": 81,
+          "pct_Pb": 0.57,
+          "pct_Cu": 0.02,
+          "Ag_kOz": 119000,
+          "Pb_MLbs": 580,
+          "Cu_MLbs": 22
+        }
+      }
+    ],
+    "reserves": [],
+    "resources_year": null,
+    "geology": {
+      "regional": "The Navidad Project is located on the southwest edge of the Northern Patagonia Massif in southern Argentina. This boundary of the massif is coincident with the \"Gastre Fault System\", a mega-structural feature believed to be the result of continental-scale northeast to southwest extension that produced through down-faulting a series of northwest to southeast trending half grabens and tectonic basins (von Gosen et. al. 2004). Granitoid rocks of the basement in northern Chubut Province belong to the Palaeozoic age Mail Choique and Lipetren formations. Locally these rocks were exposed at surface in windows through the overlying Mesozoic age volcanic and sedimentary rocks. At Navidad the Mesozoic sequence consists of the Lonco Trapial Formation and overlying Cañadón Asfalto Formation. The latter of these formations hosts the Navidad mineralisation.",
+      "deposit": "Navidad mineralisation is epithermal, as demonstrated by widespread open space-filling crustiform and cockade textures in the gangue minerals (carbonate, barite) and sulphide assemblages. The abundance of base metals, combined with carbonate-rich gangue, suggests that the deposit is intermediate, rather than low, sulphidation in style. Typical high sulphidation sulphides and gangue minerals are absent, but there is rare late stage kaolinite and minor hydrothermal alunite that implies late ingress of a hypogene acid fluid. Ministerio de Economía República Argentina Secretaría de Minería"
+    },
+    "sources_consulted": [
+      "Pan American Silver Corp. Navidad Project",
+      "Pan American Silver. Reports Mineral Reserves and Mineral Resources as at June 30, 2024",
+      "Pan America Silver Corp. Navidad Project, Chubut Province, Argentina: Preliminary Assessment, January 14, 2010"
+    ],
+    "source_pages": [
+      25,
+      26,
+      27,
+      28
+    ]
+  }
+]

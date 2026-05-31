@@ -1,0 +1,223 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model DimOperator {
+  operatorSlug String @id @map("operator_slug")
+  operatorName String @map("operator_name")
+  aliases      String
+
+  wells           DimWell[]
+  productionFacts FactProductionMonthly[]
+
+  @@map("dim_operator")
+}
+
+model DimFormation {
+  formationSlug       String  @id @map("formation_slug")
+  formationName       String  @map("formation_name")
+  formationVacaMuerta Boolean @map("formation_vaca_muerta")
+
+  wells           DimWell[]
+  productionFacts FactProductionMonthly[]
+
+  @@map("dim_formation")
+}
+
+model DimWell {
+  wellId          String @id @map("well_id")
+  sigla           String
+  operatorSlug    String @map("operator_slug")
+  formationSlug   String @map("formation_slug")
+  operatorName    String @map("operator_name")
+  province        String
+  basin           String
+  concession      String
+  yacimiento      String
+  wellType        String @map("well_type")
+  extractionType  String @map("extraction_type")
+  statusCode      String @map("status_code")
+  resourceType    String @map("resource_type")
+  subResourceType String @map("sub_resource_type")
+  depthM          Float? @map("depth_m")
+  latitude        Float?
+  longitude       Float?
+
+  operator        DimOperator             @relation(fields: [operatorSlug], references: [operatorSlug])
+  formation       DimFormation            @relation(fields: [formationSlug], references: [formationSlug])
+  productionFacts FactProductionMonthly[]
+
+  @@index([operatorSlug])
+  @@index([formationSlug])
+  @@index([province])
+  @@index([basin])
+  @@map("dim_well")
+}
+
+model FactProductionMonthly {
+  id             Int      @id @default(autoincrement())
+  dateMonth      DateTime @map("date_month") @db.Date
+  wellId         String   @map("well_id")
+  operatorSlug   String   @map("operator_slug")
+  formationSlug  String   @map("formation_slug")
+  concession     String
+  yacimiento     String
+  basin          String
+  province       String
+  wellType       String   @map("well_type")
+  extractionType String   @map("extraction_type")
+  statusCode     String   @map("status_code")
+  tipoRecurso    String   @map("tipo_recurso")
+  depthM         Float?   @map("depth_m")
+  coordX         Float?   @map("coord_x")
+  coordY         Float?   @map("coord_y")
+
+  oilM3         Float @map("oil_m3")
+  gasThousandM3 Float @map("gas_thousand_m3")
+
+  oilBbl   Float @map("oil_bbl")
+  oilBblD  Float @map("oil_bbl_d")
+  oilBoe   Float @map("oil_boe")
+  gasMm3D  Float @map("gas_mm3_d")
+  gasMcf   Float @map("gas_mcf")
+  gasMmcfD Float @map("gas_mmcf_d")
+  gasBoe   Float @map("gas_boe")
+  boe      Float
+
+  formationVacaMuerta Boolean @map("formation_vaca_muerta")
+  unconventional      Boolean
+  vmCombined          Boolean @map("vm_combined")
+
+  well      DimWell      @relation(fields: [wellId], references: [wellId])
+  operator  DimOperator  @relation(fields: [operatorSlug], references: [operatorSlug])
+  formation DimFormation @relation(fields: [formationSlug], references: [formationSlug])
+
+  @@index([dateMonth, operatorSlug])
+  @@index([dateMonth, vmCombined])
+  @@index([wellId, dateMonth])
+  @@index([formationSlug, dateMonth])
+  @@index([operatorSlug])
+  @@index([province])
+  @@map("fact_production_monthly")
+}
+
+model MiningProject {
+  id                  Int      @id @default(autoincrement())
+  projectName         String   @unique @map("project_name")
+  primaryCommodity    String   @map("primary_commodity")
+  byProducts          String?  @map("by_products")
+  status              String?
+  depositType         String?  @map("deposit_type")
+  ownerController     String?  @map("owner_controller")
+  operator            String?
+  areaHa              Float?   @map("area_ha")
+  province            String?
+  country             String?
+  latitude            Float?
+  longitude           Float?
+  sinceProduction     Int?     @map("since_production")
+  estimatedLomYears   Int?     @map("estimated_lom_years")
+  productiveCapacity  String?  @map("productive_capacity")
+  estimatedAnnualProd String?  @map("estimated_annual_production")
+  capex               String?
+  miningMethod        String?  @map("mining_method")
+  product             String?
+  sourcePipeline      String?  @map("source_pipeline")
+  resourcesYear       Int?     @map("resources_year")
+  ingestedAt          DateTime @default(now()) @map("ingested_at")
+
+  resources Json?
+  reserves  Json?
+  geology   Json?
+
+  @@index([primaryCommodity])
+  @@index([status])
+  @@index([province])
+  @@map("mining_project")
+}
+
+model FactPrice {
+  id     Int      @id @default(autoincrement())
+  source String
+  series String
+  name   String
+  unit   String
+  date   DateTime @db.Date
+  value  Float
+
+  @@unique([source, series, date], name: "fact_price_source_series_date")
+  @@index([series, date])
+  @@index([source, date])
+  @@map("fact_price")
+}
+
+model FactRigCount {
+  date      DateTime @id @db.Date
+  oilRigs   Int?     @map("oil_rigs")
+  gasRigs   Int?     @map("gas_rigs")
+  totalRigs Int?     @map("total_rigs")
+
+  @@map("fact_rig_count")
+}
+
+model FactEnergyBalance {
+  id             Int     @id @default(autoincrement())
+  ano            Int
+  formaDeEnergia String  @map("forma_de_energia")
+  concepto       String
+  ktepRedond     Float   @map("ktep_redond")
+
+  @@unique([ano, formaDeEnergia, concepto])
+  @@index([formaDeEnergia, ano])
+  @@index([concepto, ano])
+  @@map("fact_energy_balance")
+}
+
+model FactFuelPrice {
+  id             Int      @id @default(autoincrement())
+  fechaVigencia  DateTime @map("fecha_vigencia")
+  provincia      String
+  localidad      String?
+  empresa        String?
+  empresaBandera String?  @map("empresa_bandera")
+  producto       String
+  precio         Float
+  tipoHorario    String?  @map("tipo_horario")
+  latitude       Float?
+  longitude      Float?
+
+  @@index([provincia, producto])
+  @@index([fechaVigencia])
+  @@index([producto, fechaVigencia])
+  @@map("fact_fuel_price")
+}
+
+model AggMonthlyByOperator {
+  id            Int      @id @default(autoincrement())
+  dateMonth     DateTime @map("date_month") @db.Date
+  operatorSlug  String   @map("operator_slug")
+  operatorName  String   @map("operator_name")
+  concession    String
+  yacimiento    String
+  province      String
+  formationSlug String   @map("formation_slug")
+  vmCombined    Boolean  @map("vm_combined")
+  oilM3         Float    @map("oil_m3")
+  oilBbl        Float    @map("oil_bbl")
+  oilBblD       Float    @map("oil_bbl_d")
+  gasThousandM3 Float    @map("gas_thousand_m3")
+  gasMm3D       Float    @map("gas_mm3_d")
+  gasMcf        Float    @map("gas_mcf")
+  gasMmcfD      Float    @map("gas_mmcf_d")
+  boe           Float
+  activeWells   Int      @map("active_wells")
+
+  @@index([dateMonth, operatorSlug])
+  @@index([dateMonth, vmCombined])
+  @@map("agg_monthly_by_operator")
+}

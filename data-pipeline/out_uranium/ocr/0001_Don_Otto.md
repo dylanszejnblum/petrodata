@@ -1,0 +1,88 @@
+PORTFOLIO OF ADVANCED PROJECTS | URANIUM
+
+# U
+
+# Don Otto
+
+![img-0.jpeg](img-0.jpeg)
+
+25° 36' 39.60" S
+
+65° 55' 37.20" W
+
+![img-1.jpeg](img-1.jpeg)
+
+TYPE OF DEPOSIT: Sandstone-hosted uranium deposits
+
+By-product: Vanadium
+
+STATUS: Feasibility
+
+![img-2.jpeg](img-2.jpeg)
+
+CONTROLLER | OPERATOR
+
+National Atomic Energy
+
+Commission (CNEA)
+
+ÁREA: 7.5 ha
+
+Location: The Don Otto mine is part of the former Tonco-Amblayo uranium district. The Don Otto mine is located in the San Carlos department, Salta province, about 150 kilometers southwest of the Salta city.
+
+# TECHNICAL AND ECONOMIC INFORMATION
+
+Since production: -
+
+Estimated LOM: 8 years
+
+Productive capacity: 30 tonnes per day (tpd)
+
+Mining Method: Underground
+
+Product to obtain: Calcium uranium concentrate
+
+#
+
+Ministerio de Economía República Argentina
+
+Secretaría de Minería
+
+---
+
+PORTFOLIO OF ADVANCED PROJECTS | URANIUM
+
+# PROJECT GEOLOGY
+
+## Regional Geology
+
+In the Tonco valley area, the Puncoviscana Formation (Upper Precambrian-Cambrian) is exposed, covered by sediments of the Salta Group (Lower Cretaceous-Middle Eocene) (Salfity and Marquillas, 1999). From base to top, this Group presents conglomerates, sandstones and reddish continental mudstones corresponding to the Pirgua Subgroup, and continues with fluvial, lagoonal and marine sediments of the Balbuena Subgroup, made up of the Lecho Formation and the Yacoiraite Formation, the latter being the main carrier of uranium mineralization in the district. Finally, it culminates with the Santa Bárbara Subgroup
+
+## Deposit Geology
+
+Mineralization is found in the Tonco and Amblayo syncline structures. The deposits and traces that comprise it respond to the genetic model of sedimentary deposits in continental red sandstones and, within these, to the paragenesis of uranium, copper and vanadium (Romano, 1999). At the southern end of the Tonco syncline structure, the Amblayo Limestone Member, the Don Otto Member and the Pedro Nicolás Sandstone Member are recognized from base to top (Romano, 1999). Within these, the Don Otto Member is the most economically important because it hosts the main mineralized levels of uranium and is 67 meters thick. In its Green Section, 27 meters thick, it begins with gray, fine sandstones with calcareous cement, and continues with an alternating sequence of sandstones and pelites of low calcareous content. Several mineralized levels were identified (Gorustovich, 2013).
+
+## RESOURCES
+
+|  RESOURCES | Uranium (t)  |
+| --- | --- |
+|  RAR | 180  |
+|  Inferred | 250  |
+
+*RAR: Resources Reasonably Assured
+
+## SOURCES CONSULTED
+
+National Atomic Energy Commission, Uranium in Argentina: Exploration, Resources, Demand and Supply. November 22, 2024.
+
+International Atomic Energy Agency, Nuclear Energy Agency. [Uranium 2024, Resources, Production and Demand](Uranium 2024, Resources, Production and Demand).
+
+Gorustovich, S., Guidi, F., Bárbaro N., Nievas H. 2013. [Geological and environmental observations in the sunchales ravine and the tonco river, Don Otto uranium mine, Salta province](Geological and environmental observations in the sunchales ravine and the tonco river, Don Otto uranium mine, Salta province).
+
+Ministerio de Economía República Argentina Secretaría de Minería
+
+---
+
+Sierra Colonia, Chubut
+
+![img-0.jpeg](img-0.jpeg)

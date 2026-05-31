@@ -1,0 +1,436 @@
+[
+  {
+    "project_name": "FOR THE ENERGY TRANSITION",
+    "primary_commodity": null,
+    "by_products": [],
+    "status": null,
+    "location": {
+      "province": null,
+      "country": null,
+      "description": null,
+      "latitude_dms": null,
+      "longitude_dms": null,
+      "latitude": null,
+      "longitude": null
+    },
+    "deposit_type": null,
+    "owner_controller": null,
+    "operator": null,
+    "area_ha": null,
+    "technical_economic": {
+      "since_production": null,
+      "estimated_lom_years": null,
+      "productive_capacity": null,
+      "estimated_annual_production": null,
+      "capex": null,
+      "mining_method": null,
+      "product": null
+    },
+    "resources": [],
+    "reserves": [],
+    "resources_year": null,
+    "geology": null,
+    "sources_consulted": [],
+    "source_pages": [
+      1,
+      2
+    ]
+  },
+  {
+    "project_name": "1. COBALT",
+    "primary_commodity": null,
+    "by_products": [],
+    "status": null,
+    "location": {
+      "province": null,
+      "country": null,
+      "description": null,
+      "latitude_dms": null,
+      "longitude_dms": null,
+      "latitude": null,
+      "longitude": null
+    },
+    "deposit_type": null,
+    "owner_controller": null,
+    "operator": null,
+    "area_ha": null,
+    "technical_economic": {
+      "since_production": null,
+      "estimated_lom_years": null,
+      "productive_capacity": null,
+      "estimated_annual_production": null,
+      "capex": null,
+      "mining_method": null,
+      "product": null
+    },
+    "resources": [],
+    "reserves": [],
+    "resources_year": null,
+    "geology": null,
+    "sources_consulted": [],
+    "source_pages": [
+      3
+    ]
+  },
+  {
+    "project_name": "2. COPPER",
+    "primary_commodity": null,
+    "by_products": [],
+    "status": null,
+    "location": {
+      "province": null,
+      "country": null,
+      "description": null,
+      "latitude_dms": null,
+      "longitude_dms": null,
+      "latitude": null,
+      "longitude": null
+    },
+    "deposit_type": null,
+    "owner_controller": null,
+    "operator": null,
+    "area_ha": null,
+    "technical_economic": {
+      "since_production": null,
+      "estimated_lom_years": null,
+      "productive_capacity": null,
+      "estimated_annual_production": null,
+      "capex": null,
+      "mining_method": null,
+      "product": null
+    },
+    "resources": [],
+    "reserves": [],
+    "resources_year": null,
+    "geology": null,
+    "sources_consulted": [],
+    "source_pages": [
+      4
+    ]
+  },
+  {
+    "project_name": "3. CHROMIUM",
+    "primary_commodity": null,
+    "by_products": [],
+    "status": null,
+    "location": {
+      "province": null,
+      "country": null,
+      "description": null,
+      "latitude_dms": null,
+      "longitude_dms": null,
+      "latitude": null,
+      "longitude": null
+    },
+    "deposit_type": null,
+    "owner_controller": null,
+    "operator": null,
+    "area_ha": null,
+    "technical_economic": {
+      "since_production": null,
+      "estimated_lom_years": null,
+      "productive_capacity": null,
+      "estimated_annual_production": null,
+      "capex": null,
+      "mining_method": null,
+      "product": null
+    },
+    "resources": [],
+    "reserves": [],
+    "resources_year": null,
+    "geology": null,
+    "sources_consulted": [],
+    "source_pages": [
+      5
+    ]
+  },
+  {
+    "project_name": "4. RARE-EARTH ELEMENT",
+    "primary_commodity": null,
+    "by_products": [],
+    "status": null,
+    "location": {
+      "province": null,
+      "country": null,
+      "description": null,
+      "latitude_dms": null,
+      "longitude_dms": null,
+      "latitude": null,
+      "longitude": null
+    },
+    "deposit_type": null,
+    "owner_controller": null,
+    "operator": null,
+    "area_ha": null,
+    "technical_economic": {
+      "since_production": null,
+      "estimated_lom_years": null,
+      "productive_capacity": null,
+      "estimated_annual_production": null,
+      "capex": null,
+      "mining_method": null,
+      "product": null
+    },
+    "resources": [],
+    "reserves": [],
+    "resources_year": null,
+    "geology": null,
+    "sources_consulted": [],
+    "source_pages": [
+      6
+    ]
+  },
+  {
+    "project_name": "5. GRAPHITE",
+    "primary_commodity": null,
+    "by_products": [],
+    "status": null,
+    "location": {
+      "province": null,
+      "country": null,
+      "description": null,
+      "latitude_dms": null,
+      "longitude_dms": null,
+      "latitude": null,
+      "longitude": null
+    },
+    "deposit_type": null,
+    "owner_controller": null,
+    "operator": null,
+    "area_ha": null,
+    "technical_economic": {
+      "since_production": null,
+      "estimated_lom_years": null,
+      "productive_capacity": null,
+      "estimated_annual_production": null,
+      "capex": null,
+      "mining_method": null,
+      "product": null
+    },
+    "resources": [],
+    "reserves": [],
+    "resources_year": null,
+    "geology": null,
+    "sources_consulted": [],
+    "source_pages": [
+      7
+    ]
+  },
+  {
+    "project_name": "6. LITHIUM",
+    "primary_commodity": null,
+    "by_products": [],
+    "status": null,
+    "location": {
+      "province": null,
+      "country": null,
+      "description": null,
+      "latitude_dms": null,
+      "longitude_dms": null,
+      "latitude": null,
+      "longitude": null
+    },
+    "deposit_type": null,
+    "owner_controller": null,
+    "operator": null,
+    "area_ha": null,
+    "technical_economic": {
+      "since_production": null,
+      "estimated_lom_years": null,
+      "productive_capacity": null,
+      "estimated_annual_production": null,
+      "capex": null,
+      "mining_method": null,
+      "product": null
+    },
+    "resources": [],
+    "reserves": [],
+    "resources_year": null,
+    "geology": null,
+    "sources_consulted": [],
+    "source_pages": [
+      8
+    ]
+  },
+  {
+    "project_name": "7. MANGANESE",
+    "primary_commodity": null,
+    "by_products": [],
+    "status": null,
+    "location": {
+      "province": null,
+      "country": null,
+      "description": null,
+      "latitude_dms": null,
+      "longitude_dms": null,
+      "latitude": null,
+      "longitude": null
+    },
+    "deposit_type": null,
+    "owner_controller": null,
+    "operator": null,
+    "area_ha": null,
+    "technical_economic": {
+      "since_production": null,
+      "estimated_lom_years": null,
+      "productive_capacity": null,
+      "estimated_annual_production": null,
+      "capex": null,
+      "mining_method": null,
+      "product": null
+    },
+    "resources": [],
+    "reserves": [],
+    "resources_year": null,
+    "geology": null,
+    "sources_consulted": [],
+    "source_pages": [
+      9
+    ]
+  },
+  {
+    "project_name": "8. NICKEL",
+    "primary_commodity": null,
+    "by_products": [],
+    "status": null,
+    "location": {
+      "province": null,
+      "country": null,
+      "description": null,
+      "latitude_dms": null,
+      "longitude_dms": null,
+      "latitude": null,
+      "longitude": null
+    },
+    "deposit_type": null,
+    "owner_controller": null,
+    "operator": null,
+    "area_ha": null,
+    "technical_economic": {
+      "since_production": null,
+      "estimated_lom_years": null,
+      "productive_capacity": null,
+      "estimated_annual_production": null,
+      "capex": null,
+      "mining_method": null,
+      "product": null
+    },
+    "resources": [],
+    "reserves": [],
+    "resources_year": null,
+    "geology": null,
+    "sources_consulted": [],
+    "source_pages": [
+      10
+    ]
+  },
+  {
+    "project_name": "9. THE PLATINUM-GROUP ELEMENTS (PGE)",
+    "primary_commodity": null,
+    "by_products": [],
+    "status": null,
+    "location": {
+      "province": null,
+      "country": null,
+      "description": null,
+      "latitude_dms": null,
+      "longitude_dms": null,
+      "latitude": null,
+      "longitude": null
+    },
+    "deposit_type": null,
+    "owner_controller": null,
+    "operator": null,
+    "area_ha": null,
+    "technical_economic": {
+      "since_production": null,
+      "estimated_lom_years": null,
+      "productive_capacity": null,
+      "estimated_annual_production": null,
+      "capex": null,
+      "mining_method": null,
+      "product": null
+    },
+    "resources": [],
+    "reserves": [],
+    "resources_year": null,
+    "geology": null,
+    "sources_consulted": [],
+    "source_pages": [
+      11
+    ]
+  },
+  {
+    "project_name": "10. ZINC",
+    "primary_commodity": null,
+    "by_products": [],
+    "status": null,
+    "location": {
+      "province": null,
+      "country": null,
+      "description": null,
+      "latitude_dms": null,
+      "longitude_dms": null,
+      "latitude": null,
+      "longitude": null
+    },
+    "deposit_type": null,
+    "owner_controller": null,
+    "operator": null,
+    "area_ha": null,
+    "technical_economic": {
+      "since_production": null,
+      "estimated_lom_years": null,
+      "productive_capacity": null,
+      "estimated_annual_production": null,
+      "capex": null,
+      "mining_method": null,
+      "product": null
+    },
+    "resources": [],
+    "reserves": [],
+    "resources_year": null,
+    "geology": null,
+    "sources_consulted": [],
+    "source_pages": [
+      12,
+      13
+    ]
+  },
+  {
+    "project_name": "Ministerio de Economía",
+    "primary_commodity": null,
+    "by_products": [],
+    "status": null,
+    "location": {
+      "province": null,
+      "country": null,
+      "description": null,
+      "latitude_dms": null,
+      "longitude_dms": null,
+      "latitude": null,
+      "longitude": null
+    },
+    "deposit_type": null,
+    "owner_controller": null,
+    "operator": null,
+    "area_ha": null,
+    "technical_economic": {
+      "since_production": null,
+      "estimated_lom_years": null,
+      "productive_capacity": null,
+      "estimated_annual_production": null,
+      "capex": null,
+      "mining_method": null,
+      "product": null
+    },
+    "resources": [],
+    "reserves": [],
+    "resources_year": null,
+    "geology": null,
+    "sources_consulted": [],
+    "source_pages": [
+      14
+    ]
+  }
+]

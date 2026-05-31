@@ -1,0 +1,98 @@
+PORTFOLIO OF ADVANCED PROJECTS | GOLD
+
+# Au
+
+# Cerro Negro
+
+![img-0.jpeg](img-0.jpeg)
+
+46° 54' 41.60" S
+70° 14' 30.63" W
+
+![img-1.jpeg](img-1.jpeg)
+
+TYPE OF DEPOSIT: Low Sulphidation Epithermal Style (Au-Ag)
+
+By-product: Silver
+
+![img-2.jpeg](img-2.jpeg)
+
+STATUS: Operation
+
+![img-3.jpeg](img-3.jpeg)
+
+CONTROLLER | OPERATOR
+Newmont Goldcorp | OroPlata S.A.
+
+![img-4.jpeg](img-4.jpeg)
+
+ÁREA: 26,891 ha
+
+Location: The Cerro Negro Project is located in the north-west region of the Santa Cruz province, about 345 kilometers by road southwest of the coastal city of Comodoro Rivadavia.
+
+# TECHNICAL AND ECONOMIC INFORMATION
+
+Since production: 2014
+Estimated LOM: 11 years
+Productive capacity: 4.000 tpd
+Estimated average annual production 2025: 202 kOz Au
+Mining Method: Underground
+Product to obtain: Gold and silver doré
+
+Ministerio de Economía República Argentina Secretaría de Minería
+
+---
+
+PORTFOLIO OF ADVANCED PROJECTS | GOLD
+
+# PROJECT GEOLOGY
+
+## Regional Geology
+
+The Cerro Negro gold-silver veins are located near the northwestern margin of the Deseado Massif, a 60,000 square kilometres rigid crustal block in southern Argentina bounded to the north by the Rio Deseado, to the south by the Rio Chico, to the east by the Atlantic coast, and to the west by the Andean Cordillera. The massif is in a backarc position relative to the Andean subduction system and is flanked by the subsiding Golfo de San Jorge and Austral sedimentary basins to the north and south, respectively. The massif is regarded by some authors as a Late Proterozoic to Permian allochthonous terrane that collided with Gondwana in the early Permian, and by others as an autochthonous part of the Gondwana continent. The Deseado Massif hosts numerous low-sulphidation epithermal vein systems (Sillitoe and Hendenquist, 2003).
+
+A late Triassic to late Cretaceous (230–65 Ma) extensional phase, linked to the opening of the South Atlantic Ocean, triggered extensive Mesozoic and Cenozoic magmatism throughout the massif. Magmatic activity commenced in the early Jurassic, with the intrusion of granitoids and eruption of coeval pyroclastic and epiclastic volcanic rocks. Andesitic to rhyolitic volcanism continued through the mid- to late Jurassic, culminating in the deposition of epiclastic sediments in the early Cretaceous. Mid- to late Jurassic volcanism in the Deseado Massif is conventionally divided into the andesitic Bajo Pobre Formation and the rhyolitic Bahia Laura Complex, the latter comprising the Chon Aike and La Matilde Formations.
+
+Basaltic volcanism commenced in the Cretaceous and continued throughout the Cenozoic; volcaniclastic sediments were deposited and tuffs were erupted in the early Tertiary. These units are overlain by extensive Pleistocene fluvial gravel terraces.
+
+## Deposit Geology
+
+The known deposits and prospects at Cerro Negro are distributed within and east of a volcanic-subvolcanic complex flanked and overlain by a series of rhyolite domes. The eruptive products of the rhyolite domes form an ignimbrite apron, which post-dates the mineralization and forms extensive outcrops north and south of the volcanic-subvolcanic complex. These post-mineral ignimbrites have preserved the epithermal systems, as well as lacustrine sediments, travertine, and sinter deposited at the Late Jurassic paleo-surface. Older ignimbrites that lie east of the volcanic-subvolcanic complex host mineralization at Bajo Negro and Vein Zone.
+
+Ministerio de Economía República Argentina Secretaría de Minería
+
+---
+
+PORTFOLIO OF ADVANCED PROJECTS | GOLD
+
+# RESOURCES AND RESERVES (2025)
+
+|  RESOURCES | Grade |   | Metal Content  |   |
+| --- | --- | --- | --- | --- |
+|   |  Au (g/t) | Ag (g/t) | Au (kOz) | Ag (kOz)  |
+|  Measured | 3.73 | 12.61 | 200 | 500  |
+|  Indicated | 5.42 | 27.54 | 300 | 1,700  |
+|  Inferred | 5.10 | 25.7 | 1,200 | 6,300  |
+|  RESERVES | Grade |   | Metal Content  |   |
+| --- | --- | --- | --- | --- |
+|   |  Au (g/t) | Ag (g/t) | Au (kOz) | Ag (kOz)  |
+|  Proven | 11,20 | 84.41 | 800 | 5,900  |
+|  Probable | 10.38 | 66.20 | 2,300 | 14,400  |
+
+# COMPANY'S ANNOUNCEMENT
+
+Newmont Announces Fourth Quarter and Full Year 2025 Results. Date: January 13, 2026. More Information
+
+# SOURCES CONSULTED
+
+Newmont Corp. Cerro Negro Project
+
+Newmont Corp. Resources and Reserves 2025
+
+Gold Corp. Cerro Negro Operations Santa Cruz province, Argentina, NI 43-101 Technical Report, December 31, 2015
+
+Ministerio de Economía República Argentina Secretaría de Minería
+
+---
+
+Huaillán, San Juan

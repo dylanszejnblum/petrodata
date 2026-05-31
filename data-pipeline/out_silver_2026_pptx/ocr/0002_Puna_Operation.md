@@ -1,0 +1,109 @@
+PORTFOLIO OF ADVANCED PROJECTS | SILVER
+
+# Ag
+
+# Puna Operation
+
+![img-0.jpeg](img-0.jpeg)
+
+$22^{\circ} 30' 13''$ S
+
+$66^{\circ} 15' 39''$ W
+
+![img-1.jpeg](img-1.jpeg)
+
+TYPE OF DEPOSIT: Sulphidation Epithermal Style
+
+By-product: Lead-copper-zinc
+
+STATUS: Operation
+
+![img-2.jpeg](img-2.jpeg)
+
+CONTROLLER / OPERATOR
+
+SSR Mining Inc. /
+
+Mina Pirquitas S.A
+
+ÁREA: 9,742 ha
+
+Location: The Puna Operations are comprised of the Chinchillas mine and the Pirquitas property, which includes the Pirquitas processing facilities. The project is located in the Rinconada department, in the Jujuy province.
+
+# TECHNICAL AND ECONOMIC INFORMATION
+
+Since production: 1997
+
+Estimated LOM: 2 years
+
+Productive capacity: 5,000 tpd processing capacity
+
+Annual Production (2025): 9,814 KOz Ag | 45,881 KLb Pb | 4,120 KLb Zn
+
+Mining Method: Open pit
+
+Product to obtain: Silver, lead and zinc concentrate
+
+#
+
+Ministerio de Economía República Argentina
+
+Secretaría de Minería
+
+---
+
+PORTFOLIO OF ADVANCED PROJECTS | SILVER
+
+# PROJECT GEOLOGY
+
+## Regional Geology
+
+The Chinchillas and Pirquitas deposits occur within the Bolivian tin-silver-zinc belt which occupies the back-arc portion of the central Andes and extends from southern Peru to northern Argentina.
+
+Northwestern Argentina geology consists of three main geological belts, or terranes, that together trend north-northeast: the Sub-Andean Range (Sierras Subandinas), the Eastern Cordillera (Cordillera Oriental), and the Argentine Altiplano or Puna belt. The Pirquitas and Chinchillas deposits are located in the Puna belt and are hosted in the Ordovician Acoite Formation. The Acoite Formation is an interbedded sandstone, siltstone, and mudstone turbidite sequence deposited in a back-arc basin.
+
+## Deposit Geology
+
+The Chinchillas deposit occurs within a $13 \pm 1$ Ma dacitic volcanic center and is the product of a phreatomagmatic diatreme. The deposit is controlled by an east-west trending regional scale fault where dilatation accommodated magma to intrude through the Acoite Formation.
+
+Significant silver-lead-zinc mineralization occurs in four main areas at Chinchillas: the Silver Mantos and Basement Mantos zones in the west part of the caldera and the Socavon del Diablo and Socavon Basement/Melina zones in the east part. Mineralization is dominated by silver, with lesser amounts of lead and zinc. Mineralization occurs as disseminated sulfides, matrix infilling within the volcanic tuffs, and as matrix and fracture filling in breccias within the metasedimentary rocks.
+
+The Pirquitas mine consists of exposures of the Acoite and Tiomayo formations. Folding plays an important role in vein formation and geometry; at the San Miguel pit, veins are intimately related to the San Miguel anticline, occurring proximal to the fold apex and most commonly striking perpendicular to the fold planes. West-northwest striking regional faults are also observed throughout the property. This structural fabric is interpreted to control the geometry and location of the Cortaderas breccia body. There are two types of mineralization at Pirquitas: (1) polymetallic veins with peripheral disseminated mineralization; and (2) mineralized hydrothermal breccia. Vein type is the dominant mineralization style and has been the main source of extracted ore.
+
+Ministerio de Economía República Argentina Secretaría de Minería
+
+---
+
+PORTFOLIO OF ADVANCED PROJECTS | SILVER
+
+# RESOURCES AND RESERVES (2024)
+
+|  RESOURCES | Grade |   |   | Metal Content  |   |   |
+| --- | --- | --- | --- | --- | --- | --- |
+|   |  Ag (g/t) | Pb (%) | Zn (%) | Ag (kOz) | Pb (MLbs) | Zn (MLbs)  |
+|  Measured | 239.0 | 1.12 | 3.85 | 17,959 | 22.7 | 185  |
+|  Indicated | 147.22 | 0.94 | 2.02 | 17,985 | 46.9 | 156.1  |
+|  Inferred | 157.15 | 1.05 | 6.88 | 8,566 | 1.8 | 212.0  |
+|  RESERVES | Grade |   |  | Metal Content  |   |   |
+| --- | --- | --- | --- | --- | --- | --- |
+|   |  Ag (g/t) | Pb (%) | Zn (%) | Ag (kOz) | Pb (MLbs) | Zn (MLbs)  |
+|  Proven | 145.25 | 1.19 | 0.181 | 3,940 | 22.1 | 3.3  |
+|  Probable | 141.3 | 11.17 | 0.18 | 15,588 | 110.8 | 13.5  |
+
+# COMPANY'S ANNOUNCEMENT
+
+# SOURCES CONSULTED
+
+SSR Mining Inc. Puna Project
+
+SSR Mining Inc. Technical Report Summary on the Puna Operations, Argentina. February 2024
+
+SSR Mining Inc. Resources and Reserves 2024
+
+Ministerio de Economía República Argentina Secretaría de Minería
+
+---
+
+San José, Santa Cruz
+
+![img-0.jpeg](img-0.jpeg)

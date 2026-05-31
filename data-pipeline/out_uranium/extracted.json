@@ -1,0 +1,327 @@
+[
+  {
+    "project_name": "preamble",
+    "primary_commodity": "Uranium",
+    "by_products": [],
+    "status": null,
+    "location": {
+      "province": null,
+      "country": null,
+      "description": null,
+      "latitude_dms": null,
+      "longitude_dms": null,
+      "latitude": null,
+      "longitude": null
+    },
+    "deposit_type": null,
+    "owner_controller": null,
+    "operator": null,
+    "area_ha": null,
+    "technical_economic": {
+      "since_production": null,
+      "estimated_lom_years": null,
+      "productive_capacity": null,
+      "estimated_annual_production": null,
+      "capex": null,
+      "mining_method": null,
+      "product": null
+    },
+    "resources": [],
+    "reserves": [],
+    "resources_year": null,
+    "geology": null,
+    "sources_consulted": [],
+    "source_pages": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  {
+    "project_name": "Don Otto",
+    "primary_commodity": "Uranium",
+    "by_products": [
+      "Vanadium"
+    ],
+    "status": "Feasibility",
+    "location": {
+      "province": "Salta",
+      "country": null,
+      "description": "The Don Otto mine is part of the former Tonco-Amblayo uranium district. The Don Otto mine is located in the San Carlos department, Salta province, about 150 kilometers southwest of the Salta city.",
+      "latitude_dms": "25° 36' 39.60\" S",
+      "longitude_dms": "65° 55' 37.20\" W",
+      "latitude": -25.611,
+      "longitude": -65.927
+    },
+    "deposit_type": "Sandstone-hosted uranium deposits",
+    "owner_controller": "National Atomic Energy Commission (CNEA)",
+    "operator": "National Atomic Energy Commission (CNEA)",
+    "area_ha": 7.5,
+    "technical_economic": {
+      "since_production": null,
+      "estimated_lom_years": 8,
+      "productive_capacity": "30 tonnes per day (tpd)",
+      "estimated_annual_production": null,
+      "capex": null,
+      "mining_method": "Underground",
+      "product": "Calcium uranium concentrate"
+    },
+    "resources": [
+      {
+        "category": "RAR",
+        "values": {
+          "Uranium_t": 180
+        }
+      },
+      {
+        "category": "Inferred",
+        "values": {
+          "Uranium_t": 250
+        }
+      }
+    ],
+    "reserves": [],
+    "resources_year": null,
+    "geology": {
+      "regional": "In the Tonco valley area, the Puncoviscana Formation (Upper Precambrian-Cambrian) is exposed, covered by sediments of the Salta Group (Lower Cretaceous-Middle Eocene) (Salfity and Marquillas, 1999). From base to top, this Group presents conglomerates, sandstones and reddish continental mudstones corresponding to the Pirgua Subgroup, and continues with fluvial, lagoonal and marine sediments of the Balbuena Subgroup, made up of the Lecho Formation and the Yacoiraite Formation, the latter being the main carrier of uranium mineralization in the district. Finally, it culminates with the Santa Bárbara Subgroup",
+      "deposit": "Mineralization is found in the Tonco and Amblayo syncline structures. The deposits and traces that comprise it respond to the genetic model of sedimentary deposits in continental red sandstones and, within these, to the paragenesis of uranium, copper and vanadium (Romano, 1999). At the southern end of the Tonco syncline structure, the Amblayo Limestone Member, the Don Otto Member and the Pedro Nicolás Sandstone Member are recognized from base to top (Romano, 1999). Within these, the Don Otto Member is the most economically important because it hosts the main mineralized levels of uranium and is 67 meters thick. In its Green Section, 27 meters thick, it begins with gray, fine sandstones with calcareous cement, and continues with an alternating sequence of sandstones and pelites of low calcareous content. Several mineralized levels were identified (Gorustovich, 2013)."
+    },
+    "sources_consulted": [
+      "National Atomic Energy Commission, Uranium in Argentina: Exploration, Resources, Demand and Supply. November 22, 2024.",
+      "International Atomic Energy Agency, Nuclear Energy Agency. Uranium 2024, Resources, Production and Demand.",
+      "Gorustovich, S., Guidi, F., Bárbaro N., Nievas H. 2013. Geological and environmental observations in the sunchales ravine and the tonco river, Don Otto uranium mine, Salta province."
+    ],
+    "source_pages": [
+      5,
+      6,
+      7
+    ]
+  },
+  {
+    "project_name": "Sierra Pintada",
+    "primary_commodity": "Uranium",
+    "by_products": [],
+    "status": null,
+    "location": {
+      "province": "Mendoza",
+      "country": null,
+      "description": "The project is located in the San Rafael department, Mendoza province, approximately 11 km southwest of the town of 25 de Mayo, 38 km west of the city of San Rafael and 240 km south of the city of Mendoza.",
+      "latitude_dms": "34° 35' 54.96\" S",
+      "longitude_dms": "68° 32' 26.59\" W",
+      "latitude": -34.5986,
+      "longitude": -68.540719
+    },
+    "deposit_type": null,
+    "owner_controller": null,
+    "operator": null,
+    "area_ha": null,
+    "technical_economic": {
+      "since_production": null,
+      "estimated_lom_years": 8,
+      "productive_capacity": "120 tpa",
+      "estimated_annual_production": null,
+      "capex": null,
+      "mining_method": "Open pit",
+      "product": "Uranium concentrate"
+    },
+    "resources": [
+      {
+        "category": "RAR",
+        "values": {
+          "Uranium_t": 3900
+        }
+      },
+      {
+        "category": "Inferred",
+        "values": {
+          "Uranium_t": 6110
+        }
+      }
+    ],
+    "reserves": [],
+    "resources_year": null,
+    "geology": {
+      "regional": "The uranium deposits are located in the southern sector of the San Rafael Block. In the area, the oldest unit corresponds to phyllites, schists and metaquartzites of the La Horqueta Formation (Devonian), followed by quartzites and quartz-feldspathic sandstones intercalated with lutites and limonites that make up the El Imperial Formation; in disagreement with this, there is the Cochico Group of Permian age, made up of the Los Reyunos and Arroyo Punta the Aguja Formations. Followed by the Cerro Carrizalito Formation (Upper Permian - Lower Triassic) represented by acidic intrusions located in fracture zones. Finally, basaltic lavas and bioclastic deposits of the Maipo Formation are deposited.",
+      "deposit": "The uranium mineralization is located in the Areniscas Atigradas Member of the Reyunos Formation (Saulnier et al., 1989), in a sector of 20 to 30 meters thick, which is located 10 meters below the contact with the Toba Vieja Gorda Member. The mineralization is of the lenticular type, consistent with the stratification."
+    },
+    "sources_consulted": [
+      "National Atomic Energy Commission, Uranium in Argentina: Exploration, Resources, Demand and Supply. November 22, 2024.",
+      "International Atomic Energy Agency, Nuclear Energy Agency. Uranium 2024, Resources, Production and Demand.",
+      "SEGEMAR. Proyecto Fabril Minero. \"Sierra Pintada\". November, 1975",
+      "Aldonate, M, Ávila, J., Gallucci A. Mining Geology of the San Rafael Mining Factory Complex with emphasis on the characterization of marginal mineral stockpiles. December, 2016."
+    ],
+    "source_pages": [
+      8,
+      9,
+      10
+    ]
+  },
+  {
+    "project_name": "Ivana",
+    "primary_commodity": "Uranium",
+    "by_products": [
+      "Vanadium"
+    ],
+    "status": "Preliminary Economic Assessments",
+    "location": {
+      "province": "Río Negro",
+      "country": null,
+      "description": "The Ivana deposit is located about 25 km north of the town of Valcheta, in a sparsely populated, semi-arid area of flat topography. The Amarillo Grande Project, located across the north-central part of Rio Negro Province, Argentina. It covers the Anit, Ivana and Santa Bárbara projects.",
+      "latitude_dms": null,
+      "longitude_dms": null,
+      "latitude": null,
+      "longitude": null
+    },
+    "deposit_type": "Sandstone-hosted uranium deposits",
+    "owner_controller": "Blue Sky Uranium Corp.",
+    "operator": "Ivana Minerales S.A.",
+    "area_ha": 7000,
+    "technical_economic": {
+      "since_production": null,
+      "estimated_lom_years": 11,
+      "productive_capacity": "1.5 Mlbs/y U₃O₈",
+      "estimated_annual_production": null,
+      "capex": "159,7 MUSD",
+      "mining_method": "Open pit",
+      "product": "Uranium concentrate"
+    },
+    "resources": [
+      {
+        "category": "Indicated",
+        "values": {
+          "pct_U3O8": 0.039,
+          "pct_V2O5": 0.019,
+          "U3O8_MLbs": 17,
+          "V2O5_MLbs": 8.1
+        }
+      },
+      {
+        "category": "Inferred",
+        "values": {
+          "pct_U3O8": 0.031,
+          "pct_V2O5": 0.019,
+          "U3O8_MLbs": 3.8,
+          "V2O5_MLbs": 2.4
+        }
+      }
+    ],
+    "reserves": [],
+    "resources_year": null,
+    "geology": {
+      "regional": "The Amarillo Grande Project is situated near the boundary between the northwestern North Patagonian Massif (Paleozoic and Mesozoic basement) and the southeastern Neuquén Basin. The basement rocks contain units of Neoproterozoic-Cambrian metamorphic rocks, Ordovician to Devonian marine sequences, Permo-Triassic intrusives, and Triassic-Jurassic magmatic-volcanic units. Near-horizontal sequences of Late Cretaceous and Tertiary sedimentary and epiclastic volcanic formations, representing the thin distal edge of the Neuquén Basin, lap on to the basement rocks near the Project (Gregori et al., 2016). Quaternary alluvial-colluvial deposits.",
+      "deposit": "The Ivana deposit occurs in the Oligocene-early Miocene Chichinales Formation at the distal, thin, southeastern edge of Neuquen Basin sedimentary sequences. The Chichinales Formation consists of conglomerate, tuffaceous sandstone, siltstone and mudstone, deposited unconformably on older basement rocks. The uranium mineralization at Ivana has been divided into two types based on dominant uranium mineralogy and/or alteration and gangue mineralogy; 1) Oxide mineralization characterized by visible carnotite and oxide alteration minerals, and 2) Altered \"primary\" mineralization characterized by a variant of coffinite."
+    },
+    "sources_consulted": [
+      "Blue Sky Uranium Corp. Ivana Project",
+      "Blue Sky Uranium Corp. NI 43-101 Technical Report Preliminary Economic Assessment Update for the Ivana Uranium-Vanadium Deposit, Amarillo Grande Project. Rio Negro Province, Argentina. April 2, 2024.",
+      "Blue Sky Uranium Corp. Corporate Presentation. January 2026"
+    ],
+    "source_pages": [
+      11,
+      12,
+      13
+    ]
+  },
+  {
+    "project_name": "Laguna Salada",
+    "primary_commodity": "Uranium",
+    "by_products": [
+      "Vanadium"
+    ],
+    "status": "Preliminary Economic Assessments",
+    "location": {
+      "province": "Chubut",
+      "country": null,
+      "description": "The property is located about 270 kilometers southwest of the provincial capital, Rawson and approximately 230 kilometers from the city of Comodoro Rivadavia.",
+      "latitude_dms": "44° 17' 43.53\" S",
+      "longitude_dms": "67° 13' 0.51\" W",
+      "latitude": -44.295425,
+      "longitude": -67.216808
+    },
+    "deposit_type": "Sedimentary Mineralized Gravels",
+    "owner_controller": "Jaguar Uranium Corp.",
+    "operator": "Jaguar Uranium Corp.",
+    "area_ha": 173315,
+    "technical_economic": {
+      "since_production": null,
+      "estimated_lom_years": 10,
+      "productive_capacity": "0.64 Mlbs Uranium / 1 Mlbs Vanadium",
+      "estimated_annual_production": null,
+      "capex": "135,7 MUSD",
+      "mining_method": "Open-Pit",
+      "product": "Uranium concentrate"
+    },
+    "resources": [
+      {
+        "category": "Indicated",
+        "values": {
+          "pct_U3O8": 0.01,
+          "V2O5_ppm": 550,
+          "U3O8_MLbs": 6.3,
+          "V2O5_MLbs": 57.1
+        }
+      },
+      {
+        "category": "Inferred",
+        "values": {
+          "pct_U3O8": 0.01,
+          "V2O5_ppm": 590,
+          "U3O8_MLbs": 3.8,
+          "V2O5_MLbs": 26.9
+        }
+      }
+    ],
+    "reserves": [],
+    "resources_year": null,
+    "geology": {
+      "regional": "The Laguna Salada Project is located near the western edge of the Cretaceous San Jorge Basin, which covers most of Chubut Province. The basement to the San Jorge basin comprises a sequences sedimentary, metamorphic, intrusive and volcanic rocks of Paleozoic and Triassic age. Overlain by the Jurassic Complex of the Marifil Formation. The basal part of the San Jorge basin consists of conglomerates and sandstones of the Cretaceous Puesto Manuel Arce Formation, and sandstones and interlayered mudstones of the Early Tertiary Salamanca Formation. In the Project area, the Puesto Manuel Arce and Salamanca Formations are unconformably overlain by Quaternary strata of fluvial and alluvial origin that constitute the Pleistocene Pampa de Arroqui (or Montemayor) Formation and the Holocene Gran Laguna Salada Formation.",
+      "deposit": "The mineralización at Laguna Salada is contained in flat-topped mesas that are approximately 10 meters highest than the surrounding plain, on the north bank of the Río Chico, one of principal rivers in the region that flows northeast into the Río Chubut. Uranium mineralisation in the Laguna Salada Project occurs in several lithological associations: - In the unconsolidated gravels of the Pampa de Arroqui Formation - In the unconsolidated gravels of the Gran Laguna Salada Formation Near the unconformity between the Quaternary strata, Pampa de Arroqui and Gran Laguna Salada Formations, and its substratum that include sandstone and pelite of the Salamanca Formation and sandstone and gravels of the Puesto Manuel Arce Formation."
+    },
+    "sources_consulted": [
+      "IsoEnergy Ltd. Laguna Salada Project",
+      "U3O8 Corp. Preliminary Economic Assessment of the Laguna Salada Uranium-Vanadium Deposit, Chubut Province, Argentina. September 8, 2014"
+    ],
+    "source_pages": [
+      14,
+      15,
+      16
+    ]
+  },
+  {
+    "project_name": "Ministerio de Economía",
+    "primary_commodity": null,
+    "by_products": [],
+    "status": null,
+    "location": {
+      "province": null,
+      "country": null,
+      "description": null,
+      "latitude_dms": null,
+      "longitude_dms": null,
+      "latitude": null,
+      "longitude": null
+    },
+    "deposit_type": null,
+    "owner_controller": null,
+    "operator": null,
+    "area_ha": null,
+    "technical_economic": {
+      "since_production": null,
+      "estimated_lom_years": null,
+      "productive_capacity": null,
+      "estimated_annual_production": null,
+      "capex": null,
+      "mining_method": null,
+      "product": null
+    },
+    "resources": [],
+    "reserves": [],
+    "resources_year": null,
+    "geology": null,
+    "sources_consulted": [],
+    "source_pages": [
+      17
+    ]
+  }
+]

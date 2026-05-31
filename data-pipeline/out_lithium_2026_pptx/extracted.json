@@ -1,0 +1,1532 @@
+[
+  {
+    "project_name": "preamble",
+    "primary_commodity": "Lithium",
+    "by_products": [],
+    "status": null,
+    "location": {
+      "province": null,
+      "country": null,
+      "description": null,
+      "latitude_dms": null,
+      "longitude_dms": null,
+      "latitude": null,
+      "longitude": null
+    },
+    "deposit_type": null,
+    "owner_controller": null,
+    "operator": null,
+    "area_ha": null,
+    "technical_economic": {
+      "since_production": null,
+      "estimated_lom_years": null,
+      "productive_capacity": null,
+      "estimated_annual_production": null,
+      "capex": null,
+      "mining_method": null,
+      "product": null
+    },
+    "resources": [],
+    "reserves": [],
+    "resources_year": null,
+    "geology": null,
+    "sources_consulted": [],
+    "source_pages": [
+      1,
+      2
+    ]
+  },
+  {
+    "project_name": "OPERATION",
+    "primary_commodity": "Lithium",
+    "by_products": [],
+    "status": null,
+    "location": {
+      "province": null,
+      "country": null,
+      "description": null,
+      "latitude_dms": null,
+      "longitude_dms": null,
+      "latitude": null,
+      "longitude": null
+    },
+    "deposit_type": null,
+    "owner_controller": null,
+    "operator": null,
+    "area_ha": null,
+    "technical_economic": {
+      "since_production": null,
+      "estimated_lom_years": null,
+      "productive_capacity": null,
+      "estimated_annual_production": null,
+      "capex": null,
+      "mining_method": null,
+      "product": null
+    },
+    "resources": [],
+    "reserves": [],
+    "resources_year": null,
+    "geology": null,
+    "sources_consulted": [],
+    "source_pages": [
+      3,
+      4
+    ]
+  },
+  {
+    "project_name": "Regional Geology",
+    "primary_commodity": "Lithium",
+    "by_products": [],
+    "status": null,
+    "location": {
+      "province": null,
+      "country": null,
+      "description": null,
+      "latitude_dms": null,
+      "longitude_dms": null,
+      "latitude": null,
+      "longitude": null
+    },
+    "deposit_type": null,
+    "owner_controller": null,
+    "operator": null,
+    "area_ha": null,
+    "technical_economic": {
+      "since_production": null,
+      "estimated_lom_years": null,
+      "productive_capacity": null,
+      "estimated_annual_production": null,
+      "capex": null,
+      "mining_method": null,
+      "product": null
+    },
+    "resources": [],
+    "reserves": [],
+    "resources_year": null,
+    "geology": {
+      "regional": "The report describes all the advanced lithium projects that are located in the Geological Province of La Puna in Argentine, and whose deposits are hosted in salt flats, being of the brine type. The Geological Province of La Puna (Turner, 1972) is the southern extension of the Altiplano - Puna high plateau that represents approximately 2,000 km long by 300 km wide with an average elevation of 3,700 m, controlling the geomorphology of the central Andes. Is bounded to the West by the Cordillera Occidental and to the East by the Cordillera Oriental. The uplift of the plateau is the combined result of late Tertiary crustal shortening and magmatic addition (Isacks, 1988). A volcanic arc forms the western margin of the Geological Province of La Puna. At the East of the volcanic arc, local volcanic edifices are present within the plateau. The volcanic arc and eastern volcanic centers have been active from Miocene times to the present day (Jordan and Gardeweg, 1989) and are the origin of mineralized fluids. The salt flats are the result of a long paleoenvironmental evolution, which began with the formation of freshwater lakes during the Pleistocene, which were salinized early until their desiccation in the Holocene. The congenital development with the volcanism led to a massive transfer of ions to the basins, whose result was expressed in important volumes of diverse salts, with a predominance of sodium chlorides. The volumetric share of salts in the total fill defines two major types of salt flats: 1) crystalline and 2) earthy. In general terms, the crystalline surfaces admit a concentric zonation of facies (Alonso, 1992). The crystalline salars are impregnated with interstitial brine of diversified ionic content. Almost all the brines are carriers of chemical elements of economic importance, especially boron and lithium. Ministerio de Economía República Argentina Secretaría de Minería"
+    },
+    "sources_consulted": [],
+    "source_pages": [
+      5,
+      6
+    ]
+  },
+  {
+    "project_name": "Cauchari - Olaroz",
+    "primary_commodity": "Lithium",
+    "by_products": [],
+    "status": null,
+    "location": {
+      "province": null,
+      "country": null,
+      "description": null,
+      "latitude_dms": "23° 24' 58\" S",
+      "longitude_dms": "66° 42' 47\" W",
+      "latitude": -23.416111,
+      "longitude": -66.713056
+    },
+    "deposit_type": null,
+    "owner_controller": null,
+    "operator": null,
+    "area_ha": null,
+    "technical_economic": {
+      "since_production": null,
+      "estimated_lom_years": null,
+      "productive_capacity": null,
+      "estimated_annual_production": null,
+      "capex": null,
+      "mining_method": null,
+      "product": null
+    },
+    "resources": [
+      {
+        "category": "M&I",
+        "values": {
+          "LCE_t": 19852700
+        }
+      },
+      {
+        "category": "Inferred",
+        "values": {
+          "LCE_t": 4722700
+        }
+      }
+    ],
+    "reserves": [
+      {
+        "category": "Proven",
+        "values": {
+          "LCE_t": 514450
+        }
+      },
+      {
+        "category": "Probable",
+        "values": {
+          "LCE_t": 3120590
+        }
+      }
+    ],
+    "resources_year": null,
+    "geology": null,
+    "sources_consulted": [
+      "Lithium Argentina. Cauchari Olaroz Project",
+      "Lithium Argentina: NI 43 – 101 Technical report Operational Technical Report at the Cauchari-Olaroz Salars, Jujuy Province, Argentina",
+      "Lithium Argentina. Inversor presentation. January 2026",
+      "https://investors.lithium-argentina.com/static-files/aca48412-1a3f-43db-9c3c-2695ab14dcee"
+    ],
+    "source_pages": [
+      7,
+      8,
+      9
+    ]
+  },
+  {
+    "project_name": "Centenario-Ratones",
+    "primary_commodity": "Lithium",
+    "by_products": [],
+    "status": "Operation",
+    "location": {
+      "province": "Salta",
+      "country": null,
+      "description": "The Centenario Ratones salt flat area is located $300\\mathrm{km}$ west of the city of Salta, at 3,900 m.a.s.l. The project is accessed from San Antonio de Los Cobres along provincial route 129. Pastos Grandes, is located $60\\mathrm{km}$ from the project, with a population of 100 inhabitants.",
+      "latitude_dms": null,
+      "longitude_dms": null,
+      "latitude": null,
+      "longitude": null
+    },
+    "deposit_type": "Brine",
+    "owner_controller": "Eramet",
+    "operator": "Eramine Sudamerica S.A.",
+    "area_ha": 50000,
+    "technical_economic": {
+      "since_production": 2024,
+      "estimated_lom_years": 40,
+      "productive_capacity": "24,000 tpa LCE",
+      "estimated_annual_production": null,
+      "capex": null,
+      "mining_method": "Pumping - Direct Lithium Extraction",
+      "product": "Lithium Carbonate $(\\mathrm{Li}_2\\mathrm{CO}_3)$"
+    },
+    "resources": [
+      {
+        "category": "Measured",
+        "values": {
+          "LCE_t": 6210000
+        }
+      },
+      {
+        "category": "Indicated",
+        "values": {
+          "LCE_t": 6320000
+        }
+      },
+      {
+        "category": "Inferred",
+        "values": {
+          "LCE_t": 2590000
+        }
+      }
+    ],
+    "reserves": [
+      {
+        "category": "Proven",
+        "values": {
+          "LCE_t": 289000
+        }
+      },
+      {
+        "category": "Probable",
+        "values": {
+          "LCE_t": 752000
+        }
+      }
+    ],
+    "resources_year": null,
+    "geology": {
+      "deposit": "The project area is a hydrological basin containing two salt flats, Centenario and Ratones. The Ratones Salar is located to the N of C° Ratones. A mountainous island of metamorphic rocks emerges in the central eastern part of the salt flats, where it forms a wide bay in its southern sector. Within and around the bay is the borate concentration. The Salar de Centenario is the continuation of the previous one, from which it is separated by the confluence of two important alluvial cones that expand into the depression. Genetically, it is related to the development of an important alignment of extinct hot springs, whose travertine remains can be seen on the eastern edge of the salar, coinciding with the regional fracture that limits the depression."
+    },
+    "sources_consulted": [
+      "Eramet, Centenario - Ratones Project. https://www.eramet.com/es/actividades/litio/ Eramet. Universal Registration Document, 2024 Eramet. Investor presentation. December 2025"
+    ],
+    "source_pages": [
+      10,
+      11,
+      12
+    ]
+  },
+  {
+    "project_name": "Fenix",
+    "primary_commodity": "Lithium",
+    "by_products": [],
+    "status": null,
+    "location": {
+      "province": "Catamarca",
+      "country": null,
+      "description": "Salar del Hombre Muerto is located in northwest Argentina, in the northeastern portion of Catamarca province on the border with Salta province.",
+      "latitude_dms": null,
+      "longitude_dms": null,
+      "latitude": null,
+      "longitude": null
+    },
+    "deposit_type": null,
+    "owner_controller": null,
+    "operator": null,
+    "area_ha": null,
+    "technical_economic": {
+      "since_production": 1997,
+      "estimated_lom_years": 37,
+      "productive_capacity": "20,000 tpa LCE | Stage 1a: 10,000 tpa LCE | Stage 1b: 10,000 tpa",
+      "estimated_annual_production": null,
+      "capex": null,
+      "mining_method": "Pumping - Evaporation + Direct Lithium Extraction (over the most recent three full calendar years)",
+      "product": "Lithium Carbonate $(\\mathrm{Li}_2\\mathrm{CO}_3)$ and Lithium Chloride (LiCl)"
+    },
+    "resources": [
+      {
+        "category": "Measured",
+        "values": {
+          "LCE_t": 2700000
+        }
+      },
+      {
+        "category": "Indicated",
+        "values": {
+          "LCE_t": 4300000
+        }
+      },
+      {
+        "category": "Inferred",
+        "values": {
+          "LCE_t": 4700000
+        }
+      }
+    ],
+    "reserves": [
+      {
+        "category": "Proven",
+        "values": {
+          "LCE_t": 1200000
+        }
+      },
+      {
+        "category": "Probable",
+        "values": {
+          "LCE_t": 4100000
+        }
+      }
+    ],
+    "resources_year": null,
+    "geology": {
+      "deposit": "The salar at Salar the Hombre Muerto consists of evaporite deposits formed within an endorheic basin, bounded by pre-Paleozoic, Paleozoic, and Cenozoic-age crystalline metamorphic basement rocks. Fault Bounded bedrock hills occur within and along the margins of the Salar basin subdividing the SdHM into two separate sub-basins (eastern and western), each with different evaporite sediment compositions. The Eastern Subbasin is dominated by borate evaporites and clastic sediments (such as sand, silts, and clays), whereas the Western Subbasin is relatively free of clastic sediment and is dominated by halite (sodium chloride salt) evaporite deposits."
+    },
+    "sources_consulted": [
+      "Rio Tinto Group, Hombre Muerto Project Rio Tinto. Resources and reserves 2025 Livent USA Corp. Resource and reserve report Pre-Feasibility Study Salar del Hombre Muerto. December, 2022"
+    ],
+    "source_pages": [
+      13,
+      14,
+      15
+    ]
+  },
+  {
+    "project_name": "Mariana",
+    "primary_commodity": "Lithium",
+    "by_products": [
+      "Potassium",
+      "borates"
+    ],
+    "status": "Operation",
+    "location": {
+      "province": "Salta",
+      "country": null,
+      "description": "The Mariana I, II and III project is located in the west of the Province of Salta in the Salar de Llullaillaco. In a straight line it is located 280 km west of the capital city of Salta.",
+      "latitude_dms": "24° 48' 36\" S",
+      "longitude_dms": "68° 18' 00\" W",
+      "latitude": -24.81,
+      "longitude": -68.3
+    },
+    "deposit_type": null,
+    "owner_controller": "Ganfeng Lithium Co., Ltd.",
+    "operator": "Litio Minera Argentina",
+    "area_ha": 23560,
+    "technical_economic": {
+      "since_production": 2025,
+      "estimated_lom_years": 40,
+      "productive_capacity": "20,000 tpa LiCl",
+      "estimated_annual_production": null,
+      "capex": null,
+      "mining_method": "Pumping - Evaporation",
+      "product": "Lithium Chloride (LiCl)"
+    },
+    "resources": [
+      {
+        "category": "Measured",
+        "values": {
+          "LCE_t": 4436000
+        }
+      },
+      {
+        "category": "Indicated",
+        "values": {
+          "LCE_t": 2418000
+        }
+      },
+      {
+        "category": "Inferred",
+        "values": {
+          "LCE_t": 1267000
+        }
+      }
+    ],
+    "reserves": [],
+    "resources_year": null,
+    "geology": {
+      "deposit": "Drilling and hydrogeological information indicate that the Mariana Project in the Llullaillaco Salt Flat is a sedimentary filling complex of a basin, carrying unconfined and interconnected aquifers. They are brine carriers and are found at depths of 328 meters or more. Preliminary geological observation of the boreholes made it possible to recognize 8 lithological types in the well cores carried out in the western, eastern and southern sectors of the basin. The volume of the aquifer is still open in depth since only in two of the boreholes were the volcanic lithologies attributed to the Mesozoic basement intercepted."
+    },
+    "sources_consulted": [
+      "Ganfeng Lithium. Mariana Project",
+      "Ganfeng Lithium. Company Presentation. April, 2025",
+      "Ganfeng Lithium. Annual Report 2025",
+      "Lithium Royalty Corp. Corporate Presentation. November 2025",
+      "Ganfeng Lithium. Advisian. NI 43-101 Technical Report. Preliminary Economic Assessment of the Mariana Lithium Brine Project. Salar de Llullaillaco, Salta Province, Argentina. November 15, 2018"
+    ],
+    "source_pages": [
+      16,
+      17,
+      18
+    ]
+  },
+  {
+    "project_name": "Olaroz",
+    "primary_commodity": "Lithium",
+    "by_products": [],
+    "status": "Operation",
+    "location": {
+      "province": "Jujuy",
+      "country": null,
+      "description": "Rio Tinto is the operator and majority owner of the Olaroz lithium brines operation, located in the Northern Subbasin (referred to as Salar de Olaroz) of the Olaroz-Cauchari Salar complex in Jujuy Province of northern Argentina. The Olaroz-Cauchari Salar is located in the Puna region, 230 km west of the city of San Salvador de Jujuy in Jujuy Province of northern Argentina",
+      "latitude_dms": "23° 27' 46\" S",
+      "longitude_dms": null,
+      "latitude": -23.462778,
+      "longitude": null
+    },
+    "deposit_type": "Brine",
+    "owner_controller": "Rio Tinto Group (66,5%) Toyota Tsusho (25%) JEMSE (8,5%)",
+    "operator": "Sales de Jujuy SA",
+    "area_ha": 47615,
+    "technical_economic": {
+      "since_production": 2015,
+      "estimated_lom_years": 27,
+      "productive_capacity": "Stage 1: 17,500 tpy LCE | Stage 2: 25,000 tpy LCE for 2030",
+      "estimated_annual_production": null,
+      "capex": null,
+      "mining_method": "Pumping - Evaporation",
+      "product": "Lithium Carbonate $(\\mathrm{Li}_2\\mathrm{CO}_3)$"
+    },
+    "resources": [
+      {
+        "category": "Measured",
+        "values": {
+          "LCE_t": 8500000
+        }
+      },
+      {
+        "category": "Indicated",
+        "values": {
+          "LCE_t": 8400000
+        }
+      },
+      {
+        "category": "Inferred",
+        "values": {
+          "LCE_t": 2800000
+        }
+      }
+    ],
+    "reserves": [
+      {
+        "category": "Proven",
+        "values": {
+          "LCE_t": 600000
+        }
+      },
+      {
+        "category": "Probable",
+        "values": {
+          "LCE_t": 2200000
+        }
+      }
+    ],
+    "resources_year": null,
+    "geology": {
+      "deposit": "The Olaroz salar is located in the elevated Altiplano-Puna plateau of the Central Andes. The Puna plateau of north-western Argentina comprises a series of dominantly NNW to NNE trending reverse fault-bounded ranges up to 5,000-6,000 m high, with intervening internally drained basins at an average elevation of 3,700 m. These mountain ranges are composed of Ordovician metasediments to Tertiary continental sediments, that include historical evaporite units formed in an arid environment. High evaporation rates together with reduced precipitation have led to the deposition of evaporites in many of the Puna basins since 15 Ma, with borate deposition occurring for the past 8 Myr. Precipitation of salts and evaporites has occurred in the center of basins where evaporation is the only means of water escaping from the hydrological system."
+    },
+    "sources_consulted": [
+      "Rio Tinto. Resources and reserves 2025",
+      "Arcadium Lithium. Olaroz Project",
+      "Allkem Ltd., SEC. Technical Report Summary Olaroz Lithium Facility. June, 2023"
+    ],
+    "source_pages": [
+      19,
+      20,
+      21
+    ]
+  },
+  {
+    "project_name": "Lal de Oro",
+    "primary_commodity": "Lithium",
+    "by_products": [
+      "Potassium"
+    ],
+    "status": "Operation",
+    "location": {
+      "province": "Buenos Aires",
+      "country": null,
+      "description": "The Sal de Oro project is located about 1,400 km northwest of Buenos Aires, Argentina, at an altitude of 4,025 m.a.s.l. It is located east of Salar de Hombre Muerto, in the provinces of Catamarca (Antofagasta Dept.) and Salta.",
+      "latitude_dms": "25° 13' 12\" S",
+      "longitude_dms": "67° 04' 12\" W",
+      "latitude": -25.22,
+      "longitude": -67.07
+    },
+    "deposit_type": "Brine",
+    "owner_controller": "POSCO Holdings Inc.",
+    "operator": "POSCO Argentina S.A.",
+    "area_ha": 25000,
+    "technical_economic": {
+      "since_production": 2024,
+      "estimated_lom_years": 40,
+      "productive_capacity": "Stage 1: 25,000 tpa lithium hydroxide | Stage 2: expansion of at least 23,000 tpy LCE",
+      "estimated_annual_production": null,
+      "capex": null,
+      "mining_method": "Pumping - Evaporation - Direct Lithium Extraction",
+      "product": "Lithium Hydroxide - Lithium Carbonate"
+    },
+    "resources": [],
+    "reserves": [
+      {
+        "category": "Proven",
+        "values": {
+          "LCE_t": 158000
+        }
+      },
+      {
+        "category": "Probable",
+        "values": {
+          "LCE_t": 881200
+        }
+      }
+    ],
+    "resources_year": null,
+    "geology": {
+      "deposit": "The local geology of the Hombre Muerto Salar includes a basement of intrusive, sedimentary and metamorphic rocks from the Precambrian and early Paleozoic, thick sequences of Ordovician marine sedimentary rocks with a roof of continental Mesozoic sedimentary units. These are superimposed by the Miocene to Pliocene volcanic deposits, which are common characteristics of the salt flats in the sedimentary basins of the region."
+    },
+    "sources_consulted": [
+      "Posco Argentina. Sal de Oro project"
+    ],
+    "source_pages": [
+      22,
+      23,
+      24
+    ]
+  },
+  {
+    "project_name": "Lives Quebradas",
+    "primary_commodity": "Lithium",
+    "by_products": [
+      "Potassium"
+    ],
+    "status": "Operation",
+    "location": {
+      "province": "Catamarca",
+      "country": null,
+      "description": "It is located Salar de Laguna Verde, in the Municipality of Fiambalá, 30 km from the border with Chile, 200 km from the Caldera port (Chile), 90 km north of the place Cortaderas, about 4,100 m.a.s.l.",
+      "latitude_dms": "27° 27' 00\" S",
+      "longitude_dms": "68° 39' 36\" W",
+      "latitude": -27.45,
+      "longitude": -68.66
+    },
+    "deposit_type": "Brine",
+    "owner_controller": "Zijin Mining Company",
+    "operator": "LIEX S.A.",
+    "area_ha": 26680,
+    "technical_economic": {
+      "since_production": 2025,
+      "estimated_lom_years": 50,
+      "productive_capacity": "Stage 1: 20,000 tpy LCE | Stage 2: 40,000 tpy LCE",
+      "estimated_annual_production": null,
+      "capex": null,
+      "mining_method": "Pumping - Evaporation",
+      "product": "Lithium Carbonate (Li₂CO₃)"
+    },
+    "resources": [
+      {
+        "category": "M&I",
+        "values": {
+          "LCE_t": 5966191
+        }
+      },
+      {
+        "category": "Inferred",
+        "values": {
+          "LCE_t": 2329900
+        }
+      }
+    ],
+    "reserves": [
+      {
+        "category": "Proven",
+        "values": {
+          "LCE_t": 990491
+        }
+      },
+      {
+        "category": "Probable",
+        "values": {
+          "LCE_t": 587600
+        }
+      }
+    ],
+    "resources_year": null,
+    "geology": {
+      "deposit": "The project includes the \"Tres Quebradas\" lagoon, which is not freshwater, but a reservoir of super-saturated brine in sodium, calcium and chlorine. The density of the brine is 1.22 (25% heavier than fresh water). It is black in color due to its content of manganese and other metals. There are two large salars within the area, they are formed by a very rough surface, which suggests that it is a mature salt formed mostly by a sodium chloride core. The contribution of fresh water to the salt is limited to the extreme south where the Valle Ancho River and the Piscis River enter. All the rivers at the northern end of the complex provide thermal waters laden with metals. The waters that enter the salt flats are, on the one hand, alkaline and carbonated, and acidic with a high metallic content. There are more than a dozen thermal contributions and some have lithium contents of up to 1,000 mg/l, which is a worldwide record. These contributions go directly to the salt flat and the \"Tres Quebradas\" lagoon where they are concentrated by evaporation."
+    },
+    "sources_consulted": [
+      "Zijin Mining Group Ltd. Tres Quebradas Project NEO Lithium Corp. Feasibility Study (FS) - 3Q Project NI 43-101 Technical Report Catamarca, Argentina. November 25, 2021"
+    ],
+    "source_pages": [
+      25,
+      26,
+      27
+    ]
+  },
+  {
+    "project_name": "Hombre Muerto Oeste",
+    "primary_commodity": "Lithium",
+    "by_products": [
+      "Potassium"
+    ],
+    "status": "Construction",
+    "location": {
+      "province": "Catamarca",
+      "country": null,
+      "description": "The project is in the geological province of Puna, 90 km north of the town of Antofagasta de la Sierra, province of Catamarca. The HMW Project is located to the West and South of the Salar del Hombre Muerto.",
+      "latitude_dms": null,
+      "longitude_dms": null,
+      "latitude": null,
+      "longitude": null
+    },
+    "deposit_type": "Brine",
+    "owner_controller": "Galan Lithium Limited",
+    "operator": "Galan Litio S.A",
+    "area_ha": 9493,
+    "technical_economic": {
+      "since_production": 2026,
+      "estimated_lom_years": 40,
+      "productive_capacity": "Stage1: 5,400 tpa LCE | Stage 2: HMW mining permit has been granted at a commercial scale up to 21,000 tpa LCE.",
+      "estimated_annual_production": null,
+      "capex": null,
+      "mining_method": "Pumping - Evaporation",
+      "product": "Lithium Chloride concentrate (LiCl)"
+    },
+    "resources": [
+      {
+        "category": "Measured",
+        "values": {
+          "LCE_t": 4738000
+        }
+      },
+      {
+        "category": "Indicated",
+        "values": {
+          "LCE_t": 1649000
+        }
+      },
+      {
+        "category": "Inferred",
+        "values": {
+          "LCE_t": 1480000
+        }
+      },
+      {
+        "category": "Indicated",
+        "values": {
+          "LCE_t": 640330
+        }
+      },
+      {
+        "category": "Inferred",
+        "values": {
+          "LCE_t": 91471
+        }
+      }
+    ],
+    "reserves": [
+      {
+        "category": "Proven",
+        "values": {
+          "LCE_t": 884
+        }
+      },
+      {
+        "category": "Probable",
+        "values": {
+          "LCE_t": 861.5
+        }
+      }
+    ],
+    "resources_year": null,
+    "geology": {
+      "deposit": "The local geology of the Hombre Muerto Salar includes a basement of intrusive, sedimentary and metamorphic rocks from the Precambrian and early Paleozoic, thick sequences of Ordovician marine sedimentary rocks with a roof of continental Mesozoic sedimentary units. These are superimposed by the Miocene to Pliocene volcanic deposits, which are common characteristics of the salt flats in the sedimentary basins of the region."
+    },
+    "sources_consulted": [
+      "Galan Lithium Limited. Hombre Muerto West Project",
+      "Galan Lithium Limited. Euroz Harleys Research – February 2025",
+      "Galan Lithium Limited. Annual Report, June 30, 2025",
+      "Galan Lithium Limited. Compelling Preliminary Economic Assessment Results for 100% owned Hombre Muerto West (HMW) Project in Catamarca, Argentina. December 21, 2020.",
+      "Argosy Minerals Ltd., Rincón Project",
+      "Argosy Minerals Ltd., Company presentation. July 2025.",
+      "Argosy Minerals Limited., Annual report 2024.",
+      "Argosy Minerals Ltd., PEA Results Rincón Lithium Project. November 2018."
+    ],
+    "source_pages": [
+      28,
+      29,
+      30,
+      31,
+      32,
+      33
+    ]
+  },
+  {
+    "project_name": "Lal de los Ángeles",
+    "primary_commodity": "Lithium",
+    "by_products": [
+      "Potassium"
+    ],
+    "status": "Construction",
+    "location": {
+      "province": "Salta",
+      "country": null,
+      "description": "The Sal de Los Ángeles project is located in the Salar Diablillos, a saline body located in the Los Andes Department, in Salta, at 3,760 m.a.s.l.",
+      "latitude_dms": "25° 14' 40\" S",
+      "longitude_dms": "66° 44' 53\" W",
+      "latitude": -25.244444,
+      "longitude": -66.748056
+    },
+    "deposit_type": "Brine",
+    "owner_controller": "Revotech Asia Ltd. (46%) Xizang Zhufeng Resources Co.(45%), Leading Resources Global Ltd. (9%)",
+    "operator": "Potasio y Litio Argentina S.A.",
+    "area_ha": 8156.5,
+    "technical_economic": {
+      "since_production": 2028,
+      "estimated_lom_years": 20,
+      "productive_capacity": "Stage 1: 10,000 tpa LCE | Stage 2: 20,000 tpa LCE",
+      "estimated_annual_production": null,
+      "capex": "e. 500 MUSD",
+      "mining_method": "Pumping - Evaporation",
+      "product": "Lithium Carbonate $(\\mathrm{Li}_2\\mathrm{CO}_3)$"
+    },
+    "resources": [
+      {
+        "category": "Indicated",
+        "values": {
+          "LCE_t": 1037240
+        }
+      },
+      {
+        "category": "Inferred",
+        "values": {
+          "LCE_t": 1006739
+        }
+      }
+    ],
+    "reserves": [],
+    "resources_year": null,
+    "geology": {
+      "deposit": "The deposit type is a brine aquifer within a salar basin. Salar de Diablillos is a detrital salar, located in the northwest portion of the Diablillos hydrographic basin. The hydrographical basin is an enclosed intermountain plane with a length of approximately 40 km in the north-south direction and a width of approximately 15 km in the east-west. The Salar surface covers approximately 33 km². The hydrothermal fluids that are inferred to be the source of boron to the basins have been associated with correlative levels of lithium and potassium (Viramonte, Alonso, Gutierrez &amp; Arganaz, 1984). It is possible to classify the salars of the region based on this association between lithium and borates in two groups: lithium-borate rich and lithium-borate deficient."
+    },
+    "sources_consulted": [
+      "Lithium X. Sal de los Ángeles Project",
+      "P.L.A.S.A. Litio Angeles Argentina Project",
+      "Lithium X. Investor presentation",
+      "Lithium X. Technical Report Resource Estimate for Lithium &amp; Potassium Sal de los Angeles Project, February 2017",
+      "Xizang Zhufeng. Sal de los Ángeles Project",
+      "Evolve Royalties. Inversor Presentation, December 2025"
+    ],
+    "source_pages": [
+      34,
+      35,
+      36
+    ]
+  },
+  {
+    "project_name": "Lal de Vida",
+    "primary_commodity": "Lithium",
+    "by_products": [
+      "Potassium"
+    ],
+    "status": "Construction",
+    "location": {
+      "province": "Catamarca",
+      "country": null,
+      "description": "The project is located approximately 200 km south of Olaroz, Rio Tinto's operating mine in the high-altitude Puna ecoregion of the Altiplano of northwest Argentina at approximately 4,000 m above sea level. Sal de Vida is within SdHM in the Province of Catamarca",
+      "latitude_dms": "25° 24' 33.71\" S",
+      "longitude_dms": "66° 54' 44.73\" W",
+      "latitude": -25.409364,
+      "longitude": -66.912425
+    },
+    "deposit_type": "Brine",
+    "owner_controller": "Rio Tinto Group",
+    "operator": "Galaxy Lithium Sal de Vida S.A.",
+    "area_ha": 26253,
+    "technical_economic": {
+      "since_production": 2026,
+      "estimated_lom_years": 40,
+      "productive_capacity": "Stage 1: 15,000 tpa LCE | Stage 2: expanded 30,000 tpa LCE",
+      "estimated_annual_production": null,
+      "capex": "Stage 1: 660 MUSD",
+      "mining_method": "Pumping - Evaporation",
+      "product": "Lithium Carbonate (Li₂CO₃), Potassium Chloride (KCl)"
+    },
+    "resources": [
+      {
+        "category": "Measured",
+        "values": {
+          "LCE_t": 3500000
+        }
+      },
+      {
+        "category": "Indicated",
+        "values": {
+          "LCE_t": 3000000
+        }
+      },
+      {
+        "category": "Inferred",
+        "values": {
+          "LCE_t": 700000
+        }
+      }
+    ],
+    "reserves": [
+      {
+        "category": "Proven",
+        "values": {
+          "LCE_t": 400000
+        }
+      },
+      {
+        "category": "Probable",
+        "values": {
+          "LCE_t": 2038709
+        }
+      }
+    ],
+    "resources_year": null,
+    "geology": {
+      "deposit": "Salar the Hombre Muerto is one of the most important evaporitic basins in the Argentinean Puna and is the first basin to produce lithium from brine in Argentina. It consists of evaporite deposits formed within an isolated endorheic basin, bounded by pre-Paleozoic, Paleozoic, and Cenozoic-age crystalline metamorphic basement rocks. Fault-bounded bedrock hills occur within and along the margins of the salar basin, further subdividing SdHM into two separate subbasins (eastern and western), each with different evaporite sediment compositions. The Western Subbasin is considered a mature salar, whereas the Eastern Subbasin is considered immature. Sal de Vida is located in the Eastern Subbasin of SdHM. Immature salars are dominated by clastic deposits with interbedded evaporites. In the Eastern Subbasin, a transition of evaporite facies is observed from basin margins to basin centres, proceeding from sulphates at margins through borates in basin centres."
+    },
+    "sources_consulted": [
+      "Arcadium lithium. Sal de Vida Project",
+      "Rio Tinto Group. Resources and reserves 2025",
+      "Allkem Ltd., Sal de Vida Lithium Brine Project. NI 43-101 Technical Report, Feasibility Study. 27 October 2023."
+    ],
+    "source_pages": [
+      37,
+      38,
+      39
+    ]
+  },
+  {
+    "project_name": "Salar del Rincón",
+    "primary_commodity": "Lithium",
+    "by_products": [
+      "Potassium"
+    ],
+    "status": "Construction",
+    "location": {
+      "province": "Catamarca",
+      "country": null,
+      "description": "Salar del Hombre Muerto is located in northwest Argentina, in the northeastern portion of Catamarca Province on the border with Salta Province.",
+      "latitude_dms": null,
+      "longitude_dms": null,
+      "latitude": null,
+      "longitude": null
+    },
+    "deposit_type": "Brine",
+    "owner_controller": "Río Tinto Group",
+    "operator": "Rincon Mining Ltda.",
+    "area_ha": 83000,
+    "technical_economic": {
+      "since_production": 2028,
+      "estimated_lom_years": 40,
+      "productive_capacity": "53,000 tpa LCE",
+      "estimated_annual_production": null,
+      "capex": "2,500 MUSD",
+      "mining_method": "Pumping - direct lithium extraction",
+      "product": "Lithium Carbonate $(\\mathrm{Li}_2\\mathrm{CO}_3)$ and Lithium Chloride (LiCl)"
+    },
+    "resources": [
+      {
+        "category": "Measured",
+        "values": {
+          "LCE_t": 1540000
+        }
+      },
+      {
+        "category": "Indicated",
+        "values": {
+          "LCE_t": 7850000
+        }
+      },
+      {
+        "category": "Inferred",
+        "values": {
+          "LCE_t": 2290000
+        }
+      }
+    ],
+    "reserves": [
+      {
+        "category": "Probable",
+        "values": {
+          "LCE_t": 2070000
+        }
+      }
+    ],
+    "resources_year": null,
+    "geology": {
+      "deposit": "The Mineral Resources are based on the Salar del Rincon deposits which are typical of a mature salar with lithium-enriched brine hosted in clastic and evaporitic sediments. The deposits are similar to other lithium brine deposits located in the Puna Plateau which extends across multiple countries and jurisdictions in South America. Active tectonics form and sustain numerous young Cenozoic endorheic basins in the Puna Plateau. North-south aligned thrust faults, grabens, and half grabens frequently create accommodation space, while transverse strikeslip faults or volcanism assist with basin closure. Siliclastic material deposited in the basins is sourced from the surrounding geology of the catchment area, although pre-basin sediments may also occur deeper in the basin and function as aquifers. Sedimentary deposits typically include evaporite deposits dominated by halite with widespread occurrence of gypsum, and travertine from active or dormant hydrothermal springs. The arid environment limits precipitation, and waters migrate downgradient to the salar margin from the surrounding mountains. The aridity and phreatic brine level near land surface promotes groundwater evaporation which concentrates the fluids to form brines enriched in dissolved solids."
+    },
+    "sources_consulted": [
+      "Rio Tinto Group. Rincon Project Mineral Resources and Ore Reserves 2024"
+    ],
+    "source_pages": [
+      40,
+      41,
+      42
+    ]
+  },
+  {
+    "project_name": "Kachi",
+    "primary_commodity": "Lithium",
+    "by_products": [],
+    "status": "Feasibility",
+    "location": {
+      "province": "Catamarca",
+      "country": null,
+      "description": "The Kachi Project is located in the Salar of Carachi Pampa - Catamarca Province, approximately 100 km south of the Livent's Hombre Muerto Salar Operation (former FMC).",
+      "latitude_dms": "26° 31' 12\" S",
+      "longitude_dms": "67° 25' 48\" W",
+      "latitude": -26.52,
+      "longitude": -67.43
+    },
+    "deposit_type": "Brine",
+    "owner_controller": "Lake Resources (75%) Lilac Solutions Inc. (25%) Morena del Valle Minerals S.A.",
+    "operator": "Lake Resources (75%) Lilac Solutions Inc. (25%) Morena del Valle Minerals S.A.",
+    "area_ha": 74000,
+    "technical_economic": {
+      "since_production": null,
+      "estimated_lom_years": 25,
+      "productive_capacity": "25,000 tpa LCE",
+      "estimated_annual_production": null,
+      "capex": "1,157 MUSD",
+      "mining_method": "Pumping - Direct Lithium Extraction",
+      "product": "Lithium Carbonate (Li₂CO₃)"
+    },
+    "resources": [
+      {
+        "category": "Measured",
+        "values": {
+          "Lithium_t": 788000,
+          "LCE_t": 4191000
+        }
+      },
+      {
+        "category": "Indicated",
+        "values": {
+          "Lithium_t": 751000,
+          "LCE_t": 3998000
+        }
+      },
+      {
+        "category": "Inferred",
+        "values": {
+          "Lithium_t": 542000,
+          "LCE_t": 2885000
+        }
+      }
+    ],
+    "reserves": [
+      {
+        "category": "Proven",
+        "values": {
+          "LCE_t": 4390
+        }
+      },
+      {
+        "category": "Proven",
+        "values": {
+          "LCE_t": 28360
+        }
+      },
+      {
+        "category": "Probable",
+        "values": {
+          "LCE_t": 85060
+        }
+      }
+    ],
+    "resources_year": null,
+    "geology": {
+      "deposit": "The drills show that the filling of the Kachi basin is predominantly sand dominated by silt and intercalated clays. The surface halite is variable. This leads to a classification of Kachi as an immature salar system. There are ignimbrites inside the sediment of the basin, but of limited distribution and thickness. A conglomerate would form the basis of the sedimentary sequence of the basin that contains brine. Several depositional geomorphological units can be recognized, including: salar Carachi Pampa; Laguna Carachi Pampa which is a body of salt water fed by volcanic springs on the northeast margin of the salt flat; Vega Carachi Pampa, an ephemeral wetland plain north of the lagoon; and Barreal Carachi Pampa, a clay depression located on the western and northern margins of the salar. These units are partially covered by even more recent alluvial and colluvial sediments and wind sand dunes."
+    },
+    "sources_consulted": [
+      "Lake Resources. Kachi Project",
+      "Lake Resources. Investor Presentation, Aug 2025",
+      "Lake Resources. Resources and reserves 2025",
+      "Lake Resources. Kachi Project Definitive Feasibility Study Addendum"
+    ],
+    "source_pages": [
+      43,
+      44,
+      45
+    ]
+  },
+  {
+    "project_name": "Pozuelos",
+    "primary_commodity": "Lithium",
+    "by_products": [],
+    "status": "Feasibility",
+    "location": {
+      "province": "Salta",
+      "country": null,
+      "description": "The PPG Project incorporates the adjacent Pozuelos and Pastos Grandes salars in the Puna (Altiplano) region of northwestern Argentina, Salta Province, approximately $600\\mathrm{km}$ to the port of Antofagasta, Chile. That integrates three previously distinct projects in the Pozuelos–Pastos Grandes basins under one plan, capturing shared infrastructure and operating synergies.",
+      "latitude_dms": null,
+      "longitude_dms": null,
+      "latitude": null,
+      "longitude": null
+    },
+    "deposit_type": "Brine",
+    "owner_controller": "Ganfeng Lithium Co. Ltd. (67%), Lithium Argentina (33%)",
+    "operator": "Lithea Inc. Sucursal Argentina",
+    "area_ha": 21000,
+    "technical_economic": {
+      "since_production": 2029,
+      "estimated_lom_years": 30,
+      "productive_capacity": "Stage 1: 50,000 tpa LCE | Full Project: 150,000 tpa LCE",
+      "estimated_annual_production": null,
+      "capex": "Stage 1: USD 1.1 Billion | Full Project USD 3.3 Billion",
+      "mining_method": "Pumping - Direct Lithium Extraction",
+      "product": "Lithium Carbonate $(\\mathrm{Li}_2\\mathrm{CO}_3)$, Lithium Hydroxide and Lithium Chloride (LiCl)"
+    },
+    "resources": [
+      {
+        "category": "Measured",
+        "values": {
+          "LCE_t": 13242244
+        }
+      },
+      {
+        "category": "Indicated",
+        "values": {
+          "LCE_t": 1834383
+        }
+      },
+      {
+        "category": "Inferred",
+        "values": {
+          "LCE_t": 6713437
+        }
+      }
+    ],
+    "reserves": [],
+    "resources_year": null,
+    "geology": {
+      "deposit": "The salt flats of Pozuelos and Pastos Grandes share the same local stratigraphy. The basins are separated in the northeast of Pozuelos by the Pozuelos and Geste formations. Quaternary rocks are observed in the form of accumulations of evaporites such as halite and borates, carbonates and sulphates that occupy the intermontane depression. The Pastos Grandes salt flats are the current expression of a larger sedimentary basin, known as Sijes developed since the Miocene. The Sijes Formation is made up of sandstones, clays, tuff and evaporites (Halite and Gypsum) and travertine. This unit is a potential aquifer and can store lithium-rich brines. The Lilac White Formation represents a larger ancient salt flat than the current one and is a potential aquifer that can store lithium-rich brines. The Salar de Pastos Grandes is filled with unconsolidated classics (clays and silts), organic material and fine-grained sediments. The age of these sediments is late to recent Quaternary and 30 m thick. The sediments contain lithium-rich brines, which has been demonstrated by exploration work."
+    },
+    "sources_consulted": [
+      "Lithium Argentina. Pozuelos-Pastos Grandes Project",
+      "Lithium Americas. NI 43-101 Report lithium resources update Pastos Grandes project. Salta province, Argentina. April 2023",
+      "Lithium Argentina. Inversor presentation. January 2026",
+      "Lithium Argentina. Management's discussion and analysis for the three and nine months ended september 30, 2025"
+    ],
+    "source_pages": [
+      46,
+      47,
+      48
+    ]
+  },
+  {
+    "project_name": "Arizaro",
+    "primary_commodity": "Lithium",
+    "by_products": [],
+    "status": "Pre Feasibility",
+    "location": {
+      "province": "Salta",
+      "country": null,
+      "description": "The Project is located in the Salar de Arizaro basin, within the Salta province of northwest Argentina, about 230 kilometers from Salta and approximately 38 km southwest of the town of Tolar Grande. The Project is in the Argentinean Puna, at an elevation of approximately 3,475 meters above sea level.",
+      "latitude_dms": "24° 46' 12\" S",
+      "longitude_dms": "67° 42' 34\" W",
+      "latitude": -24.77,
+      "longitude": -67.709444
+    },
+    "deposit_type": "Brine",
+    "owner_controller": "Lithium Chile Inc. (80%) and SMG SRL (20%)",
+    "operator": "Minera Arli SA",
+    "area_ha": 20800,
+    "technical_economic": {
+      "since_production": null,
+      "estimated_lom_years": 20,
+      "productive_capacity": "25,000 tpa LCE",
+      "estimated_annual_production": null,
+      "capex": "1,055 MUSD",
+      "mining_method": "Pumping - Direct Lithium Extraction",
+      "product": "Lithium Carbonate $(\\mathrm{Li}_2\\mathrm{CO}_3)$"
+    },
+    "resources": [
+      {
+        "category": "Measured",
+        "values": {
+          "LCE_t": 261000
+        }
+      },
+      {
+        "category": "Indicated",
+        "values": {
+          "LCE_t": 2237000
+        }
+      },
+      {
+        "category": "Inferred",
+        "values": {
+          "LCE_t": 1624000
+        }
+      }
+    ],
+    "reserves": [
+      {
+        "category": "Probable",
+        "values": {
+          "LCE_t": 273
+        }
+      }
+    ],
+    "resources_year": null,
+    "geology": {
+      "deposit": "Lithium Chile's properties are found within the Salar de Arizaro, which represents one of these endorheic (internally drained) basins. The northern concession area, which is surrounded by Holocene alluvial and colluvial deposits, is located over recent evaporitic deposits; entire tenements are located over the Salar de Arizaro and toward the eastern side, surrounded by Holocene clay deposits. Older sediments from this northeastern area belong to Oligocene-Lower Miocene Vizcachera Formation and include sandstones, volcanic sandstones, pelites, tuffs, gypsum, and halites. Toward the northwest, older granodiorites belonging to the Upper Ordovician, Taca Taca formation, dacites, ignimbrites, and dacitic tuffs belonging to Eocene Santa Ines Volcanic Complex form the boundary of the Salar. The central mining concessions are located over recent evaporitic deposits."
+    },
+    "sources_consulted": [
+      "Lithium Chile Inc. Arizaro Project",
+      "Lithium Chile. Salar de Arizaro Project NI 43-101 Technical Report and pre-feasibility Study Salta, Argentina. July, 2024",
+      "Lithium Chile Inc. Corporate Presentation, October 2025"
+    ],
+    "source_pages": [
+      49,
+      50,
+      51
+    ]
+  },
+  {
+    "project_name": "Cauchari",
+    "primary_commodity": "Lithium",
+    "by_products": [
+      "Potassium"
+    ],
+    "status": "Pre Feasibility",
+    "location": {
+      "province": "Jujuy",
+      "country": null,
+      "description": "Cauchari Lithium Brine Project in Jujuy Province.",
+      "latitude_dms": "23° 43' 30.9\" S",
+      "longitude_dms": "66° 48' 39.9\" W",
+      "latitude": -23.72525,
+      "longitude": -66.811083
+    },
+    "deposit_type": "Brine",
+    "owner_controller": "Austroid Corp.",
+    "operator": "Minerales Australes S.A.",
+    "area_ha": 5500.9,
+    "technical_economic": {
+      "since_production": null,
+      "estimated_lom_years": 30,
+      "productive_capacity": "25,000 tpa LCE",
+      "estimated_annual_production": null,
+      "capex": null,
+      "mining_method": "Pumping - Direct Lithium Extraction (DLE)",
+      "product": "Lithium Carbonate $(\\mathrm{Li}_2\\mathrm{CO}_3)$"
+    },
+    "resources": [
+      {
+        "category": "Totales",
+        "values": {
+          "LCE_t": 6300000,
+          "ECI_t": 19600
+        }
+      }
+    ],
+    "reserves": [],
+    "resources_year": null,
+    "geology": {
+      "deposit": "Salar de Cauchari is a mixed style salar, with a halite nucleus in the center of the Salar overlain with up to 50 m of fine grained (clay) sediments. The halite core is interbedded with clayey to silty and sandy layers. The Salar is surrounded by relative coarse grained alluvial and fluvial sediments. These fans demark the perimeter of the actual Salar visible in satellite images and at depth extend towards the center of the Salar where they form the distal facies with an increase in sand and silt. At depth (between 300 m. and 500 m) a deep sand unit has been intercepted in several core holes in the SE Sector of the Project area."
+    },
+    "sources_consulted": [
+      "Austroid Corp. Cauchari Project"
+    ],
+    "source_pages": [
+      52,
+      53,
+      54
+    ]
+  },
+  {
+    "project_name": "Cauchari Jv",
+    "primary_commodity": "Lithium",
+    "by_products": [
+      "Potassium"
+    ],
+    "status": "Pre Feasibility",
+    "location": {
+      "province": "Jujuy",
+      "country": null,
+      "description": "The Cauchari lithium brines project located in the Southern Subbasin (referred to as Salar de Cauchari) of the Olaroz-Cauchari Salar complex in Jujuy Province of northern Argentina. The Olaroz-Cauchari Salar is located in the Puna region, 230 km west of the city of San Salvador de Jujuy in Jujuy Province of northern Argentina at an altitude of 3,900 m.a.s.l.",
+      "latitude_dms": null,
+      "longitude_dms": null,
+      "latitude": null,
+      "longitude": null
+    },
+    "deposit_type": "Brine",
+    "owner_controller": "Rio Tinto Group",
+    "operator": "South American Salars",
+    "area_ha": 27772,
+    "technical_economic": {
+      "since_production": null,
+      "estimated_lom_years": 30,
+      "productive_capacity": "25,000 tpa LCE",
+      "estimated_annual_production": null,
+      "capex": "659 MUSD",
+      "mining_method": "Pumping - Evaporation",
+      "product": "Lithium Carbonate $(\\mathrm{Li}_2\\mathrm{CO}_3)$"
+    },
+    "resources": [
+      {
+        "category": "Measured",
+        "values": {
+          "LCE_t": 1900000
+        }
+      },
+      {
+        "category": "Indicated",
+        "values": {
+          "LCE_t": 2600000
+        }
+      },
+      {
+        "category": "Inferred",
+        "values": {
+          "LCE_t": 1500000
+        }
+      }
+    ],
+    "reserves": [
+      {
+        "category": "Proven",
+        "values": {
+          "LCE_t": 200000
+        }
+      },
+      {
+        "category": "Probable",
+        "values": {
+          "LCE_t": 900000
+        }
+      }
+    ],
+    "resources_year": null,
+    "geology": {
+      "deposit": "Salar de Cauchari (the salar) is a mixed (mature and immature) style salar, with a halite nucleus in the centre of the salar overlain with up to 50 m of fine grained (clay) sediments. The halite core is interbedded with clayey to silty and sandy layers. The salar is surrounded by relative coarse grained alluvial and fluvial sediments. These fans demarcate the perimeter of the actual salar visible in satellite images and at depth extend towards the centre of the salar where they form the distal facies with an increase in sand and silt content. At depth (between 300 m and 600 m) a deep sand unit has been intercepted in several core holes in the southeast sector of the project area. Salar de Cauchari is located towards the centre of the Puna Plateau. The Puna is an elevated plateau in northern Argentina which has been subject to uplift along thrust systems inverting earlier extensional faults. The Puna is host to numerous large ignimbrites and stratovolcanoes. Evaporite minerals (halite, gypsum) occur disseminated within clastic sequences in the salar basins and as discrete evaporite beds. Based on the drilling campaigns carried out in the salar between 2011 and 2018, six major geological units were identified and correlated from the logging of drill cuttings and undisturbed core to a general depth of over 600 m. These units are characterised according to the relative abundance of gravels, sands, silts, clays and evaporites present within each grouping. No drill hole has reached bedrock."
+    },
+    "sources_consulted": [
+      "Rio Tinto Group. Cauchari project",
+      "Rio Tinto. Resources and reserves 2025",
+      "Allkem Limited. Cauchari Mineral Resource and Ore Reserve Update and Project Update. Date: September 25, 2023"
+    ],
+    "source_pages": [
+      55,
+      56,
+      57
+    ]
+  },
+  {
+    "project_name": "Candelas",
+    "primary_commodity": "Lithium",
+    "by_products": [
+      "Potassium"
+    ],
+    "status": "Preliminary Economic Evaluation",
+    "location": {
+      "province": "Catamarca",
+      "country": null,
+      "description": "Candelas is located in the province of Catamarca, Argentina, in the geographical area of the Puna and about $170\\mathrm{km}$ from the city of Salta.",
+      "latitude_dms": null,
+      "longitude_dms": null,
+      "latitude": null,
+      "longitude": null
+    },
+    "deposit_type": "Brine",
+    "owner_controller": "Galan Lithium Limited",
+    "operator": "Galan Exploraciones S.A",
+    "area_ha": 24000,
+    "technical_economic": {
+      "since_production": null,
+      "estimated_lom_years": null,
+      "productive_capacity": "14,000 tpa LCE",
+      "estimated_annual_production": null,
+      "capex": "408 MUSD",
+      "mining_method": "Pumping - Evaporation",
+      "product": "Lithium Carbonate $(\\mathrm{Li}_2\\mathrm{CO}_3)$"
+    },
+    "resources": [
+      {
+        "category": "Indicated",
+        "values": {
+          "LCE_t": 1284
+        }
+      },
+      {
+        "category": "Inferred",
+        "values": {
+          "LCE_t": 350
+        }
+      }
+    ],
+    "reserves": [],
+    "resources_year": null,
+    "geology": {
+      "deposit": "The Candelas Project is part of the Hombre Muerto basin, one of the most globally prolific salt flats, located in the Argentinean Puna plateau of the high Andes mountains at an elevation of approximately 4,000 m above sea level. The Project is in the geological province of Altiplano Puna, 90 km north of the town of Antofagasta de la Sierra, province of Catamarca, Argentina. The Project is located to the East and South of the Salar del Hombre Muerto. Candelas lies approximately 40 km ESE of the Hombre Muerto West project under feasibility study, also by Galan. The Candelas Project is hosted within a ~15 km by 3-4 km wide structurally controlled basin that has infilled with sediments that host the Li bearing brines"
+    },
+    "sources_consulted": [
+      "Galan Lithium. Candelas Project",
+      "Galan Lithium. Investor Presentation. May 2025",
+      "Galan Lithium. Excellent Preliminary Economic Assessment Results for Candelas Project in Catamarca, Argentina. Date: november 2021"
+    ],
+    "source_pages": [
+      58,
+      59,
+      60
+    ]
+  },
+  {
+    "project_name": "Hombre Muerto Norte",
+    "primary_commodity": "Lithium",
+    "by_products": [
+      "Potassium"
+    ],
+    "status": "Preliminary Economic Evaluation",
+    "location": {
+      "province": "Catamarca",
+      "country": null,
+      "description": "The Hombre Muerto Norte Project is located in Antofagasta de La Sierra Department, Catamarca Province and Los Andes Department, Salta Province, northwestern Argentina. The Project comprises six Mining Concessions with a total area of 3237 ha, situated in the northern part of Salar del Hombre Muerto.",
+      "latitude_dms": "25° 13' 12\" S",
+      "longitude_dms": "67° 04' 12\" W",
+      "latitude": -25.22,
+      "longitude": -67.07
+    },
+    "deposit_type": "Brine",
+    "owner_controller": "POSCO Holdings Inc.",
+    "operator": "Nrg Metals Argentina S.A.",
+    "area_ha": 5687,
+    "technical_economic": {
+      "since_production": null,
+      "estimated_lom_years": 25,
+      "productive_capacity": "15,600 tpa LCE",
+      "estimated_annual_production": null,
+      "capex": "366.1 MUSD",
+      "mining_method": "Pumping - Evaporation",
+      "product": "Lithium Carbonate $(\\mathrm{Li}_2\\mathrm{CO}_3)$"
+    },
+    "resources": [
+      {
+        "category": "Measured",
+        "values": {
+          "LCE_t": 1463000
+        }
+      },
+      {
+        "category": "Indicated",
+        "values": {
+          "LCE_t": 120200
+        }
+      }
+    ],
+    "reserves": [],
+    "resources_year": null,
+    "geology": {
+      "deposit": "Salar del Hombre Muerto is situated in the southern zone of the central Andean Puna-Altiplano plateau of South America. It is characterized by low-lying internally drained basins (salars), which are fault-bounded by mountain ranges and volcanic edifices. Salar infill geology within the SHM is regionally variable. The channel occupied by Alba Sabrina, most of the northern sector of the Eastern Subbasin including Tramo, and the southern sector of the Eastern Subbasin are clastic sediment-dominated; while the Western Subbasin and the Natalia Maria area on the eastern margin of Tincalayu Peninsula in the Eastern Subbasin are halite-dominated. Brine Resources in the Alba Sabrina, Natalia Maria, and Tramo properties of the HMN Project are defined relative to a 500 mg/L lithium cut-off. Overall, the information at the HMN Project indicates that the lithium grades and the levels of impurities compare favourably against other brine deposits."
+    },
+    "sources_consulted": [
+      "Lithium South Development Corp. Hombre Muerto Norte Project",
+      "Lithium South Development Corp. NI 43-101 Preliminary economic assessment Hombre Muerto North lithium project Salta, Argentina. Date: March 4, 2024",
+      "Lithium South Development Corp. Updated Mineral Resource Estimate – Hombre Muerto North Project NI 43-101 Technical Report Catamarca and Salta, Argentina. Date: September 5, 2023"
+    ],
+    "source_pages": [
+      61,
+      62,
+      63
+    ]
+  },
+  {
+    "project_name": "Río Grande",
+    "primary_commodity": "Lithium",
+    "by_products": [],
+    "status": null,
+    "location": {
+      "province": "Salta",
+      "country": null,
+      "description": "The Project is located in the Salar de Rio Grande basin (the salar) in the Salta provincial boundaries, within the Puna Region of northwest Argentina",
+      "latitude_dms": null,
+      "longitude_dms": null,
+      "latitude": null,
+      "longitude": null
+    },
+    "deposit_type": null,
+    "owner_controller": null,
+    "operator": null,
+    "area_ha": null,
+    "technical_economic": {
+      "since_production": null,
+      "estimated_lom_years": 30,
+      "productive_capacity": "Stage 1: 20,000 tpa LCE | Stage 2: 20,000 tpa LCE",
+      "estimated_annual_production": null,
+      "capex": null,
+      "mining_method": "Pumping - Evaporation",
+      "product": "Lithium Carbonate $(\\mathrm{Li}_2\\mathrm{CO}_3)$ and Lithium Chloride (LiCl)"
+    },
+    "resources": [
+      {
+        "category": "Measured",
+        "values": {
+          "LCE_t": 2094000
+        }
+      },
+      {
+        "category": "Indicated",
+        "values": {
+          "LCE_t": 564000
+        }
+      },
+      {
+        "category": "Inferred",
+        "values": {
+          "LCE_t": 2039000
+        }
+      }
+    ],
+    "reserves": [],
+    "resources_year": null,
+    "geology": {
+      "deposit": "The Salar de Rio Grande is located in the Puna Geological Province (Turner, 1972) and within the Puna Austral Geological Sub-province (Alonso et al., 1984a). One of the most important characteristics that defines the Geological Province of Puna is the presence of evaporitic basins, or \"salars,\" where important deposits of borates, sodium sulfate, and lithium can concentrate. The oldest rocks that outcrop in the area are of Upper Permian age and correspond to La Tabla Formation/Llullaillaco Plutonic Complex, which is located in the northeast section of the area. The Tabla Formation is composed of porphyries, breccias, ignimbrites, and lavas of dacitic-rhyodacitic-rhyolitic composition with fine-grained dykes intrusions of dacitic to andesitic composition."
+    },
+    "sources_consulted": [
+      "Noa Lithium Brines Inc. NI 43-101 Technical Report Preliminary Economic Assessment (PEA) Rio Grande Project, Salta, Argentina. Date: October 30, 2025.",
+      "Noa Lithium Brines Inc. Investor Presentation, December 2025"
+    ],
+    "source_pages": [
+      64,
+      65,
+      66
+    ]
+  },
+  {
+    "project_name": "Salar Tolillar",
+    "primary_commodity": "Lithium",
+    "by_products": [],
+    "status": "Preliminary Economic Evaluation",
+    "location": {
+      "province": "Salta",
+      "country": null,
+      "description": "The Project is situated in the Salar de Tolillar basin, located in the Salta Province of northwest Argentina. It is approximately 170 kilometers west of Salta and 90 km south of Salar de Pocitos station. The Project is situated at an elevation of around 3,650 meters above sea level in the Argentinean Puna.",
+      "latitude_dms": "25° 2' 12\" S",
+      "longitude_dms": "66° 7' 26\" W",
+      "latitude": -25.036667,
+      "longitude": -66.123889
+    },
+    "deposit_type": "Brine",
+    "owner_controller": "Alpha Lithium Corporation",
+    "operator": "Alpha Lithium Argentina S.A.",
+    "area_ha": 28030,
+    "technical_economic": {
+      "since_production": null,
+      "estimated_lom_years": 35,
+      "productive_capacity": "30,000 tpa LCE",
+      "estimated_annual_production": null,
+      "capex": "777 MUSD",
+      "mining_method": "Pumping - direct lithium extraction",
+      "product": "Lithium Carbonate $(\\mathrm{Li}_2\\mathrm{CO}_3)$"
+    },
+    "resources": [
+      {
+        "category": "Indicated",
+        "values": {
+          "LCE_t": 3626000
+        }
+      },
+      {
+        "category": "Inferred",
+        "values": {
+          "LCE_t": 1393000
+        }
+      }
+    ],
+    "reserves": [],
+    "resources_year": null,
+    "geology": {
+      "deposit": "The Salar de Tolillar is located in the Geological Province of La Puna (Turner, 1972) and within the Puna Austral Geological Sub-province (Alonso et al., 1984a, 1984b). One of the most important characteristics that define the Geological Province of Puna, is the presence of evaporitic basins, or \"salars\", where important deposits of borates, sodium sulphate, and lithium can concentrate. Salars near the Tolillar Project area include: Hombre Muerto, Antofalla, Ratones, Pocitos, Centenario, and Diablillos. One of the most important characteristics that define the Geological Province of La Puna, is the presence of evaporitic basins, where important deposits of borates, sodium sulphate, and lithium salts occur. The Salar de Tolillar occupies one of these endorheic (internally drained) basins. The oldest rocks in the area are the Tolillar Formation, which consists of graywackes and marine sediments assigned to the Tremadocian period (early Ordovician), mainly located North and South of the Salar. This formation is intruded by gabbro dikes that form part of the Ojo de Colorados Basic Complex, which are also assigned to the Tremadocian period."
+    },
+    "sources_consulted": [
+      "Alpha lithium Corp. Tolillar Project NI 43-101 Technical Report Update on Preliminary Economic Assessment Salta, Argentina. Date: August 10, 2023."
+    ],
+    "source_pages": [
+      67,
+      68,
+      69
+    ]
+  },
+  {
+    "project_name": "Ministerio de Economía",
+    "primary_commodity": null,
+    "by_products": [],
+    "status": null,
+    "location": {
+      "province": null,
+      "country": null,
+      "description": null,
+      "latitude_dms": null,
+      "longitude_dms": null,
+      "latitude": null,
+      "longitude": null
+    },
+    "deposit_type": null,
+    "owner_controller": null,
+    "operator": null,
+    "area_ha": null,
+    "technical_economic": {
+      "since_production": null,
+      "estimated_lom_years": null,
+      "productive_capacity": null,
+      "estimated_annual_production": null,
+      "capex": null,
+      "mining_method": null,
+      "product": null
+    },
+    "resources": [],
+    "reserves": [],
+    "resources_year": null,
+    "geology": null,
+    "sources_consulted": [],
+    "source_pages": [
+      70
+    ]
+  }
+]

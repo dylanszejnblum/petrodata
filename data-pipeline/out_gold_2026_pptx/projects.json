@@ -1,0 +1,1045 @@
+[
+  {
+    "project_name": "Cerro Moro",
+    "primary_commodity": "Gold",
+    "by_products": [
+      "Silver"
+    ],
+    "status": "Operation",
+    "location": {
+      "province": "Santa Cruz",
+      "country": null,
+      "description": "Cerro Moro is located in the Santa Cruz province of southern Argentina. Is located approximately 70 kilometer southwest of the port city of Puerto Deseado.",
+      "latitude_dms": "48° 01' 55\" S",
+      "longitude_dms": "66° 33' 45\" W",
+      "latitude": -48.031944,
+      "longitude": -66.5625
+    },
+    "deposit_type": "Low Sulphidation Epithermal Style (Au-Ag)",
+    "owner_controller": "Pan American Silver Corp.",
+    "operator": "Estelar Resources Limited S.A",
+    "area_ha": 304167,
+    "technical_economic": {
+      "since_production": 2018,
+      "estimated_lom_years": 3,
+      "productive_capacity": "1,100 tonnes per day (tpd)",
+      "estimated_annual_production": null,
+      "capex": null,
+      "mining_method": "Open-Pit &amp; Underground",
+      "product": "Gold and silver doré"
+    },
+    "resources": [
+      {
+        "category": "Measured",
+        "values": {
+          "Au_g_t": 4.87,
+          "Ag_g_t": 277,
+          "Au_kOz": 39.2,
+          "Ag_kOz": 2200
+        }
+      },
+      {
+        "category": "Indicated",
+        "values": {
+          "Au_g_t": 5.58,
+          "Ag_g_t": 254,
+          "Au_kOz": 135.1,
+          "Ag_kOz": 6100
+        }
+      },
+      {
+        "category": "Inferred",
+        "values": {
+          "Au_g_t": 6.85,
+          "Ag_g_t": 164,
+          "Au_kOz": 145.7,
+          "Ag_kOz": 3500
+        }
+      }
+    ],
+    "reserves": [
+      {
+        "category": "Proven",
+        "values": {
+          "Au_g_t": 9.94,
+          "Ag_g_t": 223,
+          "Au_kOz": 92.2,
+          "Ag_kOz": 2100
+        }
+      },
+      {
+        "category": "Probable",
+        "values": {
+          "Au_g_t": 5.59,
+          "Ag_g_t": 282,
+          "Au_kOz": 57.6,
+          "Ag_kOz": 2900
+        }
+      }
+    ],
+    "resources_year": null,
+    "geology": {
+      "regional": "Cerro Moro is located within the Deseado Massif, a tectonic block in the central portion of the Santa Cruz Province that covers an area of approximately 60,000 square kilometers. The massif is underlain by the Patagonian Terrane, an early Palaeozoic to Permian allochthonous terrane that collided with Gondwana in the early Permian; it consists of Lower Palaeozoic meta-sedimentary rocks of the La Modesta Formation (also known as the Rio Deseado Complex) that are intruded by granites of Lower to Middle Palaeozoic age. The terrane is in turn unconformably overlain by continental sandstone of the La Golondrina and El Tranquilo Formations, which were deposited during the Permian and through the late Triassic (Panza and Márquez, 1994). During the Jurassic and Cretaceous periods, the region underwent extensional tectonics and volcanism. The initial response was deposition of the epiclastic and pyroclastic Roca Blanca Formation, followed by the widespread extrusion of mafic volcanic rocks of the Bajo Pobre Formation during the Middle Jurassic. During the Middle and Upper Jurassic, these rocks were overlain by felsic and intermediate volcanic rocks and epiclastic sediments of the Bahía Laura Group. The Bahía Laura Group includes the Chon Aike and La Matilde formations. The Chon Aike Formation consists of a thick sequence of rhyolitic ignimbrites, tuffs, and volcaniclastic rocks; it is interpreted to host the gold mineralization at Cerro Moro. The La Matilde Formation is characterized by well-bedded epiclastic volcanic sandstone, felsic pyroclastic rocks, and some andesitic rocks (Panza and Marquez, 1994, Pankhurst et al., 2000). During the Paleocene epoch, the region was covered with continental and marine sediments. More recently, during the Late Tertiary to Early Quaternary, basaltic lava flows were extruded over parts of the Deseado Massif but these lavas are not observed at Cerro Moro.",
+      "deposit": "The Cerro Moro, gold-silver mineralization is associated with low-sulphidation epithermal veins, stockwork, and breccia units. Phreatic breccias (unit Hbx) are commonly spatially associated with low-sulphidation veins consisting of quartz, some adularia, and variable concentrations of pyrite, acanthite, sphalerite, and other very minor base metal sulphides. Ministerio de Economía República Argentina Secretaría de Minería"
+    },
+    "sources_consulted": [
+      "Pan American Silver. Cerro Moro Project Pan American Silver Corp. Reserves and resources June 30, 2025. Yamana Gold. NI 43-101 Technical report Cerro Moro Gold-Silver mine, Santa Cruz province, Argentina. August 26, 2022."
+    ],
+    "source_pages": [
+      6,
+      7,
+      8,
+      9
+    ]
+  },
+  {
+    "project_name": "Cerro Negro",
+    "primary_commodity": "Gold",
+    "by_products": [
+      "Silver"
+    ],
+    "status": "Operation",
+    "location": {
+      "province": "Santa Cruz",
+      "country": null,
+      "description": "The Cerro Negro Project is located in the north-west region of the Santa Cruz province, about 345 kilometers by road southwest of the coastal city of Comodoro Rivadavia.",
+      "latitude_dms": "46° 54' 41.60\" S",
+      "longitude_dms": "70° 14' 30.63\" W",
+      "latitude": -46.911556,
+      "longitude": -70.241842
+    },
+    "deposit_type": "Low Sulphidation Epithermal Style (Au-Ag)",
+    "owner_controller": "Newmont Goldcorp",
+    "operator": "OroPlata S.A. ![img-4.jpeg](img-4.jpeg)",
+    "area_ha": 26891,
+    "technical_economic": {
+      "since_production": 2014,
+      "estimated_lom_years": 11,
+      "productive_capacity": "4.000 tpd",
+      "estimated_annual_production": null,
+      "capex": null,
+      "mining_method": "Underground",
+      "product": "Gold and silver doré"
+    },
+    "resources": [
+      {
+        "category": "Measured",
+        "values": {
+          "Au_g_t": 3.73,
+          "Ag_g_t": 12.61,
+          "Au_kOz": 200,
+          "Ag_kOz": 500
+        }
+      },
+      {
+        "category": "Indicated",
+        "values": {
+          "Au_g_t": 5.42,
+          "Ag_g_t": 27.54,
+          "Au_kOz": 300,
+          "Ag_kOz": 1700
+        }
+      },
+      {
+        "category": "Inferred",
+        "values": {
+          "Au_g_t": 5.1,
+          "Ag_g_t": 25.7,
+          "Au_kOz": 1200,
+          "Ag_kOz": 6300
+        }
+      }
+    ],
+    "reserves": [
+      {
+        "category": "Proven",
+        "values": {
+          "Au_g_t": 1120,
+          "Ag_g_t": 84.41,
+          "Au_kOz": 800,
+          "Ag_kOz": 5900
+        }
+      },
+      {
+        "category": "Probable",
+        "values": {
+          "Au_g_t": 10.38,
+          "Ag_g_t": 66.2,
+          "Au_kOz": 2300,
+          "Ag_kOz": 14400
+        }
+      }
+    ],
+    "resources_year": null,
+    "geology": {
+      "regional": "The Cerro Negro gold-silver veins are located near the northwestern margin of the Deseado Massif, a 60,000 square kilometres rigid crustal block in southern Argentina bounded to the north by the Rio Deseado, to the south by the Rio Chico, to the east by the Atlantic coast, and to the west by the Andean Cordillera. The massif is in a backarc position relative to the Andean subduction system and is flanked by the subsiding Golfo de San Jorge and Austral sedimentary basins to the north and south, respectively. The massif is regarded by some authors as a Late Proterozoic to Permian allochthonous terrane that collided with Gondwana in the early Permian, and by others as an autochthonous part of the Gondwana continent. The Deseado Massif hosts numerous low-sulphidation epithermal vein systems (Sillitoe and Hendenquist, 2003). A late Triassic to late Cretaceous (230–65 Ma) extensional phase, linked to the opening of the South Atlantic Ocean, triggered extensive Mesozoic and Cenozoic magmatism throughout the massif. Magmatic activity commenced in the early Jurassic, with the intrusion of granitoids and eruption of coeval pyroclastic and epiclastic volcanic rocks. Andesitic to rhyolitic volcanism continued through the mid- to late Jurassic, culminating in the deposition of epiclastic sediments in the early Cretaceous. Mid- to late Jurassic volcanism in the Deseado Massif is conventionally divided into the andesitic Bajo Pobre Formation and the rhyolitic Bahia Laura Complex, the latter comprising the Chon Aike and La Matilde Formations. Basaltic volcanism commenced in the Cretaceous and continued throughout the Cenozoic; volcaniclastic sediments were deposited and tuffs were erupted in the early Tertiary. These units are overlain by extensive Pleistocene fluvial gravel terraces.",
+      "deposit": "The known deposits and prospects at Cerro Negro are distributed within and east of a volcanic-subvolcanic complex flanked and overlain by a series of rhyolite domes. The eruptive products of the rhyolite domes form an ignimbrite apron, which post-dates the mineralization and forms extensive outcrops north and south of the volcanic-subvolcanic complex. These post-mineral ignimbrites have preserved the epithermal systems, as well as lacustrine sediments, travertine, and sinter deposited at the Late Jurassic paleo-surface. Older ignimbrites that lie east of the volcanic-subvolcanic complex host mineralization at Bajo Negro and Vein Zone. Ministerio de Economía República Argentina Secretaría de Minería"
+    },
+    "sources_consulted": [
+      "Newmont Corp. Cerro Negro Project",
+      "Newmont Corp. Resources and Reserves 2025",
+      "Gold Corp. Cerro Negro Operations Santa Cruz province, Argentina, NI 43-101 Technical Report, December 31, 2015"
+    ],
+    "source_pages": [
+      10,
+      11,
+      12,
+      13
+    ]
+  },
+  {
+    "project_name": "Casposo",
+    "primary_commodity": "Gold",
+    "by_products": [
+      "Silver"
+    ],
+    "status": "Operation",
+    "location": {
+      "province": "San Juan",
+      "country": null,
+      "description": "The Mine Casposo is situated approximately 150 kilometer northwest of San Juan City, in the Department of Calingasta, San Juan Province, Argentina.",
+      "latitude_dms": null,
+      "longitude_dms": null,
+      "latitude": null,
+      "longitude": null
+    },
+    "deposit_type": "Low Sulphidation Epithermal Style (Au-Ag)",
+    "owner_controller": "Austral Gold Limited",
+    "operator": "Casposo Argentina Ltd. (Suc. Argentina)",
+    "area_ha": 52055,
+    "technical_economic": {
+      "since_production": null,
+      "estimated_lom_years": 6,
+      "productive_capacity": "1,000 tpd",
+      "estimated_annual_production": null,
+      "capex": null,
+      "mining_method": "Open pit",
+      "product": "Gold and silver doré"
+    },
+    "resources": [
+      {
+        "category": "M&I",
+        "values": {
+          "Au_g_t": 1.48,
+          "Ag_g_t": 59.91,
+          "Au_kOz": 107,
+          "Ag_kOz": 4349
+        }
+      },
+      {
+        "category": "Inferred",
+        "values": {
+          "Au_g_t": 7.52,
+          "Ag_g_t": 68.54,
+          "Au_kOz": 42,
+          "Ag_kOz": 381
+        }
+      }
+    ],
+    "reserves": [
+      {
+        "category": "Probable",
+        "values": {
+          "Au_g_t": 1.31,
+          "Ag_g_t": 58.52,
+          "Au_kOz": 80,
+          "Ag_kOz": 3276
+        }
+      }
+    ],
+    "resources_year": null,
+    "geology": {
+      "regional": "The main basement is formed by Permian-Triassic intrusive and volcanic rocks of calc-alkaline affinity and andesitic to rhyolite composition, regionally known as the Choiyoi Group. These younger sediments of Jurassic and Cretaceous age have been thickened by compression and thrusting since the Late Cretaceous in a thin-skinned fold thrust belt. The Mine is located on the eastern border of the Cordillera Frontal. In the Mine area, the Cordillera Frontal is underlain by marine metasediments of the La Puerta Formation. These sedimentary sequences are overlain by a thick intrusive and volcanic sequence assigned to the Permian Triassic Choiyoi Group. The main host rocks at the property are basal andesitic volcanic flows, tuffs, and breccias overlain by rhyolite, rhyolite-dacite flows, and dacitic ignimbrite flows.",
+      "deposit": "The Casposo gold-silver mineralization occurs in the rhyolite and underlying andesite, which is associated with banded quartz-chalcedony veins, typical of low sulphidation epithermal environments. Mineralization occurs along a 10km long west-northwest to east-southeast trending regional structural corridor. The primary Kamila Vein system forms a sigmoidal set 500m long near the center. The Mercado Vein system is the northwest continuation of Kamila and is separated by an east-west fault from the Kamila deposit. The Julieta Zone is located five kilometers along strike to the northwest of the Kamila and Mercado deposits and is situated within the same regional structural corridor. The Casposo Norte deposit is located on a parallel structure approximately two kilometers north of Kamila. Ministerio de Economía República Argentina Secretaría de Minería"
+    },
+    "sources_consulted": [
+      "Austral Goldcorp. Casposo Project",
+      "Austral Goldcorp. Inversor presentation. December 2025",
+      "Austral Goldcorp. Technical Report on the Casposo Mine Calingasta Department, San Juan Province, Argentina. Report for NI 43-101. October 2025"
+    ],
+    "source_pages": [
+      14,
+      15,
+      16,
+      17
+    ]
+  },
+  {
+    "project_name": "Cerro Vanguardia",
+    "primary_commodity": "Gold",
+    "by_products": [
+      "Silver"
+    ],
+    "status": "Operation",
+    "location": {
+      "province": "Santa Cruz",
+      "country": null,
+      "description": "The Cerro Vanguardia mine in the Santa Cruz province. Is located approximately 110 kilometers, in a straight line, northwest of Puerto de San Julián.",
+      "latitude_dms": "48° 23' 28\" S",
+      "longitude_dms": "68° 15' 51\" W",
+      "latitude": -48.391111,
+      "longitude": -68.264167
+    },
+    "deposit_type": "Low Sulphidation Epithermal Style (Au-Ag)",
+    "owner_controller": "AngloGold Ashanti plc (92.5%) Fomicruz S.E. (7.5%)",
+    "operator": "Cerro Vanguardia S.A.",
+    "area_ha": 51400,
+    "technical_economic": {
+      "since_production": 1998,
+      "estimated_lom_years": 5,
+      "productive_capacity": "3,500 tpd",
+      "estimated_annual_production": null,
+      "capex": null,
+      "mining_method": "Open-Pit &amp; Underground",
+      "product": "Gold and silver doré"
+    },
+    "resources": [
+      {
+        "category": "Measured",
+        "values": {
+          "Au_g_t": 2.48,
+          "Ag_g_t": 50.04,
+          "Au_kOz": 560,
+          "Ag_kOz": 11290
+        }
+      },
+      {
+        "category": "Indicated",
+        "values": {
+          "Au_g_t": 2.53,
+          "Ag_g_t": 63.96,
+          "Au_kOz": 1010,
+          "Ag_kOz": 25490
+        }
+      },
+      {
+        "category": "Inferred",
+        "values": {
+          "Au_g_t": 3.01,
+          "Ag_g_t": 91.04,
+          "Au_kOz": 390,
+          "Ag_kOz": 11670
+        }
+      }
+    ],
+    "reserves": [
+      {
+        "category": "Proven",
+        "values": {
+          "Au_g_t": 3.16,
+          "Ag_g_t": 61.07,
+          "Au_kOz": 250,
+          "Ag_kOz": 4770
+        }
+      },
+      {
+        "category": "Probable",
+        "values": {
+          "Au_g_t": 10.5,
+          "Ag_g_t": 69.52,
+          "Au_kOz": 420,
+          "Ag_kOz": 12560
+        }
+      }
+    ],
+    "resources_year": null,
+    "geology": {
+      "regional": "The Cerro Vanguardia district is located within the Southern Deseado Massif in the province of Santa Cruz in Argentine Patagonia. The Deseado Massif is an extensive rhyolite province of Middle to Late Jurassic age. The most important geological feature in the Deseado Massif is an extended plateau formed by pyroclastic, epiclastic, and extrusive rocks that were part of a powerful explosive volcanic event. This volcanic event was associated with regional extensional tectonics that developed during the Middle to Late Jurassic and is related to the opening of the Atlantic Ocean. The rocks representing this magmatism are called the Bajo Pobre Formation and the Bahía Laura Group. The Bajo Pobre Formation comprises andesites, basalts, and mafic volcanic agglomerates. The Bahía Laura Group includes both the Chon Aike Formation (ignimbrites, tuffs, volcanic breccias, agglomerates, lavas, and domes) and the La Matilde Formation (epiclastic volcanic tuffs and strata interbedded with ignimbrites). The Middle to Upper Jurassic ignimbrites and volcanic rocks of the Chon Aike Formation host the low-sulfidation epithermal gold and silver deposits",
+      "deposit": "Cerro Vanguardia is located in the heart of the 60,000 km² Deseado Massif, one of the largest volcanic complexes in southern Patagonia. The Deseado Massif is overlain by low-grade metamorphic basement rocks of Paleozoic age. These rocks are exposed in erosional windows through overlying Cretaceous sediments and Tertiary-to-Quaternary basalts. The mineralized bodies comprise a series of low-sulfidation epithermal vein deposits containing gold and large quantities of silver, which is recovered as a byproduct. Ministerio de Economía República Argentina Secretaría de Minería"
+    },
+    "sources_consulted": [
+      "Anglo Gold Ashanti. Cerro Vanguardia Project",
+      "Anglo Gold Ashanti. Mineral Resource and Mineral Reserve Report at 31 december 2024",
+      "Anglo Gold Ashanti. Cerro Vanguardia - Americas, Operational profile"
+    ],
+    "source_pages": [
+      18,
+      19,
+      20,
+      21
+    ]
+  },
+  {
+    "project_name": "Don Nicolás-Las Calandrias",
+    "primary_commodity": "Gold",
+    "by_products": [
+      "Silver"
+    ],
+    "status": "Operation",
+    "location": {
+      "province": "Santa Cruz",
+      "country": null,
+      "description": "The is located in Santa Cruz province. Is located approximately 100 km from the South Atlantic Ocean. Elevations at the Project vary between 120 m.a.s.l.",
+      "latitude_dms": "47° 56' 01\" S",
+      "longitude_dms": "67° 27' 06\" W",
+      "latitude": -47.933611,
+      "longitude": -67.451667
+    },
+    "deposit_type": "High",
+    "owner_controller": "Cerrado Gold Inc. / Minera Don Nicolás S.A.",
+    "operator": "Cerrado Gold Inc. / Minera Don Nicolás S.A.",
+    "area_ha": 333400,
+    "technical_economic": {
+      "since_production": 2019,
+      "estimated_lom_years": 5,
+      "productive_capacity": "1,000 tpd",
+      "estimated_annual_production": null,
+      "capex": null,
+      "mining_method": "Open-Pit &amp; Underground",
+      "product": "Gold and silver doré"
+    },
+    "resources": [
+      {
+        "category": "Calandrias Sur (open pit)",
+        "values": {
+          "Au_g_t": 0.97,
+          "Ag_g_t": 15.34,
+          "Au_kOz": 400.72,
+          "Ag_kOz": 6328.98
+        }
+      },
+      {
+        "category": "Calandrias Norte (open pit)",
+        "values": {
+          "Au_g_t": 14.94,
+          "Ag_g_t": 23.12,
+          "Au_kOz": 37.85,
+          "Ag_kOz": 58.57
+        }
+      },
+      {
+        "category": "Zorro (open pit)",
+        "values": {
+          "Au_g_t": 1.6,
+          "Ag_g_t": 7.84,
+          "Au_kOz": 10.58,
+          "Ag_kOz": 51.81
+        }
+      },
+      {
+        "category": "Depleted Satellites (open pit)",
+        "values": {
+          "Au_g_t": 1.96,
+          "Ag_g_t": 0,
+          "Au_kOz": 2.83,
+          "Ag_kOz": 0
+        }
+      },
+      {
+        "category": "Paloma Trend (underground)",
+        "values": {
+          "Au_g_t": 4.34,
+          "Ag_g_t": 17.38,
+          "Au_kOz": 38.36,
+          "Ag_kOz": 153.56
+        }
+      },
+      {
+        "category": "TOTAL",
+        "values": {
+          "Au_g_t": 1.13,
+          "Ag_g_t": 15.26,
+          "Au_kOz": 490.34,
+          "Ag_kOz": 6592.92
+        }
+      }
+    ],
+    "reserves": [],
+    "resources_year": null,
+    "geology": {
+      "regional": "The Deseado Massif's basement rock consists of the Cambrian-aged metasedimentary rocks of the \"La Modesta\" Formation, intruded by granites and tonalites. The fluvial Permo-Triassic sequences of the \"La Juanita\" and \"La Golondrina\" formations unconformably overlie these. They are deposited in an NNW-trending rift basin that formed along older reactivated basement structures. The Jurassic Bahia Laura Volcanic Complex is the main host of the widespread epithermal mineralisation that defined the Deaseado Massif's metallogenic character. The Bahia Laura Volcanic Complex compromises bimodal sequences. It represents widespread volcanism formed on an extensional tectonic regime related to intracontinental rifting (Fernandez, 2020). The volcanic succession includes successively intercalated rocks of the Bajo Pobre, Cerro León, Chon Aike, and La Matilde formations, which reveal their coeval nature. The Bajo Pobre Formation and its intrusive equivalent, the Leon Formation, consist of calc-alkaline andesite and basaltic-andesite lavas flow, volcaniclastic deposits, and subvolcanic plugs (Fernandez, 2020). The Chon Aike Formation is a felsic composition consisting of rhyolitic and dacitic ignimbrites with epiclastic deposits and ash-fall tuffs. The upper unit of the Bahia Laura Volcanic Complex is the lacustrine tuffs and tuffaceous sediments of the La Matilde Formation (Fernandez et al., 2020). This Bi-modal volcanism, including the rhyolitic and andesitic flow and tuffaceous volcaniclastic lithologies of the Middle to Upper Jurassic age, is widely present on the Mina Don Nicolás. Numerous fault and fracture zones (which served as conduits for hydrothermal activity during periods of Jurassic volcanism) created a network of widespread, shallow mineralised \"epithermal\" fissure veins, breccias, and stock-work systems, many of which carry economic Au and Ag mineralisation.",
+      "deposit": "Gold-silver mineralisation is associated with epithermal deposits. The Jurassic Bahia Laura Volcanic Complex is the main host of the widespread epithermal Mineralisation that defined the Deseado Massif's metallogenic character. Ministerio de Economía República Argentina Secretaría de Minería"
+    },
+    "sources_consulted": [
+      "GeoEstima Spa. Technical Report on the Preliminary Economic Assessment of the Minera Don Nicolás gold Project, Santa Cruz, Argentina, September 19, 2024.",
+      "Cerrado Gold Inc. Don Nicolás Project",
+      "Cerrado Gold Inc. Driving Substantial Cash Flow With Limited Dilutio. January 2026."
+    ],
+    "source_pages": [
+      22,
+      23,
+      24,
+      25
+    ]
+  },
+  {
+    "project_name": "Farallón Negro",
+    "primary_commodity": "Gold",
+    "by_products": [
+      "Silver"
+    ],
+    "status": "Operation",
+    "location": {
+      "province": "Catamarca",
+      "country": null,
+      "description": "The Farallón Negro deposit is located in the Hualfin District, Belén Department, Catamarca Province, at an average altitude of 2,600 m.a.s.l. It is located approximately 400 kilometers from the city of San Fernando del Valle de Catamarca.",
+      "latitude_dms": "27° 15' 23\" S",
+      "longitude_dms": "66° 40' 4\" W",
+      "latitude": -27.256389,
+      "longitude": -66.667778
+    },
+    "deposit_type": "Low Sulphidation Epithermal Style (Au-Ag)",
+    "owner_controller": "YMAD",
+    "operator": "YMAD",
+    "area_ha": 34400,
+    "technical_economic": {
+      "since_production": 1978,
+      "estimated_lom_years": 1,
+      "productive_capacity": null,
+      "estimated_annual_production": null,
+      "capex": null,
+      "mining_method": "Underground",
+      "product": "Gold and silver doré"
+    },
+    "resources": [],
+    "reserves": [],
+    "resources_year": null,
+    "geology": {
+      "regional": "The Farallón Negro deposit is part of the Agua de Dionisio mining district. The oldest rocks in the area correspond to the igneous-metamorphic basement of Precambrian-Eopaleozoic age, which includes low-grade metaphorhites of the Suncho Formation and granitoids of the Capillitas Batholith, followed by Miocene continental sedimentary rocks of the Morterito Formation. The most prominent stratigraphic unit of the Agua de Dionisio mining district is the Farallón Negro volcanic complex, whose outcrops constitute the Miocene stratovolcano. According to Sasso (1997) and Halter et al. (2005), the main activity of the stratovolcano ended with the emplacement of the Alto de la Blenda Monzonite between 7.5 and 7.02 Ma, although the later intrusion of minor dacitic and rhyolitic bodies stands out, including the Agua Tapada (7.35 Ma), Bajo las Pampitas (7.2 Ma) and Bajo de la Alumbrera (7.1-6.7 Ma) porphyritic systems. These last bodies show the beginning of the hydrothermal activity that affected the Farallón Negro volcanic complex.",
+      "deposit": "The Farallón Negro – Alto de la Blenda epithermal ore deposit, dated at approximately 5.5 Ma, belongs to the Agua de Dionisio Mining District, located in the Sierras Pampeanas geological province. Ore bodies include veins, breccias and stockworks, constituted essentially by silica, carbonate (Ca - Mn) and Mn oxides alongside base metals sulphides and precious minerals (Wernert et al., 2019) SOURCES CONSULTED Ministerio de Economía República Argentina Secretaría de Minería"
+    },
+    "sources_consulted": [],
+    "source_pages": [
+      26,
+      27,
+      28
+    ]
+  },
+  {
+    "project_name": "Gualcamayo - Carbonatos Profundos",
+    "primary_commodity": "Gold",
+    "by_products": [
+      "Copper"
+    ],
+    "status": "Operation",
+    "location": {
+      "province": "San Juan",
+      "country": null,
+      "description": "The Gualcamayo project located in the North of the province of San Juan, Argentina.",
+      "latitude_dms": "29° 41' 45.4\" S",
+      "longitude_dms": "68° 37' 44.1\" W",
+      "latitude": -29.695944,
+      "longitude": -68.628917
+    },
+    "deposit_type": "Skarn Au",
+    "owner_controller": "Eris LLC",
+    "operator": "Minas Argentinas S.A",
+    "area_ha": null,
+    "technical_economic": {
+      "since_production": null,
+      "estimated_lom_years": null,
+      "productive_capacity": "149 kOz Au",
+      "estimated_annual_production": null,
+      "capex": null,
+      "mining_method": "Open-Pit &amp; Underground",
+      "product": "Gold and silver doré"
+    },
+    "resources": [
+      {
+        "category": "M&I",
+        "values": {
+          "Au_g_t": 3.29,
+          "Au_kO2": 2090
+        }
+      },
+      {
+        "category": "Inferred",
+        "values": {
+          "Au_g_t": 3.38,
+          "Au_kO2": 376
+        }
+      }
+    ],
+    "reserves": [],
+    "resources_year": null,
+    "geology": {
+      "regional": "The Gualcamayo deposit is located on the eastern edge of the Central Precordillera, characterized by thick sequences of marine platform limestones and dolomites, corresponding to the Los Sapitos Formation (Cambrian) and the San Juan Formation (Ordovician). To the west, it transitions to gray mudstones with organic matter of the Gualcamayo Formation (Ordovician), which is overlain by a sequence of clastic sediments of the Trapiche Group, beginning with conglomerates and a rhythmic succession of marine sandstones and mudstones of flysch facies. Outcropping in angular unconformity is a sedimentary sequence of rhythmically alternating fine sandstones and mudstones, from a fluvio-deltaic environment in glacial lakes, corresponding to the Volcán Formation (Carboniferous). This is followed by sandstones, quartzose sandstones, sabulitic and conglomeratic sandstones, arkose, and mudstones from a fluvial environment with palustrine intervals, belonging to the Panacán Formation (Carboniferous). This gradually transitions to blood-red sandstones alternating with white quartzose sandstones, interbedded with purplish-red mudstones at intervals of evaporites (mainly gypsum), from an arid and oxidizing continental environment, belonging to the Ojo de Agua Formation, assigned to the Permian. Completing the column are the volcaniclastic deposits, andesitic lavas, and pyroclastic rocks of intermediate composition of the Cerro Morado Formation.",
+      "deposit": "The Gualcamayo deposit is located in a Cambrian-Ordovician stratigraphic sequence at the base of which are the dolomites and limestones belonging to the Los Sapitos Formation (Cambrian) followed by a sequence of limestones and dolomites of the San Juan Formation (Ordovician). Ministerio de Economía República Argentina Secretaría de Minería"
+    },
+    "sources_consulted": [
+      "Minas Argentinas. Gualcamayo Project",
+      "Mineros. Earnings Call Q1 2023. May 9, 2023"
+    ],
+    "source_pages": [
+      29,
+      30,
+      31,
+      32
+    ]
+  },
+  {
+    "project_name": "Lindero",
+    "primary_commodity": "Gold",
+    "by_products": [
+      "Copper"
+    ],
+    "status": "Operation",
+    "location": {
+      "province": "Salta",
+      "country": null,
+      "description": "Lindero mine is located in the Argentina Puna with a minimum elevation of approximately 3,500 to 4,000 m.a.s.l. The mine is located $260\\mathrm{km}$ due west of Salta City.",
+      "latitude_dms": null,
+      "longitude_dms": null,
+      "latitude": null,
+      "longitude": null
+    },
+    "deposit_type": "Porphyry Au",
+    "owner_controller": "Fortuna Mining Corp.",
+    "operator": "Mansfield Minera S.A",
+    "area_ha": 3500,
+    "technical_economic": {
+      "since_production": 2020,
+      "estimated_lom_years": 8,
+      "productive_capacity": "18,750 tpd",
+      "estimated_annual_production": null,
+      "capex": null,
+      "mining_method": "Open-Pit",
+      "product": "Gold doré"
+    },
+    "resources": [
+      {
+        "category": "Measured",
+        "values": {
+          "Au_g_t": 0.52
+        }
+      },
+      {
+        "category": "Indicated",
+        "values": {
+          "Au_g_t": 0.42
+        }
+      },
+      {
+        "category": "Inferred",
+        "values": {
+          "Au_g_t": 0.46
+        }
+      }
+    ],
+    "reserves": [
+      {
+        "category": "Proven",
+        "values": {
+          "Au_g_t": 0.56
+        }
+      },
+      {
+        "category": "Probable",
+        "values": {
+          "Au_g_t": 0.53
+        }
+      }
+    ],
+    "resources_year": null,
+    "geology": {
+      "regional": "The Andean volcanic arcs are concentrated along the north-trending axis of the Puna region, and along several northwest-trending structural transverse zones. The western part of the Salta Province is underlain by Paleogene and Neogene continental volcanic arcs and related sedimentary rock of the Andean cycle. Sedimentary rocks are deposited in large back-arc continental basins similar to the Siete Curvas basin, a portion of which is active and includes the Salar de Arizaro basin. The Lindero and Arizaro Deposits are located in the southern Archibarca volcanic belt, which is characterized by adjacent or superimposed stratovolcano complexes commonly manifested by eroded volcanic cones. Rocks exposed in these belts include andesite and dacite porphyries and coeval volcanic and volcaniclastic rocks. The Siete Curvas basin is structurally bounded by large regional structures: to the north by the Calama-Olacapato-El Toro Transverse Structure, and to the south by the Archibarca Transverse Structure. The transverse zones are interpreted to be surface expressions of ancient deep crustal trans-lithospheric structures, which were initially related to the opening of the proto-Atlantic Ocean in the Cretaceous, and have been periodically reactivated (Richards, 2000). The East Fissure fault zone and the Pocitos linear zone bound the basin to the west and east, respectively. These regional north-south-trending structures are interpreted to represent suture zones of accreted terranes, similar to the West Fissure fault zone of northern Chile (Richards, 2000). Presently the trans-lithospheric structures mark the transition from flat-slab to steep-slab subduction off the west coast of South America.",
+      "deposit": "The Lindero deposit is a gold porphyry system hosted within a series of diorite to monzonite porphyritic stocks that intrude coarse-grained Ordovician granites and Early Tertiary red bed sandstones. Gold-copper mineralization shows a strong relationship to lithology, potassium-feldspar alteration, and stockwork veining. Ministerio de Economía República Argentina Secretaría de Minería"
+    },
+    "sources_consulted": [
+      "Fortuna Mining Corp. Lindero Project",
+      "Fortina Silver Mines Inc., Fortuna Silver Mines Inc.: Lindero Mine and Arizaro Project, Salta",
+      "Province, Argentina Technical Report. December 31, 2022",
+      "Fortuna Mining Corp. Investor Presentation. January 23, 2025",
+      "Fortuna Mining Corp. Reserves and Resources 2024"
+    ],
+    "source_pages": [
+      33,
+      34,
+      35,
+      36
+    ]
+  },
+  {
+    "project_name": "Veladero",
+    "primary_commodity": "Gold",
+    "by_products": [
+      "Silver"
+    ],
+    "status": "Operation | Ampliation",
+    "location": {
+      "province": "San Juan",
+      "country": null,
+      "description": "The Veladero mine is located in San Juan Province, Argentina. The property is located approximately 374 kilometers northwest of the city of San Juan, at elevations of 4,000 to 4,850 m.a.s.l.",
+      "latitude_dms": null,
+      "longitude_dms": null,
+      "latitude": null,
+      "longitude": null
+    },
+    "deposit_type": "High",
+    "owner_controller": "Barrick Mining Corporation",
+    "operator": "Minera Andina Del Sol",
+    "area_ha": 304167,
+    "technical_economic": {
+      "since_production": 2005,
+      "estimated_lom_years": 7,
+      "productive_capacity": null,
+      "estimated_annual_production": null,
+      "capex": null,
+      "mining_method": "Open-Pit",
+      "product": "Gold and silver doré"
+    },
+    "resources": [
+      {
+        "category": "Measured",
+        "values": {
+          "Au_g_t": 0.65,
+          "Ag_g_t": 13.08,
+          "Au_kOz": 530,
+          "Ag_kOz": 11000
+        }
+      },
+      {
+        "category": "Indicated",
+        "values": {
+          "Au_g_t": 0.85,
+          "Ag_g_t": 13.91,
+          "Au_kOz": 1800,
+          "Ag_kOz": 38000
+        }
+      },
+      {
+        "category": "Inferred",
+        "values": {
+          "Au_g_t": 0.5,
+          "Ag_g_t": 15.08,
+          "Au_kOz": 290,
+          "Ag_kOz": 8200
+        }
+      }
+    ],
+    "reserves": [
+      {
+        "category": "Proven",
+        "values": {
+          "Au_g_t": 0.66,
+          "Ag_g_t": 12.92,
+          "Au_kOz": 510,
+          "Ag_kOz": 10000
+        }
+      },
+      {
+        "category": "Probable",
+        "values": {
+          "Au_g_t": 0.68,
+          "Ag_g_t": 13.93,
+          "Au_kOz": 1100,
+          "Ag_kOz": 22000
+        }
+      }
+    ],
+    "resources_year": null,
+    "geology": {
+      "regional": "The Veladero deposit is situated at the north end of the El Indio Gold Belt, a 120 km by 25 km north-trending corridor of Permian to late Miocene volcanic and intrusive rocks, which host a number of hydrothermal alteration zones and epithermal mineral deposits. The belt consists of a Tertiary volcanic rift basin in which volcanic flows and tuffs were deposited and subsequently cut by associated intrusions. Basement rocks in the belt consist of andesitic to rhyolitic tuffs, lava flows, and volcaniclastic rocks of the Permo-Triassic Choiyoi Formation, which are overlain unconformably by Tertiary igneous and volcanic rocks ranging in age from older 40 Ma stocks to more recent 4 Ma tuffs, lava flows, and volcaniclastic rocks. The El Indio Gold Belt hosts both high and low sulphidation style mineralization over approximately a 120 km strike length, from the Alturas Deposit in the south, the Tambo-El Indio mines in the middle, to the Veladero and Pascua-Lama deposits in the north. Epithermal mineralization within this belt is associated with Tertiary structural trends.",
+      "deposit": "The Veladero deposit is a hypogene-oxidized, high sulphidation gold-silver deposit hosted by volcaniclastic sediments, tuffs, and volcanic breccias related to a Miocene diatreme-dome complex. Hydrothermal alteration is typical of high sulphidation gold deposits, with a silicified core grading outward into advanced argillic alteration, then into peripheral argillic and propylitic alteration haloes. Gold occurs as fine native grains, and is dominantly associated with silicification and with iron oxide or iron sulfate fracture coatings. Silver mineralization is distinct from gold, and occurs as a broader, more diffuse envelope, probably representing a separate mineralizing event. Ministerio de Economía República Argentina Secretaría de Minería"
+    },
+    "sources_consulted": [
+      "Barrick Gold Corp. Veladero Project",
+      "Barrick Gold Corp. Technical Report on the Veladero Mine, San Juan province, Argentina. NI 43-101 Report. March 19, 2018.",
+      "Barrick Gold Corp. Resources and Reserves 2024"
+    ],
+    "source_pages": [
+      37,
+      38,
+      39,
+      40
+    ]
+  },
+  {
+    "project_name": "Calcatreu",
+    "primary_commodity": "Gold",
+    "by_products": [
+      "Silver"
+    ],
+    "status": "Construction",
+    "location": {
+      "province": "Río Negro",
+      "country": null,
+      "description": "The Calcatreu Project is located in the center-west region of the Rio Negro province, approximately 85 km south of Ingeniero Jacobacci city.",
+      "latitude_dms": "41° 52' 59.01\" S",
+      "longitude_dms": "69° 31' 59.99\" W",
+      "latitude": -41.883058,
+      "longitude": -69.533331
+    },
+    "deposit_type": "Low Sulphidation Epithermal Style (Au-Ag)",
+    "owner_controller": "Patagonia Gold.",
+    "operator": "Minera Calcatreu SAU.",
+    "area_ha": 70268,
+    "technical_economic": {
+      "since_production": 2027,
+      "estimated_lom_years": 5,
+      "productive_capacity": "97.000 Oz Au",
+      "estimated_annual_production": null,
+      "capex": null,
+      "mining_method": "Open-Pit",
+      "product": "Gold and silver doré"
+    },
+    "resources": [
+      {
+        "category": "Indicated",
+        "values": {
+          "Au_g_t": 2.11,
+          "Ag_g_t": 19.83,
+          "Au_kOz": 669,
+          "Ag_kOz": 6275
+        }
+      },
+      {
+        "category": "Inferred",
+        "values": {
+          "Au_g_t": 1.34,
+          "Ag_g_t": 13.09,
+          "Au_kOz": 348,
+          "Ag_kOz": 3399
+        }
+      }
+    ],
+    "reserves": [],
+    "resources_year": null,
+    "geology": {
+      "regional": "The oldest units in the region correspond to the igneous-metamorphic basement, represented by the Neoproterozoic to Eopaleozoic schists, gneisses and migmatites of the Cushamen Formation, and the granitic, grano-dioritic and tonalitic intrusives eopaleozoics to neopaleozoics of the Mamil Choique and Lipetrén Formations. The Jurassic vulcanites of the Garamilla Formation are arranged on the basement units, which include rhyolites, rhyodacites and pyroclastic rocks of similar composition. These rocks are covered by the Jurassic deposits of the Taquetrén Formation, made up of andesitic ignimbrites interspersed by andesitic and dacitic lava bodies, considered equivalent to the Lonco Formation Trapial (Wernert M. S., et al., 2024). Hodgkin and Rivera (2001) defined the Calcatreu Volcano-Tectonic Basin for the deposit area. This back-arc or intra-arc basin would have experienced extensional structuring under a pull-apart regime, with normal faulting of NE-SW vergence. According to the authors, this dynamic would be associated with the tectonism of the Gastre Fault Zone, and would have led to the genesis of at least 5 rhyolitic to andesitic volcanic events in the basin, equivalent to the Garamilla and Taquetrén formations, and to which it would also be associated the emplacement of intermediate to acidic porphyries responsible for hydrothermalism linked to the epithermal mineralization of Calcatreu. During the Cretaceous, the continental sedimentites of the Angostura Colorada Formation were deposited on the previous units, followed by the shallow and transitional marine sedimentites of the Coli Toro Formation. The Cenozoic stratigraphy of the region includes volcanic rocks of the Huitrera Formation, which include andesites, basalts, trachytes, rhyolites and ignimbrites of intermediate composition, and that correspond to the Paleocene-Eocene. Above and during the Miocene-Pliocene, the tuffs of the Collón Curá Formation were, as well as various basaltic plateau units. Quaternary deposits are represented by fluvial, alluvial and lagoon sedimentites, as well as modern plateau basalts.",
+      "deposit": "The Calcatreu project includes numerous swarms of epithermal veins and associated stockworks, filled with multiple pulses of silica, carbonates, adularia and few sulphides, with a predominance of banded and brecciated textures. Based on this mineralogy and its textures, the project is classified as a low-sulfidation epithermal system according to Hedenquist et al. (2000) or as an Au-Ag deposit of the adularia-sericite type according to the models proposed by Corbett and Leach (1998). The main mineralized bodies of the deposit include veins 49, Nelson E, Nelson O, Castro N, Castro S, Belén, Mariano, Amistad, Amancay and Viuda de Castro, as well as other minor mineralized zones. The bodies are generally arranged in a NE-SW direction, with the exception of the Viuda de Castro vein, whose orientation is E-W. Ministerio de Economía República Argentina Secretaría de Minería"
+    },
+    "sources_consulted": [
+      "Patagonia Gold. Calcatreu Project",
+      "Patagonia Gold. Investor Presentation. October 2022",
+      "Patagonia Gold Plc. NI 43-101 Technical Report Mineral Resource Estimate Calcatreu Gold-Silver Project, Rio Negro Province, Argentina. December 31, 2018."
+    ],
+    "source_pages": [
+      41,
+      42,
+      43,
+      44
+    ]
+  },
+  {
+    "project_name": "Suyai",
+    "primary_commodity": "Gold",
+    "by_products": [
+      "Silver"
+    ],
+    "status": "Feasibility",
+    "location": {
+      "province": "Chubut",
+      "country": null,
+      "description": "The Suyai project is located on the Esquel mountain range, at a distance of approximately 28 kilometers by road, or 9 kilometers in a straight line from the city of Esquel, in the province of Chubut.",
+      "latitude_dms": "42° 53' 50\" S",
+      "longitude_dms": "71° 13' 10\" W",
+      "latitude": -42.897222,
+      "longitude": -71.219444
+    },
+    "deposit_type": "Low Sulphidation Epithermal Style (Au-Ag)",
+    "owner_controller": "Pan American Silver Corp. (60%) and CAM (40%)",
+    "operator": "Suyai Del Sur S.A.",
+    "area_ha": 36702,
+    "technical_economic": {
+      "since_production": null,
+      "estimated_lom_years": 10,
+      "productive_capacity": "- tpd",
+      "estimated_annual_production": null,
+      "capex": "220 MUSD",
+      "mining_method": "Underground",
+      "product": "Gold and silver doré"
+    },
+    "resources": [
+      {
+        "category": "M&I",
+        "values": {
+          "Au_g_t": 15.13,
+          "Ag_g_t": 23,
+          "Au_kOz": 2286,
+          "Ag_kOz": 3523
+        }
+      },
+      {
+        "category": "Inferred",
+        "values": {
+          "Au_g_t": 9.9,
+          "Ag_g_t": 21,
+          "Au_kOz": 274,
+          "Ag_kOz": 575
+        }
+      }
+    ],
+    "reserves": [],
+    "resources_year": null,
+    "geology": {
+      "regional": "The deposit is located in the Cordón Esquel, a northwest bound elevation where Palaeozoic and Tertiary rocks emerge. The basal unit is a set of Palaeozoic metasediments. They are covered by a marine sedimentary sequence of Jurassic age and in discordance covered by basaltic, andesitic and pyroclastic flows, at the top, of the Upper Jurassic. The sequence is intruded by granites from the Lower Cretaceous and culminates in volcanic and sedimentary deposits from the Tertiary (Oligocene)."
+    },
+    "sources_consulted": [],
+    "source_pages": [
+      45,
+      46,
+      47
+    ]
+  },
+  {
+    "project_name": "Hualilán",
+    "primary_commodity": "Gold",
+    "by_products": [
+      "Silver",
+      "Zinc",
+      "Lead"
+    ],
+    "status": "Prefeasibility",
+    "location": {
+      "province": "San Juan",
+      "country": null,
+      "description": "Located in San Juan province Argentina. Access to the project is excellent with a double lane sealed highway covering the 120 kilometres from San Juan City, the regional capital and major mining hub, to within 400 metres from the project.",
+      "latitude_dms": null,
+      "longitude_dms": null,
+      "latitude": null,
+      "longitude": null
+    },
+    "deposit_type": "Skarn (Zn-Au)",
+    "owner_controller": "Challenger Gold Ltd.",
+    "operator": "Golden Mining S.A.",
+    "area_ha": 6747,
+    "technical_economic": {
+      "since_production": 2028,
+      "estimated_lom_years": 7,
+      "productive_capacity": "820 tpd (6.3 gpd Au and 35.7 gpd Ag)",
+      "estimated_annual_production": null,
+      "capex": "2.1 MUSD",
+      "mining_method": "Open-Pit",
+      "product": "Zinc concentrates with commercial gold and silver values"
+    },
+    "resources": [
+      {
+        "category": "Total",
+        "values": {
+          "Au_g_t": 1.1,
+          "Ag_g_t": 6,
+          "pct_Zn": 0.4,
+          "pct_Pb": 0.06
+        }
+      }
+    ],
+    "reserves": [
+      {
+        "category": "US$1800 optimised shell (>0.30 ppm AuEq)",
+        "values": {
+          "Au_g_t": 1,
+          "Ag_g_t": 5.1,
+          "pct_Zn": 0.38,
+          "pct_Pb": 0.06
+        }
+      },
+      {
+        "category": "Below US$1800 shell (>1.0ppm AuEq)",
+        "values": {
+          "Au_g_t": 2,
+          "Ag_g_t": 9,
+          "pct_Zn": 0.89,
+          "pct_Pb": 0.05
+        }
+      },
+      {
+        "category": "Probable",
+        "values": {
+          "Category": 6.6,
+          "Au_g_t": 37.6,
+          "Ag_g_t": 91,
+          "pct_Zn": 517
+        }
+      }
+    ],
+    "resources_year": null,
+    "geology": {
+      "regional": "Hualilan is located within the Central Precordillera. The área is a fold and thrust belt incorporating shallow marine and terrestrial sedimentary rocks of a lower Palaeozoic back-arc basin with minor volcanic and intrusive rocks. Porphyry intrusive rocks with dacitic and tonalitic composition range in age from 13 Ma to 5 Ma. The area is flanked to the north, west and south by diversity of mineral deposits from large tonnage copper and gold porphyries, skarn, manto and Carlin-style replacement deposits and epithermal deposit, as well as vein and breccia-hosted deposits.",
+      "deposit": "The Project is the site of extensive zinc skarn mineralisation with a gold overprint which makes it a somewhat unique style of mineralisation. Commonly zinc skarns occur in continental settings associated convergent tectonic plate margins as is the case at Hualilan, located in the pre-cordillera of the western South American convergent plate margin. Zinc skarns commonly contain high grade zinc, lead, and silver although zinc is usually dominant. Mineralisation and skarn alteration at Hualilan occurs in all three main rock types. In all host rocks, the zinc skarn mineralisation is overprinted by a slightly later phase of gold – silver mineralisation. This second phase of mineralisation is mesothermal to deep epithermal and may be related to but is separate from the zinc skarn. Importantly, the gold mineralisation is deposited in the same reactivated faults and fractures as the zinc skarn. Ministerio de Economía República Argentina Secretaría de Minería"
+    },
+    "sources_consulted": [
+      "Challenger Gold Limited. Hualilan Gold Project",
+      "Challenger Gold Limited. Inversor Presentation 2025",
+      "Challenger Gold Limited. Hualilan Toll Milling Project Preliminary Feasibility Study Summary San Juan, Argentina. June 2025.",
+      "Challenger Gold Limited. Quarterly activities report for the period ended. September 30, 2025 Interim Financial Report for the half-year. Juny 30, 2024"
+    ],
+    "source_pages": [
+      48,
+      49,
+      50,
+      51
+    ]
+  },
+  {
+    "project_name": "Taguas",
+    "primary_commodity": "Gold",
+    "by_products": [
+      "Silver",
+      "Copper"
+    ],
+    "status": "PEA",
+    "location": {
+      "province": "San Juan",
+      "country": null,
+      "description": "Access to the site is from the town of Tudcum, located 200 km from the city of San Juan. To reach Taguas, the 148 km mining road that links Tudcum to the Veladero gold mine is used. From Veladero one must travel 25 km further north along the Las Taguas River to reach the Project camp.",
+      "latitude_dms": "29° 11' 27.79\" S",
+      "longitude_dms": "69° 52' 35.98\" W",
+      "latitude": -29.191053,
+      "longitude": -69.876661
+    },
+    "deposit_type": "High Sulphidation Epithermal Style (Au-Ag)",
+    "owner_controller": "Orvana Minerals Corp.",
+    "operator": "Compañía Minera Piuquenes S.A.",
+    "area_ha": 3274,
+    "technical_economic": {
+      "since_production": 2028,
+      "estimated_lom_years": 9,
+      "productive_capacity": "47 kOz Au",
+      "estimated_annual_production": null,
+      "capex": "141 M USD",
+      "mining_method": "Open-Pit",
+      "product": "Gold and silver doré"
+    },
+    "resources": [
+      {
+        "category": "Cerros Taguas",
+        "values": {
+          "Au_g_t": 0.37,
+          "Ag_g_t": 11.1,
+          "Au_kOz": 467,
+          "Ag_kOz": 14037
+        }
+      },
+      {
+        "category": "Cerro Silla Sur",
+        "values": {
+          "Au_g_t": 3.14,
+          "Ag_g_t": 57.9,
+          "pct_Cu": 0.24,
+          "Au_kOz": 75,
+          "Ag_kOz": 1396,
+          "Cu_MLbs": 4
+        }
+      },
+      {
+        "category": "Cerro Campamento",
+        "values": {
+          "Au_g_t": 4.01,
+          "Ag_g_t": 41.1,
+          "pct_Cu": 0.47,
+          "Au_kOz": 196,
+          "Ag_kOz": 2025,
+          "Cu_MLbs": 15.6
+        }
+      }
+    ],
+    "reserves": [],
+    "resources_year": null,
+    "geology": {
+      "regional": "Taguas is located at the northern end of the Cura Valley volcanic belt, of tertiary age, and on the eastern flank of the El Indio metallogenic belt (Siddeley and Araneda, 1990). The physical continuity of the volcanism and stratigraphy of the thin Chilean Cura Valley volcanic belt has been confirmed by several regional studies (Ramos 1995, 1998 and Godeas et al., 1993). The Cura Valley belt has similarities with the Chilean flank in both age and type of basement and alterations (Davidson and Mpodozis, 1991) and is an extension of the El Indio belt in Argentina.",
+      "deposit": "The Taguas property is home to a high-sulfidation gold-silver epithermal system housed in altered Tertiary volcanic rhyolites. Supergene gold-silver oxide mineralization occurs in the southern half of Taguas, at Cerro Taguas Norte, Cerro Taguas Sur, Cerro III and Cerro IV. This mineralization consists of sub-vertical mineralized structures, which also impact in the northeast, in a zone of lower grade mineralization. The high grade zones range in width from 1.5m to 8m and in length from 40m to over 500m. High grade zones consist of relatively continuous mineralization with gold grades ranging from 0.2 to over 4.0 g/t Au and 10 to over 50 g/t Au. Oxidation extends from the surface to approximately 200m below the surface. Gold-silver sulphides (pyrite-enargite) have been found in the north central zone of the property, at Cerro Campamento, and at Cerro Silla Sur. In addition, intersections grading over 50 g/t Au and 100 g/t Ag have been recognized in discrete mineralized vein structures ranging in length from 1.5 m to 5 m. Evidence of porphyry copper-gold mineralization has also been found on the Taguas property. Ministerio de Economía República Argentina Secretaría de Minería"
+    },
+    "sources_consulted": [
+      "Orvana Minerals Corp. Taguas Project",
+      "Orvana Minerals Corp., Inversor Presentation, november 2025",
+      "Orvana Minerals Corp., Preliminary Economic Assessment, NI 43-101 Technical Report on the Taguas Heap Leach Project. December 29, 2021."
+    ],
+    "source_pages": [
+      52,
+      53,
+      54,
+      55
+    ]
+  }
+]

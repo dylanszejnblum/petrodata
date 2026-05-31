@@ -1,0 +1,85 @@
+project_name,primary_commodity,bucket,category,metric,value
+Puna Operation,Silver,resources,Measured,Ag_g_t,239
+Puna Operation,Silver,resources,Measured,pct_Pb,1.12
+Puna Operation,Silver,resources,Measured,pct_Zn,3.85
+Puna Operation,Silver,resources,Measured,Ag_kOz,17959
+Puna Operation,Silver,resources,Measured,Pb_MLbs,22.7
+Puna Operation,Silver,resources,Measured,Zn_MLbs,185
+Puna Operation,Silver,resources,Indicated,Ag_g_t,147.22
+Puna Operation,Silver,resources,Indicated,pct_Pb,0.94
+Puna Operation,Silver,resources,Indicated,pct_Zn,2.02
+Puna Operation,Silver,resources,Indicated,Ag_kOz,17985
+Puna Operation,Silver,resources,Indicated,Pb_MLbs,46.9
+Puna Operation,Silver,resources,Indicated,Zn_MLbs,156.1
+Puna Operation,Silver,resources,Inferred,Ag_g_t,157.15
+Puna Operation,Silver,resources,Inferred,pct_Pb,1.05
+Puna Operation,Silver,resources,Inferred,pct_Zn,6.88
+Puna Operation,Silver,resources,Inferred,Ag_kOz,8566
+Puna Operation,Silver,resources,Inferred,Pb_MLbs,1.8
+Puna Operation,Silver,resources,Inferred,Zn_MLbs,212
+Puna Operation,Silver,reserves,Proven,Ag_g_t,145.25
+Puna Operation,Silver,reserves,Proven,pct_Pb,1.19
+Puna Operation,Silver,reserves,Proven,pct_Zn,0.181
+Puna Operation,Silver,reserves,Proven,Ag_kOz,3940
+Puna Operation,Silver,reserves,Proven,Pb_MLbs,22.1
+Puna Operation,Silver,reserves,Proven,Zn_MLbs,3.3
+Puna Operation,Silver,reserves,Probable,Ag_g_t,141.3
+Puna Operation,Silver,reserves,Probable,pct_Pb,11.17
+Puna Operation,Silver,reserves,Probable,pct_Zn,0.18
+Puna Operation,Silver,reserves,Probable,Ag_kOz,15588
+Puna Operation,Silver,reserves,Probable,Pb_MLbs,110.8
+Puna Operation,Silver,reserves,Probable,Zn_MLbs,13.5
+San José,Silver,resources,Measured,Ag_g_t,412
+San José,Silver,resources,Measured,Au_g_t,6.66
+San José,Silver,resources,Measured,Ag_kOz,12600
+San José,Silver,resources,Measured,Au_kOz,204.2
+San José,Silver,resources,Indicated,Ag_g_t,269
+San José,Silver,resources,Indicated,Au_g_t,5.53
+San José,Silver,resources,Indicated,Ag_kOz,6100
+San José,Silver,resources,Indicated,Au_kOz,125.7
+San José,Silver,resources,Inferred,Ag_g_t,252
+San José,Silver,resources,Inferred,Au_g_t,4.59
+San José,Silver,resources,Inferred,Ag_kOz,9500
+San José,Silver,resources,Inferred,Au_kOz,171.8
+San José,Silver,reserves,Proven,Ag_g_t,295
+San José,Silver,reserves,Proven,Au_g_t,4.72
+San José,Silver,reserves,Proven,Ag_kOz,3400
+San José,Silver,reserves,Proven,Au_kOz,54.1
+San José,Silver,reserves,Probable,Ag_g_t,272
+San José,Silver,reserves,Probable,Au_g_t,5.5
+San José,Silver,reserves,Probable,Ag_kOz,2000
+San José,Silver,reserves,Probable,Au_kOz,39.7
+Diablillos,Silver,resources,M&I,Ag_g_t,59
+Diablillos,Silver,resources,M&I,Au_g_t,0.51
+Diablillos,Silver,resources,M&I,Ag_kOz,198643
+Diablillos,Silver,resources,M&I,Au_kOz,1715
+Diablillos,Silver,resources,Inferred,Ag_g_t,21
+Diablillos,Silver,resources,Inferred,Au_g_t,0.38
+Diablillos,Silver,resources,Inferred,Ag_kOz,13427
+Diablillos,Silver,resources,Inferred,Au_kOz,241
+Diablillos,Silver,reserves,Proven,Ag_g_t,118
+Diablillos,Silver,reserves,Proven,Au_g_t,0.86
+Diablillos,Silver,reserves,Proven,Ag_kOz,46796
+Diablillos,Silver,reserves,Proven,Au_kOz,341
+Diablillos,Silver,reserves,Probable,Ag_g_t,80
+Diablillos,Silver,reserves,Probable,Au_g_t,0.8
+Diablillos,Silver,reserves,Probable,Ag_kOz,76684
+Diablillos,Silver,reserves,Probable,Au_kOz,766
+Navidad,Silver,resources,Measured,Ag_g_l,137
+Navidad,Silver,resources,Measured,pct_Pb,1.44
+Navidad,Silver,resources,Measured,pct_Cu,0.1
+Navidad,Silver,resources,Measured,Ag_kOz,67000
+Navidad,Silver,resources,Measured,Pb_MLbs,489
+Navidad,Silver,resources,Measured,Cu_MLbs,34
+Navidad,Silver,resources,Indicated,Ag_g_l,126
+Navidad,Silver,resources,Indicated,pct_Pb,0.79
+Navidad,Silver,resources,Indicated,pct_Cu,0.04
+Navidad,Silver,resources,Indicated,Ag_kOz,565000
+Navidad,Silver,resources,Indicated,Pb_MLbs,2434
+Navidad,Silver,resources,Indicated,Cu_MLbs,123
+Navidad,Silver,resources,Inferred,Ag_g_l,81
+Navidad,Silver,resources,Inferred,pct_Pb,0.57
+Navidad,Silver,resources,Inferred,pct_Cu,0.02
+Navidad,Silver,resources,Inferred,Ag_kOz,119000
+Navidad,Silver,resources,Inferred,Pb_MLbs,580
+Navidad,Silver,resources,Inferred,Cu_MLbs,22

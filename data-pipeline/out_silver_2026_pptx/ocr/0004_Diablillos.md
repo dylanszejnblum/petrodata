@@ -1,0 +1,102 @@
+PORTFOLIO OF ADVANCED PROJECTS | SILVER
+
+# Ag
+
+# Diablillos
+
+![img-0.jpeg](img-0.jpeg)
+
+25° 18' 00" S
+
+66° 50' 00" W
+
+![img-1.jpeg](img-1.jpeg)
+
+TYPE OF DEPOSIT: High Sulphidation Epithermal Style
+
+STATUS: Feasibility
+
+CAPEX: 620 M USD
+
+![img-2.jpeg](img-2.jpeg)
+
+CONTROLLER / OPERATOR
+AbraSilver Resource Corp. /
+Abra Plata Argentina S.A.
+
+ÁREA: 7,919 ha
+
+Location: The Diablillos property is located in the high Puna and Altiplano region of north-western Argentina. It is approximately 160 km southwest of the city of Salta and 375 km northwest of the city of Catamarca, along the border between the Provinces of Salta and Catamarca, Argentina.
+
+# TECHNICAL AND ECONOMIC INFORMATION
+
+Since production: 2029
+
+Estimated LOM: 28 years
+
+Productive capacity: 9000 tpd
+
+Estimated average annual production 2025: -
+
+Mining Method: Open pit
+
+Product to obtain: Concentrate and doré
+
+Ministerio de Economía República Argentina Secretaría de Minería
+
+---
+
+PORTFOLIO OF ADVANCED PROJECTS | SILVER
+
+# PROJECT GEOLOGY
+
+## Regional geology
+
+The project is located in the Postacretionary Metalogenetic Belt associated with the Neogene magmatic arc, linked to NE-SO transtensional zones. It is characterized by a vulcanism that has not evolved much in the Miocene period. It includes corridors to the NE that control the magmatic and hydrothermal activity, where polymetallic mineralizations in the N (Farallón Negro) and porphyries with subtypes linked to the characteristics of magmatism such as Agua Rica and Alumbrera are located.
+
+The dissected volcanoes of the upper Miocene in the Puna usually host areas with intermediate argillic alteration and silicification. In the highest levels of these systems, in their final episodes, golden manifestations such as Diablillos and Organullo were recognized.
+
+## Deposit Geology
+
+In the vicinity of the project, the Diablillos-Cerro Galán fault zone is approximately 10 km wide. Magmatism and hydrothermal activity often occur at the intersection of the faults with shear structures, such as the Cerro Ratones line. Tertiary andesitic flows and flow breccias develop with intermediate tufa and pelic units, and subvolcanic porphyry rocks. Precambrian granitic and granodioritic rocks underlie most of the volcanic sequence. Drilling by Silver Standard Resources identified a highly permeable erosive discordance that would control hydrothermal fluids.
+
+The recognized alteration contains silica clay-alunite-jarosite, indicative of strong acid leaching, which is related to the presence of gold in silica.
+
+Ministerio de Economía República Argentina Secretaría de Minería
+
+---
+
+PORTFOLIO OF ADVANCED PROJECTS | SILVER
+
+# RESOURCES AND RESERVES (2024)
+
+|  RESOURCES (2025) | Grade |   | Metal Content  |   |
+| --- | --- | --- | --- | --- |
+|   |  Ag (g/t) | Au (g/t) | Ag (kOz) | Au (kOz)  |
+|  M&I | 59 | 0.51 | 198,643 | 1,715  |
+|  Inferred | 21 | 0.38 | 13,427 | 241  |
+|  RESERVES (2024) | Grade |   | Metal Content  |   |
+| --- | --- | --- | --- | --- |
+|   |  Ag (g/t) | Au (g/t) | Ag (kOz) | Au (kOz)  |
+|  Proven | 118 | 0.86 | 46,796 | 341  |
+|  Probable | 80 | 0.80 | 76,684 | 766  |
+
+# COMPANY'S ANNOUNCEMENT
+
+AbraSilver Submits RIGI Application for the Diablillos Project. Date: November 21, 2025. More information
+
+AbraSilver Commences Phase VI Drill Program at Diablillos and Reports Assay Results. Date: January 13, 2026. More information
+
+# Sources Consulted
+
+AbraSilver Source Corp. Diablillos Project
+
+AbraSilver Source Corp. NI 43-101 Technical Report, Mineral Resource Estimate for the Diablillos Au-Ag Project, Salta &amp; Catamarca Provinces, Argentina. Date: September 12, 2025.
+
+Ministerio de Economía República Argentina Secretaría de Minería
+
+---
+
+El Quevar, Salta
+
+![img-0.jpeg](img-0.jpeg)

@@ -1,0 +1,240 @@
+[
+  {
+    "group_idx": 0,
+    "project_name": "preamble",
+    "page_numbers": [
+      1,
+      2
+    ],
+    "md_path": "ocr/0000_preamble.md"
+  },
+  {
+    "group_idx": 1,
+    "project_name": "OPERATION",
+    "page_numbers": [
+      3,
+      4
+    ],
+    "md_path": "ocr/0001_OPERATION.md"
+  },
+  {
+    "group_idx": 2,
+    "project_name": "Regional Geology",
+    "page_numbers": [
+      5,
+      6
+    ],
+    "md_path": "ocr/0002_Regional_Geology.md"
+  },
+  {
+    "group_idx": 3,
+    "project_name": "Cauchari - Olaroz",
+    "page_numbers": [
+      7,
+      8,
+      9
+    ],
+    "md_path": "ocr/0003_Cauchari_-_Olaroz.md"
+  },
+  {
+    "group_idx": 4,
+    "project_name": "Centenario-Ratones",
+    "page_numbers": [
+      10,
+      11,
+      12
+    ],
+    "md_path": "ocr/0004_Centenario-Ratones.md"
+  },
+  {
+    "group_idx": 5,
+    "project_name": "Fenix",
+    "page_numbers": [
+      13,
+      14,
+      15
+    ],
+    "md_path": "ocr/0005_Fenix.md"
+  },
+  {
+    "group_idx": 6,
+    "project_name": "Mariana",
+    "page_numbers": [
+      16,
+      17,
+      18
+    ],
+    "md_path": "ocr/0006_Mariana.md"
+  },
+  {
+    "group_idx": 7,
+    "project_name": "Olaroz",
+    "page_numbers": [
+      19,
+      20,
+      21
+    ],
+    "md_path": "ocr/0007_Olaroz.md"
+  },
+  {
+    "group_idx": 8,
+    "project_name": "Lal de Oro",
+    "page_numbers": [
+      22,
+      23,
+      24
+    ],
+    "md_path": "ocr/0008_Lal_de_Oro.md"
+  },
+  {
+    "group_idx": 9,
+    "project_name": "Lives Quebradas",
+    "page_numbers": [
+      25,
+      26,
+      27
+    ],
+    "md_path": "ocr/0009_Lives_Quebradas.md"
+  },
+  {
+    "group_idx": 10,
+    "project_name": "Hombre Muerto Oeste",
+    "page_numbers": [
+      28,
+      29,
+      30,
+      31,
+      32,
+      33
+    ],
+    "md_path": "ocr/0010_Hombre_Muerto_Oeste.md"
+  },
+  {
+    "group_idx": 11,
+    "project_name": "Lal de los \u00c1ngeles",
+    "page_numbers": [
+      34,
+      35,
+      36
+    ],
+    "md_path": "ocr/0011_Lal_de_los_ngeles.md"
+  },
+  {
+    "group_idx": 12,
+    "project_name": "Lal de Vida",
+    "page_numbers": [
+      37,
+      38,
+      39
+    ],
+    "md_path": "ocr/0012_Lal_de_Vida.md"
+  },
+  {
+    "group_idx": 13,
+    "project_name": "Salar del Rinc\u00f3n",
+    "page_numbers": [
+      40,
+      41,
+      42
+    ],
+    "md_path": "ocr/0013_Salar_del_Rinc_n.md"
+  },
+  {
+    "group_idx": 14,
+    "project_name": "Kachi",
+    "page_numbers": [
+      43,
+      44,
+      45
+    ],
+    "md_path": "ocr/0014_Kachi.md"
+  },
+  {
+    "group_idx": 15,
+    "project_name": "Pozuelos",
+    "page_numbers": [
+      46,
+      47,
+      48
+    ],
+    "md_path": "ocr/0015_Pozuelos.md"
+  },
+  {
+    "group_idx": 16,
+    "project_name": "Arizaro",
+    "page_numbers": [
+      49,
+      50,
+      51
+    ],
+    "md_path": "ocr/0016_Arizaro.md"
+  },
+  {
+    "group_idx": 17,
+    "project_name": "Cauchari",
+    "page_numbers": [
+      52,
+      53,
+      54
+    ],
+    "md_path": "ocr/0017_Cauchari.md"
+  },
+  {
+    "group_idx": 18,
+    "project_name": "Cauchari Jv",
+    "page_numbers": [
+      55,
+      56,
+      57
+    ],
+    "md_path": "ocr/0018_Cauchari_Jv.md"
+  },
+  {
+    "group_idx": 19,
+    "project_name": "Candelas",
+    "page_numbers": [
+      58,
+      59,
+      60
+    ],
+    "md_path": "ocr/0019_Candelas.md"
+  },
+  {
+    "group_idx": 20,
+    "project_name": "Hombre Muerto Norte",
+    "page_numbers": [
+      61,
+      62,
+      63
+    ],
+    "md_path": "ocr/0020_Hombre_Muerto_Norte.md"
+  },
+  {
+    "group_idx": 21,
+    "project_name": "R\u00edo Grande",
+    "page_numbers": [
+      64,
+      65,
+      66
+    ],
+    "md_path": "ocr/0021_R_o_Grande.md"
+  },
+  {
+    "group_idx": 22,
+    "project_name": "Salar Tolillar",
+    "page_numbers": [
+      67,
+      68,
+      69
+    ],
+    "md_path": "ocr/0022_Salar_Tolillar.md"
+  },
+  {
+    "group_idx": 23,
+    "project_name": "Ministerio de Econom\u00eda",
+    "page_numbers": [
+      70
+    ],
+    "md_path": "ocr/0023_Ministerio_de_Econom_a.md"
+  }
+]

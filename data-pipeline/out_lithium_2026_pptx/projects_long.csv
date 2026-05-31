@@ -1,0 +1,79 @@
+project_name,primary_commodity,bucket,category,metric,value
+Cauchari - Olaroz,Lithium,resources,M&I,LCE_t,19852700
+Cauchari - Olaroz,Lithium,resources,Inferred,LCE_t,4722700
+Cauchari - Olaroz,Lithium,reserves,Proven,LCE_t,514450
+Cauchari - Olaroz,Lithium,reserves,Probable,LCE_t,3120590
+Centenario-Ratones,Lithium,resources,Measured,LCE_t,6210000
+Centenario-Ratones,Lithium,resources,Indicated,LCE_t,6320000
+Centenario-Ratones,Lithium,resources,Inferred,LCE_t,2590000
+Centenario-Ratones,Lithium,reserves,Proven,LCE_t,289000
+Centenario-Ratones,Lithium,reserves,Probable,LCE_t,752000
+Fenix,Lithium,resources,Measured,LCE_t,2700000
+Fenix,Lithium,resources,Indicated,LCE_t,4300000
+Fenix,Lithium,resources,Inferred,LCE_t,4700000
+Fenix,Lithium,reserves,Proven,LCE_t,1200000
+Fenix,Lithium,reserves,Probable,LCE_t,4100000
+Mariana,Lithium,resources,Measured,LCE_t,4436000
+Mariana,Lithium,resources,Indicated,LCE_t,2418000
+Mariana,Lithium,resources,Inferred,LCE_t,1267000
+Olaroz,Lithium,resources,Measured,LCE_t,8500000
+Olaroz,Lithium,resources,Indicated,LCE_t,8400000
+Olaroz,Lithium,resources,Inferred,LCE_t,2800000
+Olaroz,Lithium,reserves,Proven,LCE_t,600000
+Olaroz,Lithium,reserves,Probable,LCE_t,2200000
+Lal de Oro,Lithium,reserves,Proven,LCE_t,158000
+Lal de Oro,Lithium,reserves,Probable,LCE_t,881200
+Lives Quebradas,Lithium,resources,M&I,LCE_t,5966191
+Lives Quebradas,Lithium,resources,Inferred,LCE_t,2329900
+Lives Quebradas,Lithium,reserves,Proven,LCE_t,990491
+Lives Quebradas,Lithium,reserves,Probable,LCE_t,587600
+Hombre Muerto Oeste,Lithium,resources,Measured,LCE_t,4738000
+Hombre Muerto Oeste,Lithium,resources,Indicated,LCE_t,1649000
+Hombre Muerto Oeste,Lithium,resources,Inferred,LCE_t,1480000
+Hombre Muerto Oeste,Lithium,resources,Indicated,LCE_t,640330
+Hombre Muerto Oeste,Lithium,resources,Inferred,LCE_t,91471
+Hombre Muerto Oeste,Lithium,reserves,Proven,LCE_t,884
+Hombre Muerto Oeste,Lithium,reserves,Probable,LCE_t,861.5
+Lal de los Ángeles,Lithium,resources,Indicated,LCE_t,1037240
+Lal de los Ángeles,Lithium,resources,Inferred,LCE_t,1006739
+Lal de Vida,Lithium,resources,Measured,LCE_t,3500000
+Lal de Vida,Lithium,resources,Indicated,LCE_t,3000000
+Lal de Vida,Lithium,resources,Inferred,LCE_t,700000
+Lal de Vida,Lithium,reserves,Proven,LCE_t,400000
+Lal de Vida,Lithium,reserves,Probable,LCE_t,2038709
+Salar del Rincón,Lithium,resources,Measured,LCE_t,1540000
+Salar del Rincón,Lithium,resources,Indicated,LCE_t,7850000
+Salar del Rincón,Lithium,resources,Inferred,LCE_t,2290000
+Salar del Rincón,Lithium,reserves,Probable,LCE_t,2070000
+Kachi,Lithium,resources,Measured,Lithium_t,788000
+Kachi,Lithium,resources,Measured,LCE_t,4191000
+Kachi,Lithium,resources,Indicated,Lithium_t,751000
+Kachi,Lithium,resources,Indicated,LCE_t,3998000
+Kachi,Lithium,resources,Inferred,Lithium_t,542000
+Kachi,Lithium,resources,Inferred,LCE_t,2885000
+Kachi,Lithium,reserves,Proven,LCE_t,4390
+Kachi,Lithium,reserves,Proven,LCE_t,28360
+Kachi,Lithium,reserves,Probable,LCE_t,85060
+Pozuelos,Lithium,resources,Measured,LCE_t,13242244
+Pozuelos,Lithium,resources,Indicated,LCE_t,1834383
+Pozuelos,Lithium,resources,Inferred,LCE_t,6713437
+Arizaro,Lithium,resources,Measured,LCE_t,261000
+Arizaro,Lithium,resources,Indicated,LCE_t,2237000
+Arizaro,Lithium,resources,Inferred,LCE_t,1624000
+Arizaro,Lithium,reserves,Probable,LCE_t,273
+Cauchari,Lithium,resources,Totales,LCE_t,6300000
+Cauchari,Lithium,resources,Totales,ECI_t,19600
+Cauchari Jv,Lithium,resources,Measured,LCE_t,1900000
+Cauchari Jv,Lithium,resources,Indicated,LCE_t,2600000
+Cauchari Jv,Lithium,resources,Inferred,LCE_t,1500000
+Cauchari Jv,Lithium,reserves,Proven,LCE_t,200000
+Cauchari Jv,Lithium,reserves,Probable,LCE_t,900000
+Candelas,Lithium,resources,Indicated,LCE_t,1284
+Candelas,Lithium,resources,Inferred,LCE_t,350
+Hombre Muerto Norte,Lithium,resources,Measured,LCE_t,1463000
+Hombre Muerto Norte,Lithium,resources,Indicated,LCE_t,120200
+Río Grande,Lithium,resources,Measured,LCE_t,2094000
+Río Grande,Lithium,resources,Indicated,LCE_t,564000
+Río Grande,Lithium,resources,Inferred,LCE_t,2039000
+Salar Tolillar,Lithium,resources,Indicated,LCE_t,3626000
+Salar Tolillar,Lithium,resources,Inferred,LCE_t,1393000

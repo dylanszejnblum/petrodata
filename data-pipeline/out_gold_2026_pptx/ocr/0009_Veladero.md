@@ -1,0 +1,117 @@
+PORTFOLIO OF ADVANCED PROJECTS | GOLD
+
+# Au
+
+# Veladero
+
+![img-0.jpeg](img-0.jpeg)
+
+$29^{\circ} 22'$ S
+
+$69^{\circ} 57'$ W
+
+![img-1.jpeg](img-1.jpeg)
+
+![img-2.jpeg](img-2.jpeg)
+
+TYPE OF DEPOSIT: High
+
+Sulphidation Epithermal Style
+
+(Au-Ag)
+
+By-product: Silver
+
+STATUS: Operation | Ampliation
+
+![img-3.jpeg](img-3.jpeg)
+
+CONTROLLER | OPERATOR
+
+Barrick Mining Corporation |
+
+Minera Andina Del Sol
+
+ÁREA: 304,167 ha
+
+Location: The Veladero mine is located in San Juan Province, Argentina. The property is located approximately 374 kilometers northwest of the city of San Juan, at elevations of 4,000 to 4,850 m.a.s.l.
+
+# TECHNICAL AND ECONOMIC INFORMATION
+
+Since production: 2005
+
+Estimated LOM: 7 years
+
+Productive capacity: -
+
+Estimated average annual production 2025: 460 kOz Au
+
+Mining Method: Open-Pit
+
+Product to obtain: Gold and silver doré
+
+#
+
+Ministerio de Economía
+
+República Argentina
+
+Secretaría de Minería
+
+---
+
+PORTFOLIO OF ADVANCED PROJECTS | GOLD
+
+# PROJECT GEOLOGY
+
+## Type of deposit - High Sulphidation Epithermal Style (Au-Ag)
+
+### Regional Geology
+
+The Veladero deposit is situated at the north end of the El Indio Gold Belt, a 120 km by 25 km north-trending corridor of Permian to late Miocene volcanic and intrusive rocks, which host a number of hydrothermal alteration zones and epithermal mineral deposits. The belt consists of a Tertiary volcanic rift basin in which volcanic flows and tuffs were deposited and subsequently cut by associated intrusions. Basement rocks in the belt consist of andesitic to rhyolitic tuffs, lava flows, and volcaniclastic rocks of the Permo-Triassic Choiyoi Formation, which are overlain unconformably by Tertiary igneous and volcanic rocks ranging in age from older 40 Ma stocks to more recent 4 Ma tuffs, lava flows, and volcaniclastic rocks.
+
+The El Indio Gold Belt hosts both high and low sulphidation style mineralization over approximately a 120 km strike length, from the Alturas Deposit in the south, the Tambo-El Indio mines in the middle, to the Veladero and Pascua-Lama deposits in the north. Epithermal mineralization within this belt is associated with Tertiary structural trends.
+
+### Deposit Geology
+
+The Veladero deposit is a hypogene-oxidized, high sulphidation gold-silver deposit hosted by volcaniclastic sediments, tuffs, and volcanic breccias related to a Miocene diatreme-dome complex. Hydrothermal alteration is typical of high sulphidation gold deposits, with a silicified core grading outward into advanced argillic alteration, then into peripheral argillic and propylitic alteration haloes. Gold occurs as fine native grains, and is dominantly associated with silicification and with iron oxide or iron sulfate fracture coatings. Silver mineralization is distinct from gold, and occurs as a broader, more diffuse envelope, probably representing a separate mineralizing event.
+
+Ministerio de Economía República Argentina Secretaría de Minería
+
+---
+
+PORTFOLIO OF ADVANCED PROJECTS | GOLD
+
+# RESOURCES AND RESERVES (2024)
+
+|  RESOURCES | Au (g/t) | Ag (g/t) | Au (kOz) | Ag (kOz)  |
+| --- | --- | --- | --- | --- |
+|  Measured | 0.65 | 13.08 | 530 | 11,000  |
+|  Indicated | 0.85 | 13.91 | 1,800 | 38,000  |
+|  Inferred | 0.5 | 15.08 | 290 | 8,200  |
+|  RESERVES | Au (g/t) | Ag (g/t) | Au (kOz) | Ag (kOz)  |
+| --- | --- | --- | --- | --- |
+|  Proven | 0.66 | 12.92 | 510 | 10,000  |
+|  Probable | 0.68 | 13.93 | 1,100 | 22,000  |
+
+# COMPANY'S ANNOUNCEMENT
+
+RIGI: Veladero submits application valued at approximately US$400 million. Date: August 13, 2025. More information
+
+The company has reaffirmed its commitment to extending the life of the Veladero mine through an ambitious exploration program in San Juan. The company is progressing with drilling at the high-sulfidation Brujas and Argenta targets, located south of the deposit, and is constructing the Phase 8 leach pad. Date: May 7, 2025. More information
+
+The company initiated Phase 8A of the expansion of the Leaching Valley at the Veladero mine, San Juan. Date: January 28, 2025. More information
+
+# SOURCES CONSULTED
+
+Barrick Gold Corp. Veladero Project
+
+Barrick Gold Corp. Technical Report on the Veladero Mine, San Juan province, Argentina. NI 43-101 Report. March 19, 2018.
+
+Barrick Gold Corp. Resources and Reserves 2024
+
+Ministerio de Economía República Argentina Secretaría de Minería
+
+---
+
+Josemaría, San Juan

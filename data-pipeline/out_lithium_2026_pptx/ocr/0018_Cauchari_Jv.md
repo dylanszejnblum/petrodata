@@ -1,0 +1,89 @@
+PORTFOLIO OF ADVANCED PROJECTS | LITHIUM
+
+# L i
+
+# Cauchari Jv
+
+![img-0.jpeg](img-0.jpeg)
+
+$23^{\circ} 29' 13.19''$ S
+$66^{\circ} 42' 34.30''$ W
+
+![img-1.jpeg](img-1.jpeg)
+
+TYPE OF DEPOSIT: Brine
+
+By-product: Potassium
+
+![img-2.jpeg](img-2.jpeg)
+
+STATUS: Pre Feasibility
+
+CAPEX: 659 MUSD
+
+![img-3.jpeg](img-3.jpeg)
+
+CONTROLLER | OPERATOR
+Rio Tinto Group | South American Salars
+
+ÁREA: 27,772 ha
+
+Location: The Cauchari lithium brines project located in the Southern Subbasin (referred to as Salar de Cauchari) of the Olaroz-Cauchari Salar complex in Jujuy Province of northern Argentina. The Olaroz-Cauchari Salar is located in the Puna region, 230 km west of the city of San Salvador de Jujuy in Jujuy Province of northern Argentina at an altitude of 3,900 m.a.s.l.
+
+# TECHNICAL AND ECONOMIC INFORMATION
+
+Since production: -
+
+Estimated LOM: 30 years
+
+Productive capacity: 25,000 tpa LCE
+
+Mining Method: Pumping - Evaporation
+
+Product to obtain: Lithium Carbonate $(\mathrm{Li}_2\mathrm{CO}_3)$
+
+#
+
+Ministerio de Economía
+República Argentina
+
+Secretaría de Minería
+
+---
+
+PORTFOLIO OF ADVANCED PROJECTS | LITHIUM
+
+# PROJECT GEOLOGY
+
+## Deposit Geology
+
+Salar de Cauchari (the salar) is a mixed (mature and immature) style salar, with a halite nucleus in the centre of the salar overlain with up to 50 m of fine grained (clay) sediments. The halite core is interbedded with clayey to silty and sandy layers. The salar is surrounded by relative coarse grained alluvial and fluvial sediments. These fans demarcate the perimeter of the actual salar visible in satellite images and at depth extend towards the centre of the salar where they form the distal facies with an increase in sand and silt content. At depth (between 300 m and 600 m) a deep sand unit has been intercepted in several core holes in the southeast sector of the project area.
+
+Salar de Cauchari is located towards the centre of the Puna Plateau. The Puna is an elevated plateau in northern Argentina which has been subject to uplift along thrust systems inverting earlier extensional faults. The Puna is host to numerous large ignimbrites and stratovolcanoes. Evaporite minerals (halite, gypsum) occur disseminated within clastic sequences in the salar basins and as discrete evaporite beds. Based on the drilling campaigns carried out in the salar between 2011 and 2018, six major geological units were identified and correlated from the logging of drill cuttings and undisturbed core to a general depth of over 600 m. These units are characterised according to the relative abundance of gravels, sands, silts, clays and evaporites present within each grouping. No drill hole has reached bedrock.
+
+## RESOURCES AND RESERVES (2025)
+
+|  RESOURCES (2025) | Li Grade (mg/l) | LCE (t)  |
+| --- | --- | --- |
+|  Measured | 530 | 1,900,000  |
+|  Indicated | 450 | 2,600,000  |
+|  Inferred | 470 | 1,500,000  |
+|  RESERVES | Li Grade (mg/l) | LCE (t)  |
+|  Proven | 570 | 200,000  |
+|  Probable | 490 | 900,000  |
+
+## SOURCES CONSULTED
+
+Rio Tinto Group. Cauchari project
+
+Rio Tinto. Resources and reserves 2025
+
+Allkem Limited. Cauchari Mineral Resource and Ore Reserve Update and Project Update. Date: September 25, 2023
+
+Ministerio de Economía República Argentina Secretaría de Minería
+
+---
+
+Tres Quebradas, Catamarca
+
+![img-0.jpeg](img-0.jpeg)

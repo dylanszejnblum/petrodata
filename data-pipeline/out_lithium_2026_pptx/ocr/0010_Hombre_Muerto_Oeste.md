@@ -1,0 +1,168 @@
+PORTFOLIO OF ADVANCED PROJECTS | LITHIUM
+
+# Li
+
+# Hombre Muerto Oeste
+
+![img-0.jpeg](img-0.jpeg)
+
+$25^{\circ} 13' \mathrm{S}$
+
+$67^{\circ} 04' \mathrm{W}$
+
+![img-1.jpeg](img-1.jpeg)
+
+TYPE OF DEPOSIT: Brine
+
+By-product: Potassium
+
+STATUS: Construction
+
+CAPEX: -
+
+![img-2.jpeg](img-2.jpeg)
+
+CONTROLLER | OPERATOR
+
+Galan Lithium Limited | Galan Litio S.A
+
+ÁREA: 9,493 ha
+
+Location: The project is in the geological province of Puna, 90 km north of the town of Antofagasta de la Sierra, province of Catamarca. The HMW Project is located to the West and South of the Salar del Hombre Muerto.
+
+# TECHNICAL AND ECONOMIC INFORMATION
+
+Since production: 2026
+
+Estimated LOM: 40 years
+
+Productive capacity: Stage1: 5,400 tpa LCE | Stage 2: HMW mining permit has been granted at a commercial scale up to 21,000 tpa LCE.
+
+Mining Method: Pumping - Evaporation
+
+Product to obtain: Lithium Chloride concentrate (LiCl)
+
+#
+
+Ministerio de Economía
+
+República Argentina
+
+Secretaría de Minería
+
+---
+
+PORTFOLIO OF ADVANCED PROJECTS | LITHIUM
+
+# PROJECT GEOLOGY
+
+## Deposit Geology
+
+The local geology of the Hombre Muerto Salar includes a basement of intrusive, sedimentary and metamorphic rocks from the Precambrian and early Paleozoic, thick sequences of Ordovician marine sedimentary rocks with a roof of continental Mesozoic sedimentary units. These are superimposed by the Miocene to Pliocene volcanic deposits, which are common characteristics of the salt flats in the sedimentary basins of the region.
+
+## RESOURCES AND RESERVES
+
+|  RESOURCES (2025) | Li Grade (mg/l) | LCE (t) | K Grade (mg/l) | KCI Eq. (t)  |
+| --- | --- | --- | --- | --- |
+|  Measured | 866 | 4,738,000 | 7,505 | 14,711,000  |
+|  Indicated | 894 | 1,649,000 | 7,837 | 5,181,000  |
+|  Inferred | 926 | 1,480,000 | 8,210 | 4,700,000  |
+|  RESERVES (2024)* | Production period (years) | Li Grade (mg/l) | LCE (t)  |
+| --- | --- | --- | --- |
+|  Proven | 1-7 | 884 | 101,200  |
+|  Probable | 1-40 | 861.5 | 705,200  |
+
+*Reserves estimate the Hombre Muerto West Project phase 2, in the will field west and Santa Bárbara.
+
+## COMPANY'S ANNOUNCEMENT
+
+$40 Million Placement to Support 30% Expansion, Phase 1 HMW. Date: January 29, 2026. More information
+
+Incentive Regime for HMW Project in Argentina. Date: July 25, 2025. More information
+
+HMW Project Update. Date: September 10, 2025. More information
+
+Full HMW Phase 2 (21Ktpa LCE) Mining Permit Granted. Date: January 6, 2025. More information
+
+## SOURCES CONSULTED
+
+Galan Lithium Limited. Hombre Muerto West Project
+
+Galan Lithium Limited. Euroz Harleys Research – February 2025
+
+Galan Lithium Limited. Annual Report, June 30, 2025
+
+Galan Lithium Limited. Compelling Preliminary Economic Assessment Results for 100% owned Hombre Muerto West (HMW) Project in Catamarca, Argentina. December 21, 2020.
+
+Ministerio de Economía República Argentina Secretaría de Minería
+
+---
+
+Tres Quebradas, Catamarca
+
+![img-0.jpeg](img-0.jpeg)
+
+---
+
+PORTFOLIO OF ADVANCED PROJECTS | LITHIUM
+
+![img-0.jpeg](img-0.jpeg)
+
+![img-1.jpeg](img-1.jpeg)
+
+Location: The Salar de Rincón is a saline body located in the Los Andes Department, in Salta, at 3,760 m.a.s.l. It is located about 280 km northwest of the city of Salta and is accessed by National Route 51.
+
+# TECHNICAL AND ECONOMIC INFORMATION
+
+Since production: -
+
+Estimated LOM: 16.5 years
+
+Productive capacity: Stage 1: 2,000 tpa LCE | Stage 2: 10,000 tpa LCE
+
+Mining Method: Pumping - Evaporation
+
+Product to obtain: Lithium Carbonate (Li₂CO₃).
+
+Ministerio de Economía República Argentina Secretaría de Minería
+
+---
+
+PORTFOLIO OF ADVANCED PROJECTS | LITHIUM
+
+# PROJECT GEOLOGY
+
+## Deposit Geology
+
+The geological framework is given by a southern volcanic range (Tul Tul - Del Medio and Pocitos volcanoes) and the Guayaos mountain range (Ordovicico) in the north, while the rest is comprised by alluvial fields. It shows an almost continuous layer of salt on the surface that reaches variable thicknesses. Borate is 20-30 cm below a layer of halite that makes up the escape. Borates are Ulexite and tincal. Ulexite is up to 50 cm thick and is both solid and nodular. It shows strong contamination with chlorides and sulphates. Tincal occurs at the NE edge of the salt flats and was mined in the old Carolina mine. It occurs in various morphologies, some of which are known to miners as greaves or corn grains. It occurs mainly with a reddish lime-clay ganga.
+
+## RESOURCES (2024)
+
+|  RESOURCES | Li Grade (mg/l) | LCE (t)  |
+| --- | --- | --- |
+|  Indicated | 327 | 640,330  |
+|  Inferred | 352 | 91,471  |
+
+## COMPANY'S ANNOUNCEMENT
+
+Significant progress with 40mw energy infrastructure to power rincon lithium project. Date: January 12, 2026. More information
+
+Quarterly activities report, december 2025. Date: January 30, 2026. More information
+
+## SOURCES CONSULTED
+
+Argosy Minerals Ltd., Rincón Project
+
+Argosy Minerals Ltd., Company presentation. July 2025.
+
+Argosy Minerals Limited., Annual report 2024.
+
+Argosy Minerals Ltd., PEA Results Rincón Lithium Project. November 2018.
+
+Ministerio de Economía República Argentina Secretaría de Minería
+
+---
+
+Pastos Grandes, Salta
+
+![img-0.jpeg](img-0.jpeg)

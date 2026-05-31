@@ -1,0 +1,102 @@
+PORTFOLIO OF ADVANCED PROJECTS | COPPER
+
+# Cu
+
+# Vicuña (Filo del Sol)
+
+![img-0.jpeg](img-0.jpeg)
+
+28° 29' 41" S
+
+69° 39' 43" W
+
+![img-1.jpeg](img-1.jpeg)
+
+TYPE OF DEPOSIT: High Sulphidation Epithermal
+
+By-product: Gold and silver
+
+STATUS: Prefeasibility
+
+ÁREA: 14,014 ha
+
+Location: The Filo del Sol Project is located in the Atacama Region, in northern Chile and in the adjacent province of San Juan, Argentina, 140 kilometers southeast of the city of Copiapó, Chile, and extends to both sides of the border between Argentina and Chile. The average altitudes are from 4,000 to 4,900 m.a.s.l.
+
+# TECHNICAL AND ECONOMIC INFORMATION
+
+Since production: 2032
+
+Estimated LOM: 14 years
+
+Production (Josemaria + Filo del Sol) : 500 ktpa Cu | 700 kozpa Au | 22 Mozpa Ag
+
+Mining Method: Open-Pit
+
+Product to obtain: Copper, gold and silver cathodes, silver in doré and copper concentrates
+
+#
+
+Ministerio de Economía República Argentina
+
+Secretaría de Minería
+
+---
+
+PORTFOLIO OF ADVANCED PROJECTS | COPPER
+
+# PROJECT GEOLOGY
+
+## Regional Geology
+
+It is found in the post-accretionary metallogenic belt of the magmatic arc during the neogene (Tertiary). Between 30° and 34° Lat. S, during the middle Miocene (18-15 Ma) a horizontalization of the Nazca plate begins with the consequent cortical thickening. The magmatic activity reaches a great development in the provinces of San Juan and the center of Mendoza. With the progressive horizontalization of the plate, the arch migrated eastward. These particular conditions generated a magmatism that culminated in episodes of hydrothermal alteration, high sulphidation gold mineralization, porphyry copper and molybdenum, and locally associated vetiform polymetallic deposits.
+
+## Deposit Geology
+
+The Filo del Sol Project shows a complete transition between a high sulphidation epithermal environment and a porphyry system, and both types of deposits are represented. Weathering and supergenic processes have created high-grade copper and silver oxide zones. Mineralization, of potential economic interest, within the Filo del Sol deposit includes high grade leached oxide / mixed copper mineralization, structurally controlled gold and silver mineralization, sub-horizontal "mantle type" high grade silver mineralization and mineralization of scattered sulfides of copper, gold, silver and molybdenum.
+
+Ministerio de Economía República Argentina Secretaría de Minería
+
+---
+
+PORTFOLIO OF ADVANCED PROJECTS | COPPER
+
+# RESOURCES AND RESERVES
+
+|  RESOURCES
+(2026) | Grade |   |   | Metal Content  |   |   |   |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+|   |   |  Cu (%) | Au (g/t) | Ag (g/t) | Cu (kt) | Au (kOz) | Ag (kOz)  |
+|  Gold oxide | M&I | 0.38 | 0.32 | 8.1 | 9,759 | 26,500 | 672,000  |
+|   |  Inferred | 0.31 | 0.18 | 3.2 | 30,740 | 58,700 | 1,030,000  |
+|  RESERVES
+(2024) | Grade |   |   | Metal Content  |   |   |
+| --- | --- | --- | --- | --- | --- | --- |
+|   |  Cu (%) | Au (g/t) | Ag (g/t) | Cu (kt) | Au (kOz) | Ag (kOz)  |
+|  Probable | 0.39 | 0.34 | 16.0 | 1,007 | 2,867 | 133,334  |
+
+*Lundin Mining 2024
+
+# COMPANY'S ANNOUNCEMENT
+
+The firm has submitted the NI 43-101 Technical Report on the Mineral Resources of the Vicuña Project, which includes updated estimates of the Filo del Sol (oxides and sulfides) and Josemaría deposits, located in the province of San Juan. Date: June 16, 2025. More information
+
+The firm to announce that Vicuña Corp. ("Vicuña") has submitted an application for the inclusion of the Josemaría and Filo del Sol deposits (collectively, the "Vicuña Project") to the Incentive Regime for Large Investments ("RIGI") under the Long-Term Strategic Export Projects designation ("PEELP") in Argentina. Date: December 11, 2025. More information
+
+# SOURCES CONSULTED
+
+Lundin Mining Corp. Vicuña Project
+
+Lundin Mining Corp. Technical Report Presentation February 16, 2026
+
+Lundin Mining Corp. NI 43-101 Technical report. Vicuña Project, Argentina and Chile. June 2025
+
+Lundin Mining Corp. Reserves and Resources 2024
+
+Lundin Mining Corp. Corporate presentation. December 2025
+
+Ministerio de Economía República Argentina Secretaría de Minería
+
+---
+
+Pachón, San Juan
+![img-0.jpeg](img-0.jpeg)

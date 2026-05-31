@@ -1,0 +1,124 @@
+PORTFOLIO OF ADVANCED PROJECTS | GOLD
+
+# Au
+
+# Taguas
+
+![img-0.jpeg](img-0.jpeg)
+
+29° 11' 27.79" S
+
+69° 52' 35.98" W
+
+![img-1.jpeg](img-1.jpeg)
+
+TYPE OF DEPOSIT: High Sulphidation Epithermal Style (Au-Ag)
+
+By-product: Silver
+
+STATUS: PEA
+
+CAPEX: 141 M USD
+
+![img-2.jpeg](img-2.jpeg)
+
+CONTROLLER | OPERATOR
+
+Orvana Minerals Corp. | Compañía Minera Piuquenes S.A.
+
+ÁREA: 3,274 ha
+
+Location: Access to the site is from the town of Tudcum, located 200 km from the city of San Juan. To reach Taguas, the 148 km mining road that links Tudcum to the Veladero gold mine is used. From Veladero one must travel 25 km further north along the Las Taguas River to reach the Project camp.
+
+# TECHNICAL AND ECONOMIC INFORMATION
+
+Since production: 2028
+
+Estimated LOM: 9 years
+
+Productive capacity: 47 kOz Au
+
+Mining Method: Open-Pit
+
+Product to obtain: Gold and silver doré
+
+#
+
+Ministerio de Economía República Argentina
+
+Secretaría de Minería
+
+---
+
+PORTFOLIO OF ADVANCED PROJECTS | GOLD
+
+# PROJECT GEOLOGY
+
+## Type of deposit - High Sulphidation Epithermal Style (Au-Ag)
+
+### Regional Geology
+
+Taguas is located at the northern end of the Cura Valley volcanic belt, of tertiary age, and on the eastern flank of the El Indio metallogenic belt (Siddeley and Araneda, 1990). The physical continuity of the volcanism and stratigraphy of the thin Chilean Cura Valley volcanic belt has been confirmed by several regional studies (Ramos 1995, 1998 and Godeas et al., 1993). The Cura Valley belt has similarities with the Chilean flank in both age and type of basement and alterations (Davidson and Mpodozis, 1991) and is an extension of the El Indio belt in Argentina.
+
+### Deposit Geology
+
+The Taguas property is home to a high-sulfidation gold-silver epithermal system housed in altered Tertiary volcanic rhyolites. Supergene gold-silver oxide mineralization occurs in the southern half of Taguas, at Cerro Taguas Norte, Cerro Taguas Sur, Cerro III and Cerro IV. This mineralization consists of sub-vertical mineralized structures, which also impact in the northeast, in a zone of lower grade mineralization. The high grade zones range in width from 1.5m to 8m and in length from 40m to over 500m. High grade zones consist of relatively continuous mineralization with gold grades ranging from 0.2 to over 4.0 g/t Au and 10 to over 50 g/t Au. Oxidation extends from the surface to approximately 200m below the surface. Gold-silver sulphides (pyrite-enargite) have been found in the north central zone of the property, at Cerro Campamento, and at Cerro Silla Sur. In addition, intersections grading over 50 g/t Au and 100 g/t Ag have been recognized in discrete mineralized vein structures ranging in length from 1.5 m to 5 m. Evidence of porphyry copper-gold mineralization has also been found on the Taguas property.
+
+Ministerio de Economía República Argentina Secretaría de Minería
+
+---
+
+PORTFOLIO OF ADVANCED PROJECTS | GOLD
+
+# RESOURCES (2024)
+
+|   | Category | Au (g/t) | Ag (g/t) | Cu (%) | Au (kOz) | Ag (kOz) | Cu (MLbs)  |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+|  Cerros Taguas | Indicated | 0.37 | 11.1 |  | 467 | 14,037 |   |
+|   |  Inferred (combined) | 0.30 | 9.2 | 0.14 | 936 | 28,882 | 293  |
+|  Cerro Silla Sur | Inferred (combined) | 3.14 | 57.9 | 0.24 | 75 | 1,396 | 4  |
+|  Cerro Campamento | Inferred (combined) | 4.01 | 41.1 | 0.47 | 196 | 2,025 | 15.6  |
+
+# COMPANY'S ANNOUNCEMENT
+
+Orvana reports geophysical survey results and commences initial deep drilling program at taguas, argentina Date: January 28, 2026. More Information
+
+# SOURCES CONSULTED
+
+Orvana Minerals Corp. Taguas Project
+
+Orvana Minerals Corp., Inversor Presentation, november 2025
+
+Orvana Minerals Corp., Preliminary Economic Assessment, NI 43-101 Technical Report on the Taguas Heap Leach Project. December 29, 2021.
+
+Ministerio de Economía República Argentina Secretaria de Mineria
+
+---
+
+# AUTORIDADES
+
+Presidente de la Nación
+Lic. Javier Milei
+
+Ministro de Economía
+Lic. Luis Caputo
+
+Secretario de Coordinación de Energía y Minería
+Lic. Daniel González
+
+Secretario de Minería
+Dr. Luis Enrique Lucero
+
+Subsecretario de Desarrollo Minero
+Dr. Mario Ricardo Thiem
+
+Director Nacional de Promoción y Economía Minera
+Ing. Fernando Ciacera
+
+Director de Economía Minera
+Lic. Camilo Hereñú
+
+Equipo de trabajo
+Geol. Magaly Quintrein, Florencia Isusi
+
+Ministerio de Economía República Argentina Secretaría de Minería

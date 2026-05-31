@@ -1,0 +1,61 @@
+[
+  {
+    "group_idx": 0,
+    "project_name": "preamble",
+    "page_numbers": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "md_path": "ocr/0000_preamble.md"
+  },
+  {
+    "group_idx": 1,
+    "project_name": "Don Otto",
+    "page_numbers": [
+      5,
+      6,
+      7
+    ],
+    "md_path": "ocr/0001_Don_Otto.md"
+  },
+  {
+    "group_idx": 2,
+    "project_name": "Sierra Pintada",
+    "page_numbers": [
+      8,
+      9,
+      10
+    ],
+    "md_path": "ocr/0002_Sierra_Pintada.md"
+  },
+  {
+    "group_idx": 3,
+    "project_name": "Ivana",
+    "page_numbers": [
+      11,
+      12,
+      13
+    ],
+    "md_path": "ocr/0003_Ivana.md"
+  },
+  {
+    "group_idx": 4,
+    "project_name": "Laguna Salada",
+    "page_numbers": [
+      14,
+      15,
+      16
+    ],
+    "md_path": "ocr/0004_Laguna_Salada.md"
+  },
+  {
+    "group_idx": 5,
+    "project_name": "Ministerio de Econom\u00eda",
+    "page_numbers": [
+      17
+    ],
+    "md_path": "ocr/0005_Ministerio_de_Econom_a.md"
+  }
+]

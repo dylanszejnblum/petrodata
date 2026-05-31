@@ -1,0 +1,163 @@
+[
+  {
+    "group_idx": 0,
+    "project_name": "preamble",
+    "page_numbers": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "md_path": "ocr/0000_preamble.md"
+  },
+  {
+    "group_idx": 1,
+    "project_name": "Cerro Moro",
+    "page_numbers": [
+      6,
+      7,
+      8,
+      9
+    ],
+    "md_path": "ocr/0001_Cerro_Moro.md"
+  },
+  {
+    "group_idx": 2,
+    "project_name": "Cerro Negro",
+    "page_numbers": [
+      10,
+      11,
+      12,
+      13
+    ],
+    "md_path": "ocr/0002_Cerro_Negro.md"
+  },
+  {
+    "group_idx": 3,
+    "project_name": "Casposo",
+    "page_numbers": [
+      14,
+      15,
+      16,
+      17
+    ],
+    "md_path": "ocr/0003_Casposo.md"
+  },
+  {
+    "group_idx": 4,
+    "project_name": "Cerro Vanguardia",
+    "page_numbers": [
+      18,
+      19,
+      20,
+      21
+    ],
+    "md_path": "ocr/0004_Cerro_Vanguardia.md"
+  },
+  {
+    "group_idx": 5,
+    "project_name": "Don Nicol\u00e1s-Las Calandrias",
+    "page_numbers": [
+      22,
+      23,
+      24,
+      25
+    ],
+    "md_path": "ocr/0005_Don_Nicol_s-Las_Calandrias.md"
+  },
+  {
+    "group_idx": 6,
+    "project_name": "Farall\u00f3n Negro",
+    "page_numbers": [
+      26,
+      27,
+      28
+    ],
+    "md_path": "ocr/0006_Farall_n_Negro.md"
+  },
+  {
+    "group_idx": 7,
+    "project_name": "Gualcamayo - Carbonatos Profundos",
+    "page_numbers": [
+      29,
+      30,
+      31,
+      32
+    ],
+    "md_path": "ocr/0007_Gualcamayo_-_Carbonatos_Profundos.md"
+  },
+  {
+    "group_idx": 8,
+    "project_name": "Lindero",
+    "page_numbers": [
+      33,
+      34,
+      35,
+      36
+    ],
+    "md_path": "ocr/0008_Lindero.md"
+  },
+  {
+    "group_idx": 9,
+    "project_name": "Veladero",
+    "page_numbers": [
+      37,
+      38,
+      39,
+      40
+    ],
+    "md_path": "ocr/0009_Veladero.md"
+  },
+  {
+    "group_idx": 10,
+    "project_name": "Calcatreu",
+    "page_numbers": [
+      41,
+      42,
+      43,
+      44
+    ],
+    "md_path": "ocr/0010_Calcatreu.md"
+  },
+  {
+    "group_idx": 11,
+    "project_name": "Suyai",
+    "page_numbers": [
+      45,
+      46,
+      47
+    ],
+    "md_path": "ocr/0011_Suyai.md"
+  },
+  {
+    "group_idx": 12,
+    "project_name": "Hualil\u00e1n",
+    "page_numbers": [
+      48,
+      49,
+      50,
+      51
+    ],
+    "md_path": "ocr/0012_Hualil_n.md"
+  },
+  {
+    "group_idx": 13,
+    "project_name": "Taguas",
+    "page_numbers": [
+      52,
+      53,
+      54,
+      55
+    ],
+    "md_path": "ocr/0013_Taguas.md"
+  },
+  {
+    "group_idx": 14,
+    "project_name": "Ministerio de Econom\u00eda",
+    "page_numbers": [
+      56
+    ],
+    "md_path": "ocr/0014_Ministerio_de_Econom_a.md"
+  }
+]

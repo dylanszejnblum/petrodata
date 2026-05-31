@@ -1,0 +1,84 @@
+[
+  {
+    "project_name": "preamble",
+    "primary_commodity": "Uranium",
+    "by_products": [],
+    "status": null,
+    "location": {
+      "province": null,
+      "country": null,
+      "description": null,
+      "latitude_dms": null,
+      "longitude_dms": null,
+      "latitude": null,
+      "longitude": null
+    },
+    "deposit_type": null,
+    "owner_controller": null,
+    "operator": null,
+    "area_ha": null,
+    "technical_economic": {
+      "since_production": null,
+      "estimated_lom_years": null,
+      "productive_capacity": null,
+      "estimated_annual_production": null,
+      "capex": null,
+      "mining_method": null,
+      "product": null
+    },
+    "resources": [],
+    "reserves": [],
+    "resources_year": null,
+    "geology": null,
+    "sources_consulted": [],
+    "source_pages": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "_problems": [
+      "sparse_record: only name+commodity populated"
+    ]
+  },
+  {
+    "project_name": "Ministerio de Economía",
+    "primary_commodity": null,
+    "by_products": [],
+    "status": null,
+    "location": {
+      "province": null,
+      "country": null,
+      "description": null,
+      "latitude_dms": null,
+      "longitude_dms": null,
+      "latitude": null,
+      "longitude": null
+    },
+    "deposit_type": null,
+    "owner_controller": null,
+    "operator": null,
+    "area_ha": null,
+    "technical_economic": {
+      "since_production": null,
+      "estimated_lom_years": null,
+      "productive_capacity": null,
+      "estimated_annual_production": null,
+      "capex": null,
+      "mining_method": null,
+      "product": null
+    },
+    "resources": [],
+    "reserves": [],
+    "resources_year": null,
+    "geology": null,
+    "sources_consulted": [],
+    "source_pages": [
+      17
+    ],
+    "_problems": [
+      "missing_required: primary_commodity",
+      "sparse_record: only name+commodity populated"
+    ]
+  }
+]

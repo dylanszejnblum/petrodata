@@ -1,0 +1,79 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#000000"/>
+  <defs>
+    <linearGradient id="heroGlow" x1="195" y1="96" x2="1014" y2="544" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1A1A1A"/>
+      <stop offset="1" stop-color="#050505"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="36" y="36" width="1128" height="558" rx="28" fill="url(#heroGlow)" stroke="#222222" stroke-width="2"/>
+
+  <g opacity="0.95" stroke="#222222">
+    <path d="M36 129H1164"/>
+    <path d="M36 222H1164"/>
+    <path d="M36 315H1164"/>
+    <path d="M36 408H1164"/>
+    <path d="M36 501H1164"/>
+    <path d="M187 36V594"/>
+    <path d="M338 36V594"/>
+    <path d="M489 36V594"/>
+    <path d="M640 36V594"/>
+    <path d="M791 36V594"/>
+    <path d="M942 36V594"/>
+    <path d="M1093 36V594"/>
+  </g>
+
+  <g opacity="0.9">
+    <circle cx="1066" cy="140" r="86" fill="#0E0E0E" stroke="#222222" stroke-width="2"/>
+    <circle cx="1066" cy="140" r="46" fill="#121212" stroke="#333333" stroke-width="2"/>
+    <circle cx="1066" cy="140" r="7" fill="#D71921"/>
+  </g>
+
+  <g>
+    <text x="96" y="132" fill="#999999" font-size="17" font-family="'Space Mono', 'IBM Plex Mono', monospace" letter-spacing="3.6">NONUSD.COM</text>
+    <rect x="95" y="151" width="118" height="6" rx="3" fill="#D71921"/>
+    <rect x="221" y="151" width="30" height="6" rx="3" fill="#333333"/>
+    <rect x="259" y="151" width="14" height="6" rx="3" fill="#333333"/>
+  </g>
+
+  <g>
+    <text x="92" y="300" fill="#FFFFFF" font-size="128" font-weight="700" font-family="'Space Grotesk', 'Helvetica Neue', Arial, sans-serif" letter-spacing="-8">non</text>
+    <text x="360" y="300" fill="#D71921" font-size="128" font-weight="700" font-family="'Space Grotesk', 'Helvetica Neue', Arial, sans-serif" letter-spacing="-8">usd</text>
+    <text x="96" y="354" fill="#E8E8E8" font-size="28" font-family="'Space Mono', 'IBM Plex Mono', monospace" letter-spacing="5.2">NON-USD STABLECOIN TRACKER</text>
+    <text x="96" y="398" fill="#666666" font-size="23" font-family="'Space Grotesk', 'Helvetica Neue', Arial, sans-serif">Real-time market data, issuer profiles, and global distribution.</text>
+  </g>
+
+  <g>
+    <rect x="96" y="446" width="112" height="54" rx="27" fill="#111111" stroke="#333333" stroke-width="2"/>
+    <rect x="224" y="446" width="112" height="54" rx="27" fill="#111111" stroke="#333333" stroke-width="2"/>
+    <rect x="352" y="446" width="112" height="54" rx="27" fill="#111111" stroke="#333333" stroke-width="2"/>
+    <rect x="480" y="446" width="112" height="54" rx="27" fill="#111111" stroke="#333333" stroke-width="2"/>
+    <rect x="608" y="446" width="112" height="54" rx="27" fill="#111111" stroke="#333333" stroke-width="2"/>
+    <text x="127" y="480" fill="#D71921" font-size="24" font-family="'Space Mono', 'IBM Plex Mono', monospace">EUR</text>
+    <text x="256" y="480" fill="#D71921" font-size="24" font-family="'Space Mono', 'IBM Plex Mono', monospace">BRL</text>
+    <text x="383" y="480" fill="#D71921" font-size="24" font-family="'Space Mono', 'IBM Plex Mono', monospace">SGD</text>
+    <text x="510" y="480" fill="#D71921" font-size="24" font-family="'Space Mono', 'IBM Plex Mono', monospace">MXN</text>
+    <text x="639" y="480" fill="#D71921" font-size="24" font-family="'Space Mono', 'IBM Plex Mono', monospace">ARS</text>
+  </g>
+
+  <g>
+    <rect x="830" y="368" width="302" height="168" rx="24" fill="#111111" stroke="#222222" stroke-width="2"/>
+    <text x="866" y="418" fill="#666666" font-size="14" font-family="'Space Mono', 'IBM Plex Mono', monospace" letter-spacing="2.1">TRACK</text>
+    <text x="866" y="461" fill="#FFFFFF" font-size="31" font-weight="700" font-family="'Space Grotesk', 'Helvetica Neue', Arial, sans-serif">30+ fiat pegs</text>
+    <text x="866" y="502" fill="#999999" font-size="16" font-family="'Space Grotesk', 'Helvetica Neue', Arial, sans-serif">coins, markets, and</text>
+    <text x="866" y="527" fill="#999999" font-size="16" font-family="'Space Grotesk', 'Helvetica Neue', Arial, sans-serif">on-chain distribution</text>
+  </g>
+
+  <g>
+    <rect x="86" y="528" width="512" height="50" rx="18" fill="#0E0E0E" stroke="#1F1F1F" stroke-width="2"/>
+    <text x="116" y="546" fill="#555555" font-size="12" font-family="'Space Mono', 'IBM Plex Mono', monospace" letter-spacing="2.2">MARKET CAP</text>
+    <text x="116" y="572" fill="#FFFFFF" font-size="22" font-family="'Space Grotesk', 'Helvetica Neue', Arial, sans-serif">$2.6T+</text>
+
+    <text x="304" y="546" fill="#555555" font-size="12" font-family="'Space Mono', 'IBM Plex Mono', monospace" letter-spacing="2.2">CURRENCIES</text>
+    <text x="304" y="572" fill="#FFFFFF" font-size="22" font-family="'Space Grotesk', 'Helvetica Neue', Arial, sans-serif">30+</text>
+
+    <text x="486" y="546" fill="#555555" font-size="12" font-family="'Space Mono', 'IBM Plex Mono', monospace" letter-spacing="2.2">ACTIVE COINS</text>
+    <text x="486" y="572" fill="#FFFFFF" font-size="22" font-family="'Space Grotesk', 'Helvetica Neue', Arial, sans-serif">30+</text>
+  </g>
+</svg>

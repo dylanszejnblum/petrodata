@@ -1,0 +1,78 @@
+[
+  {
+    "project_name": "preamble",
+    "pages": [
+      "pages/portfolio_uranium_2026.pptx/page_0001.png",
+      "pages/portfolio_uranium_2026.pptx/page_0002.png",
+      "pages/portfolio_uranium_2026.pptx/page_0003.png",
+      "pages/portfolio_uranium_2026.pptx/page_0004.png"
+    ],
+    "page_numbers": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  {
+    "project_name": "Don Otto",
+    "pages": [
+      "pages/portfolio_uranium_2026.pptx/page_0005.png",
+      "pages/portfolio_uranium_2026.pptx/page_0006.png",
+      "pages/portfolio_uranium_2026.pptx/page_0007.png"
+    ],
+    "page_numbers": [
+      5,
+      6,
+      7
+    ]
+  },
+  {
+    "project_name": "Sierra Pintada",
+    "pages": [
+      "pages/portfolio_uranium_2026.pptx/page_0008.png",
+      "pages/portfolio_uranium_2026.pptx/page_0009.png",
+      "pages/portfolio_uranium_2026.pptx/page_0010.png"
+    ],
+    "page_numbers": [
+      8,
+      9,
+      10
+    ]
+  },
+  {
+    "project_name": "Ivana",
+    "pages": [
+      "pages/portfolio_uranium_2026.pptx/page_0011.png",
+      "pages/portfolio_uranium_2026.pptx/page_0012.png",
+      "pages/portfolio_uranium_2026.pptx/page_0013.png"
+    ],
+    "page_numbers": [
+      11,
+      12,
+      13
+    ]
+  },
+  {
+    "project_name": "Laguna Salada",
+    "pages": [
+      "pages/portfolio_uranium_2026.pptx/page_0014.png",
+      "pages/portfolio_uranium_2026.pptx/page_0015.png",
+      "pages/portfolio_uranium_2026.pptx/page_0016.png"
+    ],
+    "page_numbers": [
+      14,
+      15,
+      16
+    ]
+  },
+  {
+    "project_name": "Ministerio de Econom\u00eda",
+    "pages": [
+      "pages/portfolio_uranium_2026.pptx/page_0017.png"
+    ],
+    "page_numbers": [
+      17
+    ]
+  }
+]

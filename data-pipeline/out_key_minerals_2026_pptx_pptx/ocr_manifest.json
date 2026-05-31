@@ -1,0 +1,100 @@
+[
+  {
+    "group_idx": 0,
+    "project_name": "FOR THE ENERGY TRANSITION",
+    "page_numbers": [
+      1,
+      2
+    ],
+    "md_path": "ocr/0000_FOR_THE_ENERGY_TRANSITION.md"
+  },
+  {
+    "group_idx": 1,
+    "project_name": "1. COBALT",
+    "page_numbers": [
+      3
+    ],
+    "md_path": "ocr/0001_1._COBALT.md"
+  },
+  {
+    "group_idx": 2,
+    "project_name": "2. COPPER",
+    "page_numbers": [
+      4
+    ],
+    "md_path": "ocr/0002_2._COPPER.md"
+  },
+  {
+    "group_idx": 3,
+    "project_name": "3. CHROMIUM",
+    "page_numbers": [
+      5
+    ],
+    "md_path": "ocr/0003_3._CHROMIUM.md"
+  },
+  {
+    "group_idx": 4,
+    "project_name": "4. RARE-EARTH ELEMENT",
+    "page_numbers": [
+      6
+    ],
+    "md_path": "ocr/0004_4._RARE-EARTH_ELEMENT.md"
+  },
+  {
+    "group_idx": 5,
+    "project_name": "5. GRAPHITE",
+    "page_numbers": [
+      7
+    ],
+    "md_path": "ocr/0005_5._GRAPHITE.md"
+  },
+  {
+    "group_idx": 6,
+    "project_name": "6. LITHIUM",
+    "page_numbers": [
+      8
+    ],
+    "md_path": "ocr/0006_6._LITHIUM.md"
+  },
+  {
+    "group_idx": 7,
+    "project_name": "7. MANGANESE",
+    "page_numbers": [
+      9
+    ],
+    "md_path": "ocr/0007_7._MANGANESE.md"
+  },
+  {
+    "group_idx": 8,
+    "project_name": "8. NICKEL",
+    "page_numbers": [
+      10
+    ],
+    "md_path": "ocr/0008_8._NICKEL.md"
+  },
+  {
+    "group_idx": 9,
+    "project_name": "9. THE PLATINUM-GROUP ELEMENTS (PGE)",
+    "page_numbers": [
+      11
+    ],
+    "md_path": "ocr/0009_9._THE_PLATINUM-GROUP_ELEMENTS_PGE.md"
+  },
+  {
+    "group_idx": 10,
+    "project_name": "10. ZINC",
+    "page_numbers": [
+      12,
+      13
+    ],
+    "md_path": "ocr/0010_10._ZINC.md"
+  },
+  {
+    "group_idx": 11,
+    "project_name": "Ministerio de Econom\u00eda",
+    "page_numbers": [
+      14
+    ],
+    "md_path": "ocr/0011_Ministerio_de_Econom_a.md"
+  }
+]

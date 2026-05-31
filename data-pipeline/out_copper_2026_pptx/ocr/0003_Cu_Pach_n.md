@@ -1,0 +1,88 @@
+PORTFOLIO OF ADVANCED PROJECTS | COPPER
+
+# Cu Pachón
+
+![img-0.jpeg](img-0.jpeg)
+
+31° 44' 38" S
+70° 25' 52" W
+
+![img-1.jpeg](img-1.jpeg)
+
+TYPE OF DEPOSIT: Copper Porphyry
+By-products: Silver and molybdenum
+
+STATUS: Feasibility
+
+CAPEX: 9,460 MUSD
+
+CONTROLLER | OPERATOR
+Glencore Plc. | El Pachón S.A
+
+ÁREA: 1,004 ha
+
+Location: It is located in the province of San Juan, in the department of Calingasta; approximately 300 km west of the city of San Juan and 5 km from the border with Chile. It covers elevations from 3,600 to 4,200 meters above sea level.
+
+# TECHNICAL AND ECONOMIC INFORMATION
+
+Since production: 2034
+Estimated LOM: +40 years
+Productive capacity: 185 ktpd
+Estimated average annual production: 338 ktpaCu | 32 kozAu | 2.2 MozAg | 6.6 ktMo
+Mining Method: Open-Pit
+Product to obtain: Copper, molybdenum and silver concentrates
+
+Ministerio de Economía República Argentina Secretaría de Minería
+
+---
+
+PORTFOLIO OF ADVANCED PROJECTS | COPPER
+
+# PROJECT GEOLOGY
+
+## Regional Geology
+
+It is found in the post-accretionary metallogenetic belt of the magmatic arc during the neogene (Tertiary). Between 30° and 34° Lat. S, during the middle Miocene (18–15 Ma) a horizontalization of the Nazca plate began and its consequent cortical thickening. Magmatic activity reaches a great development in the provinces of San Juan and center of Mendoza. With the progressive horizontalization of the plate produces a migration of the arch towards the east. These particular conditions give rise to a magmatism that culminates with episodes of hydrothermal alteration and high sulfurization gold mineralization. Another important type of mineralization is the Copper-Molybdenum porphyry such as Pachón, Mercerdario in San Juan; Paramillos, San Jorge and San Benicio in Mendoza; with locally associated vetiform polymetallic deposits.
+
+## Deposit Geology
+
+The deposit is located in the Cordillera Principal, formed by a basement of granitoids and vulcanites (Gr. Choiyoi), above in discordance there are jurassic sedimentary units, on them – also in discordance – lie stratified and andesitic vulcanites and to a lesser extent rhyolitic and riodacitics (Fm. Pachón). The latter is locally intruded by mesosilicic bodies, granular to porphyric, with which mineralization is linked. The sequence of deposit formation was synthesized by Lencinas and Tonel (1994): 1-Intrusion of the Diorita Pachón stock. 2-Formation of the porphyric copper system. 3-Posthumous intrusion of dioritic porphyry in whose intrusive dome there is magmatic breccia with accumulation of hydrothermal fluids. 4-Hydrothermal brecciation, alteration and mineralization of the breccia. 5-Intrusion of the dacitic porphyry at the northern limit of the hydrothermal breccia. 6-Formation of poorly mineralized tourmaline breccias. 7-Leaching and supergenic enrichment.
+
+The formation stage of the hydrothermal breccia is accompanied by a sinking of 50 to 70 m from the breccia body relative to the surrounding volcanoes.
+
+Ministerio de Economía República Argentina Secretaría de Minería
+
+---
+
+PORTFOLIO OF ADVANCED PROJECTS | COPPER
+
+# RESOURCES (2025)
+
+|  RESOURCES | Ore (Mt) | Grade  |   |   |
+| --- | --- | --- | --- | --- |
+|   |   |  Cu (%) | Ag (g/t) | Mo (%)  |
+|  Measured | 322 | 0.66 | 2.3 | 0.01  |
+|  Indicated | 1,910 | 0.47 | 1.9 | 0.01  |
+|  Inferred | 4,400 | 0.36 | 1.4 | 0.01  |
+
+# COMPANY'S ANNOUNCEMENT
+
+Glencore submits RIGI applications in respect of its Argentine copper projects. Date: August 18, 2025. More information
+
+# SOURCES CONSULTED
+
+Glencore Pachón. Pachón Project. https://www.elpachon.com.ar/
+
+Glencore. Capital Markets Day. December 3, 2025
+
+Glencore Pachón. Publications. https://www.glencore.com/publications
+
+Glencore. Resources and Reserves. December 2025
+
+Ministerio de Economía República Argentina Secretaría de Minería
+
+---
+
+Los Azules, San Juan
+
+![img-0.jpeg](img-0.jpeg)

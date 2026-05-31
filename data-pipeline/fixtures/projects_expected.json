@@ -1,0 +1,81 @@
+[
+  {
+    "project_name": "Cerro Moro",
+    "primary_commodity": "Gold",
+    "by_products": ["Silver"],
+    "status": "Operation",
+    "location": {
+      "province": "Santa Cruz",
+      "country": "Argentina",
+      "description": "Located in the Santa Cruz province of southern Argentina, approximately 70 km southwest of the port city of Puerto Deseado.",
+      "latitude_dms": "48° 01' 55\" S",
+      "longitude_dms": "66° 33' 45\" W"
+    },
+    "deposit_type": "Low Sulphidation Epithermal Style (Au-Ag)",
+    "owner_controller": "Pan American Silver Corp.",
+    "operator": "Estelar Resources Limited S.A",
+    "area_ha": 304167,
+    "technical_economic": {
+      "since_production": 2018,
+      "estimated_lom_years": 3,
+      "productive_capacity": "1,100 tonnes per day (tpd)",
+      "estimated_annual_production": "83.1 koz Au | 2.51 Moz Ag (2025 est.)",
+      "capex": null,
+      "mining_method": "Open-Pit & Underground",
+      "product": "Gold and silver doré"
+    },
+    "resources": [
+      {"category": "Measured",  "values": {"Au_g_t": 4.87, "Ag_g_t": 277, "Au_kOz": 39.2,  "Ag_kOz": 2200}},
+      {"category": "Indicated", "values": {"Au_g_t": 5.58, "Ag_g_t": 254, "Au_kOz": 135.1, "Ag_kOz": 6100}},
+      {"category": "Inferred",  "values": {"Au_g_t": 6.85, "Ag_g_t": 164, "Au_kOz": 145.7, "Ag_kOz": 3500}}
+    ],
+    "reserves": [
+      {"category": "Proven",   "values": {"Au_g_t": 9.94, "Ag_g_t": 223, "Au_kOz": 92.2, "Ag_kOz": 2100}},
+      {"category": "Probable", "values": {"Au_g_t": 5.59, "Ag_g_t": 282, "Au_kOz": 57.6, "Ag_kOz": 2900}}
+    ],
+    "resources_year": 2025,
+    "sources_consulted": [
+      "Pan American Silver. Cerro Moro Project.",
+      "Pan American Silver Corp. Reserves and resources June 30, 2025.",
+      "Yamana Gold. NI 43-101 Technical report Cerro Moro Gold-Silver mine, Santa Cruz province, Argentina. August 26, 2022."
+    ],
+    "source_pages": [1, 3, 6]
+  },
+  {
+    "project_name": "Don Otto",
+    "primary_commodity": "Uranium",
+    "by_products": [],
+    "status": "Feasibility",
+    "location": {
+      "province": "Salta",
+      "country": "Argentina",
+      "description": "Part of the former Tonco-Amblayo uranium district, in the San Carlos department, Salta province, about 150 km southwest of Salta city.",
+      "latitude_dms": "25° 36' 39.60\" S",
+      "longitude_dms": "65° 55' 37.20\" W"
+    },
+    "deposit_type": "Sandstone, sedimentary deposit",
+    "owner_controller": "National Atomic Energy Commission (CNEA)",
+    "operator": "CNEA",
+    "area_ha": 7.5,
+    "technical_economic": {
+      "since_production": null,
+      "estimated_lom_years": 8,
+      "productive_capacity": null,
+      "estimated_annual_production": "30 Tn U",
+      "capex": null,
+      "mining_method": "underground",
+      "product": null
+    },
+    "resources": [
+      {"category": "Total", "values": {"RAR_Tn": 180, "IR_Tn": 250, "pct_U": 0.1}}
+    ],
+    "reserves": [],
+    "resources_year": null,
+    "sources_consulted": [
+      "National Atomic Energy Commission, Uranium in Argentina: Exploration, Resources, Demand and Supply. November 22, 2024.",
+      "International Atomic Energy Agency, Nuclear Energy Agency. Uranium 2022, Resources, Production and Demand. 29th edition.",
+      "Gorustovich, S., Guidi, F., Bárbaro N., Nievas H."
+    ],
+    "source_pages": [2, 4, 5]
+  }
+]

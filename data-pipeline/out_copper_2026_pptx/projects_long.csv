@@ -1,0 +1,120 @@
+project_name,primary_commodity,bucket,category,metric,value
+Vicuña (Josemaria),Copper,resources,M&I,pct_Cu,0.28
+Vicuña (Josemaria),Copper,resources,M&I,Au_g_t,0.19
+Vicuña (Josemaria),Copper,resources,M&I,Ag_g_t,1.1
+Vicuña (Josemaria),Copper,resources,M&I,Cu_kt,4579
+Vicuña (Josemaria),Copper,resources,M&I,Au_kOz,9700
+Vicuña (Josemaria),Copper,resources,M&I,Ag_kOz,58000
+Vicuña (Josemaria),Copper,resources,Inferred,pct_Cu,0.32
+Vicuña (Josemaria),Copper,resources,Inferred,Au_g_t,0.11
+Vicuña (Josemaria),Copper,resources,Inferred,Ag_g_t,1
+Vicuña (Josemaria),Copper,resources,Inferred,Cu_kt,1515
+Vicuña (Josemaria),Copper,resources,Inferred,Au_kOz,2500
+Vicuña (Josemaria),Copper,resources,Inferred,Ag_kOz,22000
+Vicuña (Josemaria),Copper,reserves,Proven,pct_Cu,0.43
+Vicuña (Josemaria),Copper,reserves,Proven,Au_g_t,0.34
+Vicuña (Josemaria),Copper,reserves,Proven,Ag_g_t,1.33
+Vicuña (Josemaria),Copper,reserves,Proven,Cu_kt,837
+Vicuña (Josemaria),Copper,reserves,Proven,Au_kOz,2143
+Vicuña (Josemaria),Copper,reserves,Proven,Ag_kOz,8430
+Vicuña (Josemaria),Copper,reserves,Probable,pct_Cu,0.27
+Vicuña (Josemaria),Copper,reserves,Probable,Au_g_t,0.19
+Vicuña (Josemaria),Copper,reserves,Probable,Ag_g_t,0.85
+Vicuña (Josemaria),Copper,reserves,Probable,Cu_kt,2205
+Vicuña (Josemaria),Copper,reserves,Probable,Au_kOz,4872
+Vicuña (Josemaria),Copper,reserves,Probable,Ag_kOz,22285
+Vicuña (Filo del Sol),Copper,reserves,Gold oxide,pct_Cu,0.38
+Vicuña (Filo del Sol),Copper,reserves,Gold oxide,Au_g_t,0.32
+Vicuña (Filo del Sol),Copper,reserves,Gold oxide,Ag_g_t,8.1
+Vicuña (Filo del Sol),Copper,reserves,Gold oxide,Cu_kt,9759
+Vicuña (Filo del Sol),Copper,reserves,Gold oxide,Au_kOz,26500
+Vicuña (Filo del Sol),Copper,reserves,Gold oxide,Ag_kOz,672000
+Vicuña (Filo del Sol),Copper,reserves,Probable,pct_Cu,0.39
+Vicuña (Filo del Sol),Copper,reserves,Probable,Au_g_t,0.34
+Vicuña (Filo del Sol),Copper,reserves,Probable,Ag_g_t,16
+Vicuña (Filo del Sol),Copper,reserves,Probable,Cu_kt,1007
+Vicuña (Filo del Sol),Copper,reserves,Probable,Au_kOz,2867
+Vicuña (Filo del Sol),Copper,reserves,Probable,Ag_kOz,133334
+Cu Pachón,Copper,resources,Measured,pct_Cu,0.66
+Cu Pachón,Copper,resources,Measured,Ag_g_t,2.3
+Cu Pachón,Copper,resources,Measured,pct_Mo,0.01
+Cu Pachón,Copper,resources,Indicated,pct_Cu,0.47
+Cu Pachón,Copper,resources,Indicated,Ag_g_t,1.9
+Cu Pachón,Copper,resources,Indicated,pct_Mo,0.01
+Cu Pachón,Copper,resources,Inferred,pct_Cu,0.36
+Cu Pachón,Copper,resources,Inferred,Ag_g_t,1.4
+Cu Pachón,Copper,resources,Inferred,pct_Mo,0.01
+Cu Los Azules,Copper,resources,M&I,Cu_Blbs,5.4
+Cu Los Azules,Copper,resources,M&I,Au_MOz,1
+Cu Los Azules,Copper,resources,M&I,Ag_MOz,26.6
+Cu Los Azules,Copper,resources,Inferred,Cu_Blbs,20
+Cu Los Azules,Copper,resources,Inferred,Au_MOz,5.7
+Cu Los Azules,Copper,resources,Inferred,Ag_MOz,149.9
+Cu Los Azules,Copper,reserves,Proven,Cu_Blbs,3463
+Cu Los Azules,Copper,reserves,Probable,Cu_Blbs,6754
+Mara - Agua Rica,Copper,resources,Measured,Cu_kt,0.75
+Mara - Agua Rica,Copper,resources,Measured,Au_g_t,0.27
+Mara - Agua Rica,Copper,resources,Measured,Ag_g_t,3.6
+Mara - Agua Rica,Copper,resources,Measured,pct_Mo,0.03
+Mara - Agua Rica,Copper,resources,Indicated,Cu_kt,0.44
+Mara - Agua Rica,Copper,resources,Indicated,Au_g_t,0.19
+Mara - Agua Rica,Copper,resources,Indicated,Ag_g_t,3.3
+Mara - Agua Rica,Copper,resources,Indicated,pct_Mo,0.03
+Mara - Agua Rica,Copper,resources,Inferred,Cu_kt,0.29
+Mara - Agua Rica,Copper,resources,Inferred,Au_g_t,0.09
+Mara - Agua Rica,Copper,resources,Inferred,Ag_g_t,1.9
+Mara - Agua Rica,Copper,resources,Inferred,pct_Mo,0.03
+Cu Taca Taca,Copper,resources,M&I,pct_Cu,0.42
+Cu Taca Taca,Copper,resources,M&I,Au_g_t,0.09
+Cu Taca Taca,Copper,resources,M&I,pct_Mo,0.012
+Cu Taca Taca,Copper,resources,M&I,Cu_kt,8716
+Cu Taca Taca,Copper,resources,M&I,Au_kOz,5715
+Cu Taca Taca,Copper,resources,M&I,Mo_kt,253
+Cu Taca Taca,Copper,resources,Inferred,pct_Cu,0.27
+Cu Taca Taca,Copper,resources,Inferred,Au_g_t,0.06
+Cu Taca Taca,Copper,resources,Inferred,pct_Mo,0.007
+Cu Taca Taca,Copper,resources,Inferred,Cu_kt,389
+Cu Taca Taca,Copper,resources,Inferred,Au_kOz,263
+Cu Taca Taca,Copper,resources,Inferred,Mo_kt,10
+Cu Taca Taca,Copper,reserves,Proven,pct_Cu,0.58
+Cu Taca Taca,Copper,reserves,Proven,Au_g_t,0.13
+Cu Taca Taca,Copper,reserves,Proven,pct_Mo,0.015
+Cu Taca Taca,Copper,reserves,Proven,Cu_kt,2509.5
+Cu Taca Taca,Copper,reserves,Proven,Au_kOz,1835.6
+Cu Taca Taca,Copper,reserves,Proven,Mo_kt,66.8
+Cu Taca Taca,Copper,reserves,Probable,pct_Cu,0.38
+Cu Taca Taca,Copper,reserves,Probable,Au_g_t,0.07
+Cu Taca Taca,Copper,reserves,Probable,pct_Mo,0.011
+Cu Taca Taca,Copper,reserves,Probable,Cu_kt,5919
+Cu Taca Taca,Copper,reserves,Probable,Au_kOz,3696.6
+Cu Taca Taca,Copper,reserves,Probable,Mo_kt,177.6
+Cu PSJ Cobre Mendocino,Copper,resources,Measured,pct_Cu,0.57
+Cu PSJ Cobre Mendocino,Copper,resources,Measured,Au_g_t,0.22
+Cu PSJ Cobre Mendocino,Copper,resources,Measured,Cu_klb,999194
+Cu PSJ Cobre Mendocino,Copper,resources,Measured,Au_kOz,586
+Cu PSJ Cobre Mendocino,Copper,resources,Indicated,pct_Cu,0.42
+Cu PSJ Cobre Mendocino,Copper,resources,Indicated,Au_g_t,0.18
+Cu PSJ Cobre Mendocino,Copper,resources,Indicated,Cu_klb,1501785
+Cu PSJ Cobre Mendocino,Copper,resources,Indicated,Au_kOz,672
+Cu PSJ Cobre Mendocino,Copper,resources,Inferred,pct_Cu,0.37
+Cu PSJ Cobre Mendocino,Copper,resources,Inferred,Au_g_t,0.14
+Cu PSJ Cobre Mendocino,Copper,resources,Inferred,Cu_klb,592182
+Cu PSJ Cobre Mendocino,Copper,resources,Inferred,Au_kOz,337
+Altar,Copper,resources,Measured,pct_Cu,0.43
+Altar,Copper,resources,Measured,Au_g_t,0.09
+Altar,Copper,resources,Measured,Ag_g_t,1.03
+Altar,Copper,resources,Measured,Cu_MIbs,7854
+Altar,Copper,resources,Measured,Au_MOz,2.3
+Altar,Copper,resources,Measured,Ag_MOz,25.8
+Altar,Copper,resources,Indicated,pct_Cu,0.41
+Altar,Copper,resources,Indicated,Au_g_t,0.05
+Altar,Copper,resources,Indicated,Ag_g_t,1.31
+Altar,Copper,resources,Indicated,Cu_MIbs,14657
+Altar,Copper,resources,Indicated,Au_MOz,2.8
+Altar,Copper,resources,Indicated,Ag_MOz,68
+Altar,Copper,resources,Inferred,pct_Cu,0.37
+Altar,Copper,resources,Inferred,Au_g_t,0.04
+Altar,Copper,resources,Inferred,Ag_g_t,1.25
+Altar,Copper,resources,Inferred,Cu_MIbs,9.832
+Altar,Copper,resources,Inferred,Au_MOz,1.7
+Altar,Copper,resources,Inferred,Ag_MOz,49

@@ -1,0 +1,319 @@
+{
+  "nav": {
+    "dashboard": "DASHBOARD",
+    "dashboardFull": "Dashboard",
+    "oilGas": "OIL & GAS",
+    "oilGasFull": "Oil & Gas Tracker",
+    "minerals": "MINERALS",
+    "mineralsFull": "Minerals Tracker",
+    "uranium": "URANIUM",
+    "uraniumFull": "Uranium",
+    "research": "RESEARCH",
+    "researchFull": "Research",
+    "menu": "Menu",
+    "openMenu": "Open navigation menu",
+    "closeMenu": "Close navigation menu",
+    "switchTheme": "Switch theme",
+    "switchLanguage": "Switch language"
+  },
+  "common": {
+    "live": "LIVE",
+    "loading": "loading…",
+    "capped": "CAPPED",
+    "reset": "Reset",
+    "any": "Any",
+    "filters": "Filters",
+    "search": "Search",
+    "viewAll": "View all",
+    "viewMore": "View more",
+    "noData": "No data",
+    "backendOffline": "Backend offline at {url}",
+    "comingSoon": "Coming soon"
+  },
+  "footer": {
+    "tagline": "Argentina's oil, gas, minerals and rare-earths projects — production, reserves, and geography in one place.",
+    "resources": "Resources",
+    "newsletter": "Newsletter",
+    "newsletterBlurb": "New research & stats in your inbox. No spam.",
+    "status": "Status",
+    "allSystemsOperational": "ALL SYSTEMS OPERATIONAL",
+    "contactTagline": "Have a tip on a project or operator?"
+  },
+  "dashboard": {
+    "eyebrow": "VACA MUERTA · {month}",
+    "boeSuffix": "BOE",
+    "tagline": "Real-time intelligence for Argentina's oil & gas — sourced from Secretaría de Energía and refreshed monthly.",
+    "kpi": {
+      "oilLatest": "BBL/D OIL · LATEST",
+      "gasLatest": "MMCF/D GAS · LATEST",
+      "vmShare": "VM SHARE · BOE",
+      "activeWells": "ACTIVE WELLS",
+      "momSuffix": "MoM"
+    },
+    "chart": {
+      "eyebrow": "MONTHLY PRODUCTION · BOE",
+      "title": "By operator · last 12 months",
+      "topStacked": "Top {n} · stacked"
+    },
+    "vmDonut": {
+      "title": "Vaca Muerta share of BOE",
+      "vmLegend": "Vaca Muerta",
+      "conventionalLegend": "Conventional",
+      "centerLabel": "VM"
+    },
+    "topOperators": {
+      "title": "Top operators",
+      "boeColumn": "BOE",
+      "fullRanking": "Full ranking"
+    },
+    "mapPreview": {
+      "title": "Activity map",
+      "sampled": "{n} sampled",
+      "wellsInCatalog": "wells in catalog",
+      "openFullMap": "Open full map"
+    },
+    "freshness": {
+      "dataThrough": "Data through {month}",
+      "source": "datos.energia.gob.ar · CC-BY 4.0"
+    },
+    "minerals": {
+      "eyebrow": "MINERALS",
+      "summary": "{projects} projects · {commodities} commodities · {provinces} provinces",
+      "explore": "Explore minerals"
+    }
+  },
+  "mapPage": {
+    "filters": {
+      "title": "Filters",
+      "reset": "Reset",
+      "resource": "Resource",
+      "resourceAll": "All",
+      "resourceOil": "Oil",
+      "resourceGas": "Gas",
+      "formation": "Formation",
+      "operator": "Operator",
+      "basin": "Basin",
+      "province": "Province",
+      "status": "Status",
+      "hideAbandoned": "Hide abandoned wells",
+      "wellsCount": "{count} wells",
+      "capped": "CAPPED",
+      "live": "live",
+      "loading": "loading…"
+    },
+    "overview": {
+      "latestMonth": "Latest month · {month}",
+      "oilUnit": "{value} bbl/d oil",
+      "gasUnit": "{value} MMcf/d gas",
+      "vmShareOfBoe": "{pct} of BOE",
+      "operatorOilBblD": "{operator} · oil bbl/d"
+    },
+    "topOperators": {
+      "title": "Top operators · BOE",
+      "clickToFilter": "Click to filter the map"
+    }
+  },
+  "wellPopup": {
+    "wellPrefix": "Well",
+    "latest": "Latest",
+    "noProduction": "No production reported for this well.",
+    "fetchingProduction": "Fetching last reported production…",
+    "noData": "no data",
+    "loading": "loading",
+    "fields": {
+      "operator": "Operator",
+      "basin": "Basin",
+      "province": "Province",
+      "formation": "Formation",
+      "yacimiento": "Yacimiento",
+      "concession": "Concession",
+      "depth": "Depth"
+    },
+    "source": "Source · Secretaría de Energía",
+    "tiles": {
+      "oil": "Oil",
+      "gas": "Gas",
+      "boe": "BOE"
+    },
+    "status": {
+      "active": "Active",
+      "injector": "Injector",
+      "stopped": "Stopped",
+      "underStudy": "Under study",
+      "abandoned": "Abandoned",
+      "unknown": "Unknown"
+    },
+    "resource": {
+      "oil": "Oil",
+      "gas": "Gas"
+    }
+  },
+  "mineralsCharts": {
+    "common": { "noData": "No data" },
+    "provinces": {
+      "eyebrow": "PROJECTS BY PROVINCE",
+      "title": "Top provinces"
+    },
+    "capex": {
+      "eyebrow": "CAPEX · TOP 10",
+      "title": "Largest announced investments"
+    },
+    "status": {
+      "eyebrow": "PROJECT STAGE",
+      "title": "Portfolio progression",
+      "operating": "Operating",
+      "advanced": "Advanced (Feasibility + Construction)",
+      "early": "Early stage (PEA + Prefeasibility)",
+      "exploration": "Exploration"
+    },
+    "freshness": {
+      "label": "Data from {sources} pipelines · Last updated {date}"
+    }
+  },
+  "mineralsPage": {
+    "eyebrow": "MINERALS · ARGENTINA",
+    "heroTitle": "Mining projects across Argentina",
+    "heroBlurb": "{total} projects across {commodities} commodities, drawn from {sources} pipelines. Browse by commodity or open a focused tracker.",
+    "kpi": {
+      "totalProjects": "TOTAL PROJECTS",
+      "commodities": "COMMODITIES",
+      "inOperation": "IN OPERATION",
+      "dataSources": "DATA SOURCES"
+    },
+    "commoditiesSection": {
+      "eyebrow": "COMMODITIES",
+      "title": "Explore by mineral",
+      "blurb": "Tap a commodity for a dedicated tracker with the full project list and the headline resource numbers."
+    },
+    "mapSection": {
+      "eyebrow": "MAP",
+      "title": "All projects"
+    },
+    "breakdownTopProvinces": "Top provinces",
+    "breakdownByStatus": "By status",
+    "projectsSection": {
+      "eyebrow": "PROJECTS",
+      "title": "Full catalog",
+      "subtitle": "First {n} · sorted A→Z"
+    }
+  },
+  "uraniumPage": {
+    "vanadium": {
+      "eyebrow": "CO-OCCURRENCE · V₂O₅",
+      "headline": "{count} of {total} projects also report Vanadium",
+      "blurb": "Uranium deposits in Argentina frequently carry Vanadium (V₂O₅) as a by-product. The signal matters to investors: a dual value chain (nuclear fuel + steel/batteries) materially improves project economics."
+    },
+    "comparison": {
+      "eyebrow": "COMPARISON TABLE",
+      "title": "Uranium projects side by side",
+      "columns": {
+        "project": "Project",
+        "status": "Status",
+        "province": "Province",
+        "u3o8Grade": "U₃O₈ grade",
+        "u3o8Tonnage": "U₃O₈ tonnage",
+        "v2o5Grade": "V₂O₅ grade",
+        "v2o5Tonnage": "V₂O₅ tonnage"
+      },
+      "vanadiumYes": "Yes",
+      "vanadiumNo": "—"
+    }
+  },
+  "commodityPage": {
+    "breadcrumb": "MINERALS / {commodity}",
+    "blurb": "{projects} projects · {producing} in operation. Headline figures below are summed across the catalog.",
+    "kpi": {
+      "projects": "PROJECTS",
+      "inOperation": "IN OPERATION",
+      "resource": "RESOURCE · {category}",
+      "resourceNa": "RESOURCE",
+      "reserve": "RESERVE · {category}",
+      "reserveNa": "RESERVE"
+    },
+    "totals": {
+      "resource": "Resource totals",
+      "reserve": "Reserve totals",
+      "noTotals": "No totals reported."
+    },
+    "mapSection": {
+      "eyebrow": "{commodity} · MAP",
+      "title": "Project locations",
+      "mapped": "{n} mapped · click for details"
+    },
+    "byProvince": "BY PROVINCE",
+    "projectsSection": {
+      "eyebrow": "PROJECTS",
+      "title": "{commodity} catalog",
+      "subtitle": "{n} projects · sorted A→Z"
+    }
+  },
+  "projectsTable": {
+    "noResults": "No projects match these filters.",
+    "columns": {
+      "project": "Project",
+      "commodity": "Commodity",
+      "status": "Status",
+      "province": "Province",
+      "operator": "Operator",
+      "grade": "Grade",
+      "resource": "Resource"
+    }
+  },
+  "projectDetail": {
+    "kpi": {
+      "since": "Since",
+      "lomYears": "LOM (yrs)",
+      "capex": "CAPEX",
+      "method": "Method"
+    },
+    "meta": {
+      "operator": "Operator",
+      "owner": "Owner",
+      "location": "Location",
+      "area": "Area"
+    },
+    "market": "MARKET",
+    "sections": {
+      "resources": "RESOURCES",
+      "resourcesTitle": "Reported resources",
+      "resourcesYear": "Year · {year}",
+      "reserves": "RESERVES",
+      "reservesTitle": "Reported reserves",
+      "techEcon": "TECHNICAL & ECONOMIC",
+      "techEconTitle": "Operating plan",
+      "geology": "GEOLOGY",
+      "geologyTitle": "Geological context",
+      "location": "LOCATION",
+      "locationTitle": "Where it sits"
+    },
+    "techEconFields": {
+      "productiveCapacity": "Productive capacity",
+      "annualProduction": "Estimated annual production",
+      "product": "Product",
+      "capex": "CAPEX",
+      "miningMethod": "Mining method",
+      "estimatedLom": "Estimated LOM (years)"
+    },
+    "locationFields": {
+      "province": "Province",
+      "country": "Country",
+      "latitude": "Latitude",
+      "longitude": "Longitude"
+    },
+    "tables": {
+      "category": "Category",
+      "noNumeric": "Categories reported but no numeric values attached."
+    },
+    "noCoords": "No coordinates reported",
+    "provenance": {
+      "source": "Source · {pipeline}",
+      "sourceUnknown": "unknown pipeline",
+      "ingested": "Ingested · {date}",
+      "resourcesYear": "Resources year · {year}"
+    }
+  },
+  "metadata": {
+    "homeTitle": "Petrodata — Argentina oil, gas, minerals & rare-earths tracker",
+    "homeDescription": "Real-time intelligence for Argentina's oil, gas, minerals and rare-earths. Production, reserves, operators, and geography in one place."
+  }
+}

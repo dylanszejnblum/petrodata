@@ -1,0 +1,84 @@
+PORTFOLIO OF ADVANCED PROJECTS | URANIUM
+
+# U
+
+# Ivana
+
+![img-0.jpeg](img-0.jpeg)
+
+40° 25' S
+
+66° 10' W
+
+![img-1.jpeg](img-1.jpeg)
+
+TYPE OF DEPOSIT: Sandstone-hosted uranium deposits
+
+By-product: Vanadium
+
+CAPEX: 159,7 MUSD
+
+STATUS: Preliminary Economic Assessments
+
+CONTROLLER | OPERATOR
+
+Blue Sky Uranium Corp. | Ivana Minerales S.A.
+
+ÁREA: 7,000 ha
+
+Location: The Ivana deposit is located about 25 km north of the town of Valcheta, in a sparsely populated, semi-arid area of flat topography. The Amarillo Grande Project, located across the north-central part of Rio Negro Province, Argentina. It covers the Anit, Ivana and Santa Bárbara projects.
+
+# TECHNICAL AND ECONOMIC INFORMATION
+
+Since production: -
+
+Estimated LOM: 11 years
+
+Productive capacity: 1.5 Mlbs/y U₃O₈
+
+Mining Method: Open pit
+
+Product to obtain: Uranium concentrate
+
+#
+
+Ministerio de Economía República Argentina
+
+Secretaría de Minería
+
+---
+
+PORTFOLIO OF ADVANCED PROJECTS | URANIUM
+
+# PROJECT GEOLOGY
+
+## Regional Geology
+
+The Amarillo Grande Project is situated near the boundary between the northwestern North Patagonian Massif (Paleozoic and Mesozoic basement) and the southeastern Neuquén Basin. The basement rocks contain units of Neoproterozoic-Cambrian metamorphic rocks, Ordovician to Devonian marine sequences, Permo-Triassic intrusives, and Triassic-Jurassic magmatic-volcanic units. Near-horizontal sequences of Late Cretaceous and Tertiary sedimentary and epiclastic volcanic formations, representing the thin distal edge of the Neuquén Basin, lap on to the basement rocks near the Project (Gregori et al., 2016). Quaternary alluvial-colluvial deposits.
+
+## Deposit Geology
+
+The Ivana deposit occurs in the Oligocene-early Miocene Chichinales Formation at the distal, thin, southeastern edge of Neuquen Basin sedimentary sequences. The Chichinales Formation consists of conglomerate, tuffaceous sandstone, siltstone and mudstone, deposited unconformably on older basement rocks.
+
+The uranium mineralization at Ivana has been divided into two types based on dominant uranium mineralogy and/or alteration and gangue mineralogy; 1) Oxide mineralization characterized by visible carnotite and oxide alteration minerals, and 2) Altered "primary" mineralization characterized by a variant of coffinite.
+
+## RESOURCES (2023)
+
+|  RESOURCES | U.O. (%) | V.O. (%) | U.O. (MLbs) | V.O. (MLbs)  |
+| --- | --- | --- | --- | --- |
+|  Indicated | 0.039 | 0.019 | 17.0 | 8.1  |
+|  Inferred | 0.031 | 0.019 | 3.8 | 2.4  |
+
+## SOURCES CONSULTED
+
+Blue Sky Uranium Corp. Ivana Project
+
+Blue Sky Uranium Corp. NI 43-101 Technical Report Preliminary Economic Assessment Update for the Ivana Uranium-Vanadium Deposit, Amarillo Grande Project. Rio Negro Province, Argentina. April 2, 2024.
+
+Blue Sky Uranium Corp. Corporate Presentation. January 2026
+
+Ministerio de Economía República Argentina Secretaría de Minería
+
+---
+
+Tierras Coloradas, Chubut

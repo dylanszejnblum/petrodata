@@ -1,0 +1,94 @@
+PORTFOLIO OF ADVANCED PROJECTS | GOLD
+
+# Au
+
+# Cerro Vanguardia
+
+![img-0.jpeg](img-0.jpeg)
+
+48° 23' 28" S
+68° 15' 51" W
+
+![img-1.jpeg](img-1.jpeg)
+
+TYPE OF DEPOSIT: Low Sulphidation Epithermal Style (Au-Ag)
+
+By-product: Silver
+
+STATUS: Operation
+
+![img-2.jpeg](img-2.jpeg)
+
+CONTROLLER | OPERATOR
+AngloGold Ashanti plc (92.5%)
+Fomicruz S.E. (7.5%) |
+Cerro Vanguardia S.A.
+
+ÁREA: 51,400 ha
+
+Location: The Cerro Vanguardia mine in the Santa Cruz province. Is located approximately 110 kilometers, in a straight line, northwest of Puerto de San Julián.
+
+# TECHNICAL AND ECONOMIC INFORMATION
+
+Since production: 1998
+Estimated LOM: 5 years
+Productive capacity: 3,500 tpd
+Estimated average annual production 2025: 179 kOz
+Mining Method: Open-Pit &amp; Underground
+Product to obtain: Gold and silver doré
+
+Ministerio de Economía República Argentina Secretaría de Minería
+
+---
+
+PORTFOLIO OF ADVANCED PROJECTS | GOLD
+
+# PROJECT GEOLOGY
+
+## Regional Geology
+
+The Cerro Vanguardia district is located within the Southern Deseado Massif in the province of Santa Cruz in Argentine Patagonia. The Deseado Massif is an extensive rhyolite province of Middle to Late Jurassic age. The most important geological feature in the Deseado Massif is an extended plateau formed by pyroclastic, epiclastic, and extrusive rocks that were part of a powerful explosive volcanic event. This volcanic event was associated with regional extensional tectonics that developed during the Middle to Late Jurassic and is related to the opening of the Atlantic Ocean. The rocks representing this magmatism are called the Bajo Pobre Formation and the Bahía Laura Group. The Bajo Pobre Formation comprises andesites, basalts, and mafic volcanic agglomerates. The Bahía Laura Group includes both the Chon Aike Formation (ignimbrites, tuffs, volcanic breccias, agglomerates, lavas, and domes) and the La Matilde Formation (epiclastic volcanic tuffs and strata interbedded with ignimbrites). The Middle to Upper Jurassic ignimbrites and volcanic rocks of the Chon Aike Formation host the low-sulfidation epithermal gold and silver deposits
+
+## Deposit Geology
+
+Cerro Vanguardia is located in the heart of the 60,000 km² Deseado Massif, one of the largest volcanic complexes in southern Patagonia. The Deseado Massif is overlain by low-grade metamorphic basement rocks of Paleozoic age. These rocks are exposed in erosional windows through overlying Cretaceous sediments and Tertiary-to-Quaternary basalts. The mineralized bodies comprise a series of low-sulfidation epithermal vein deposits containing gold and large quantities of silver, which is recovered as a byproduct.
+
+Ministerio de Economía
+República Argentina
+Secretaría de Minería
+
+---
+
+PORTFOLIO OF ADVANCED PROJECTS | GOLD
+
+# RESOURCES AND RESERVES (2024)
+
+|  RESOURCES | Au (g/t) | Ag (g/t) | Au (kOz) | Ag (kOz)  |
+| --- | --- | --- | --- | --- |
+|  Measured | 2.48 | 50.04 | 560 | 11,290  |
+|  Indicated | 2.53 | 63.96 | 1,010 | 25,490  |
+|  Inferred | 3.01 | 91.04 | 390 | 11,670  |
+|  RESERVES | Au (g/t) | Ag (g/t) | Au (kOz) | Ag (kOz)  |
+| --- | --- | --- | --- | --- |
+|  Proven | 3.16 | 61.07 | 250 | 4,770  |
+|  Probable | 10.50 | 69.52 | 420 | 12,560  |
+
+# COMPANY'S ANNOUNCEMENT
+
+Austral Gold Restarts Production at Casposo, Argentina. Date: October 14, 2025. More Information
+
+Austral Gold Signs Agreement to Process Hualilan's Material. Date: December 5, 2024. More Information
+
+# SOURCES CONSULTED
+
+Anglo Gold Ashanti. Cerro Vanguardia Project
+
+Anglo Gold Ashanti. Mineral Resource and Mineral Reserve Report at 31 december 2024
+
+Anglo Gold Ashanti. Cerro Vanguardia - Americas, Operational profile
+
+Ministerio de Economía República Argentina Secretaría de Minería
+
+---
+
+Don Nicolás, Santa Cruz

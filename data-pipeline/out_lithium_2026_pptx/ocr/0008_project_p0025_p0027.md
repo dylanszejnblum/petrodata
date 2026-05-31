@@ -1,0 +1,79 @@
+PORTFOLIO OF ADVANCED PROJECTS | LITHIUM
+
+# Lives Quebradas
+
+![img-0.jpeg](img-0.jpeg)
+
+27° 27' 00" S
+68° 39' 36" W
+
+![img-1.jpeg](img-1.jpeg)
+
+TYPE OF DEPOSIT: Brine
+
+By-product: Potassium
+
+STATUS: Operation
+
+![img-2.jpeg](img-2.jpeg)
+
+CONTROLLER | OPERATOR
+Zijin Mining Company | LIEX S.A.
+
+ÁREA: 26,680 ha
+
+Location: It is located Salar de Laguna Verde, in the Municipality of Fiambalá, 30 km from the border with Chile, 200 km from the Caldera port (Chile), 90 km north of the place Cortaderas, about 4,100 m.a.s.l.
+
+# TECHNICAL AND ECONOMIC INFORMATION
+
+Since production: 2025
+
+Estimated LOM: 50 years
+
+Productive capacity: Stage 1: 20,000 tpy LCE | Stage 2: 40,000 tpy LCE
+
+Estimated average annual production 2025: 7,315 t LCE
+
+Mining Method: Pumping - Evaporation
+
+Product to obtain: Lithium Carbonate (Li₂CO₃)
+
+Ministerio de Economía República Argentina Secretaría de Minería
+
+---
+
+PORTFOLIO OF ADVANCED PROJECTS | LITHIUM
+
+# PROJECT GEOLOGY
+
+## Deposit Geology
+
+The project includes the "Tres Quebradas" lagoon, which is not freshwater, but a reservoir of super-saturated brine in sodium, calcium and chlorine. The density of the brine is 1.22 (25% heavier than fresh water). It is black in color due to its content of manganese and other metals. There are two large salars within the area, they are formed by a very rough surface, which suggests that it is a mature salt formed mostly by a sodium chloride core. The contribution of fresh water to the salt is limited to the extreme south where the Valle Ancho River and the Piscis River enter. All the rivers at the northern end of the complex provide thermal waters laden with metals. The waters that enter the salt flats are, on the one hand, alkaline and carbonated, and acidic with a high metallic content. There are more than a dozen thermal contributions and some have lithium contents of up to 1,000 mg/l, which is a worldwide record. These contributions go directly to the salt flat and the "Tres Quebradas" lagoon where they are concentrated by evaporation.
+
+## RESOURCES AND RESERVES (2024)
+
+|  RESOURCES | Li Grade (mg/l) | LCE (t)  |
+| --- | --- | --- |
+|  M&I | 400 | 5,966,191  |
+|  Inferred | 400 | 2,329,900  |
+|  |   |   |
+|  RESERVES | Li Grade (mg/l) | LCE (t)  |
+|  Proven | 675 | 990,491  |
+|  Probable | 675 | 587,600  |
+
+## COMPANY'S ANNOUNCEMENT
+
+The company has announced the launch of the 3Q Lithium Project, with an initial capacity of 20,000 tons per year of lithium carbonate, marking its first venture located in Fiambalá, Catamarca. Date: September 15, 2025. More information
+
+## SOURCES CONSULTED
+
+Zijin Mining Group Ltd. Tres Quebradas Project
+NEO Lithium Corp. Feasibility Study (FS) - 3Q Project NI 43-101 Technical Report Catamarca, Argentina. November 25, 2021
+
+Ministerio de Economía República Argentina Secretaría de Minería
+
+---
+
+Olaroz, Jujuy
+
+![img-0.jpeg](img-0.jpeg)

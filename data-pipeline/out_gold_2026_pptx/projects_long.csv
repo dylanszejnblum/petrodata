@@ -1,0 +1,174 @@
+project_name,primary_commodity,bucket,category,metric,value
+Cerro Moro,Gold,resources,Measured,Au_g_t,4.87
+Cerro Moro,Gold,resources,Measured,Ag_g_t,277
+Cerro Moro,Gold,resources,Measured,Au_kOz,39.2
+Cerro Moro,Gold,resources,Measured,Ag_kOz,2200
+Cerro Moro,Gold,resources,Indicated,Au_g_t,5.58
+Cerro Moro,Gold,resources,Indicated,Ag_g_t,254
+Cerro Moro,Gold,resources,Indicated,Au_kOz,135.1
+Cerro Moro,Gold,resources,Indicated,Ag_kOz,6100
+Cerro Moro,Gold,resources,Inferred,Au_g_t,6.85
+Cerro Moro,Gold,resources,Inferred,Ag_g_t,164
+Cerro Moro,Gold,resources,Inferred,Au_kOz,145.7
+Cerro Moro,Gold,resources,Inferred,Ag_kOz,3500
+Cerro Moro,Gold,reserves,Proven,Au_g_t,9.94
+Cerro Moro,Gold,reserves,Proven,Ag_g_t,223
+Cerro Moro,Gold,reserves,Proven,Au_kOz,92.2
+Cerro Moro,Gold,reserves,Proven,Ag_kOz,2100
+Cerro Moro,Gold,reserves,Probable,Au_g_t,5.59
+Cerro Moro,Gold,reserves,Probable,Ag_g_t,282
+Cerro Moro,Gold,reserves,Probable,Au_kOz,57.6
+Cerro Moro,Gold,reserves,Probable,Ag_kOz,2900
+Cerro Negro,Gold,resources,Measured,Au_g_t,3.73
+Cerro Negro,Gold,resources,Measured,Ag_g_t,12.61
+Cerro Negro,Gold,resources,Measured,Au_kOz,200
+Cerro Negro,Gold,resources,Measured,Ag_kOz,500
+Cerro Negro,Gold,resources,Indicated,Au_g_t,5.42
+Cerro Negro,Gold,resources,Indicated,Ag_g_t,27.54
+Cerro Negro,Gold,resources,Indicated,Au_kOz,300
+Cerro Negro,Gold,resources,Indicated,Ag_kOz,1700
+Cerro Negro,Gold,resources,Inferred,Au_g_t,5.1
+Cerro Negro,Gold,resources,Inferred,Ag_g_t,25.7
+Cerro Negro,Gold,resources,Inferred,Au_kOz,1200
+Cerro Negro,Gold,resources,Inferred,Ag_kOz,6300
+Cerro Negro,Gold,reserves,Proven,Au_g_t,1120
+Cerro Negro,Gold,reserves,Proven,Ag_g_t,84.41
+Cerro Negro,Gold,reserves,Proven,Au_kOz,800
+Cerro Negro,Gold,reserves,Proven,Ag_kOz,5900
+Cerro Negro,Gold,reserves,Probable,Au_g_t,10.38
+Cerro Negro,Gold,reserves,Probable,Ag_g_t,66.2
+Cerro Negro,Gold,reserves,Probable,Au_kOz,2300
+Cerro Negro,Gold,reserves,Probable,Ag_kOz,14400
+Casposo,Gold,resources,M&I,Au_g_t,1.48
+Casposo,Gold,resources,M&I,Ag_g_t,59.91
+Casposo,Gold,resources,M&I,Au_kOz,107
+Casposo,Gold,resources,M&I,Ag_kOz,4349
+Casposo,Gold,resources,Inferred,Au_g_t,7.52
+Casposo,Gold,resources,Inferred,Ag_g_t,68.54
+Casposo,Gold,resources,Inferred,Au_kOz,42
+Casposo,Gold,resources,Inferred,Ag_kOz,381
+Casposo,Gold,reserves,Probable,Au_g_t,1.31
+Casposo,Gold,reserves,Probable,Ag_g_t,58.52
+Casposo,Gold,reserves,Probable,Au_kOz,80
+Casposo,Gold,reserves,Probable,Ag_kOz,3276
+Cerro Vanguardia,Gold,resources,Measured,Au_g_t,2.48
+Cerro Vanguardia,Gold,resources,Measured,Ag_g_t,50.04
+Cerro Vanguardia,Gold,resources,Measured,Au_kOz,560
+Cerro Vanguardia,Gold,resources,Measured,Ag_kOz,11290
+Cerro Vanguardia,Gold,resources,Indicated,Au_g_t,2.53
+Cerro Vanguardia,Gold,resources,Indicated,Ag_g_t,63.96
+Cerro Vanguardia,Gold,resources,Indicated,Au_kOz,1010
+Cerro Vanguardia,Gold,resources,Indicated,Ag_kOz,25490
+Cerro Vanguardia,Gold,resources,Inferred,Au_g_t,3.01
+Cerro Vanguardia,Gold,resources,Inferred,Ag_g_t,91.04
+Cerro Vanguardia,Gold,resources,Inferred,Au_kOz,390
+Cerro Vanguardia,Gold,resources,Inferred,Ag_kOz,11670
+Cerro Vanguardia,Gold,reserves,Proven,Au_g_t,3.16
+Cerro Vanguardia,Gold,reserves,Proven,Ag_g_t,61.07
+Cerro Vanguardia,Gold,reserves,Proven,Au_kOz,250
+Cerro Vanguardia,Gold,reserves,Proven,Ag_kOz,4770
+Cerro Vanguardia,Gold,reserves,Probable,Au_g_t,10.5
+Cerro Vanguardia,Gold,reserves,Probable,Ag_g_t,69.52
+Cerro Vanguardia,Gold,reserves,Probable,Au_kOz,420
+Cerro Vanguardia,Gold,reserves,Probable,Ag_kOz,12560
+Don Nicolás-Las Calandrias,Gold,resources,Calandrias Sur (open pit),Au_g_t,0.97
+Don Nicolás-Las Calandrias,Gold,resources,Calandrias Sur (open pit),Ag_g_t,15.34
+Don Nicolás-Las Calandrias,Gold,resources,Calandrias Sur (open pit),Au_kOz,400.72
+Don Nicolás-Las Calandrias,Gold,resources,Calandrias Sur (open pit),Ag_kOz,6328.98
+Don Nicolás-Las Calandrias,Gold,resources,Calandrias Norte (open pit),Au_g_t,14.94
+Don Nicolás-Las Calandrias,Gold,resources,Calandrias Norte (open pit),Ag_g_t,23.12
+Don Nicolás-Las Calandrias,Gold,resources,Calandrias Norte (open pit),Au_kOz,37.85
+Don Nicolás-Las Calandrias,Gold,resources,Calandrias Norte (open pit),Ag_kOz,58.57
+Don Nicolás-Las Calandrias,Gold,resources,Zorro (open pit),Au_g_t,1.6
+Don Nicolás-Las Calandrias,Gold,resources,Zorro (open pit),Ag_g_t,7.84
+Don Nicolás-Las Calandrias,Gold,resources,Zorro (open pit),Au_kOz,10.58
+Don Nicolás-Las Calandrias,Gold,resources,Zorro (open pit),Ag_kOz,51.81
+Don Nicolás-Las Calandrias,Gold,resources,Depleted Satellites (open pit),Au_g_t,1.96
+Don Nicolás-Las Calandrias,Gold,resources,Depleted Satellites (open pit),Ag_g_t,0
+Don Nicolás-Las Calandrias,Gold,resources,Depleted Satellites (open pit),Au_kOz,2.83
+Don Nicolás-Las Calandrias,Gold,resources,Depleted Satellites (open pit),Ag_kOz,0
+Don Nicolás-Las Calandrias,Gold,resources,Paloma Trend (underground),Au_g_t,4.34
+Don Nicolás-Las Calandrias,Gold,resources,Paloma Trend (underground),Ag_g_t,17.38
+Don Nicolás-Las Calandrias,Gold,resources,Paloma Trend (underground),Au_kOz,38.36
+Don Nicolás-Las Calandrias,Gold,resources,Paloma Trend (underground),Ag_kOz,153.56
+Don Nicolás-Las Calandrias,Gold,resources,TOTAL,Au_g_t,1.13
+Don Nicolás-Las Calandrias,Gold,resources,TOTAL,Ag_g_t,15.26
+Don Nicolás-Las Calandrias,Gold,resources,TOTAL,Au_kOz,490.34
+Don Nicolás-Las Calandrias,Gold,resources,TOTAL,Ag_kOz,6592.92
+Gualcamayo - Carbonatos Profundos,Gold,resources,M&I,Au_g_t,3.29
+Gualcamayo - Carbonatos Profundos,Gold,resources,M&I,Au_kO2,2090
+Gualcamayo - Carbonatos Profundos,Gold,resources,Inferred,Au_g_t,3.38
+Gualcamayo - Carbonatos Profundos,Gold,resources,Inferred,Au_kO2,376
+Lindero,Gold,resources,Measured,Au_g_t,0.52
+Lindero,Gold,resources,Indicated,Au_g_t,0.42
+Lindero,Gold,resources,Inferred,Au_g_t,0.46
+Lindero,Gold,reserves,Proven,Au_g_t,0.56
+Lindero,Gold,reserves,Probable,Au_g_t,0.53
+Veladero,Gold,resources,Measured,Au_g_t,0.65
+Veladero,Gold,resources,Measured,Ag_g_t,13.08
+Veladero,Gold,resources,Measured,Au_kOz,530
+Veladero,Gold,resources,Measured,Ag_kOz,11000
+Veladero,Gold,resources,Indicated,Au_g_t,0.85
+Veladero,Gold,resources,Indicated,Ag_g_t,13.91
+Veladero,Gold,resources,Indicated,Au_kOz,1800
+Veladero,Gold,resources,Indicated,Ag_kOz,38000
+Veladero,Gold,resources,Inferred,Au_g_t,0.5
+Veladero,Gold,resources,Inferred,Ag_g_t,15.08
+Veladero,Gold,resources,Inferred,Au_kOz,290
+Veladero,Gold,resources,Inferred,Ag_kOz,8200
+Veladero,Gold,reserves,Proven,Au_g_t,0.66
+Veladero,Gold,reserves,Proven,Ag_g_t,12.92
+Veladero,Gold,reserves,Proven,Au_kOz,510
+Veladero,Gold,reserves,Proven,Ag_kOz,10000
+Veladero,Gold,reserves,Probable,Au_g_t,0.68
+Veladero,Gold,reserves,Probable,Ag_g_t,13.93
+Veladero,Gold,reserves,Probable,Au_kOz,1100
+Veladero,Gold,reserves,Probable,Ag_kOz,22000
+Calcatreu,Gold,resources,Indicated,Au_g_t,2.11
+Calcatreu,Gold,resources,Indicated,Ag_g_t,19.83
+Calcatreu,Gold,resources,Indicated,Au_kOz,669
+Calcatreu,Gold,resources,Indicated,Ag_kOz,6275
+Calcatreu,Gold,resources,Inferred,Au_g_t,1.34
+Calcatreu,Gold,resources,Inferred,Ag_g_t,13.09
+Calcatreu,Gold,resources,Inferred,Au_kOz,348
+Calcatreu,Gold,resources,Inferred,Ag_kOz,3399
+Suyai,Gold,resources,M&I,Au_g_t,15.13
+Suyai,Gold,resources,M&I,Ag_g_t,23
+Suyai,Gold,resources,M&I,Au_kOz,2286
+Suyai,Gold,resources,M&I,Ag_kOz,3523
+Suyai,Gold,resources,Inferred,Au_g_t,9.9
+Suyai,Gold,resources,Inferred,Ag_g_t,21
+Suyai,Gold,resources,Inferred,Au_kOz,274
+Suyai,Gold,resources,Inferred,Ag_kOz,575
+Hualilán,Gold,resources,Total,Au_g_t,1.1
+Hualilán,Gold,resources,Total,Ag_g_t,6
+Hualilán,Gold,resources,Total,pct_Zn,0.4
+Hualilán,Gold,resources,Total,pct_Pb,0.06
+Hualilán,Gold,reserves,US$1800 optimised shell (>0.30 ppm AuEq),Au_g_t,1
+Hualilán,Gold,reserves,US$1800 optimised shell (>0.30 ppm AuEq),Ag_g_t,5.1
+Hualilán,Gold,reserves,US$1800 optimised shell (>0.30 ppm AuEq),pct_Zn,0.38
+Hualilán,Gold,reserves,US$1800 optimised shell (>0.30 ppm AuEq),pct_Pb,0.06
+Hualilán,Gold,reserves,Below US$1800 shell (>1.0ppm AuEq),Au_g_t,2
+Hualilán,Gold,reserves,Below US$1800 shell (>1.0ppm AuEq),Ag_g_t,9
+Hualilán,Gold,reserves,Below US$1800 shell (>1.0ppm AuEq),pct_Zn,0.89
+Hualilán,Gold,reserves,Below US$1800 shell (>1.0ppm AuEq),pct_Pb,0.05
+Hualilán,Gold,reserves,Probable,Category,6.6
+Hualilán,Gold,reserves,Probable,Au_g_t,37.6
+Hualilán,Gold,reserves,Probable,Ag_g_t,91
+Hualilán,Gold,reserves,Probable,pct_Zn,517
+Taguas,Gold,resources,Cerros Taguas,Au_g_t,0.37
+Taguas,Gold,resources,Cerros Taguas,Ag_g_t,11.1
+Taguas,Gold,resources,Cerros Taguas,Au_kOz,467
+Taguas,Gold,resources,Cerros Taguas,Ag_kOz,14037
+Taguas,Gold,resources,Cerro Silla Sur,Au_g_t,3.14
+Taguas,Gold,resources,Cerro Silla Sur,Ag_g_t,57.9
+Taguas,Gold,resources,Cerro Silla Sur,pct_Cu,0.24
+Taguas,Gold,resources,Cerro Silla Sur,Au_kOz,75
+Taguas,Gold,resources,Cerro Silla Sur,Ag_kOz,1396
+Taguas,Gold,resources,Cerro Silla Sur,Cu_MLbs,4
+Taguas,Gold,resources,Cerro Campamento,Au_g_t,4.01
+Taguas,Gold,resources,Cerro Campamento,Ag_g_t,41.1
+Taguas,Gold,resources,Cerro Campamento,pct_Cu,0.47
+Taguas,Gold,resources,Cerro Campamento,Au_kOz,196
+Taguas,Gold,resources,Cerro Campamento,Ag_kOz,2025
+Taguas,Gold,resources,Cerro Campamento,Cu_MLbs,15.6

@@ -1,0 +1,21 @@
+project_name,primary_commodity,bucket,category,metric,value
+Don Otto,Uranium,resources,RAR,Uranium_t,180
+Don Otto,Uranium,resources,Inferred,Uranium_t,250
+Sierra Pintada,Uranium,resources,RAR,Uranium_t,3900
+Sierra Pintada,Uranium,resources,Inferred,Uranium_t,6110
+Ivana,Uranium,resources,Indicated,pct_U3O8,0.039
+Ivana,Uranium,resources,Indicated,pct_V2O5,0.019
+Ivana,Uranium,resources,Indicated,U3O8_MLbs,17
+Ivana,Uranium,resources,Indicated,V2O5_MLbs,8.1
+Ivana,Uranium,resources,Inferred,pct_U3O8,0.031
+Ivana,Uranium,resources,Inferred,pct_V2O5,0.019
+Ivana,Uranium,resources,Inferred,U3O8_MLbs,3.8
+Ivana,Uranium,resources,Inferred,V2O5_MLbs,2.4
+Laguna Salada,Uranium,resources,Indicated,pct_U3O8,0.01
+Laguna Salada,Uranium,resources,Indicated,V2O5_ppm,550
+Laguna Salada,Uranium,resources,Indicated,U3O8_MLbs,6.3
+Laguna Salada,Uranium,resources,Indicated,V2O5_MLbs,57.1
+Laguna Salada,Uranium,resources,Inferred,pct_U3O8,0.01
+Laguna Salada,Uranium,resources,Inferred,V2O5_ppm,590
+Laguna Salada,Uranium,resources,Inferred,U3O8_MLbs,3.8
+Laguna Salada,Uranium,resources,Inferred,V2O5_MLbs,26.9
