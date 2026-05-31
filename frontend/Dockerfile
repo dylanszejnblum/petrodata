@@ -1,71 +1,80 @@
-# To use this Dockerfile, you have to set `output: 'standalone'` in your next.config.js file.
-# From https://github.com/vercel/next.js/blob/canary/examples/with-docker/Dockerfile
+# ===================== BUILD STAGE =====================
+FROM node:22-alpine AS builder
 
-FROM node:22.17.0-alpine AS base
-
-# Install dependencies only when needed
-FROM base AS deps
-# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
-RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Install dependencies based on the preferred package manager
-COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
-RUN \
-  if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
-  elif [ -f package-lock.json ]; then npm ci; \
-  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm i --frozen-lockfile; \
-  else echo "Lockfile not found." && exit 1; \
-  fi
+# Install pnpm
+RUN corepack enable && corepack prepare pnpm@latest --activate
 
+# Build-time env vars required by Payload CMS + Next.js
+ARG DATABASE_URL
+ARG PAYLOAD_SECRET
+ARG NEXT_PUBLIC_SERVER_URL
+ARG NEXT_PUBLIC_API_BASE_URL
+ARG CRON_SECRET
+ARG PREVIEW_SECRET
 
-# Rebuild the source code only when needed
-FROM base AS builder
+ENV DATABASE_URL=$DATABASE_URL
+ENV PAYLOAD_SECRET=$PAYLOAD_SECRET
+ENV NEXT_PUBLIC_SERVER_URL=$NEXT_PUBLIC_SERVER_URL
+ENV NEXT_PUBLIC_API_BASE_URL=$NEXT_PUBLIC_API_BASE_URL
+ENV CRON_SECRET=$CRON_SECRET
+ENV PREVIEW_SECRET=$PREVIEW_SECRET
+ENV NODE_OPTIONS="--no-deprecation"
+
+# Copy dependency manifests
+COPY package.json pnpm-lock.yaml ./
+
+# Install dependencies (including devDependencies for build)
+RUN pnpm install --frozen-lockfile --ignore-scripts
+
+# Rebuild native/build-required packages explicitly
+RUN pnpm rebuild sharp esbuild unrs-resolver
+
+# Copy source code and config files
+COPY tsconfig.json next.config.ts next-sitemap.config.cjs playwright.config.ts vitest.config.mts postcss.config.mjs ./
+COPY src ./src
+COPY public ./public
+COPY redirects.ts ./
+COPY messages ./messages
+COPY components.json ./
+
+# Generate Payload importmap and types, then build Next.js
+RUN pnpm generate:importmap
+RUN pnpm build
+
+# Prune dev dependencies for production
+RUN pnpm prune --prod --ignore-scripts
+
+# ===================== PRODUCTION STAGE =====================
+FROM node:22-alpine AS production
+
 WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
-COPY . .
 
-# Next.js collects completely anonymous telemetry data about general usage.
-# Learn more here: https://nextjs.org/telemetry
-# Uncomment the following line in case you want to disable telemetry during the build.
-# ENV NEXT_TELEMETRY_DISABLED 1
+RUN corepack enable && corepack prepare pnpm@latest --activate
 
-RUN \
-  if [ -f yarn.lock ]; then yarn run build; \
-  elif [ -f package-lock.json ]; then npm run build; \
-  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm run build; \
-  else echo "Lockfile not found." && exit 1; \
-  fi
+# Runtime env vars
+ARG NEXT_PUBLIC_SERVER_URL
+ARG NEXT_PUBLIC_API_BASE_URL
+ARG NEXT_PUBLIC_GA_MEASUREMENT_ID
 
-# Production image, copy all the files and run next
-FROM base AS runner
-WORKDIR /app
+ENV NEXT_PUBLIC_SERVER_URL=$NEXT_PUBLIC_SERVER_URL
+ENV NEXT_PUBLIC_API_BASE_URL=$NEXT_PUBLIC_API_BASE_URL
+ENV NEXT_PUBLIC_GA_MEASUREMENT_ID=$NEXT_PUBLIC_GA_MEASUREMENT_ID
+ENV NODE_OPTIONS="--no-deprecation"
+ENV HOSTNAME="0.0.0.0"
 
-ENV NODE_ENV production
-# Uncomment the following line in case you want to disable telemetry during runtime.
-# ENV NEXT_TELEMETRY_DISABLED 1
-
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
-
-# Remove this line if you do not have this folder
+# Copy built artifacts and production deps
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/public ./public
-
-# Set the correct permission for prerender cache
-RUN mkdir .next
-RUN chown nextjs:nodejs .next
-
-# Automatically leverage output traces to reduce image size
-# https://nextjs.org/docs/advanced-features/output-file-tracing
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-
-USER nextjs
+COPY --from=builder /app/src ./src
+COPY --from=builder /app/next.config.ts ./next.config.ts
+COPY --from=builder /app/redirects.ts ./redirects.ts
+COPY --from=builder /app/messages ./messages
+COPY --from=builder /app/next-env.d.ts ./next-env.d.ts
 
 EXPOSE 3000
 
-ENV PORT 3000
-
-# server.js is created by next build from the standalone output
-# https://nextjs.org/docs/pages/api-reference/next-config-js/output
-CMD HOSTNAME="0.0.0.0" node server.js
+CMD ["pnpm", "start"]

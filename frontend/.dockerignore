@@ -1,0 +1,16 @@
+node_modules
+.next
+.git
+.gitignore
+.env
+.env.*
+*.md
+test
+tests
+coverage
+playwright-report
+test-results
+blob-report
+public/media
+public/robots.txt
+public/sitemap*.xml
