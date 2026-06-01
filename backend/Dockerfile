@@ -10,7 +10,7 @@ RUN corepack enable && corepack prepare pnpm@10 --activate
 COPY package.json pnpm-lock.yaml ./
 COPY prisma ./prisma/
 
-# Install dependencies, skip build scripts (handled separately below)
+# Install dependencies (including devDependencies needed for build)
 RUN pnpm install --frozen-lockfile --ignore-scripts
 
 # Rebuild native/build-required packages explicitly
@@ -23,8 +23,8 @@ COPY src ./src/
 # Generate Prisma client
 RUN pnpm prisma generate
 
-# Build the NestJS app
-RUN pnpm run build
+# Build the NestJS app (use explicit nest binary)
+RUN ./node_modules/.bin/nest build && ls -la dist/ && ls -la dist/main.js 2>/dev/null || (echo "BUILD FAILED - dist/main.js not found" && exit 1)
 
 # ===================== PRODUCTION STAGE =====================
 FROM node:22-alpine AS production
@@ -35,13 +35,15 @@ WORKDIR /app
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/package.json ./
 
-# Copy node_modules (includes prisma CLI + generated client)
+# Copy full node_modules (includes prisma + generated client)
 COPY --from=builder /app/node_modules ./node_modules
 
 # Prisma schema + migrations needed for prisma migrate deploy
 COPY --from=builder /app/prisma ./prisma
 
+RUN ls -la /app/dist/main.js 2>/dev/null || (echo "dist/main.js MISSING in production" && exit 1)
+
 EXPOSE 3001
 
-# Use local prisma binary (not npx which downloads latest incompatible version)
+# Use local prisma binary, then start app
 CMD ["sh", "-c", "./node_modules/.bin/prisma migrate deploy && node dist/main"]
