@@ -23,15 +23,18 @@ COPY src ./src/
 # Generate Prisma client
 RUN pnpm prisma generate
 
-# Build the NestJS app - capture all output
-RUN pnpm run build 2>&1; exit_code=$?; echo "--- dist/ contents ---"; ls -la dist/ 2>/dev/null || echo "dist/ not found"; echo "--- check main.js ---"; ls -la dist/main.js 2>/dev/null || echo "dist/main.js not found"; if [ $exit_code -ne 0 ]; then echo "BUILD FAILED with exit code $exit_code"; exit $exit_code; fi
+# Build the NestJS app
+RUN pnpm run build
+
+# Verify the output (nest build puts files in dist/src/main.js)
+RUN test -f dist/src/main.js && echo "dist/src/main.js OK" || (echo "BUILD FAILED - dist/src/main.js not found" && exit 1)
 
 # ===================== PRODUCTION STAGE =====================
 FROM node:22-alpine AS production
 
 WORKDIR /app
 
-# Copy built artifacts
+# Copy built artifacts (dist/src/main.js)
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/package.json ./
 
@@ -41,9 +44,9 @@ COPY --from=builder /app/node_modules ./node_modules
 # Prisma schema + migrations needed for prisma migrate deploy
 COPY --from=builder /app/prisma ./prisma
 
-RUN ls -la /app/dist/main.js 2>/dev/null && echo "dist/main.js OK" || (echo "dist/main.js MISSING in production" && exit 1)
+RUN test -f /app/dist/src/main.js && echo "dist/src/main.js OK" || (echo "dist/src/main.js MISSING" && exit 1)
 
 EXPOSE 3001
 
-# Use local prisma binary, then start app
-CMD ["sh", "-c", "./node_modules/.bin/prisma migrate deploy && node dist/main"]
+# Use local prisma binary, then start app (nest build outputs to dist/src/)
+CMD ["sh", "-c", "./node_modules/.bin/prisma migrate deploy && node dist/src/main"]
