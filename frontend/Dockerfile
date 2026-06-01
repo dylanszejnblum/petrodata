@@ -32,7 +32,7 @@ RUN pnpm install --frozen-lockfile --ignore-scripts
 RUN pnpm rebuild sharp esbuild unrs-resolver
 
 # Copy source code and config files
-COPY tsconfig.json next.config.ts next-sitemap.config.cjs playwright.config.ts vitest.config.mts postcss.config.js ./
+COPY tsconfig.json next.config.ts next-sitemap.config.cjs playwright.config.ts vitest.config.mts postcss.config.js tailwind.config.mjs ./
 COPY src ./src
 COPY public ./public
 COPY redirects.ts ./
