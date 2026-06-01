@@ -32,11 +32,10 @@ RUN pnpm install --frozen-lockfile --ignore-scripts
 RUN pnpm rebuild sharp esbuild unrs-resolver
 
 # Copy source code and config files
-COPY tsconfig.json next.config.ts next-sitemap.config.cjs playwright.config.ts vitest.config.mts postcss.config.mjs ./
+COPY tsconfig.json next.config.ts next-sitemap.config.cjs playwright.config.ts vitest.config.mts postcss.config.js ./
 COPY src ./src
 COPY public ./public
 COPY redirects.ts ./
-COPY messages ./messages
 COPY components.json ./
 
 # Generate Payload importmap and types, then build Next.js
@@ -72,7 +71,6 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/src ./src
 COPY --from=builder /app/next.config.ts ./next.config.ts
 COPY --from=builder /app/redirects.ts ./redirects.ts
-COPY --from=builder /app/messages ./messages
 COPY --from=builder /app/next-env.d.ts ./next-env.d.ts
 
 EXPOSE 3000
