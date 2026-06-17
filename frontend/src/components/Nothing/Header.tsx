@@ -8,14 +8,16 @@ import { useTheme } from '../../providers/Theme'
 import { LanguageSwitcher } from './LanguageSwitcher'
 
 type NavItem = {
-  href: '/' | '/map' | '/companies' | '/provincias'
+  href?: '/' | '/map' | '/companies' | '/provincias'
   labelKey:
     | 'dashboard'
     | 'oilGas'
     | 'companies'
     | 'provinces'
+    | 'investments'
   shortLabelKey: NavItem['labelKey']
-  match: (pathname: string) => boolean
+  match?: (pathname: string) => boolean
+  comingSoon?: boolean
 }
 
 const NAV_ITEMS: NavItem[] = [
@@ -42,6 +44,11 @@ const NAV_ITEMS: NavItem[] = [
     labelKey: 'provinces',
     shortLabelKey: 'provinces',
     match: (p) => p === '/provincias' || p.startsWith('/provincias/'),
+  },
+  {
+    labelKey: 'investments',
+    shortLabelKey: 'investments',
+    comingSoon: true,
   },
 ]
 
@@ -211,15 +218,30 @@ export function NothingHeader() {
 
         <nav className="hidden md:flex flex-wrap items-center gap-x-6 gap-y-2">
           {NAV_ITEMS.map((item, i) => {
-            const isActive = item.match(pathname)
+            const animation = `header-nav-item 400ms cubic-bezier(0.16, 1, 0.3, 1) ${200 + i * 80}ms both`
+            if (item.comingSoon) {
+              return (
+                <span
+                  key={item.labelKey}
+                  className="relative inline-flex items-center gap-1.5 font-mono text-[11px] tracking-[0.08em] uppercase text-nd-text-disabled cursor-default"
+                  style={{ animation }}
+                >
+                  {t(item.shortLabelKey)}
+                  <span className="rounded-full border border-nd-border bg-nd-surface-raised px-1.5 py-px text-[9px] tracking-[0.04em] text-nd-text-secondary normal-case">
+                    {t('comingSoon')}
+                  </span>
+                </span>
+              )
+            }
+            const isActive = item.match?.(pathname) ?? false
             return (
               <Link
-                key={item.href}
-                href={item.href}
+                key={item.labelKey}
+                href={item.href!}
                 className="relative font-mono text-[11px] tracking-[0.08em] uppercase transition-colors"
                 style={{
                   color: isActive ? 'var(--nd-text-display)' : 'var(--nd-text-disabled)',
-                  animation: `header-nav-item 400ms cubic-bezier(0.16, 1, 0.3, 1) ${200 + i * 80}ms both`,
+                  animation,
                 }}
               >
                 {t(item.shortLabelKey)}
@@ -271,11 +293,25 @@ export function NothingHeader() {
                   | 'oilGasFull'
                   | 'companiesFull'
                   | 'provincesFull'
-                const isActive = item.match(pathname)
+                  | 'investmentsFull'
+                if (item.comingSoon) {
+                  return (
+                    <span
+                      key={item.labelKey}
+                      className="flex items-center justify-between gap-2 border-b border-nd-border py-4 text-sm uppercase font-mono text-nd-text-disabled"
+                    >
+                      {t(labelKey)}
+                      <span className="rounded-full border border-nd-border bg-nd-surface-raised px-1.5 py-px text-[9px] tracking-[0.04em] text-nd-text-secondary normal-case">
+                        {t('comingSoon')}
+                      </span>
+                    </span>
+                  )
+                }
+                const isActive = item.match?.(pathname) ?? false
                 return (
                   <Link
-                    key={item.href}
-                    href={item.href}
+                    key={item.labelKey}
+                    href={item.href!}
                     className="border-b border-nd-border py-4 text-sm uppercase font-mono"
                     style={{
                       color: isActive ? 'var(--nd-text-display)' : 'var(--nd-text-secondary)',
