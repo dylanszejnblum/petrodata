@@ -486,7 +486,7 @@
     "companies": "companies",
     "noResults": "No province matches.",
     "backToList": "All provinces",
-    "summary": "{projects} projects · {companies} companies",
+    "summary": "{wells} wells · {companies} companies",
     "stats": {
       "projects": "Projects",
       "advanced": "Advanced",
