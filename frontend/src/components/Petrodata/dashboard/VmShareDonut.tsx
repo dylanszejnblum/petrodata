@@ -3,9 +3,11 @@
 import { useTranslations } from 'next-intl'
 import { Cell, Pie, PieChart, ResponsiveContainer } from 'recharts'
 import { AnimatedCounter } from './AnimatedCounter'
+import { useMounted } from '@/hooks/useMounted'
 
 export function VmShareDonut({ shareBoe }: { shareBoe: number }) {
   const t = useTranslations('dashboard.vmDonut')
+  const mounted = useMounted()
   const pct = Math.max(0, Math.min(1, shareBoe))
   const conventional = 1 - pct
   const data = [
@@ -22,6 +24,7 @@ export function VmShareDonut({ shareBoe }: { shareBoe: number }) {
       </span>
 
       <div className="relative mt-4 mx-auto" style={{ width: 180, height: 180 }}>
+        {mounted && (
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie
@@ -42,6 +45,7 @@ export function VmShareDonut({ shareBoe }: { shareBoe: number }) {
             </Pie>
           </PieChart>
         </ResponsiveContainer>
+        )}
         <div className="absolute inset-0 grid place-items-center pointer-events-none">
           <div className="flex flex-col items-center">
             <AnimatedCounter

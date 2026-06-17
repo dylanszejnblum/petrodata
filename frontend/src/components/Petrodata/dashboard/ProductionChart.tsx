@@ -3,6 +3,7 @@
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { OperatorAvatar } from '@/components/Petrodata/map/OperatorAvatar'
 import { formatCompact, formatMonth } from '@/utilities/formatNumber'
+import { useMounted } from '@/hooks/useMounted'
 import type { ChartRow, OperatorSeriesMeta } from './operatorPalette'
 
 export function ProductionChart({
@@ -12,6 +13,7 @@ export function ProductionChart({
   rows: ChartRow[]
   operators: OperatorSeriesMeta[]
 }) {
+  const mounted = useMounted()
   if (rows.length === 0 || operators.length === 0) {
     return (
       <div
@@ -25,6 +27,7 @@ export function ProductionChart({
   return (
     <div className="flex flex-col gap-4">
       <div className="h-[280px] md:h-[400px] w-full">
+        {mounted && (
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={rows} margin={{ top: 8, right: 16, bottom: 0, left: 0 }}>
             <defs>
@@ -68,6 +71,7 @@ export function ProductionChart({
             ))}
           </AreaChart>
         </ResponsiveContainer>
+        )}
       </div>
       <Legend operators={operators} />
     </div>
