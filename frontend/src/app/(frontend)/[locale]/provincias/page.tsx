@@ -29,7 +29,12 @@ async function getExportTotals(): Promise<Record<string, number>> {
     const { data, error } = await api.GET('/api/v2/provinces/export-summary', { cache: 'no-store' })
     if (error || !data) return {}
     const map: Record<string, number> = {}
-    for (const p of data.data.provinces) map[p.slug] = p.total_export_usd
+    for (const p of data.data.provinces) {
+      // Oil & gas focus: sum only non-mining export sectors.
+      map[p.slug] = Object.entries(p.by_sector)
+        .filter(([sector]) => !/miner/i.test(sector))
+        .reduce((sum, [, v]) => sum + (v || 0), 0)
+    }
     return map
   } catch {
     return {}
@@ -42,13 +47,15 @@ export default async function ProvincesPage() {
     getProvinces(),
     getExportTotals(),
   ])
-  const cards: ProvinceCard[] = provinces.map((p) => ({
-    slug: p.slug,
-    name: p.name,
-    projectCount: p.combined_project_count,
-    commodities: p.commodities ?? [],
-    exportUsd: exportTotals[p.slug] ?? null,
-  }))
+  // Oil & gas focus: only provinces with oil & gas activity.
+  const cards: ProvinceCard[] = provinces
+    .filter((p) => p.has_oil_gas)
+    .map((p) => ({
+      slug: p.slug,
+      name: p.name,
+      wells: p.oil_gas_wells,
+      exportUsd: exportTotals[p.slug] ?? null,
+    }))
 
   return (
     <>

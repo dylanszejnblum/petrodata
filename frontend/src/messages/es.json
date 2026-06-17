@@ -486,7 +486,7 @@
     "companies": "empresas",
     "noResults": "Ninguna provincia coincide.",
     "backToList": "Todas las provincias",
-    "summary": "{projects} proyectos · {companies} empresas",
+    "summary": "{wells} pozos · {companies} empresas",
     "stats": {
       "projects": "Proyectos",
       "advanced": "Avanzados",

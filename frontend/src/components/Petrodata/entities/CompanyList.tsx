@@ -5,7 +5,6 @@ import { useTranslations } from 'next-intl'
 import { Search } from 'lucide-react'
 import { Link } from '@/i18n/navigation'
 import { api } from '@/api/client'
-import { commodityColor } from '@/components/Petrodata/minerals/commodityColors'
 import { CompanyLogo } from './CompanyLogo'
 
 export type CompanyCard = {
@@ -28,7 +27,6 @@ const num = (v: unknown): number | null => (typeof v === 'number' && Number.isFi
 export function CompanyList({ companies }: { companies: CompanyCard[] }) {
   const t = useTranslations('companies')
   const [q, setQ] = useState('')
-  const [sector, setSector] = useState<'all' | 'mining' | 'oil'>('all')
   const [prices, setPrices] = useState<Record<string, Price>>({})
 
   // Live stock prices — fetched client-side, refreshed every 5 min.
@@ -60,24 +58,13 @@ export function CompanyList({ companies }: { companies: CompanyCard[] }) {
   }, [])
 
   const filtered = useMemo(
-    () =>
-      companies.filter((c) => {
-        if (q && !c.name.toLowerCase().includes(q.toLowerCase())) return false
-        if (sector === 'mining' && c.type === 'oil_and_gas') return false
-        if (sector === 'oil' && c.type === 'mining') return false
-        return true
-      }),
-    [companies, q, sector],
+    () => companies.filter((c) => !q || c.name.toLowerCase().includes(q.toLowerCase())),
+    [companies, q],
   )
 
   return (
     <div className="flex flex-col gap-5">
-      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-        <div className="flex flex-wrap items-center gap-1.5">
-          <SectorChip label={t('sectorAll')} active={sector === 'all'} onClick={() => setSector('all')} />
-          <SectorChip label={t('sectorMining')} active={sector === 'mining'} onClick={() => setSector('mining')} />
-          <SectorChip label={t('sectorOil')} active={sector === 'oil'} onClick={() => setSector('oil')} />
-        </div>
+      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-end">
         <label className="relative block md:w-72">
           <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-nd-text-disabled" />
           <input
@@ -151,20 +138,3 @@ function StockCell({ ticker, exchange, price }: { ticker: string | null; exchang
   )
 }
 
-function SectorChip({ label, active, onClick }: { label: string; active: boolean; onClick: () => void }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-pressed={active}
-      className="border px-3 py-1.5 text-[10px] uppercase tracking-[0.08em] font-mono transition-colors"
-      style={{
-        borderColor: active ? 'var(--nd-text-display)' : 'var(--nd-border)',
-        backgroundColor: active ? 'var(--nd-text-display)' : 'transparent',
-        color: active ? 'var(--nd-black)' : 'var(--nd-text-secondary)',
-      }}
-    >
-      {label}
-    </button>
-  )
-}

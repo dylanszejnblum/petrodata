@@ -28,18 +28,21 @@ async function getCompanies() {
 
 export default async function CompaniesPage() {
   const [t, companies] = await Promise.all([getTranslations('companies'), getCompanies()])
-  const cards: CompanyCard[] = companies.map((c) => ({
-    slug: c.slug,
-    name: c.name,
-    type: c.type,
-    sector: c.sector,
-    logoUrl: str(c.logo_url),
-    ticker: str(c.stock_ticker),
-    exchange: str(c.stock_exchange),
-    isPublic: c.is_public,
-    projectCount: c.project_count,
-    commodities: c.commodities ?? [],
-  }))
+  // Oil & gas focus: drop pure-mining companies (keep oil_and_gas and mixed).
+  const cards: CompanyCard[] = companies
+    .filter((c) => c.type !== 'mining')
+    .map((c) => ({
+      slug: c.slug,
+      name: c.name,
+      type: c.type,
+      sector: c.sector,
+      logoUrl: str(c.logo_url),
+      ticker: str(c.stock_ticker),
+      exchange: str(c.stock_exchange),
+      isPublic: c.is_public,
+      projectCount: c.project_count_oil_gas,
+      commodities: c.commodities ?? [],
+    }))
 
   return (
     <>
