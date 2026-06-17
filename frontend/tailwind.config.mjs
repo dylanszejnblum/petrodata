@@ -5,7 +5,7 @@ const config = {
       fontFamily: {
         sans: ['var(--font-space-grotesk)', 'system-ui', 'sans-serif'],
         mono: ['var(--font-space-mono)', 'monospace'],
-        display: ['Doto', 'var(--font-space-grotesk)', 'system-ui', 'sans-serif'],
+        display: ['var(--font-space-grotesk)', 'system-ui', 'sans-serif'],
       },
       typography: {
         DEFAULT: {

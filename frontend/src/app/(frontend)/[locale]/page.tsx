@@ -1,8 +1,7 @@
 import type { Metadata } from 'next'
 import nextDynamic from 'next/dynamic'
 import { getTranslations } from 'next-intl/server'
-import { Link } from '@/i18n/navigation'
-import { ArrowRight, RefreshCw } from 'lucide-react'
+import { RefreshCw } from 'lucide-react'
 import { NothingHeader } from '@/components/Nothing/Header'
 import { NothingFooter } from '@/components/Nothing/Footer'
 import { api, type ApiSchemas } from '@/api/client'
@@ -19,7 +18,6 @@ import {
   type OperatorSeriesMeta,
 } from '@/components/Petrodata/dashboard/operatorPalette'
 import type { SparkPoint } from '@/components/Petrodata/dashboard/Sparkline'
-import { commodityColor } from '@/components/Petrodata/minerals/commodityColors'
 
 const ProductionChart = nextDynamic(
   () =>
@@ -45,7 +43,7 @@ export async function generateMetadata(): Promise<Metadata> {
     description: t('homeDescription'),
     alternates: buildAlternates('/'),
     openGraph: {
-      images: [{ url: getSocialImageURL(), width: 1200, height: 630, alt: 'Petrodata dashboard' }],
+      images: [{ url: getSocialImageURL(), width: 1200, height: 630, alt: 'Vaca Muerta dashboard' }],
     },
   }
 }
@@ -55,7 +53,6 @@ type OperatorListItem = ApiSchemas['OperatorListItemDto']
 type OperatorPoint = ApiSchemas['OperatorTimeSeriesPointDto']
 type WellFC = ApiSchemas['GeoWellFeatureCollectionDto']
 type DataFreshness = ApiSchemas['DataFreshnessDto']
-type MineralsSummary = ApiSchemas['SummaryDto']
 
 const EMPTY_FC: WellFC = { type: 'FeatureCollection', features: [] } as WellFC
 const TOP_N_OPERATORS = 5
@@ -119,16 +116,6 @@ async function getFreshness(): Promise<DataFreshness | null> {
   }
 }
 
-async function getMineralsSummary(): Promise<MineralsSummary | null> {
-  try {
-    const { data, error } = await api.GET('/api/v2/minerals/summary', { cache: 'no-store' })
-    if (error || !data) return null
-    return data.data
-  } catch {
-    return null
-  }
-}
-
 /**
  * Build the union of monthly buckets across the top-N operators.
  * Returns last 12 months sorted ascending.
@@ -176,14 +163,13 @@ function toSparkPoints(values: number[]): SparkPoint[] {
 }
 
 export default async function DashboardPage() {
-  const [t, tCommon, latest, operators, wells, freshness, mineralsSummary] = await Promise.all([
+  const [t, tCommon, latest, operators, wells, freshness] = await Promise.all([
     getTranslations('dashboard'),
     getTranslations('common'),
     getLatest(),
     getOperators(),
     getWells(),
     getFreshness(),
-    getMineralsSummary(),
   ])
 
   const topOperators = operators.slice(0, TOP_N_OPERATORS)
@@ -388,86 +374,8 @@ export default async function DashboardPage() {
           </div>
         </section>
 
-        {/* MINERALS ROW */}
-        {mineralsSummary && (
-          <section className="container pb-20">
-            <Link
-              href="/minerals"
-              className="block border border-nd-border bg-nd-surface p-5 md:p-6 hover:bg-nd-surface-raised transition-colors group"
-            >
-              <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-                <div>
-                  <span
-                    className="text-nd-text-disabled text-[10px] uppercase tracking-[0.08em] font-mono"
-                  >
-                    {t('minerals.eyebrow')}
-                  </span>
-                  <h2
-                    className="mt-2 text-balance text-2xl md:text-3xl leading-none text-nd-text-display font-display"
-                  >
-                    {t('minerals.summary', {
-                      projects: mineralsSummary.total_projects,
-                      commodities: Object.keys(mineralsSummary.by_commodity).length,
-                      provinces: Object.keys(mineralsSummary.by_province).length,
-                    })}
-                  </h2>
-                </div>
-                <span
-                  className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-[0.08em] text-nd-text-secondary group-hover:text-nd-text-display transition-colors font-mono"
-                >
-                  {t('minerals.explore')}
-                  <ArrowRight size={11} />
-                </span>
-              </div>
-              <CommodityBars byCommodity={mineralsSummary.by_commodity} />
-            </Link>
-          </section>
-        )}
       </main>
       <NothingFooter />
     </>
-  )
-}
-
-function CommodityBars({ byCommodity }: { byCommodity: Record<string, number> }) {
-  const entries = Object.entries(byCommodity).sort((a, b) => b[1] - a[1])
-  if (entries.length === 0) return null
-  const max = entries[0][1]
-  return (
-    <div className="mt-6 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-      {entries.slice(0, 6).map(([name, count]) => {
-        const { color } = commodityColor(name)
-        return (
-          <div key={name} className="flex flex-col gap-1.5">
-            <div className="flex items-baseline justify-between gap-2">
-              <span
-                className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-[0.04em] text-nd-text-secondary font-mono"
-              >
-                <span
-                  className="inline-block size-1.5 rounded-full"
-                  style={{ backgroundColor: color }}
-                  aria-hidden
-                />
-                {name}
-              </span>
-              <span
-                className="text-nd-text-display text-[11px] tabular-nums font-mono"
-              >
-                {count}
-              </span>
-            </div>
-            <div className="h-[3px] bg-nd-surface-raised">
-              <div
-                className="h-full"
-                style={{
-                  width: `${Math.max(4, (count / max) * 100)}%`,
-                  backgroundColor: color,
-                }}
-              />
-            </div>
-          </div>
-        )
-      })}
-    </div>
   )
 }

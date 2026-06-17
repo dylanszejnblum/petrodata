@@ -8,12 +8,10 @@ import { useTheme } from '../../providers/Theme'
 import { LanguageSwitcher } from './LanguageSwitcher'
 
 type NavItem = {
-  href: '/' | '/map' | '/minerals' | '/minerals/uranium' | '/companies' | '/provincias'
+  href: '/' | '/map' | '/companies' | '/provincias'
   labelKey:
     | 'dashboard'
     | 'oilGas'
-    | 'minerals'
-    | 'uranium'
     | 'companies'
     | 'provinces'
   shortLabelKey: NavItem['labelKey']
@@ -32,19 +30,6 @@ const NAV_ITEMS: NavItem[] = [
     labelKey: 'oilGas',
     shortLabelKey: 'oilGas',
     match: (p) => p === '/map' || p.startsWith('/map/'),
-  },
-  {
-    href: '/minerals',
-    labelKey: 'minerals',
-    shortLabelKey: 'minerals',
-    match: (p) =>
-      (p === '/minerals' || p.startsWith('/minerals/')) && !p.startsWith('/minerals/uranium'),
-  },
-  {
-    href: '/minerals/uranium',
-    labelKey: 'uranium',
-    shortLabelKey: 'uranium',
-    match: (p) => p === '/minerals/uranium' || p.startsWith('/minerals/uranium/'),
   },
   {
     href: '/companies',
@@ -199,7 +184,7 @@ export function NothingHeader() {
         <div className="flex items-center justify-between gap-4">
           <Link href="/" className="flex items-center">
             <span className="text-nd-text-display font-sans text-lg tracking-tight">
-              petrodata
+              vacamuerta<span style={{ color: 'var(--nd-success)' }}>.io</span>
             </span>
           </Link>
 
@@ -284,8 +269,6 @@ export function NothingHeader() {
                 const labelKey = `${item.labelKey}Full` as
                   | 'dashboardFull'
                   | 'oilGasFull'
-                  | 'mineralsFull'
-                  | 'uraniumFull'
                   | 'companiesFull'
                   | 'provincesFull'
                 const isActive = item.match(pathname)

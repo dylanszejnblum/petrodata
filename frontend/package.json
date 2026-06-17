@@ -1,7 +1,7 @@
 {
-  "name": "petrodata",
+  "name": "vacamuerta",
   "version": "0.1.0",
-  "description": "Petrodata — Argentina oil, gas, minerals & rare-earths tracker",
+  "description": "Vaca Muerta — Argentina oil and gas intelligence",
   "license": "MIT",
   "type": "module",
   "scripts": {

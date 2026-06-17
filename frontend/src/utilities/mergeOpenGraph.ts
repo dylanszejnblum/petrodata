@@ -4,17 +4,17 @@ import { getSocialImageURL } from './getSocialImageURL'
 const defaultOpenGraph: Metadata['openGraph'] = {
   type: 'website',
   description:
-    'Petrodata — tracking Argentina’s oil, gas, minerals and rare-earths projects. Production, reserves, operators, and geography in one place.',
+    'Vaca Muerta — Argentina oil and gas intelligence. Production, reserves, operators, and geography in one place.',
   images: [
     {
       url: getSocialImageURL(),
       width: 1200,
       height: 630,
-      alt: 'Petrodata — Argentina resources tracker',
+      alt: 'Vaca Muerta — Argentina oil and gas intelligence',
     },
   ],
-  siteName: 'Petrodata',
-  title: 'Petrodata — Argentina oil, gas, minerals & rare-earths tracker',
+  siteName: 'Vaca Muerta',
+  title: 'Vaca Muerta — Argentina oil and gas intelligence',
 }
 
 export const mergeOpenGraph = (og?: Metadata['openGraph']): Metadata['openGraph'] => {

@@ -16,7 +16,7 @@ export const Logo = (props: Props) => {
   return (
     /* eslint-disable @next/next/no-img-element */
     <span
-      aria-label="Petrodata"
+      aria-label="Vaca Muerta"
       className={clsx(
         'inline-flex items-center text-nd-text-display text-base tracking-tight font-display',
         className,
@@ -24,7 +24,7 @@ export const Logo = (props: Props) => {
       data-loading={loading}
       data-fetch-priority={priority}
     >
-      petro<span style={{ color: 'var(--nd-success)' }}>data</span>
+      vacamuerta<span style={{ color: 'var(--nd-success)' }}>.io</span>
     </span>
   )
 }

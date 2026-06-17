@@ -60,7 +60,7 @@ export function NothingFooter() {
             <Link href="/" className="flex items-center gap-3">
               <NonUsdMark />
               <span className="text-nd-text-display text-sm tracking-tight font-sans">
-                petrodata
+                vacamuerta<span style={{ color: 'var(--nd-success)' }}>.io</span>
               </span>
             </Link>
             <p className="text-nd-text-disabled text-xs max-w-xs font-sans">
@@ -84,18 +84,6 @@ export function NothingFooter() {
                 className="text-nd-text-secondary hover:text-nd-text-display text-sm transition-colors font-sans"
               >
                 {tNav('oilGasFull')}
-              </Link>
-              <Link
-                href="/minerals"
-                className="text-nd-text-secondary hover:text-nd-text-display text-sm transition-colors font-sans"
-              >
-                {tNav('mineralsFull')}
-              </Link>
-              <Link
-                href="/minerals/uranium"
-                className="text-nd-text-secondary hover:text-nd-text-display text-sm transition-colors font-sans"
-              >
-                {tNav('uraniumFull')}
               </Link>
               <Link
                 href="/companies"
@@ -140,7 +128,7 @@ export function NothingFooter() {
         <div className="mt-12 pt-6 border-t border-nd-border flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div className="flex items-center gap-4">
             <span className="text-nd-text-disabled text-[11px] tracking-[0.08em] uppercase font-mono">
-              &copy; {new Date().getFullYear()} petrodata
+              &copy; {new Date().getFullYear()} vacamuerta.io
             </span>
             <span className="text-nd-text-disabled text-[11px] tracking-[0.04em] font-mono">
               Made by{' '}
@@ -166,10 +154,10 @@ export function NothingFooter() {
           <span className="text-nd-text-disabled text-[11px] font-sans">
             {t('contactTagline')}{' '}
             <a
-              href="mailto:info@petrodata.ar"
+              href="mailto:info@vacamuerta.io"
               className="text-nd-text-secondary hover:text-nd-text-display transition-colors"
             >
-              info@petrodata.ar
+              info@vacamuerta.io
             </a>
           </span>
         </div>

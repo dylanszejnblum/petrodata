@@ -87,10 +87,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <link href="/favicon.ico" rel="icon" sizes="32x32" />
         <link href="/favicon.png" rel="icon" type="image/png" sizes="32x32" />
         <link href="/apple-touch-icon.png" rel="apple-touch-icon" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Doto:wght@400;700&display=swap"
-          rel="stylesheet"
-        />
       </head>
       <body>
         <NextIntlClientProvider locale={locale} messages={messages}>
@@ -115,39 +111,32 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 export const metadata: Metadata = {
   metadataBase: new URL(getServerSideURL()),
   title: {
-    default: 'Petrodata — Argentina oil, gas, minerals & rare-earths tracker',
-    template: '%s | Petrodata',
+    default: 'Vaca Muerta — Argentina oil and gas intelligence',
+    template: '%s | Vaca Muerta',
   },
   description:
-    'Petrodata — tracking Argentina’s oil, gas, minerals and rare-earths projects. Production, reserves, operators, and geography in one place.',
+    'Vaca Muerta — Argentina oil and gas intelligence. Production, reserves, operators, and geography in one place.',
   keywords: [
     'Argentina',
-    'mining',
-    'minería',
+    'Vaca Muerta',
     'oil and gas',
     'petróleo',
     'gas',
-    'lithium',
-    'litio',
-    'uranium',
-    'uranio',
-    'rare earths',
-    'tierras raras',
-    'gold',
-    'silver',
-    'copper',
-    'Vaca Muerta',
+    'shale',
+    'energy',
+    'production',
+    'operators',
   ],
-  authors: [{ name: 'Petrodata', url: getServerSideURL() }],
-  creator: 'Petrodata',
+  authors: [{ name: 'Vaca Muerta', url: getServerSideURL() }],
+  creator: 'Vaca Muerta',
   openGraph: mergeOpenGraph(),
   twitter: {
     card: 'summary_large_image',
-    title: 'Petrodata — Argentina oil, gas, minerals & rare-earths tracker',
+    title: 'Vaca Muerta — Argentina oil and gas intelligence',
     description:
-      'Production, reserves, operators, and geography for Argentina’s oil, gas, minerals and rare-earths projects.',
+      'Production, reserves, operators, and geography for Argentina’s oil and gas projects.',
     images: [
-      { url: getSocialImageURL(), width: 1200, height: 630, alt: 'Petrodata homepage' },
+      { url: getSocialImageURL(), width: 1200, height: 630, alt: 'Vaca Muerta homepage' },
     ],
   },
   robots: {

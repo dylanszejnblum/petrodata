@@ -51,7 +51,7 @@
   --breakpoint-2xl: 86rem;
   --font-mono: var(--font-space-mono), monospace;
   --font-sans: var(--font-space-grotesk), system-ui, sans-serif;
-  --font-display: 'Doto', var(--font-space-grotesk), system-ui, sans-serif;
+  --font-display: var(--font-space-grotesk), system-ui, sans-serif;
 }
 
 @layer utilities {

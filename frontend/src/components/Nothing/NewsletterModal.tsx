@@ -4,8 +4,8 @@ import React, { useState, useEffect, useCallback, useRef, FormEvent } from 'reac
 
 type ModalState = 'idle' | 'entering' | 'visible' | 'exiting' | 'success' | 'success-exiting'
 
-const STORAGE_KEY = 'petrodata-newsletter-dismissed'
-const SESSION_KEY = 'petrodata-newsletter-shown'
+const STORAGE_KEY = 'vacamuerta-newsletter-dismissed'
+const SESSION_KEY = 'vacamuerta-newsletter-shown'
 const SCROLL_THRESHOLD = 0.4
 const TIME_DELAY = 12000
 const DISMISS_COOLDOWN_DAYS = 14

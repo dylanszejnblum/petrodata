@@ -17,8 +17,8 @@ export const generateMeta = async (args: {
     : getSocialImageURL()
 
   const metaTitle = title
-    ? `${title} | Petrodata`
-    : 'Petrodata — Argentina oil, gas, minerals & rare-earths tracker'
+    ? `${title} | Vaca Muerta`
+    : 'Vaca Muerta — Argentina oil and gas intelligence'
 
   return {
     description: description as string | undefined,
