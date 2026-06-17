@@ -47,7 +47,7 @@ export default async function ProvincesPage() {
     getProvinces(),
     getExportTotals(),
   ])
-  // Oil & gas focus: only provinces with oil & gas activity.
+  // Oil & gas focus: only provinces with oil & gas activity, sorted by exports (desc).
   const cards: ProvinceCard[] = provinces
     .filter((p) => p.has_oil_gas)
     .map((p) => ({
@@ -56,6 +56,7 @@ export default async function ProvincesPage() {
       wells: p.oil_gas_wells,
       exportUsd: exportTotals[p.slug] ?? null,
     }))
+    .sort((a, b) => (b.exportUsd ?? 0) - (a.exportUsd ?? 0))
 
   return (
     <>
