@@ -68,7 +68,7 @@ export function NothingFooter() {
             </p>
           </div>
 
-          <div className="flex gap-16">
+          <div className="flex flex-col gap-8 sm:flex-row sm:gap-12 md:gap-16">
             <div className="flex flex-col gap-2">
               <span className="text-nd-text-secondary text-[11px] tracking-[0.08em] uppercase font-mono">
                 {t('resources')}
@@ -126,7 +126,7 @@ export function NothingFooter() {
         </div>
 
         <div className="mt-12 pt-6 border-t border-nd-border flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
             <span className="text-nd-text-disabled text-[11px] tracking-[0.08em] uppercase font-mono">
               &copy; {new Date().getFullYear()} vacamuerta.io
             </span>
