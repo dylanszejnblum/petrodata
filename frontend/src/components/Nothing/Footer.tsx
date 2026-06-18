@@ -2,52 +2,7 @@
 
 import { useTranslations } from 'next-intl'
 import { Link } from '@/i18n/navigation'
-import React from 'react'
 import { FooterNewsletterForm } from './FooterNewsletterForm'
-
-function NonUsdMark() {
-  return (
-    <div
-      className="relative flex size-6 items-center justify-center rounded-full border border-nd-border-visible bg-nd-surface-raised"
-      aria-hidden="true"
-    >
-      <div className="absolute inset-[0.18rem] rounded-full border border-nd-border" />
-      <svg
-        aria-hidden="true"
-        className="text-nd-text-display"
-        viewBox="0 0 24 24"
-        style={{
-          width: '0.95rem',
-          height: '0.95rem',
-        }}
-      >
-        <path
-          d="M14.8 7.2c-.7-.8-1.8-1.2-3.1-1.2-2.3 0-3.8 1.1-3.8 2.9 0 4.3 7.1 1.8 7.1 5.3 0 1.4-1.2 2.4-3.2 2.4-1.5 0-2.8-.5-3.9-1.5"
-          fill="none"
-          stroke="currentColor"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="1.7"
-        />
-        <path
-          d="M12 4.8v14.4"
-          fill="none"
-          stroke="currentColor"
-          strokeLinecap="round"
-          strokeWidth="1.7"
-        />
-      </svg>
-      <span
-        className="absolute w-4 rounded-full bg-nd-text-display"
-        style={{ transform: 'rotate(-34deg)', height: '1.5px' }}
-      />
-      <span
-        className="absolute size-[0.16rem] rounded-full bg-nd-accent"
-        style={{ right: '0.22rem', top: '0.26rem' }}
-      />
-    </div>
-  )
-}
 
 export function NothingFooter() {
   const t = useTranslations('footer')
@@ -58,7 +13,8 @@ export function NothingFooter() {
         <div className="flex flex-col md:flex-row justify-between gap-8">
           <div className="flex flex-col gap-3">
             <Link href="/" className="flex items-center gap-3">
-              <NonUsdMark />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/favicon.png" alt="Vaca Muerta" className="size-6 rounded-sm" />
               <span className="text-nd-text-display text-sm tracking-tight font-sans">
                 vacamuerta<span style={{ color: 'var(--nd-success)' }}>.io</span>
               </span>
