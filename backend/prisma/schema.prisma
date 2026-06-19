@@ -318,3 +318,39 @@ model ProvinceExport {
   @@index([slug])
   @@map("province_export")
 }
+
+model NewsDocument {
+  docId           String    @id @map("doc_id")
+  sourceName      String    @map("source_name")
+  sourceFamily    String    @map("source_family")
+  sourceType      String    @map("source_type")
+  sourceUrl       String    @map("source_url")
+  discoveredVia   String?   @map("discovered_via")
+  retrievedAt     DateTime  @map("retrieved_at")
+  publishedAt     DateTime? @map("published_at")
+  eventDate       DateTime? @map("event_date") @db.Date
+  title           String
+  deck            String?
+  bodyText        String?   @map("body_text")
+  language        String    @default("es")
+  region          String[]
+  geo             Json
+  entities        Json
+  topics          String[]
+  signals         Json
+  numbers         Json
+  attachments     Json
+  clusterId       String?   @map("cluster_id")
+  noveltyScore    Float?    @map("novelty_score")
+  importanceScore Float?    @map("importance_score")
+  legalMode       String    @map("legal_mode")
+  editorNotes     String    @default("") @map("editor_notes")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  @@index([publishedAt])
+  @@index([sourceFamily])
+  @@index([clusterId])
+  @@index([legalMode])
+  @@map("news_document")
+}

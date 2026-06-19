@@ -12,6 +12,7 @@ import { PricesModule } from './modules/prices/prices.module';
 import { MacroModule } from './modules/macro/macro.module';
 import { CompaniesModule } from './modules/companies/companies.module';
 import { ProvincesModule } from './modules/provinces/provinces.module';
+import { NewsModule } from './modules/news/news.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { ProvincesModule } from './modules/provinces/provinces.module';
     MacroModule,
     CompaniesModule,
     ProvincesModule,
+    NewsModule,
   ],
   controllers: [AppController],
 })

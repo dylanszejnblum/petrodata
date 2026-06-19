@@ -72,3 +72,7 @@ pids/
 *.pid
 *.seed
 *.pid.lock
+
+# news ingest output (shipped to backend via HTTP, never committed)
+out_news/
+data-pipeline/out_news/

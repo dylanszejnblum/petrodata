@@ -1,0 +1,26 @@
+# Keep the news-cron image lean — only deps + the news pipeline ship.
+.venv
+__pycache__
+**/__pycache__
+*.pyc
+.pytest_cache
+tests
+
+# Output dirs (regenerated at runtime; watermarks live on a mounted volume)
+out_*/
+out_news/
+
+# Heavy mining-extract assets the news pipeline doesn't use
+*.pdf
+*.pptx
+*.pptx.pdf
+images/
+fixtures/
+companies/
+provinces/
+
+# Local / VCS noise
+.git
+.gitignore
+.DS_Store
+*.md
