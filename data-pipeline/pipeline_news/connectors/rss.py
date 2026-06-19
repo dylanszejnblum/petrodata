@@ -29,6 +29,8 @@ import news_schema as schema
 NAME = "rss"
 
 # Each feed carries its own identity + legal handling. Add a source = add a row.
+# Optional "region": tags docs with a province (general feeds rely on stage3 to
+# drop the non-O&G items).
 FEEDS = [
     {
         "url": "https://www.shale24.com/feed/",
@@ -41,6 +43,20 @@ FEEDS = [
         "source_name": "EconoJournal",
         "source_family": "medio",
         "legal_mode": "metadata_only",
+    },
+    {
+        "url": "https://www.energiaonline.com.ar/feed/",
+        "source_name": "Energía Online",
+        "source_family": "medio",
+        "legal_mode": "metadata_only",
+    },
+    {
+        # General regional outlet — no O&G-specific feed exists; stage3 filters.
+        "url": "https://www.rionegro.com.ar/feed/",
+        "source_name": "Diario Río Negro",
+        "source_family": "medio",
+        "legal_mode": "metadata_only",
+        "region": ["Río Negro"],
     },
 ]
 
@@ -101,6 +117,7 @@ def fetch(state: dict, limit: int | None = None) -> tuple[list[dict], dict]:
                 "source_name": feed["source_name"],
                 "source_family": feed["source_family"],
                 "legal_mode": feed["legal_mode"],
+                "region": feed.get("region", []),
             })
             kept += 1
             if iso and (not max_seen or iso > max_seen):
@@ -130,4 +147,5 @@ def normalize(raw: dict) -> dict:
         published_at=raw.get("published_iso"),
         deck=deck,          # short excerpt only; body_text stays null
         language="es",
+        region=raw.get("region", []),
     )

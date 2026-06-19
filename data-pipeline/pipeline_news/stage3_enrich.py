@@ -36,6 +36,27 @@ def _compile_map(d: dict[str, list[str]]) -> dict[str, list[re.Pattern]]:
     return {canon: _compile(aliases) for canon, aliases in d.items()}
 
 
+# Reverse alias → canonical map, to fold connector-supplied legal names
+# (e.g. "PLUSPETROL SA", "YPF S.A") into the taxonomy canonical.
+_ALIAS2CANON: dict[str, str] = {}
+for _canon, _aliases in tax.COMPANIES.items():
+    _ALIAS2CANON[_canon.lower()] = _canon
+    for _a in _aliases:
+        _ALIAS2CANON[_a.lower()] = _canon
+
+_LEGAL_SUFFIX = re.compile(
+    r"\s+(s\.?a\.?u?\.?|s\.?r\.?l\.?|s\.?a\.?s\.?|s\.?a\.?i\.?c\.?|ltda?\.?|inc\.?|corp\.?|plc|llc|n\.?v\.?)\.?$",
+    re.I)
+
+
+def _canon_company(name: str) -> str:
+    """Map a company surface form to its taxonomy canonical, or return it
+    unchanged if unknown (CNV names are authoritative)."""
+    base = name.strip().rstrip(".")
+    key = _LEGAL_SUFFIX.sub("", base.lower()).strip().rstrip(".,").strip()
+    return _ALIAS2CANON.get(key) or _ALIAS2CANON.get(base.lower()) or name
+
+
 _COMPANIES = _compile_map(tax.COMPANIES)
 _PEOPLE = _compile_map(tax.PEOPLE)
 _PROJECTS = _compile_map(tax.PROJECTS)
@@ -140,7 +161,11 @@ def enrich(out_dir: Path) -> Path:
                 dropped.append(doc.get("title", "")[:80])
                 continue
 
-            doc["entities"] = _merge(doc.get("entities", {}), found)
+            merged = _merge(doc.get("entities", {}), found)
+            # Canonicalize + dedupe company surface forms (order-preserving).
+            merged["companies"] = list(dict.fromkeys(
+                _canon_company(c) for c in merged["companies"]))
+            doc["entities"] = merged
             doc["topics"] = sorted(set((doc.get("topics") or []) + topics))
             nums = _numbers(text)
             if nums:
