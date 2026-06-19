@@ -4,9 +4,11 @@ import {
   Injectable,
   NestInterceptor,
 } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
 import { Observable, from } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { MetaService } from './meta.service';
+import { RESPONSE_META_KEY } from './response-meta.decorator';
 
 export interface Pagination {
   page: number;
@@ -21,14 +23,21 @@ export interface RawResult<T = unknown> {
 
 @Injectable()
 export class ResponseInterceptor implements NestInterceptor {
-  constructor(private readonly meta: MetaService) {}
+  constructor(
+    private readonly meta: MetaService,
+    private readonly reflector: Reflector,
+  ) {}
 
-  intercept(_ctx: ExecutionContext, next: CallHandler): Observable<any> {
+  intercept(ctx: ExecutionContext, next: CallHandler): Observable<any> {
+    const override = this.reflector.getAllAndOverride<Record<string, unknown>>(
+      RESPONSE_META_KEY,
+      [ctx.getHandler(), ctx.getClass()],
+    );
     return next.handle().pipe(
       switchMap((value) =>
         from(
           (async () => {
-            const meta = await this.meta.buildMeta();
+            const meta = override ?? (await this.meta.buildMeta());
             // Pass-through for already-shaped payloads (e.g. GeoJSON)
             if (value && typeof value === 'object' && (value as any).__raw === true) {
               const { __raw, ...rest } = value as any;

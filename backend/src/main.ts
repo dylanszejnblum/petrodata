@@ -1,5 +1,5 @@
 import { ValidationPipe, VersioningType } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import type { NestExpressApplication } from '@nestjs/platform-express';
 import { SwaggerModule } from '@nestjs/swagger';
 import type { IncomingMessage, ServerResponse } from 'http';
@@ -26,7 +26,9 @@ async function createApp(): Promise<NestExpressApplication> {
     }),
   );
   app.useGlobalFilters(new HttpExceptionFilter());
-  app.useGlobalInterceptors(new ResponseInterceptor(app.get(MetaService)));
+  app.useGlobalInterceptors(
+    new ResponseInterceptor(app.get(MetaService), app.get(Reflector)),
+  );
 
   const document = SwaggerModule.createDocument(app, buildSwaggerConfig());
   SwaggerModule.setup('api/docs', app, document, {
