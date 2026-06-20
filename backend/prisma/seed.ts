@@ -295,6 +295,54 @@ async function fillMissingDims(
   return { addedOperators: missingOps.length, addedFormations: missingForms.length };
 }
 
+/**
+ * Wells referenced by production facts but absent from the well-registry CSV
+ * would otherwise have their facts silently dropped. Create placeholder
+ * dim_well rows for them (built from the fact row's own metadata) so no
+ * production is lost. Operator/formation FKs are already placeholder-filled.
+ */
+async function fillMissingWells(
+  validWells: Set<string>,
+  validOperators: Set<string>,
+  validFormations: Set<string>,
+): Promise<number> {
+  const placeholders = new Map<string, Prisma.DimWellCreateManyInput>();
+  await readCsv<any>('fact_production_monthly.csv', async (rows) => {
+    for (const r of rows) {
+      const wellId = String(r.well_id);
+      if (!wellId || validWells.has(wellId) || placeholders.has(wellId)) continue;
+      const operatorSlug = normSlug(r.operator_slug);
+      const formationSlug = normSlug(r.formation_slug);
+      if (!validOperators.has(operatorSlug) || !validFormations.has(formationSlug)) continue;
+      placeholders.set(wellId, {
+        wellId,
+        sigla: r.well_sigla ?? '',
+        operatorSlug,
+        formationSlug,
+        operatorName: r.operator_name ?? '',
+        province: r.province ?? '',
+        basin: r.basin ?? '',
+        concession: r.concession ?? '',
+        yacimiento: r.yacimiento ?? '',
+        wellType: r.well_type ?? '',
+        extractionType: r.extraction_type ?? '',
+        statusCode: r.status_code ?? '',
+        resourceType: r.tipo_recurso ?? '',
+        subResourceType: '',
+        depthM: parseNumOrNull(r.depth_m),
+        latitude: null,
+        longitude: null,
+      });
+    }
+  });
+  const rows = [...placeholders.values()];
+  for (let i = 0; i < rows.length; i += BATCH_SIZE) {
+    await prisma.dimWell.createMany({ data: rows.slice(i, i + BATCH_SIZE), skipDuplicates: true });
+  }
+  rows.forEach((w) => validWells.add(w.wellId));
+  return rows.length;
+}
+
 async function main() {
   const t0 = Date.now();
   console.log(`Seeding from: ${DATA_DIR}`);
@@ -320,6 +368,9 @@ async function main() {
   (await prisma.dimWell.findMany({ select: { wellId: true } })).forEach((w) =>
     validWells.add(w.wellId),
   );
+
+  const addedWells = await fillMissingWells(validWells, validOperators, validFormations);
+  console.log(`  added ${addedWells} well placeholders (referenced in facts, missing from registry)`);
 
   console.log('Loading production facts (this is the big one)...');
   await seedFacts(validWells, validOperators, validFormations);

@@ -13,6 +13,7 @@ import { MacroModule } from './modules/macro/macro.module';
 import { CompaniesModule } from './modules/companies/companies.module';
 import { ProvincesModule } from './modules/provinces/provinces.module';
 import { NewsModule } from './modules/news/news.module';
+import { InversionesModule } from './modules/inversiones/inversiones.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { NewsModule } from './modules/news/news.module';
     CompaniesModule,
     ProvincesModule,
     NewsModule,
+    InversionesModule,
   ],
   controllers: [AppController],
 })
