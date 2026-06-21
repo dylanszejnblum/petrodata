@@ -50,7 +50,7 @@ export class InversionesService {
     const yearAgo = new Date(Date.UTC(month.getUTCFullYear() - 1, month.getUTCMonth(), 1));
     const asOf = month.toISOString().slice(0, 7);
 
-    const [now, prior, wells, wellsPrior, serieRows, opRows, exportRows, breakeven, actividad] = await Promise.all([
+    const [now, prior, wells, wellsPrior, serieRows, opRows, exportRows, breakeven, actividad, tradeAnnual] = await Promise.all([
       this.snapshot(month),
       this.snapshot(yearAgo),
       this.activeWells(month),
@@ -75,12 +75,29 @@ export class InversionesService {
       }),
       this.breakeven(),
       this.actividad(asOf),
+      this.prisma.factEnergyTrade.findMany({
+        where: { granularity: 'annual' },
+        orderBy: { period: 'asc' },
+      }),
     ]);
 
     const shareOil = pct(now.vm.oilM3, now.nat.oilM3);
     const shareGas = pct(now.vm.gasThousandM3, now.nat.gasThousandM3);
     const vmOilBblD = now.vm.oilBblD ?? 0;
-    const exportEnergyUsd = exportRows.reduce((a, r) => a + (r._sum.valueAnnualUsd ?? 0), 0);
+
+    // INDEC energy trade (real, computed) replaces the province-derived placeholder
+    // where available; the province sum is the fallback when no INDEC rows exist.
+    const provinceEnergyUsd = exportRows.reduce((a, r) => a + (r._sum.valueAnnualUsd ?? 0), 0);
+    const latestTrade = tradeAnnual.length ? tradeAnnual[tradeAnnual.length - 1] : null;
+    const priorTrade = tradeAnnual.length > 1 ? tradeAnnual[tradeAnnual.length - 2] : null;
+    const tradeSource = latestTrade
+      ? {
+          label: latestTrade.sourceLabel,
+          url: latestTrade.sourceUrl ?? '',
+          asOf: latestTrade.sourceAsOf ?? latestTrade.period.toISOString().slice(0, 4),
+        }
+      : null;
+    const exportEnergyUsd = latestTrade?.energyExportsUsd ?? provinceEnergyUsd;
 
     const opNames = await this.prisma.dimOperator.findMany({
       where: { operatorSlug: { in: opRows.map((o) => o.operatorSlug) } },
@@ -90,6 +107,7 @@ export class InversionesService {
 
     const source = (s: { label: string; url: string }) => ({ ...s, asOf });
 
+    const energySource = tradeSource ?? source(EXPORT_SOURCE);
     const kpis = [
       kpi('produccion_vm', 'Producción de petróleo VM', vmOilBblD, { suffix: ' bbl/d', decimals: 0 },
         delta(now.vm.oilBblD, prior.vm.oilBblD), source(PROD_SOURCE)),
@@ -102,8 +120,17 @@ export class InversionesService {
       kpi('pozos_activos', 'Pozos activos en VM', wells, { suffix: ' pozos', decimals: 0 },
         delta(wells, wellsPrior), source(PROD_SOURCE)),
       kpi('exportaciones_energia', 'Exportaciones de energía (anual)', exportEnergyUsd / 1e9, { prefix: 'US$', suffix: 'B', decimals: 1 },
-        null, source(EXPORT_SOURCE)),
+        delta(latestTrade?.energyExportsUsd ?? null, priorTrade?.energyExportsUsd ?? null), energySource),
     ];
+
+    // Energy trade surplus — real INDEC figure, only when computable.
+    if (latestTrade?.energySurplusUsd != null) {
+      kpis.push(
+        kpi('superavit_energia', 'Superávit comercial energético (anual)', latestTrade.energySurplusUsd / 1e9,
+          { prefix: 'US$', suffix: 'B', decimals: 1 },
+          delta(latestTrade.energySurplusUsd, priorTrade?.energySurplusUsd ?? null), energySource),
+      );
+    }
 
     const headline =
       `Vaca Muerta concentra el ${shareOil.toFixed(0)}% del petróleo nacional ` +
@@ -139,12 +166,33 @@ export class InversionesService {
         sharePct: pct(o._sum.boe, now.vm.boe),
       })),
       exportaciones: {
-        energiaUsd: exportEnergyUsd,
+        energiaUsd: exportEnergyUsd, // INDEC where available, province fallback
+        source: energySource,
         porSector: exportRows.map((r) => ({ sector: r.sector, usd: r._sum.valueAnnualUsd ?? 0 })),
-        source: source(EXPORT_SOURCE),
+        porSectorSource: source(EXPORT_SOURCE), // the petróleo/gas split is province-reported
       },
       ...(breakeven ? { breakeven } : {}), // omitted when no Brent rows — never fabricated
       actividad,
+      // agro vs energy export crossover — real INDEC history; no projected points
+      // unless a cited projection is attached.
+      ...(tradeAnnual.length && tradeSource
+        ? {
+            cruce: {
+              id: 'agro_vs_energia',
+              title: 'Exportaciones: agro vs energía',
+              unit: 'US$',
+              source: tradeSource,
+              points: tradeAnnual
+                .filter((r) => r.agroExportsUsd != null || r.energyExportsUsd != null)
+                .map((r) => ({
+                  period: r.period.toISOString().slice(0, 4),
+                  agroUsd: r.agroExportsUsd,
+                  energiaUsd: r.energyExportsUsd,
+                  tier: 'confirmado' as const,
+                })),
+            },
+          }
+        : {}),
     };
   }
 

@@ -178,6 +178,27 @@ model FactEnergyBalance {
   @@map("fact_energy_balance")
 }
 
+/// INDEC Intercambio Comercial Argentino (ICA) — energy trade in USD.
+/// Monthly rows carry the surplus (exports − imports); annual rows add agro
+/// exports for the agro-vs-energy crossover. Seeded from the pipeline's
+/// fact_energy_trade.csv via upsert (idempotent, no TRUNCATE).
+model FactEnergyTrade {
+  id               Int      @id @default(autoincrement())
+  period           DateTime @map("period") @db.Date
+  granularity      String // "monthly" | "annual"
+  energyExportsUsd Float?   @map("energy_exports_usd")
+  energyImportsUsd Float?   @map("energy_imports_usd")
+  energySurplusUsd Float?   @map("energy_surplus_usd")
+  agroExportsUsd   Float?   @map("agro_exports_usd")
+  sourceLabel      String   @map("source_label")
+  sourceUrl        String?  @map("source_url")
+  sourceAsOf       String?  @map("source_as_of")
+
+  @@unique([period, granularity])
+  @@index([granularity, period])
+  @@map("fact_energy_trade")
+}
+
 model FactFuelPrice {
   id             Int      @id @default(autoincrement())
   fechaVigencia  DateTime @map("fecha_vigencia")

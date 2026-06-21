@@ -31,6 +31,24 @@ npx prisma migrate dev --name init
 npx prisma db seed
 ```
 
+### Energy trade (INDEC ICA)
+
+The `/inversiones` surplus + agro-vs-energy crossover are backed by `fact_energy_trade`,
+seeded from INDEC's Intercambio Comercial Argentino (ICA) via the Series de Tiempo API.
+
+```bash
+# 1. Fetch + normalize (writes market-data/out/fact_energy_trade.csv)
+cd ../../petroldata.ar/market-data && uv run python fetch_energy_trade.py
+
+# 2. Seed (idempotent upsert by [period, granularity]; no TRUNCATE)
+cd -                    # back to backend/
+pnpm db:seed:energy-trade
+```
+
+Monthly rows carry energy exports/imports → surplus; annual rows add agro
+(Productos primarios + MOA) for the crossover. Values are USD (INDEC publishes
+millions; the pipeline converts). Source: INDEC, CC-BY.
+
 ## Run
 
 ```bash

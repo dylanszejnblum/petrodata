@@ -17,7 +17,7 @@ export class InversionesController {
   @ApiOperation({
     summary: 'Investment indicators (computed from official data)',
     description:
-      'Computed /inversiones payload: VM production, national share, active wells, operator leaderboard, production series, energy exports, breakeven headroom (live Brent from FactPrice vs. a cited breakeven reference) and activity momentum (new VM wells connected per month) — all derived from ingested data, source-cited, with as-of from the data.',
+      'Computed /inversiones payload: VM production, national share, active wells, operator leaderboard, production series, energy exports, breakeven headroom (live Brent from FactPrice vs. a cited breakeven reference), activity momentum (new VM wells/month), and INDEC energy trade — real energy exports, energy trade surplus (superávit) and the agro-vs-energy export crossover (cruce) — all derived from ingested data, source-cited, with as-of from the data.',
   })
   get() {
     return this.service.getPage();
