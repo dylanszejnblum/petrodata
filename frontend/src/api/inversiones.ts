@@ -64,6 +64,14 @@ export interface InvActividad {
   points: { period: string; nuevosPozos: number; preliminary: boolean }[]
 }
 
+export interface InvCruce {
+  id: string
+  title: string
+  unit: string
+  source: InvSource
+  points: { period: string; agroUsd: number | null; energiaUsd: number | null; tier: string }[]
+}
+
 export interface InversionesData {
   asOf: string | null
   latestMonth?: string
@@ -76,6 +84,7 @@ export interface InversionesData {
   exportaciones: InvExportaciones | null
   breakeven?: InvBreakeven
   actividad?: InvActividad
+  cruce?: InvCruce
 }
 
 export async function fetchInversiones(): Promise<InversionesData | null> {
