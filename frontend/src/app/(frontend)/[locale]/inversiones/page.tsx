@@ -8,6 +8,9 @@ import { fetchInversiones } from '@/api/inversiones'
 import { KpiGrid } from '@/components/Petrodata/inversiones/KpiGrid'
 import { RampChart } from '@/components/Petrodata/inversiones/RampChart'
 import { OperatorLeaderboard } from '@/components/Petrodata/inversiones/OperatorLeaderboard'
+import { BreakevenGauge } from '@/components/Petrodata/inversiones/BreakevenGauge'
+import { ActividadChart } from '@/components/Petrodata/inversiones/ActividadChart'
+import { CruceChart } from '@/components/Petrodata/inversiones/CruceChart'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
@@ -79,6 +82,16 @@ export default async function InversionesPage() {
           <KpiGrid kpis={data.kpis} />
         </section>
 
+        {/* Breakeven headroom gauge */}
+        {data.breakeven ? (
+          <section className="container pb-16">
+            <h2 className="mb-5 text-xl text-nd-text-display md:text-2xl font-display">
+              {t('breakevenTitle')}
+            </h2>
+            <BreakevenGauge breakeven={data.breakeven} />
+          </section>
+        ) : null}
+
         {/* Production ramp chart */}
         {data.serie && data.serie.points.length ? (
           <section className="container pb-16">
@@ -98,6 +111,55 @@ export default async function InversionesPage() {
               className="mt-3 inline-block font-mono text-[10px] text-nd-text-disabled transition-colors hover:text-nd-text-secondary"
             >
               {t('source')}: {data.serie.source.label} · {data.serie.source.asOf} ↗
+            </a>
+          </section>
+        ) : null}
+
+        {/* Activity momentum — new wells per month */}
+        {data.actividad && data.actividad.points.length ? (
+          <section className="container pb-16">
+            <div className="mb-5 flex flex-wrap items-baseline justify-between gap-2">
+              <h2 className="text-xl text-nd-text-display md:text-2xl font-display">
+                {t('actividadTitle')}
+              </h2>
+              <span className="font-mono text-[10px] uppercase tracking-[0.08em] text-nd-text-disabled">
+                {data.actividad.unit}
+              </span>
+            </div>
+            <ActividadChart actividad={data.actividad} />
+            <a
+              href={data.actividad.source.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-3 inline-block font-mono text-[10px] text-nd-text-disabled transition-colors hover:text-nd-text-secondary"
+            >
+              {t('source')}: {data.actividad.source.label} · {data.actividad.source.asOf} ↗
+            </a>
+          </section>
+        ) : null}
+
+        {/* Agro vs energy export crossover */}
+        {data.cruce && data.cruce.points.length ? (
+          <section className="container pb-16">
+            <div className="mb-2 flex flex-wrap items-baseline justify-between gap-2">
+              <h2 className="text-xl text-nd-text-display md:text-2xl font-display">
+                {data.cruce.title}
+              </h2>
+              <span className="font-mono text-[10px] uppercase tracking-[0.08em] text-nd-text-disabled">
+                {data.cruce.unit}
+              </span>
+            </div>
+            <p className="mb-5 max-w-2xl text-pretty text-sm leading-relaxed text-nd-text-secondary font-sans">
+              {t('cruceBlurb')}
+            </p>
+            <CruceChart cruce={data.cruce} />
+            <a
+              href={data.cruce.source.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-3 inline-block font-mono text-[10px] text-nd-text-disabled transition-colors hover:text-nd-text-secondary"
+            >
+              {t('source')}: {data.cruce.source.label} · {data.cruce.source.asOf} ↗
             </a>
           </section>
         ) : null}
