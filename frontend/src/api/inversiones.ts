@@ -54,6 +54,9 @@ export interface InvBreakeven {
   referenceUsd: number
   headroomUsd: number
   tier: string
+  // Trailing window of measured Brent for the trend chart. Optional: absent
+  // until the backend deploys the series; the component degrades gracefully.
+  series?: { date: string; value: number }[]
   source: InvSource
   referenceSource: { label: string; url?: string }
 }
@@ -100,7 +103,12 @@ export interface InversionesData {
 
 export async function fetchInversiones(): Promise<InversionesData | null> {
   try {
-    const { data, error } = await api.GET('/api/v2/inversiones', { cache: 'no-store' })
+    // ISR: the underlying figures update monthly, so a 1h revalidate makes the
+    // page near-instant while staying fresh. Tagged so we can on-demand purge
+    // via `revalidateTag('inversiones')` from an admin hook if needed.
+    const { data, error } = await api.GET('/api/v2/inversiones', {
+      next: { revalidate: 3600, tags: ['inversiones'] },
+    })
     if (error || !data) return null
     const body = (data as unknown as { data: InversionesData }).data
     if (!body || !body.asOf) return null

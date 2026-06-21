@@ -8,14 +8,14 @@ import { useTheme } from '../../providers/Theme'
 import { LanguageSwitcher } from './LanguageSwitcher'
 
 type NavItem = {
-  href?: '/' | '/map' | '/companies' | '/provincias' | '/noticias' | '/inversiones'
+  href?: '/' | '/map' | '/companies' | '/provincias' | '/noticias' | '/indicadores'
   labelKey:
     | 'dashboard'
     | 'oilGas'
     | 'companies'
     | 'provinces'
     | 'news'
-    | 'investments'
+    | 'indicators'
   shortLabelKey: NavItem['labelKey']
   match?: (pathname: string) => boolean
   comingSoon?: boolean
@@ -53,10 +53,10 @@ const NAV_ITEMS: NavItem[] = [
     match: (p) => p === '/noticias' || p.startsWith('/noticias/'),
   },
   {
-    href: '/inversiones',
-    labelKey: 'investments',
-    shortLabelKey: 'investments',
-    match: (p) => p === '/inversiones' || p.startsWith('/inversiones/'),
+    href: '/indicadores',
+    labelKey: 'indicators',
+    shortLabelKey: 'indicators',
+    match: (p) => p === '/indicadores' || p.startsWith('/indicadores/'),
   },
 ]
 
@@ -302,7 +302,7 @@ export function NothingHeader() {
                   | 'companiesFull'
                   | 'provincesFull'
                   | 'newsFull'
-                  | 'investmentsFull'
+                  | 'indicatorsFull'
                 if (item.comingSoon) {
                   return (
                     <span
