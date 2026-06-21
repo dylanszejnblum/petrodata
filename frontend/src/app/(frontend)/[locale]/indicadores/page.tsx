@@ -5,23 +5,25 @@ import { NothingFooter } from '@/components/Nothing/Footer'
 import { FooterNewsletterForm } from '@/components/Nothing/FooterNewsletterForm'
 import { buildAlternates } from '@/i18n/alternates'
 import { fetchInversiones } from '@/api/inversiones'
-import { KpiGrid } from '@/components/Petrodata/inversiones/KpiGrid'
-import { RampChart } from '@/components/Petrodata/inversiones/RampChart'
-import { OperatorLeaderboard } from '@/components/Petrodata/inversiones/OperatorLeaderboard'
-import { BreakevenGauge } from '@/components/Petrodata/inversiones/BreakevenGauge'
-import { ActividadChart } from '@/components/Petrodata/inversiones/ActividadChart'
-import { CruceChart } from '@/components/Petrodata/inversiones/CruceChart'
+import { KpiGrid } from '@/components/Petrodata/indicadores/KpiGrid'
+import { RampChart } from '@/components/Petrodata/indicadores/RampChart'
+import { OperatorLeaderboard } from '@/components/Petrodata/indicadores/OperatorLeaderboard'
+import { BreakevenTrend } from '@/components/Petrodata/indicadores/BreakevenTrend'
+import { ActividadChart } from '@/components/Petrodata/indicadores/ActividadChart'
+import { CruceChart } from '@/components/Petrodata/indicadores/CruceChart'
 
-export const dynamic = 'force-dynamic'
-export const revalidate = 0
+// ISR: investment figures update ~monthly, so a 1h revalidate makes the page
+// near-instant while staying fresh (the fetch is also tagged 'inversiones' for
+// on-demand purge via revalidateTag).
+export const revalidate = 3600
 
 export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations('inversiones')
-  return { title: t('title'), description: t('blurb'), alternates: buildAlternates('/inversiones') }
+  const t = await getTranslations('indicadores')
+  return { title: t('title'), description: t('blurb'), alternates: buildAlternates('/indicadores') }
 }
 
-export default async function InversionesPage() {
-  const [t, data] = await Promise.all([getTranslations('inversiones'), fetchInversiones()])
+export default async function IndicadoresPage() {
+  const [t, data] = await Promise.all([getTranslations('indicadores'), fetchInversiones()])
 
   if (!data) {
     return (
@@ -49,7 +51,12 @@ export default async function InversionesPage() {
       <main className="flex-1 w-full overflow-x-clip">
         {/* Hero */}
         <section className="container pt-12 pb-8 md:pt-20">
-          <span className="block font-mono text-[11px] uppercase tracking-[0.08em] text-nd-text-secondary">
+          <span className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.08em] text-nd-text-secondary">
+            <span
+              className="nd-live-dot inline-block size-1.5 rounded-full"
+              style={{ background: 'var(--nd-accent)' }}
+              aria-hidden
+            />
             {t('eyebrow')}
           </span>
           <h1 className="mt-4 text-balance text-4xl leading-none text-nd-text-display sm:text-5xl md:text-7xl font-display break-words">
@@ -58,6 +65,10 @@ export default async function InversionesPage() {
           <p className="mt-5 max-w-2xl text-pretty text-base leading-relaxed text-nd-text-secondary font-sans">
             {t('blurb')}
           </p>
+          {/* accent rule */}
+          <div className="relative mt-8 h-px w-full bg-nd-border">
+            <div className="absolute inset-y-0 left-0 bg-nd-accent" style={{ width: '6rem' }} aria-hidden />
+          </div>
         </section>
 
         {/* Headline + integrity framing */}
@@ -82,13 +93,14 @@ export default async function InversionesPage() {
           <KpiGrid kpis={data.kpis} />
         </section>
 
-        {/* Breakeven headroom gauge */}
+        {/* Breakeven headroom trend */}
         {data.breakeven ? (
           <section className="container pb-16">
-            <h2 className="mb-5 text-xl text-nd-text-display md:text-2xl font-display">
-              {t('breakevenTitle')}
+            <h2 className="mb-5 flex items-baseline gap-3 text-xl text-nd-text-display md:text-2xl font-display">
+              <span className="font-mono text-[10px] tabular-nums text-nd-text-disabled">01</span>
+              <span>{t('breakevenTitle')}</span>
             </h2>
-            <BreakevenGauge breakeven={data.breakeven} />
+            <BreakevenTrend breakeven={data.breakeven} />
           </section>
         ) : null}
 
@@ -96,8 +108,9 @@ export default async function InversionesPage() {
         {data.serie && data.serie.points.length ? (
           <section className="container pb-16">
             <div className="mb-5 flex flex-wrap items-baseline justify-between gap-2">
-              <h2 className="text-xl text-nd-text-display md:text-2xl font-display">
-                {data.serie.title}
+              <h2 className="flex items-baseline gap-3 text-xl text-nd-text-display md:text-2xl font-display">
+                <span className="font-mono text-[10px] tabular-nums text-nd-text-disabled">02</span>
+                <span>{data.serie.title}</span>
               </h2>
               <span className="font-mono text-[10px] uppercase tracking-[0.08em] text-nd-text-disabled">
                 {data.serie.unit}
@@ -114,8 +127,9 @@ export default async function InversionesPage() {
         {data.actividad && data.actividad.points.length ? (
           <section className="container pb-16">
             <div className="mb-5 flex flex-wrap items-baseline justify-between gap-2">
-              <h2 className="text-xl text-nd-text-display md:text-2xl font-display">
-                {t('actividadTitle')}
+              <h2 className="flex items-baseline gap-3 text-xl text-nd-text-display md:text-2xl font-display">
+                <span className="font-mono text-[10px] tabular-nums text-nd-text-disabled">03</span>
+                <span>{t('actividadTitle')}</span>
               </h2>
               <span className="font-mono text-[10px] uppercase tracking-[0.08em] text-nd-text-disabled">
                 {data.actividad.unit}
@@ -132,8 +146,9 @@ export default async function InversionesPage() {
         {data.cruce && data.cruce.points.length ? (
           <section className="container pb-16">
             <div className="mb-2 flex flex-wrap items-baseline justify-between gap-2">
-              <h2 className="text-xl text-nd-text-display md:text-2xl font-display">
-                {data.cruce.title}
+              <h2 className="flex items-baseline gap-3 text-xl text-nd-text-display md:text-2xl font-display">
+                <span className="font-mono text-[10px] tabular-nums text-nd-text-disabled">04</span>
+                <span>{data.cruce.title}</span>
               </h2>
               <span className="font-mono text-[10px] uppercase tracking-[0.08em] text-nd-text-disabled">
                 {data.cruce.unit}
@@ -152,8 +167,9 @@ export default async function InversionesPage() {
         {/* Operator leaderboard */}
         {data.operadores.length ? (
           <section className="container pb-16">
-            <h2 className="mb-5 text-xl text-nd-text-display md:text-2xl font-display">
-              {t('operatorsTitle')}
+            <h2 className="mb-5 flex items-baseline gap-3 text-xl text-nd-text-display md:text-2xl font-display">
+              <span className="font-mono text-[10px] tabular-nums text-nd-text-disabled">05</span>
+              <span>{t('operatorsTitle')}</span>
             </h2>
             <OperatorLeaderboard operadores={data.operadores} />
           </section>

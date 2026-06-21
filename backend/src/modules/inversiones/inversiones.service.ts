@@ -272,12 +272,24 @@ export class InversionesService {
     if (!row) return null;
 
     const brentAsOf = row.date.toISOString().slice(0, 10);
+
+    // Trailing window of measured Brent for the trend sparkline. Anchored to the
+    // latest row (not "now") so a stale dataset still renders a full window.
+    const since = new Date(row.date);
+    since.setUTCFullYear(since.getUTCFullYear() - 2);
+    const history = await this.prisma.factPrice.findMany({
+      where: { series: 'brent', date: { gte: since } },
+      orderBy: { date: 'asc' },
+      select: { value: true, date: true },
+    });
+
     return {
       brentUsd: row.value,
       brentAsOf,
       referenceUsd: BREAKEVEN_REFERENCE_USD,
       headroomUsd: row.value - BREAKEVEN_REFERENCE_USD,
       tier: 'confirmado',
+      series: history.map((h) => ({ date: h.date.toISOString().slice(0, 10), value: h.value })),
       source: { ...BRENT_SOURCE, asOf: brentAsOf },
       referenceSource: BREAKEVEN_REFERENCE_SOURCE,
     };

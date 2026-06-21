@@ -238,3 +238,23 @@ html[data-theme='light'] {
   background-image: radial-gradient(circle, var(--nd-border) 0.5px, transparent 0.5px);
   background-size: 12px 12px;
 }
+
+@keyframes nd-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+.nd-live-dot {
+  animation: nd-pulse 2.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nd-live-dot {
+    animation: none;
+  }
+}

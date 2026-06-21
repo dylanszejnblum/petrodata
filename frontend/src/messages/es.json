@@ -16,8 +16,8 @@
     "provincesFull": "Provincias",
     "news": "NOTICIAS",
     "newsFull": "Noticias",
-    "investments": "INVERSIONES",
-    "investmentsFull": "Inversiones",
+    "indicators": "INDICADORES",
+    "indicatorsFull": "Indicadores",
     "comingSoon": "Próximamente",
     "menu": "Menú",
     "openMenu": "Abrir menú de navegación",
@@ -543,9 +543,9 @@
     "homeTitle": "Vaca Muerta — inteligencia de petróleo y gas de Argentina",
     "homeDescription": "Inteligencia en tiempo real para el petróleo y gas de Argentina. Producción, reservas, operadores y geografía en un solo lugar."
   },
-  "inversiones": {
+  "indicadores": {
     "eyebrow": "Tesis de inversión",
-    "title": "Inversiones",
+    "title": "Indicadores",
     "blurb": "La oportunidad de Vaca Muerta en números: cada cifra se computa a partir de datos oficiales de producción y exportación, con su fuente y fecha de corte. Sin proyecciones sin respaldo.",
     "asOf": "Datos al {month}",
     "source": "Fuente",

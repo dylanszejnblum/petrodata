@@ -16,8 +16,8 @@
     "provincesFull": "Provinces",
     "news": "NEWS",
     "newsFull": "News",
-    "investments": "INVESTMENTS",
-    "investmentsFull": "Investments",
+    "indicators": "INDICATORS",
+    "indicatorsFull": "Indicators",
     "comingSoon": "Coming soon",
     "menu": "Menu",
     "openMenu": "Open navigation menu",
@@ -543,9 +543,9 @@
     "homeTitle": "Vaca Muerta — Argentina oil and gas intelligence",
     "homeDescription": "Real-time intelligence for Argentina's oil and gas. Production, reserves, operators, and geography in one place."
   },
-  "inversiones": {
+  "indicadores": {
     "eyebrow": "Investment thesis",
-    "title": "Investments",
+    "title": "Indicators",
     "blurb": "The Vaca Muerta opportunity in numbers: every figure is computed from official production and export data, with its source and as-of date. No unsupported projections.",
     "asOf": "Data as of {month}",
     "source": "Source",

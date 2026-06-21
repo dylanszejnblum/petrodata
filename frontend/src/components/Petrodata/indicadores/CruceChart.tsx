@@ -17,7 +17,7 @@ type Row = { period: string; agro: number | null; energia: number | null }
 const fmtPct = (v: number) => `${v.toFixed(1)}%`
 
 export function CruceChart({ cruce }: { cruce: InvCruce }) {
-  const t = useTranslations('inversiones')
+  const t = useTranslations('indicadores')
   const mounted = useMounted()
   const [mode, setMode] = useState<Mode>('usd')
 
