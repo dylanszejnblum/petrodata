@@ -2865,6 +2865,22 @@
           "news"
         ]
       }
+    },
+    "/api/v2/inversiones": {
+      "get": {
+        "description": "Computed /inversiones payload: VM production, national share, active wells, operator leaderboard, production series, energy exports, breakeven headroom (live Brent from FactPrice vs. a cited breakeven reference) and activity momentum (new VM wells connected per month) — all derived from ingested data, source-cited, with as-of from the data.",
+        "operationId": "InversionesController_get_v2",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Investment indicators (computed from official data)",
+        "tags": [
+          "inversiones"
+        ]
+      }
     }
   },
   "info": {

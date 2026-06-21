@@ -17,6 +17,17 @@ const EXPORT_SOURCE = {
   label: 'Exportaciones por sector (provincias)',
   url: 'https://datos.energia.gob.ar/',
 };
+const BRENT_SOURCE = {
+  label: 'EIA (Brent)',
+  url: 'https://www.eia.gov/dnav/pet/hist/RBRTEM.htm',
+};
+// Cited external reference — NOT computed from our data. The market price beside
+// it is computed live; the headroom (margin) between them is the story.
+const BREAKEVEN_REFERENCE_USD = 45;
+const BREAKEVEN_REFERENCE_SOURCE = {
+  label: 'YPF (breakeven Vaca Muerta ~US$45/bbl)',
+  url: 'https://www.ypf.com/inversoresaccionistas/Paginas/informacion-financiera.aspx',
+};
 
 interface Sums {
   oilBblD: number | null;
@@ -39,7 +50,7 @@ export class InversionesService {
     const yearAgo = new Date(Date.UTC(month.getUTCFullYear() - 1, month.getUTCMonth(), 1));
     const asOf = month.toISOString().slice(0, 7);
 
-    const [now, prior, wells, wellsPrior, serieRows, opRows, exportRows] = await Promise.all([
+    const [now, prior, wells, wellsPrior, serieRows, opRows, exportRows, breakeven, actividad] = await Promise.all([
       this.snapshot(month),
       this.snapshot(yearAgo),
       this.activeWells(month),
@@ -62,6 +73,8 @@ export class InversionesService {
         where: { sector: { in: ['petróleo', 'gas'] } },
         _sum: { valueAnnualUsd: true },
       }),
+      this.breakeven(),
+      this.actividad(asOf),
     ]);
 
     const shareOil = pct(now.vm.oilM3, now.nat.oilM3);
@@ -130,6 +143,8 @@ export class InversionesService {
         porSector: exportRows.map((r) => ({ sector: r.sector, usd: r._sum.valueAnnualUsd ?? 0 })),
         source: source(EXPORT_SOURCE),
       },
+      ...(breakeven ? { breakeven } : {}), // omitted when no Brent rows — never fabricated
+      actividad,
     };
   }
 
@@ -169,6 +184,60 @@ export class InversionesService {
 
   private activeWells(m: Date): Promise<number> {
     return this.prisma.factProductionMonthly.count({ where: { dateMonth: m, vmCombined: true, boe: { gt: 0 } } });
+  }
+
+  /**
+   * Breakeven headroom: the latest *measured* Brent price (computed live from
+   * FactPrice) against a *cited* breakeven reference (a constant, not computed).
+   * The margin between them is the headroom. Omitted entirely if we hold no
+   * Brent rows — never fabricated.
+   */
+  private async breakeven() {
+    const row = await this.prisma.factPrice.findFirst({
+      where: { series: 'brent' },
+      orderBy: { date: 'desc' },
+      select: { value: true, date: true },
+    });
+    if (!row) return null;
+
+    const brentAsOf = row.date.toISOString().slice(0, 10);
+    return {
+      brentUsd: row.value,
+      brentAsOf,
+      referenceUsd: BREAKEVEN_REFERENCE_USD,
+      headroomUsd: row.value - BREAKEVEN_REFERENCE_USD,
+      tier: 'confirmado',
+      source: { ...BRENT_SOURCE, asOf: brentAsOf },
+      referenceSource: BREAKEVEN_REFERENCE_SOURCE,
+    };
+  }
+
+  /**
+   * Activity momentum: new VM wells connected per month. A well's connection
+   * month is its earliest month with boe > 0 (VM-flagged). One grouped pass —
+   * no per-well N+1.
+   */
+  private async actividad(asOf: string) {
+    const rows = await this.prisma.$queryRaw<{ period: string; nuevos: number }[]>`
+      SELECT to_char(conn_month, 'YYYY-MM') AS period, COUNT(*)::int AS nuevos
+      FROM (
+        SELECT well_id, MIN(date_month) AS conn_month
+        FROM fact_production_monthly
+        WHERE vm_combined = true AND boe > 0
+        GROUP BY well_id
+      ) c
+      GROUP BY conn_month
+      ORDER BY conn_month ASC`;
+
+    return {
+      unit: 'pozos/mes',
+      source: { ...PROD_SOURCE, asOf },
+      points: rows.map((r) => ({
+        period: r.period,
+        nuevosPozos: Number(r.nuevos),
+        preliminary: r.period > asOf, // trailing month not fully reported yet
+      })),
+    };
   }
 }
 

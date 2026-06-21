@@ -992,6 +992,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v2/inversiones": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Investment indicators (computed from official data)
+         * @description Computed /inversiones payload: VM production, national share, active wells, operator leaderboard, production series, energy exports, breakeven headroom (live Brent from FactPrice vs. a cited breakeven reference) and activity momentum (new VM wells connected per month) — all derived from ingested data, source-cited, with as-of from the data.
+         */
+        get: operations["InversionesController_get_v2"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -3722,6 +3742,23 @@ export interface operations {
                 /** @description Document id (sha1 of canonical source_url) */
                 docId: string;
             };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    InversionesController_get_v2: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
             cookie?: never;
         };
         requestBody?: never;
