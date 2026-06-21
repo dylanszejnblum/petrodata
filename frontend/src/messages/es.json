@@ -543,6 +543,19 @@
     "homeTitle": "Vaca Muerta — inteligencia de petróleo y gas de Argentina",
     "homeDescription": "Inteligencia en tiempo real para el petróleo y gas de Argentina. Producción, reservas, operadores y geografía en un solo lugar."
   },
+  "inversiones": {
+    "eyebrow": "Tesis de inversión",
+    "title": "Inversiones",
+    "blurb": "La oportunidad de Vaca Muerta en números: cada cifra se computa a partir de datos oficiales de producción y exportación, con su fuente y fecha de corte. Sin proyecciones sin respaldo.",
+    "asOf": "Datos al {month}",
+    "source": "Fuente",
+    "operatorsTitle": "Operadores principales",
+    "ctaTitle": "¿Querés invertir o establecer operaciones?",
+    "ctaBody": "Trabajamos con inversores y operadores que buscan exposición al shale argentino. Escribinos para coordinar una conversación.",
+    "ctaContact": "Contacto",
+    "ctaNewsletter": "O recibí actualizaciones",
+    "noData": "Los indicadores de inversión no están disponibles en este momento."
+  },
   "noticias": {
     "eyebrow": "Monitor de noticias",
     "title": "Noticias",

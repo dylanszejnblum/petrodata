@@ -543,6 +543,19 @@
     "homeTitle": "Vaca Muerta — Argentina oil and gas intelligence",
     "homeDescription": "Real-time intelligence for Argentina's oil and gas. Production, reserves, operators, and geography in one place."
   },
+  "inversiones": {
+    "eyebrow": "Investment thesis",
+    "title": "Investments",
+    "blurb": "The Vaca Muerta opportunity in numbers: every figure is computed from official production and export data, with its source and as-of date. No unsupported projections.",
+    "asOf": "Data as of {month}",
+    "source": "Source",
+    "operatorsTitle": "Leading operators",
+    "ctaTitle": "Looking to invest or set up operations?",
+    "ctaBody": "We work with investors and operators seeking exposure to Argentine shale. Get in touch to set up a conversation.",
+    "ctaContact": "Contact",
+    "ctaNewsletter": "Or get updates",
+    "noData": "Investment indicators are unavailable right now."
+  },
   "noticias": {
     "eyebrow": "News monitor",
     "title": "News",

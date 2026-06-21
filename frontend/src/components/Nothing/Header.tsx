@@ -8,7 +8,7 @@ import { useTheme } from '../../providers/Theme'
 import { LanguageSwitcher } from './LanguageSwitcher'
 
 type NavItem = {
-  href?: '/' | '/map' | '/companies' | '/provincias' | '/noticias'
+  href?: '/' | '/map' | '/companies' | '/provincias' | '/noticias' | '/inversiones'
   labelKey:
     | 'dashboard'
     | 'oilGas'
@@ -53,9 +53,10 @@ const NAV_ITEMS: NavItem[] = [
     match: (p) => p === '/noticias' || p.startsWith('/noticias/'),
   },
   {
+    href: '/inversiones',
     labelKey: 'investments',
     shortLabelKey: 'investments',
-    comingSoon: true,
+    match: (p) => p === '/inversiones' || p.startsWith('/inversiones/'),
   },
 ]
 
