@@ -1,5 +1,7 @@
 'use client'
 
+import { useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { useMounted } from '@/hooks/useMounted'
 import { formatCompactUSD } from '@/utilities/formatCompactUSD'
@@ -8,15 +10,27 @@ import type { InvCruce } from '@/api/inversiones'
 const AGRO_COLOR = '#10b981'
 const ENERGY_COLOR = 'var(--nd-accent)'
 
+type Mode = 'usd' | 'gdp'
+
 type Row = { period: string; agro: number | null; energia: number | null }
 
+const fmtPct = (v: number) => `${v.toFixed(1)}%`
+
 export function CruceChart({ cruce }: { cruce: InvCruce }) {
+  const t = useTranslations('inversiones')
   const mounted = useMounted()
+  const [mode, setMode] = useState<Mode>('usd')
+
+  const hasGdp = cruce.points.some((p) => p.agroPctGdp != null || p.energiaPctGdp != null)
+  const active: Mode = hasGdp ? mode : 'usd'
+
   const rows: Row[] = cruce.points.map((p) => ({
     period: p.period,
-    agro: p.agroUsd,
-    energia: p.energiaUsd,
+    agro: active === 'gdp' ? p.agroPctGdp : p.agroUsd,
+    energia: active === 'gdp' ? p.energiaPctGdp : p.energiaUsd,
   }))
+
+  const fmtVal = active === 'gdp' ? fmtPct : (v: number) => formatCompactUSD(v)
 
   if (!rows.length) {
     return (
@@ -28,6 +42,26 @@ export function CruceChart({ cruce }: { cruce: InvCruce }) {
 
   return (
     <div className="flex flex-col gap-4">
+      {hasGdp && (
+        <div className="inline-flex w-fit border border-nd-border" role="group" aria-label={t('cruceModeLabel')}>
+          {(['usd', 'gdp'] as const).map((m) => (
+            <button
+              key={m}
+              type="button"
+              onClick={() => setMode(m)}
+              aria-pressed={active === m}
+              className="px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.06em] transition-colors"
+              style={{
+                color: active === m ? 'var(--nd-text-display)' : 'var(--nd-text-disabled)',
+                background: active === m ? 'var(--nd-surface-raised)' : 'transparent',
+              }}
+            >
+              {m === 'usd' ? t('cruceModeUsd') : t('cruceModeGdp')}
+            </button>
+          ))}
+        </div>
+      )}
+
       <div className="h-[280px] w-full md:h-[360px]">
         {mounted && (
           <ResponsiveContainer width="100%" height="100%">
@@ -41,13 +75,16 @@ export function CruceChart({ cruce }: { cruce: InvCruce }) {
                 minTickGap={20}
               />
               <YAxis
-                tickFormatter={(v) => formatCompactUSD(v as number)}
+                tickFormatter={(v) => fmtVal(v as number)}
                 tick={{ fill: 'var(--nd-text-disabled)', fontSize: 11, fontFamily: 'var(--font-space-mono)' }}
                 tickLine={false}
                 axisLine={false}
-                width={52}
+                width={active === 'gdp' ? 44 : 52}
               />
-              <Tooltip content={<CruceTooltip />} cursor={{ stroke: 'var(--nd-border)', strokeWidth: 1 }} />
+              <Tooltip
+                content={<CruceTooltip mode={active} />}
+                cursor={{ stroke: 'var(--nd-border)', strokeWidth: 1 }}
+              />
               <Line
                 type="monotone"
                 dataKey="agro"
@@ -74,9 +111,15 @@ export function CruceChart({ cruce }: { cruce: InvCruce }) {
           </ResponsiveContainer>
         )}
       </div>
+
       <div className="flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-nd-border pt-4">
         <LegendDot color={AGRO_COLOR} label="Agro (primarios + MOA)" />
         <LegendDot color={ENERGY_COLOR} label="Energía" />
+        {active === 'gdp' && cruce.gdpSource && (
+          <span className="ml-auto font-mono text-[10px] text-nd-text-disabled">
+            {t('computedBy', { source: cruce.gdpSource.label })}
+          </span>
+        )}
       </div>
     </div>
   )
@@ -97,16 +140,20 @@ function CruceTooltip({
   active,
   payload,
   label,
+  mode,
 }: {
   active?: boolean
   payload?: TooltipPayload[]
   label?: string | number
+  mode: Mode
 }) {
   if (!active || !payload || !payload.length) return null
+  const fmt = (v: number) => (mode === 'gdp' ? fmtPct(v) : formatCompactUSD(v))
   return (
     <div className="border border-nd-border bg-nd-surface/95 px-3 py-2 font-mono shadow-[0_8px_24px_-12px_rgba(0,0,0,0.4)] backdrop-blur-md">
       <div className="mb-1 border-b border-nd-border pb-1 text-[10px] uppercase tracking-[0.08em] text-nd-text-disabled">
         {label}
+        {mode === 'gdp' ? ' · % PBI' : ''}
       </div>
       <ul className="flex flex-col gap-0.5">
         {payload.map((p) => (
@@ -116,7 +163,7 @@ function CruceTooltip({
               {p.dataKey === 'agro' ? 'Agro' : 'Energía'}
             </span>
             <span className="tabular-nums text-nd-text-display">
-              {p.value != null ? formatCompactUSD(Number(p.value)) : '—'}
+              {p.value != null ? fmt(Number(p.value)) : '—'}
             </span>
           </li>
         ))}

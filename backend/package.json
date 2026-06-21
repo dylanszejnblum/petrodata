@@ -25,6 +25,7 @@
     "db:seed:companies": "ts-node --transpile-only prisma/seed-companies.ts",
     "db:seed:provinces": "ts-node --transpile-only prisma/seed-provinces.ts",
     "db:seed:energy-trade": "ts-node --transpile-only prisma/seed-energy-trade.ts",
+    "db:seed:gdp": "ts-node --transpile-only prisma/seed-gdp.ts",
     "openapi:export": "ts-node --transpile-only scripts/export-openapi.ts"
   },
   "prisma": {

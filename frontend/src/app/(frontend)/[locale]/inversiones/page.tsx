@@ -104,14 +104,9 @@ export default async function InversionesPage() {
               </span>
             </div>
             <RampChart points={data.serie.points} />
-            <a
-              href={data.serie.source.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-3 inline-block font-mono text-[10px] text-nd-text-disabled transition-colors hover:text-nd-text-secondary"
-            >
-              {t('source')}: {data.serie.source.label} · {data.serie.source.asOf} ↗
-            </a>
+            <span className="mt-3 inline-block font-mono text-[10px] text-nd-text-disabled">
+              {t('computedBy', { source: `${data.serie.source.label} · ${data.serie.source.asOf}` })}
+            </span>
           </section>
         ) : null}
 
@@ -127,14 +122,9 @@ export default async function InversionesPage() {
               </span>
             </div>
             <ActividadChart actividad={data.actividad} />
-            <a
-              href={data.actividad.source.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-3 inline-block font-mono text-[10px] text-nd-text-disabled transition-colors hover:text-nd-text-secondary"
-            >
-              {t('source')}: {data.actividad.source.label} · {data.actividad.source.asOf} ↗
-            </a>
+            <span className="mt-3 inline-block font-mono text-[10px] text-nd-text-disabled">
+              {t('computedBy', { source: `${data.actividad.source.label} · ${data.actividad.source.asOf}` })}
+            </span>
           </section>
         ) : null}
 
@@ -153,14 +143,9 @@ export default async function InversionesPage() {
               {t('cruceBlurb')}
             </p>
             <CruceChart cruce={data.cruce} />
-            <a
-              href={data.cruce.source.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-3 inline-block font-mono text-[10px] text-nd-text-disabled transition-colors hover:text-nd-text-secondary"
-            >
-              {t('source')}: {data.cruce.source.label} · {data.cruce.source.asOf} ↗
-            </a>
+            <span className="mt-3 inline-block font-mono text-[10px] text-nd-text-disabled">
+              {t('computedBy', { source: `${data.cruce.source.label} · ${data.cruce.source.asOf}` })}
+            </span>
           </section>
         ) : null}
 

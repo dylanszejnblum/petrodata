@@ -49,6 +49,13 @@ Monthly rows carry energy exports/imports → surplus; annual rows add agro
 (Productos primarios + MOA) for the crossover. Values are USD (INDEC publishes
 millions; the pipeline converts). Source: INDEC, CC-BY.
 
+The crossover also expresses each year as **% of GDP**, using Argentina's nominal
+GDP (current US$) from the World Bank — seeded into `fact_price` (`series=gdp_usd`):
+
+```bash
+pnpm db:seed:gdp        # fetches World Bank NY.GDP.MKTP.CD for ARG; idempotent upsert
+```
+
 ## Run
 
 ```bash

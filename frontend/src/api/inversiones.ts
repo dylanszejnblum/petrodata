@@ -64,12 +64,23 @@ export interface InvActividad {
   points: { period: string; nuevosPozos: number; preliminary: boolean }[]
 }
 
+export interface InvCrucePoint {
+  period: string
+  agroUsd: number | null
+  energiaUsd: number | null
+  gdpUsd: number | null
+  agroPctGdp: number | null
+  energiaPctGdp: number | null
+  tier: string
+}
+
 export interface InvCruce {
   id: string
   title: string
   unit: string
   source: InvSource
-  points: { period: string; agroUsd: number | null; energiaUsd: number | null; tier: string }[]
+  gdpSource: { label: string; url: string } | null
+  points: InvCrucePoint[]
 }
 
 export interface InversionesData {

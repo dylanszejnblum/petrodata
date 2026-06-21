@@ -1,3 +1,4 @@
+import { getTranslations } from 'next-intl/server'
 import type { InvKpi } from '@/api/inversiones'
 import { formatDeltaPct, formatFigure, tierColor, tierLabel } from './format'
 
@@ -14,7 +15,7 @@ function DeltaChip({ delta }: { delta: NonNullable<InvKpi['delta']> }) {
   )
 }
 
-function KpiCard({ kpi }: { kpi: InvKpi }) {
+function KpiCard({ kpi, sourceText }: { kpi: InvKpi; sourceText: string }) {
   return (
     <div className="flex flex-col gap-3 bg-nd-surface p-5">
       <div className="flex items-center justify-between gap-2">
@@ -38,24 +39,24 @@ function KpiCard({ kpi }: { kpi: InvKpi }) {
 
       {kpi.delta ? <DeltaChip delta={kpi.delta} /> : <span className="h-[22px]" />}
 
-      <a
-        href={kpi.source.url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="mt-1 font-mono text-[10px] leading-relaxed text-nd-text-disabled transition-colors hover:text-nd-text-secondary"
-      >
-        {kpi.source.label} · {kpi.source.asOf} ↗
-      </a>
+      <span className="mt-1 font-mono text-[10px] leading-relaxed text-nd-text-disabled">
+        {sourceText}
+      </span>
     </div>
   )
 }
 
-export function KpiGrid({ kpis }: { kpis: InvKpi[] }) {
+export async function KpiGrid({ kpis }: { kpis: InvKpi[] }) {
   if (!kpis.length) return null
+  const t = await getTranslations('inversiones')
   return (
     <div className="grid grid-cols-1 gap-px bg-nd-border sm:grid-cols-2 lg:grid-cols-3">
       {kpis.map((kpi) => (
-        <KpiCard key={kpi.id} kpi={kpi} />
+        <KpiCard
+          key={kpi.id}
+          kpi={kpi}
+          sourceText={t('computedBy', { source: `${kpi.source.label} · ${kpi.source.asOf}` })}
+        />
       ))}
     </div>
   )

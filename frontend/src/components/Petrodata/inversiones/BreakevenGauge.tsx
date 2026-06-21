@@ -1,9 +1,11 @@
+import { getTranslations } from 'next-intl/server'
 import type { InvBreakeven } from '@/api/inversiones'
 
 const nf0 = new Intl.NumberFormat('es-AR', { maximumFractionDigits: 0 })
 
 /** Brent (measured) vs a cited breakeven reference. The gap is the headroom. */
-export function BreakevenGauge({ breakeven }: { breakeven: InvBreakeven }) {
+export async function BreakevenGauge({ breakeven }: { breakeven: InvBreakeven }) {
+  const t = await getTranslations('inversiones')
   const { brentUsd, referenceUsd, headroomUsd } = breakeven
   const scaleMax = Math.max(brentUsd, referenceUsd) * 1.15
   const brentPct = (brentUsd / scaleMax) * 100
@@ -51,14 +53,9 @@ export function BreakevenGauge({ breakeven }: { breakeven: InvBreakeven }) {
         </span>
       </div>
 
-      <a
-        href={breakeven.source.url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="font-mono text-[10px] text-nd-text-disabled transition-colors hover:text-nd-text-secondary"
-      >
-        {breakeven.source.label} ↗
-      </a>
+      <span className="font-mono text-[10px] text-nd-text-disabled">
+        {t('computedBy', { source: `${breakeven.source.label} · ${breakeven.source.asOf}` })}
+      </span>
     </div>
   )
 }
