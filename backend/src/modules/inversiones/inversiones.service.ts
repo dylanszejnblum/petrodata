@@ -21,6 +21,10 @@ const BRENT_SOURCE = {
   label: 'EIA (Brent)',
   url: 'https://www.eia.gov/dnav/pet/hist/RBRTEM.htm',
 };
+const GDP_SOURCE = {
+  label: 'Banco Mundial (PBI nominal, US$)',
+  url: 'https://data.worldbank.org/indicator/NY.GDP.MKTP.CD?locations=AR',
+};
 // Cited external reference — NOT computed from our data. The market price beside
 // it is computed live; the headroom (margin) between them is the story.
 const BREAKEVEN_REFERENCE_USD = 45;
@@ -50,7 +54,7 @@ export class InversionesService {
     const yearAgo = new Date(Date.UTC(month.getUTCFullYear() - 1, month.getUTCMonth(), 1));
     const asOf = month.toISOString().slice(0, 7);
 
-    const [now, prior, wells, wellsPrior, serieRows, opRows, exportRows, breakeven, actividad, tradeAnnual] = await Promise.all([
+    const [now, prior, wells, wellsPrior, serieRows, opRows, exportRows, breakeven, actividad, tradeAnnual, gdpRows] = await Promise.all([
       this.snapshot(month),
       this.snapshot(yearAgo),
       this.activeWells(month),
@@ -79,6 +83,10 @@ export class InversionesService {
         where: { granularity: 'annual' },
         orderBy: { period: 'asc' },
       }),
+      this.prisma.factPrice.findMany({
+        where: { series: 'gdp_usd' },
+        select: { date: true, value: true },
+      }),
     ]);
 
     const shareOil = pct(now.vm.oilM3, now.nat.oilM3);
@@ -98,6 +106,12 @@ export class InversionesService {
         }
       : null;
     const exportEnergyUsd = latestTrade?.energyExportsUsd ?? provinceEnergyUsd;
+
+    // Year → nominal GDP (US$), for export-as-%-of-GDP. World Bank lags ~1-2y,
+    // so the most recent trade year may have no GDP (→ null %, not fabricated).
+    const gdpByYear = new Map<string, number>(
+      gdpRows.map((g) => [g.date.toISOString().slice(0, 4), g.value]),
+    );
 
     const opNames = await this.prisma.dimOperator.findMany({
       where: { operatorSlug: { in: opRows.map((o) => o.operatorSlug) } },
@@ -182,14 +196,23 @@ export class InversionesService {
               title: 'Exportaciones: agro vs energía',
               unit: 'US$',
               source: tradeSource,
+              gdpSource: gdpRows.length ? GDP_SOURCE : null,
               points: tradeAnnual
                 .filter((r) => r.agroExportsUsd != null || r.energyExportsUsd != null)
-                .map((r) => ({
-                  period: r.period.toISOString().slice(0, 4),
-                  agroUsd: r.agroExportsUsd,
-                  energiaUsd: r.energyExportsUsd,
-                  tier: 'confirmado' as const,
-                })),
+                .map((r) => {
+                  const year = r.period.toISOString().slice(0, 4);
+                  const gdpUsd = gdpByYear.get(year) ?? null;
+                  return {
+                    period: year,
+                    agroUsd: r.agroExportsUsd,
+                    energiaUsd: r.energyExportsUsd,
+                    gdpUsd,
+                    // % of GDP — null when GDP for that year isn't published yet.
+                    agroPctGdp: gdpUsd && r.agroExportsUsd != null ? (r.agroExportsUsd / gdpUsd) * 100 : null,
+                    energiaPctGdp: gdpUsd && r.energyExportsUsd != null ? (r.energyExportsUsd / gdpUsd) * 100 : null,
+                    tier: 'confirmado' as const,
+                  };
+                }),
             },
           }
         : {}),
