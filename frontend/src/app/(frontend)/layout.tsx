@@ -13,15 +13,15 @@ import { Providers } from '@/providers'
 import { defaultTheme, themeLocalStorageKey } from '@/providers/Theme/shared'
 import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
 import { draftMode } from 'next/headers'
-import { Space_Grotesk, Space_Mono } from 'next/font/google'
+import { Plus_Jakarta_Sans, Space_Mono } from 'next/font/google'
 
 import './globals.css'
 import { getServerSideURL } from '@/utilities/getURL'
 import { getSocialImageURL } from '@/utilities/getSocialImageURL'
 
-const spaceGrotesk = Space_Grotesk({
+const plusJakarta = Plus_Jakarta_Sans({
   subsets: ['latin'],
-  variable: '--font-space-grotesk',
+  variable: '--font-plus-jakarta',
   display: 'swap',
 })
 
@@ -39,7 +39,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   return (
     <html
-      className={cn(spaceGrotesk.variable, spaceMono.variable)}
+      className={cn(plusJakarta.variable, spaceMono.variable)}
       lang={locale}
       suppressHydrationWarning={true}
     >

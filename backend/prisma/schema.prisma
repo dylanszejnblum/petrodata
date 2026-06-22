@@ -375,3 +375,15 @@ model NewsDocument {
   @@index([legalMode])
   @@map("news_document")
 }
+
+// Newsletter subscribers. Email is unique (dedup at the DB level); only the
+// minimum is stored (email + capture source + timestamps) for privacy.
+model NewsletterSubscriber {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  source    String   @default("newsletter-modal")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("newsletter_subscriber")
+}

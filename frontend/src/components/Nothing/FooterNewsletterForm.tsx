@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, FormEvent } from 'react'
+import { api } from '@/api/client'
 
 export function FooterNewsletterForm() {
   const [email, setEmail] = useState('')
@@ -18,13 +19,11 @@ export function FooterNewsletterForm() {
     setStatus('loading')
 
     try {
-      const res = await fetch('/api/newsletter', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, source: 'footer' }),
+      const { response } = await api.POST('/api/v1/newsletter', {
+        body: { email, source: 'footer' },
       })
 
-      if (res.ok) {
+      if (response.ok) {
         setStatus('success')
         setMessage('SUBSCRIBED')
         setEmail('')

@@ -1012,6 +1012,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/newsletter": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Subscribe an email to the newsletter
+         * @description Idempotent. Always returns 200 with the same body whether the email is new or already subscribed, so it cannot be used to probe who is on the list. The email is normalised (trim + lowercase) and deduped on a unique column.
+         */
+        post: operations["NewsletterController_subscribe_v1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -2355,6 +2375,25 @@ export interface components {
             documents: {
                 [key: string]: unknown;
             }[];
+        };
+        SubscribeResponseDto: {
+            /**
+             * @description Always "subscribed" — the response never reveals whether the email already existed.
+             * @example subscribed
+             */
+            status: string;
+        };
+        SubscribeNewsletterDto: {
+            /**
+             * @description Subscriber email. Normalised (trimmed + lowercased) before storage.
+             * @example you@example.com
+             */
+            email: string;
+            /**
+             * @description Where the signup originated.
+             * @enum {string}
+             */
+            source?: "newsletter-modal" | "footer" | "landing-page";
         };
     };
     responses: never;
@@ -3768,6 +3807,32 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+        };
+    };
+    NewsletterController_subscribe_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SubscribeNewsletterDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["SubscribeResponseDto"];
+                        meta: components["schemas"]["MetaDto"];
+                    };
+                };
             };
         };
     };
