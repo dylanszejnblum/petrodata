@@ -1426,13 +1426,18 @@ function MapClusterLayer<P extends GeoJSON.GeoJsonProperties = GeoJSON.GeoJsonPr
       if (onClusterClick) {
         onClusterClick(clusterId, coordinates, pointCount)
       } else {
-        // Default behavior: zoom to cluster expansion zoom
-        const source = map.getSource(sourceId) as MapLibreGL.GeoJSONSource
-        const zoom = await source.getClusterExpansionZoom(clusterId)
-        map.easeTo({
-          center: coordinates,
-          zoom,
-        })
+        // Default behavior: zoom to cluster expansion zoom. This is async, so the
+        // source/map can be torn down mid-await (unmount, theme/style swap) —
+        // re-check the source survived and guard the easeTo.
+        const source = map.getSource(sourceId) as MapLibreGL.GeoJSONSource | undefined
+        if (!source) return
+        try {
+          const zoom = await source.getClusterExpansionZoom(clusterId)
+          if (!map.getSource(sourceId)) return
+          map.easeTo({ center: coordinates, zoom })
+        } catch {
+          // cluster expanded away or source removed mid-flight — ignore
+        }
       }
     }
 

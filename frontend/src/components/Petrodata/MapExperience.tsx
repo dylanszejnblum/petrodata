@@ -48,6 +48,25 @@ const ARGENTINA_VIEWPORT: Partial<MapViewport> = {
 const FETCH_DEBOUNCE_MS = 350
 const WELL_LIMIT = 1000
 
+// Wells are fetched for an area larger than the viewport so that panning within
+// that margin needs no refetch. We only refetch once the viewport leaves the
+// last-fetched area, or zooms in enough to want denser data.
+const BBOX_MARGIN = 0.3
+const REFETCH_ZOOM_DELTA = 0.5
+
+type Bbox = [number, number, number, number]
+
+function expandBbox([w, s, e, n]: Bbox, margin: number): Bbox {
+  const dx = (e - w) * margin
+  const dy = (n - s) * margin
+  return [w - dx, s - dy, e + dx, n + dy]
+}
+
+// True when `inner` lies entirely within `outer`.
+function bboxContains(outer: Bbox, inner: Bbox): boolean {
+  return inner[0] >= outer[0] && inner[1] >= outer[1] && inner[2] <= outer[2] && inner[3] <= outer[3]
+}
+
 const CARTO_FONTS_PREFIX = 'https://tiles.basemaps.cartocdn.com/fonts/'
 
 const transformRequest = (url: string) => {
@@ -110,6 +129,9 @@ export function MapExperience({
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const abortRef = useRef<AbortController | null>(null)
   const lastQueryKey = useRef<string>('')
+  // The margin-expanded bbox (and zoom) we last fetched, used to skip refetches
+  // while the viewport stays inside the already-loaded area.
+  const lastFetchedRef = useRef<{ bbox: Bbox; zoom: number } | null>(null)
   const cacheRef = useRef<globalThis.Map<string, WellFeatureCollection>>(new globalThis.Map())
   const CACHE_LIMIT = 12
   const prevRegionRef = useRef<{ province: string | null; basin: string | null }>({
@@ -222,9 +244,21 @@ export function MapExperience({
       const bounds = map.getBounds()
       const sw = bounds.getSouthWest()
       const ne = bounds.getNorthEast()
-      const nextBbox: [number, number, number, number] = [sw.lng, sw.lat, ne.lng, ne.lat]
-      setBbox(nextBbox)
-      fetchWells(filters, nextBbox)
+      const visible: Bbox = [sw.lng, sw.lat, ne.lng, ne.lat]
+      const zoom = map.getZoom()
+
+      // Skip while the viewport stays inside the loaded area and hasn't zoomed
+      // in enough to need denser data — avoids redundant fetches and the cluster
+      // flicker that a wholesale data swap causes on every small pan.
+      const last = lastFetchedRef.current
+      if (last && bboxContains(last.bbox, visible) && zoom <= last.zoom + REFETCH_ZOOM_DELTA) {
+        return
+      }
+
+      const fetchBbox = expandBbox(visible, BBOX_MARGIN)
+      lastFetchedRef.current = { bbox: fetchBbox, zoom }
+      setBbox(fetchBbox)
+      fetchWells(filters, fetchBbox)
     }, FETCH_DEBOUNCE_MS)
   }, [filters, fetchWells])
 
