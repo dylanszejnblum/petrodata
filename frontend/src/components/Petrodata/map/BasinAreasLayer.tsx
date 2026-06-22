@@ -3,35 +3,22 @@
 import { useEffect, useId } from 'react'
 import type { GeoJSONSource } from 'maplibre-gl'
 import { useMap } from '@/components/ui/map'
-import { BASIN_BOUNDS, type Bounds } from './regions'
+import { AR_BASINS } from './arBasins'
 
-type BasinFeature = GeoJSON.Feature<
-  GeoJSON.Polygon,
-  { name: string; isSelected: boolean }
->
+type BasinGeometry = GeoJSON.MultiPolygon | GeoJSON.Polygon
+type BasinProps = { name: string; isSelected: boolean }
 
-function boundsToPolygonCoords(bounds: Bounds): GeoJSON.Position[][] {
-  const [[w, s], [e, n]] = bounds
-  return [
-    [
-      [w, s],
-      [e, s],
-      [e, n],
-      [w, n],
-      [w, s],
-    ],
-  ]
-}
-
+// Real basin outlines (AR_BASINS) with the current selection state stamped on
+// each feature so the fill/line layers can highlight the selected basin.
 function buildFeatureCollection(
   selected: string | null,
-): GeoJSON.FeatureCollection<GeoJSON.Polygon, BasinFeature['properties']> {
+): GeoJSON.FeatureCollection<BasinGeometry, BasinProps> {
   return {
     type: 'FeatureCollection',
-    features: Object.entries(BASIN_BOUNDS).map(([name, bounds]) => ({
+    features: AR_BASINS.features.map((f) => ({
       type: 'Feature',
-      properties: { name, isSelected: name === selected },
-      geometry: { type: 'Polygon', coordinates: boundsToPolygonCoords(bounds) },
+      properties: { name: f.properties.name, isSelected: f.properties.name === selected },
+      geometry: f.geometry,
     })),
   }
 }
