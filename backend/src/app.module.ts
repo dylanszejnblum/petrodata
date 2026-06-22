@@ -14,6 +14,7 @@ import { CompaniesModule } from './modules/companies/companies.module';
 import { ProvincesModule } from './modules/provinces/provinces.module';
 import { NewsModule } from './modules/news/news.module';
 import { InversionesModule } from './modules/inversiones/inversiones.module';
+import { NewsletterModule } from './modules/newsletter/newsletter.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { InversionesModule } from './modules/inversiones/inversiones.module';
     ProvincesModule,
     NewsModule,
     InversionesModule,
+    NewsletterModule,
   ],
   controllers: [AppController],
 })

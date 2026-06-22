@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, useCallback, useRef, FormEvent } from 'react'
+import { api } from '@/api/client'
 
 type ModalState = 'idle' | 'entering' | 'visible' | 'exiting' | 'success' | 'success-exiting'
 
@@ -102,17 +103,14 @@ export function NewsletterModal() {
     }
 
     try {
-      const res = await fetch('/api/newsletter', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, source: 'newsletter-modal' }),
+      const { response } = await api.POST('/api/v1/newsletter', {
+        body: { email, source: 'newsletter-modal' },
       })
 
-      if (res.ok) {
+      if (response.ok) {
         setState('success')
       } else {
-        const data = await res.json()
-        setError(data.error || 'Something went wrong')
+        setError('Something went wrong')
       }
     } catch {
       setError('Network error')

@@ -2881,6 +2881,51 @@
           "inversiones"
         ]
       }
+    },
+    "/api/v1/newsletter": {
+      "post": {
+        "description": "Idempotent. Always returns 200 with the same body whether the email is new or already subscribed, so it cannot be used to probe who is on the list. The email is normalised (trim + lowercase) and deduped on a unique column.",
+        "operationId": "NewsletterController_subscribe_v1",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubscribeNewsletterDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/SubscribeResponseDto"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/MetaDto"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "summary": "Subscribe an email to the newsletter",
+        "tags": [
+          "newsletter"
+        ]
+      }
     }
   },
   "info": {
@@ -6400,6 +6445,41 @@
         },
         "required": [
           "documents"
+        ]
+      },
+      "SubscribeResponseDto": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "subscribed",
+            "description": "Always \"subscribed\" — the response never reveals whether the email already existed."
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "SubscribeNewsletterDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "you@example.com",
+            "description": "Subscriber email. Normalised (trimmed + lowercased) before storage."
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "newsletter-modal",
+              "footer",
+              "landing-page"
+            ],
+            "description": "Where the signup originated."
+          }
+        },
+        "required": [
+          "email"
         ]
       }
     }
