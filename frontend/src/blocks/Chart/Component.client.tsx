@@ -46,7 +46,7 @@ function MermaidChart({ source, instanceId }: { source: string; instanceId: stri
           theme: 'dark',
           themeVariables: MERMAID_THEME_VARIABLES,
           securityLevel: 'strict',
-          fontFamily: 'var(--font-space-grotesk), system-ui, sans-serif',
+          fontFamily: 'var(--font-plus-jakarta), system-ui, sans-serif',
         })
         const { svg } = await mermaid.render(`mermaid-${instanceId}`, source.trim())
         if (!cancelled && containerRef.current) {
