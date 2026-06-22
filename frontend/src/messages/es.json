@@ -93,6 +93,16 @@
   },
   "mapPage": {
     "summary": "Resumen",
+    "legend": {
+      "title": "Referencias",
+      "producing": "Cuenca productiva",
+      "exploration": "Cuenca en exploración",
+      "wellActive": "Pozo activo",
+      "wellStopped": "Pozo parado",
+      "gasWell": "Pozo de gas",
+      "showExploration": "Mostrar cuencas en exploración",
+      "hideExploration": "Mostrar solo cuencas productivas"
+    },
     "filters": {
       "title": "Filtros",
       "reset": "Reiniciar",

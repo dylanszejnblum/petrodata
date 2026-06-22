@@ -23,6 +23,8 @@ import { FilterPanel, DEFAULT_FILTERS, type WellFilters, type FilterOption } fro
 import { TopOperatorsCard } from './map/TopOperatorsCard'
 import { ARGENTINA_BOUNDS, BASIN_BOUNDS, PROVINCE_BOUNDS, type Bounds } from './map/regions'
 import { BasinAreasLayer } from './map/BasinAreasLayer'
+import { ExplorationBasinsLayer } from './map/ExplorationBasinsLayer'
+import { MapLegend } from './map/MapLegend'
 import { WellPopup } from './map/WellPopup'
 import { classifyWellStatus } from './map/wellStatus'
 
@@ -42,9 +44,11 @@ type Selected = {
   properties: WellProps
 }
 
-const ARGENTINA_VIEWPORT: Partial<MapViewport> = {
-  center: [-64.5, -38],
-  zoom: 4.1,
+// Default view centred on Vaca Muerta (Neuquina basin) rather than all of
+// Argentina — that's the focus of the product.
+const VACA_MUERTA_VIEWPORT: Partial<MapViewport> = {
+  center: [-69.2, -38.4],
+  zoom: 6,
 }
 
 const FETCH_DEBOUNCE_MS = 350
@@ -166,6 +170,7 @@ export function MapExperience({
   const [loading, setLoading] = useState(false)
   const [selected, setSelected] = useState<Selected | null>(null)
   const [mobilePanel, setMobilePanel] = useState<'none' | 'info' | 'filters'>('none')
+  const [showExploration, setShowExploration] = useState(true)
 
   const t = useTranslations('mapPage')
 
@@ -339,12 +344,14 @@ export function MapExperience({
         ref={mapRef}
         className="h-full w-full"
         theme={theme === 'dark' ? 'dark' : 'light'}
-        viewport={ARGENTINA_VIEWPORT}
+        viewport={VACA_MUERTA_VIEWPORT}
         onViewportChange={handleViewportChange}
         renderWorldCopies={false}
         transformRequest={transformRequest}
       >
         <MapControls position="bottom-right" showZoom showCompass showFullscreen />
+        {/* Exploration basins first so the producing basins draw on top of them. */}
+        {showExploration && <ExplorationBasinsLayer />}
         <BasinAreasLayer selectedBasin={filters.basin} onBasinClick={handleBasinClick} />
         <MapClusterLayer<WellProps>
           data={featureCollection}
@@ -387,9 +394,10 @@ export function MapExperience({
         )}
       </Map>
 
-      {/* Desktop overlay: two columns */}
+      {/* Desktop overlay: two columns. The left column scrolls if the stacked
+          cards (overview + operators + legend) are taller than the viewport. */}
       <div className="pointer-events-none absolute inset-0 hidden justify-between gap-4 p-4 md:flex">
-        <div className="flex w-[20rem] flex-col gap-4">
+        <div className="flex max-h-full w-[20rem] flex-col gap-4 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           <OverviewCard
             latest={latest}
             topOperatorSlug={operators[0]?.operator_slug ?? null}
@@ -400,6 +408,10 @@ export function MapExperience({
             operators={operators}
             selectedSlug={filters.operator}
             onSelect={handleSelectOperator}
+          />
+          <MapLegend
+            showExploration={showExploration}
+            onToggleExploration={() => setShowExploration((v) => !v)}
           />
         </div>
         <div className="w-[20rem]">
@@ -445,6 +457,10 @@ export function MapExperience({
                   operators={operators}
                   selectedSlug={filters.operator}
                   onSelect={handleSelectOperator}
+                />
+                <MapLegend
+                  showExploration={showExploration}
+                  onToggleExploration={() => setShowExploration((v) => !v)}
                 />
               </>
             ) : (

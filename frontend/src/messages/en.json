@@ -93,6 +93,16 @@
   },
   "mapPage": {
     "summary": "Overview",
+    "legend": {
+      "title": "Legend",
+      "producing": "Producing basin",
+      "exploration": "Exploration basin",
+      "wellActive": "Active well",
+      "wellStopped": "Stopped well",
+      "gasWell": "Gas well",
+      "showExploration": "Show exploration basins",
+      "hideExploration": "Show producing basins only"
+    },
     "filters": {
       "title": "Filters",
       "reset": "Reset",
