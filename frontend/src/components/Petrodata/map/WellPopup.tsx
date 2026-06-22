@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl'
 import { api, type ApiSchemas } from '@/api/client'
 import { formatCompact, formatMonth } from '@/utilities/formatNumber'
 import { OperatorAvatar } from './OperatorAvatar'
+import { classifyWellStatus, type WellStatusKind } from './wellStatus'
 
 type WellProps = ApiSchemas['GeoWellPropertiesDto']
 type WellDetail = ApiSchemas['WellDetailDto']
@@ -53,9 +54,7 @@ function useWellDetail(wellId: string): { detail: WellDetail | null; loading: bo
   return { detail, loading }
 }
 
-type StatusKind = 'active' | 'injector' | 'stopped' | 'study' | 'abandoned' | 'unknown'
-
-const STATUS_LABEL_KEYS: Record<StatusKind, 'active' | 'injector' | 'stopped' | 'underStudy' | 'abandoned' | 'unknown'> = {
+const STATUS_LABEL_KEYS: Record<WellStatusKind, 'active' | 'injector' | 'stopped' | 'underStudy' | 'abandoned' | 'unknown'> = {
   active: 'active',
   injector: 'injector',
   stopped: 'stopped',
@@ -64,24 +63,13 @@ const STATUS_LABEL_KEYS: Record<StatusKind, 'active' | 'injector' | 'stopped' | 
   unknown: 'unknown',
 }
 
-function classifyStatus(status: string | null | undefined): StatusKind {
-  if (!status) return 'unknown'
-  const s = status.toLowerCase()
-  if (s.includes('producción efectiva') || s.includes('produccion efectiva')) return 'active'
-  if (s.includes('inyector')) return 'injector'
-  if (s.includes('parado') || s.includes('transitorio')) return 'stopped'
-  if (s.includes('estudio')) return 'study'
-  if (/abandon/i.test(s)) return 'abandoned'
-  return 'unknown'
-}
-
 function StatusBadge({ status }: { status: string | null | undefined }) {
   const t = useTranslations('wellPopup.status')
-  const kind = classifyStatus(status)
+  const kind = classifyWellStatus(status)
   // For "unknown" with a non-null status, show the raw API string so the user
   // still sees the SEN classification rather than just "Unknown".
   const label = kind === 'unknown' && status ? status : t(STATUS_LABEL_KEYS[kind])
-  const palette: Record<StatusKind, { bg: string; fg: string; ring: string }> = {
+  const palette: Record<WellStatusKind, { bg: string; fg: string; ring: string }> = {
     active: { bg: 'var(--nd-success)', fg: 'var(--nd-black)', ring: 'transparent' },
     injector: { bg: 'var(--nd-accent)', fg: 'var(--nd-black)', ring: 'transparent' },
     stopped: { bg: 'var(--nd-warning)', fg: 'var(--nd-black)', ring: 'transparent' },
@@ -161,6 +149,9 @@ export function WellPopup({ well }: { well: WellProps }) {
     well.formation_slug === 'vaca_muerta' || detail?.latest_production?.vm_combined === true
 
   const latest = detail?.latest_production ?? null
+  const hasProduction =
+    !!latest &&
+    ((latest.oil_bbl_d ?? 0) > 0 || (latest.gas_mmcf_d ?? 0) > 0 || (latest.boe ?? 0) > 0)
   const depthM = well.depth_m as unknown as number | null
 
   return (
@@ -190,48 +181,45 @@ export function WellPopup({ well }: { well: WellProps }) {
         {isVm && <VmBadge />}
       </div>
 
-      {/* Latest production */}
-      <div className="border-b border-nd-border px-4 py-3">
-        <div className="flex items-center justify-between">
-          <span
-            className="text-nd-text-disabled text-[10px] uppercase tracking-[0.08em] font-mono"
-          >
-            {t('latest')} · {latest ? formatMonth(latest.date_month) : loading ? '…' : t('noData')}
-          </span>
-          {loading && (
+      {/* Latest production — hidden entirely when the well has no production
+          (zero across oil/gas/boe), per design. Shown while loading. */}
+      {(loading || hasProduction) && (
+        <div className="border-b border-nd-border px-4 py-3">
+          <div className="flex items-center justify-between">
             <span
-              className="text-nd-text-disabled text-[10px] uppercase font-mono"
+              className="text-nd-text-disabled text-[10px] uppercase tracking-[0.08em] font-mono"
             >
-              {t('loading')}
+              {t('latest')} · {latest ? formatMonth(latest.date_month) : '…'}
             </span>
+            {loading && (
+              <span
+                className="text-nd-text-disabled text-[10px] uppercase font-mono"
+              >
+                {t('loading')}
+              </span>
+            )}
+          </div>
+          {hasProduction && latest ? (
+            <div className="mt-2 grid grid-cols-3 gap-2">
+              <ProductionTile
+                label={t('tiles.oil')}
+                value={formatCompact(latest.oil_bbl_d)}
+                unit="bbl/d"
+              />
+              <ProductionTile
+                label={t('tiles.gas')}
+                value={formatCompact(latest.gas_mmcf_d)}
+                unit="MMcf/d"
+              />
+              <ProductionTile label={t('tiles.boe')} value={formatCompact(latest.boe)} unit="" />
+            </div>
+          ) : (
+            <p className="mt-2 text-nd-text-disabled text-[11px] font-sans">
+              {t('fetchingProduction')}
+            </p>
           )}
         </div>
-        {latest ? (
-          <div className="mt-2 grid grid-cols-3 gap-2">
-            <ProductionTile
-              label={t('tiles.oil')}
-              value={formatCompact(latest.oil_bbl_d)}
-              unit="bbl/d"
-            />
-            <ProductionTile
-              label={t('tiles.gas')}
-              value={formatCompact(latest.gas_mmcf_d)}
-              unit="MMcf/d"
-            />
-            <ProductionTile
-              label={t('tiles.boe')}
-              value={formatCompact(latest.boe)}
-              unit=""
-            />
-          </div>
-        ) : (
-          <p
-            className="mt-2 text-nd-text-disabled text-[11px] font-sans"
-          >
-            {loading ? t('fetchingProduction') : t('noProduction')}
-          </p>
-        )}
-      </div>
+      )}
 
       {/* Meta grid */}
       <dl

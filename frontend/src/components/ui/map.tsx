@@ -1177,6 +1177,12 @@ function MapRoute({
   return null
 }
 
+/** The value type MapLibre accepts for a circle layer's `circle-color`: a color
+ * string or a data-driven style expression. Derived from MapLibre's own spec. */
+type CircleColorValue = NonNullable<
+  Extract<MapLibreGL.LayerSpecification, { type: 'circle' }>['paint']
+>['circle-color']
+
 type MapClusterLayerProps<P extends GeoJSON.GeoJsonProperties = GeoJSON.GeoJsonProperties> = {
   /** GeoJSON FeatureCollection data or URL to fetch GeoJSON from */
   data: string | GeoJSON.FeatureCollection<GeoJSON.Point, P>
@@ -1188,8 +1194,12 @@ type MapClusterLayerProps<P extends GeoJSON.GeoJsonProperties = GeoJSON.GeoJsonP
   clusterColors?: [string, string, string]
   /** Point count thresholds for color/size steps: [medium, large] (default: [100, 750]) */
   clusterThresholds?: [number, number]
-  /** Color for unclustered individual points (default: "#3b82f6") */
-  pointColor?: string
+  /**
+   * Color for unclustered individual points (default: "#3b82f6"). Accepts a
+   * plain color string or a data-driven MapLibre expression (e.g. to colour
+   * each point by a feature property).
+   */
+  pointColor?: CircleColorValue
   /** Callback when an unclustered point is clicked */
   onPointClick?: (feature: GeoJSON.Feature<GeoJSON.Point, P>, coordinates: [number, number]) => void
   /** Callback when a cluster is clicked. If not provided, zooms into the cluster */
@@ -1508,4 +1518,4 @@ export {
   MapClusterLayer,
 }
 
-export type { MapRef, MapViewport, SymbolLayerFilter }
+export type { MapRef, MapViewport, SymbolLayerFilter, CircleColorValue }
