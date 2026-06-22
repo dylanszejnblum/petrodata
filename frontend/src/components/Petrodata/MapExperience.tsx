@@ -13,6 +13,8 @@ import {
   MarkerContent,
   type MapRef,
   type MapViewport,
+  type SymbolLayerFilter,
+  type CircleColorValue,
 } from '@/components/ui/map'
 import { api, type ApiSchemas } from '@/api/client'
 import type { paths } from '@/api/types'
@@ -22,6 +24,7 @@ import { TopOperatorsCard } from './map/TopOperatorsCard'
 import { ARGENTINA_BOUNDS, BASIN_BOUNDS, PROVINCE_BOUNDS, type Bounds } from './map/regions'
 import { BasinAreasLayer } from './map/BasinAreasLayer'
 import { WellPopup } from './map/WellPopup'
+import { classifyWellStatus } from './map/wellStatus'
 
 type WellProps = ApiSchemas['GeoWellPropertiesDto']
 type WellFeatureCollection = ApiSchemas['GeoWellFeatureCollectionDto']
@@ -47,6 +50,25 @@ const ARGENTINA_VIEWPORT: Partial<MapViewport> = {
 const FETCH_DEBOUNCE_MS = 350
 const WELL_LIMIT = 1000
 
+// Wells are fetched for an area larger than the viewport so that panning within
+// that margin needs no refetch. We only refetch once the viewport leaves the
+// last-fetched area, or zooms in enough to want denser data.
+const BBOX_MARGIN = 0.3
+const REFETCH_ZOOM_DELTA = 0.5
+
+type Bbox = [number, number, number, number]
+
+function expandBbox([w, s, e, n]: Bbox, margin: number): Bbox {
+  const dx = (e - w) * margin
+  const dy = (n - s) * margin
+  return [w - dx, s - dy, e + dx, n + dy]
+}
+
+// True when `inner` lies entirely within `outer`.
+function bboxContains(outer: Bbox, inner: Bbox): boolean {
+  return inner[0] >= outer[0] && inner[1] >= outer[1] && inner[2] <= outer[2] && inner[3] <= outer[3]
+}
+
 const CARTO_FONTS_PREFIX = 'https://tiles.basemaps.cartocdn.com/fonts/'
 
 const transformRequest = (url: string) => {
@@ -63,6 +85,32 @@ const transformRequest = (url: string) => {
 function isAbandonedStatus(statusCode: string | null | undefined): boolean {
   return !!statusCode && /abandon/i.test(statusCode)
 }
+
+// Draw a "G" on the individual dots of gas wells (only visible once zoomed in
+// past clustering, where dots are spread out). Module constant so its identity
+// stays stable across renders.
+const GAS_WELL_LABEL = {
+  text: 'G',
+  filter: ['==', ['get', 'well_type'], 'Gasífero'] as SymbolLayerFilter,
+  color: '#ffffff',
+}
+
+// Well dot colours. Stopped wells ("parado"/"transitorio") are amber to match the
+// popup's stopped badge (var(--nd-warning) = #d4a843); everything else is green.
+const MARKER_COLOR_DEFAULT = '#22c55e'
+const MARKER_COLOR_STOPPED = '#d4a843'
+
+function statusMarkerColor(statusCode: string | null | undefined): string {
+  return classifyWellStatus(statusCode) === 'stopped' ? MARKER_COLOR_STOPPED : MARKER_COLOR_DEFAULT
+}
+
+// Data-driven dot colour: reads the per-feature `marker_color` tagged above,
+// falling back to green. Module constant so its identity is stable across renders.
+const POINT_COLOR_EXPRESSION = [
+  'coalesce',
+  ['get', 'marker_color'],
+  MARKER_COLOR_DEFAULT,
+] as CircleColorValue
 
 function pickRegionBounds(filters: WellFilters): Bounds | null {
   if (filters.province && PROVINCE_BOUNDS[filters.province]) return PROVINCE_BOUNDS[filters.province]
@@ -100,6 +148,9 @@ export function MapExperience({
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const abortRef = useRef<AbortController | null>(null)
   const lastQueryKey = useRef<string>('')
+  // The margin-expanded bbox (and zoom) we last fetched, used to skip refetches
+  // while the viewport stays inside the already-loaded area.
+  const lastFetchedRef = useRef<{ bbox: Bbox; zoom: number } | null>(null)
   const cacheRef = useRef<globalThis.Map<string, WellFeatureCollection>>(new globalThis.Map())
   const CACHE_LIMIT = 12
   const prevRegionRef = useRef<{ province: string | null; basin: string | null }>({
@@ -212,9 +263,21 @@ export function MapExperience({
       const bounds = map.getBounds()
       const sw = bounds.getSouthWest()
       const ne = bounds.getNorthEast()
-      const nextBbox: [number, number, number, number] = [sw.lng, sw.lat, ne.lng, ne.lat]
-      setBbox(nextBbox)
-      fetchWells(filters, nextBbox)
+      const visible: Bbox = [sw.lng, sw.lat, ne.lng, ne.lat]
+      const zoom = map.getZoom()
+
+      // Skip while the viewport stays inside the loaded area and hasn't zoomed
+      // in enough to need denser data — avoids redundant fetches and the cluster
+      // flicker that a wholesale data swap causes on every small pan.
+      const last = lastFetchedRef.current
+      if (last && bboxContains(last.bbox, visible) && zoom <= last.zoom + REFETCH_ZOOM_DELTA) {
+        return
+      }
+
+      const fetchBbox = expandBbox(visible, BBOX_MARGIN)
+      lastFetchedRef.current = { bbox: fetchBbox, zoom }
+      setBbox(fetchBbox)
+      fetchWells(filters, fetchBbox)
     }, FETCH_DEBOUNCE_MS)
   }, [filters, fetchWells])
 
@@ -236,7 +299,13 @@ export function MapExperience({
       if (filters.wellType === 'gas' && p.well_type !== 'Gasífero') return false
       return true
     })
-    return { type: 'FeatureCollection', features: filtered }
+    // Tag each well with its marker colour (stopped → yellow, else green) using
+    // the shared status classifier, so the dot colour matches the popup badge.
+    const withColor = filtered.map((f) => ({
+      ...f,
+      properties: { ...f.properties, marker_color: statusMarkerColor(f.properties?.status_code) },
+    }))
+    return { type: 'FeatureCollection', features: withColor }
   }, [features, filters.status, filters.hideAbandoned, filters.wellType])
   const featureCount = featureCollection.features.length
   const rawCount = (features as unknown as GeoJSON.FeatureCollection<GeoJSON.Point, WellProps>).features
@@ -283,7 +352,8 @@ export function MapExperience({
           clusterMaxZoom={12}
           clusterColors={['#22c55e', '#eab308', '#ef4444']}
           clusterThresholds={[50, 250]}
-          pointColor="#22c55e"
+          pointColor={POINT_COLOR_EXPRESSION}
+          pointLabel={GAS_WELL_LABEL}
           onPointClick={handlePointClick}
         />
         {selected && (
