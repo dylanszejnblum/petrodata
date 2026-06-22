@@ -23,6 +23,7 @@ import { FilterPanel, DEFAULT_FILTERS, type WellFilters, type FilterOption } fro
 import { TopOperatorsCard } from './map/TopOperatorsCard'
 import { ARGENTINA_BOUNDS, BASIN_BOUNDS, PROVINCE_BOUNDS, type Bounds } from './map/regions'
 import { BasinAreasLayer } from './map/BasinAreasLayer'
+import { ExplorationBasinsLayer } from './map/ExplorationBasinsLayer'
 import { WellPopup } from './map/WellPopup'
 import { classifyWellStatus } from './map/wellStatus'
 
@@ -345,6 +346,8 @@ export function MapExperience({
         transformRequest={transformRequest}
       >
         <MapControls position="bottom-right" showZoom showCompass showFullscreen />
+        {/* Exploration basins first so the producing basins draw on top of them. */}
+        <ExplorationBasinsLayer />
         <BasinAreasLayer selectedBasin={filters.basin} onBasinClick={handleBasinClick} />
         <MapClusterLayer<WellProps>
           data={featureCollection}
