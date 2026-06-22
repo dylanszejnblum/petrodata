@@ -13,6 +13,7 @@ import {
   MarkerContent,
   type MapRef,
   type MapViewport,
+  type SymbolLayerFilter,
 } from '@/components/ui/map'
 import { api, type ApiSchemas } from '@/api/client'
 import type { paths } from '@/api/types'
@@ -62,6 +63,15 @@ const transformRequest = (url: string) => {
 // ("abandono") and the participle ("abandonado") in any casing.
 function isAbandonedStatus(statusCode: string | null | undefined): boolean {
   return !!statusCode && /abandon/i.test(statusCode)
+}
+
+// Draw a "G" on the individual dots of gas wells (only visible once zoomed in
+// past clustering, where dots are spread out). Module constant so its identity
+// stays stable across renders.
+const GAS_WELL_LABEL = {
+  text: 'G',
+  filter: ['==', ['get', 'well_type'], 'Gasífero'] as SymbolLayerFilter,
+  color: '#ffffff',
 }
 
 function pickRegionBounds(filters: WellFilters): Bounds | null {
@@ -284,6 +294,7 @@ export function MapExperience({
           clusterColors={['#22c55e', '#eab308', '#ef4444']}
           clusterThresholds={[50, 250]}
           pointColor="#22c55e"
+          pointLabel={GAS_WELL_LABEL}
           onPointClick={handlePointClick}
         />
         {selected && (
