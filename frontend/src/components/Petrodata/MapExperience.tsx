@@ -14,6 +14,7 @@ import {
   type MapRef,
   type MapViewport,
   type SymbolLayerFilter,
+  type CircleColorValue,
 } from '@/components/ui/map'
 import { api, type ApiSchemas } from '@/api/client'
 import type { paths } from '@/api/types'
@@ -23,6 +24,7 @@ import { TopOperatorsCard } from './map/TopOperatorsCard'
 import { ARGENTINA_BOUNDS, BASIN_BOUNDS, PROVINCE_BOUNDS, type Bounds } from './map/regions'
 import { BasinAreasLayer } from './map/BasinAreasLayer'
 import { WellPopup } from './map/WellPopup'
+import { classifyWellStatus } from './map/wellStatus'
 
 type WellProps = ApiSchemas['GeoWellPropertiesDto']
 type WellFeatureCollection = ApiSchemas['GeoWellFeatureCollectionDto']
@@ -92,6 +94,23 @@ const GAS_WELL_LABEL = {
   filter: ['==', ['get', 'well_type'], 'Gasífero'] as SymbolLayerFilter,
   color: '#ffffff',
 }
+
+// Well dot colours. Stopped wells ("parado"/"transitorio") are amber to match the
+// popup's stopped badge (var(--nd-warning) = #d4a843); everything else is green.
+const MARKER_COLOR_DEFAULT = '#22c55e'
+const MARKER_COLOR_STOPPED = '#d4a843'
+
+function statusMarkerColor(statusCode: string | null | undefined): string {
+  return classifyWellStatus(statusCode) === 'stopped' ? MARKER_COLOR_STOPPED : MARKER_COLOR_DEFAULT
+}
+
+// Data-driven dot colour: reads the per-feature `marker_color` tagged above,
+// falling back to green. Module constant so its identity is stable across renders.
+const POINT_COLOR_EXPRESSION = [
+  'coalesce',
+  ['get', 'marker_color'],
+  MARKER_COLOR_DEFAULT,
+] as CircleColorValue
 
 function pickRegionBounds(filters: WellFilters): Bounds | null {
   if (filters.province && PROVINCE_BOUNDS[filters.province]) return PROVINCE_BOUNDS[filters.province]
@@ -280,7 +299,13 @@ export function MapExperience({
       if (filters.wellType === 'gas' && p.well_type !== 'Gasífero') return false
       return true
     })
-    return { type: 'FeatureCollection', features: filtered }
+    // Tag each well with its marker colour (stopped → yellow, else green) using
+    // the shared status classifier, so the dot colour matches the popup badge.
+    const withColor = filtered.map((f) => ({
+      ...f,
+      properties: { ...f.properties, marker_color: statusMarkerColor(f.properties?.status_code) },
+    }))
+    return { type: 'FeatureCollection', features: withColor }
   }, [features, filters.status, filters.hideAbandoned, filters.wellType])
   const featureCount = featureCollection.features.length
   const rawCount = (features as unknown as GeoJSON.FeatureCollection<GeoJSON.Point, WellProps>).features
@@ -327,7 +352,7 @@ export function MapExperience({
           clusterMaxZoom={12}
           clusterColors={['#22c55e', '#eab308', '#ef4444']}
           clusterThresholds={[50, 250]}
-          pointColor="#22c55e"
+          pointColor={POINT_COLOR_EXPRESSION}
           pointLabel={GAS_WELL_LABEL}
           onPointClick={handlePointClick}
         />
