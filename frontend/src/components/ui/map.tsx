@@ -267,13 +267,22 @@ const Map = forwardRef<MapRef, MapProps>(function Map(
       ...viewport,
     })
 
+    // Fall back to raster tiles ONLY when the initial vector style itself fails
+    // to load — never on transient per-tile fetch errors during pan/zoom. Those
+    // fire constantly and a setStyle() here wipes every custom layer (basin
+    // areas, well dots) which then never re-render. Guard: once, and only while
+    // the style hasn't finished loading. Reset isStyleLoaded so the dependent
+    // layers re-add after the fallback style settles.
+    let styleFellBack = false
     map.on('error', (e) => {
-      if (e.error?.status === 0 || e.error?.message?.includes('Failed to fetch')) {
-        const fallback = resolvedTheme === 'dark' ? fallbackStyles.dark : fallbackStyles.light
-        try {
-          map.setStyle(fallback as maplibregl.StyleSpecification)
-        } catch {}
-      }
+      const failedToFetch = e.error?.status === 0 || e.error?.message?.includes('Failed to fetch')
+      if (!failedToFetch || styleFellBack || map.isStyleLoaded()) return
+      styleFellBack = true
+      const fallback = resolvedTheme === 'dark' ? fallbackStyles.dark : fallbackStyles.light
+      setIsStyleLoaded(false)
+      try {
+        map.setStyle(fallback as MapLibreGL.StyleSpecification)
+      } catch {}
     })
 
     const styleDataHandler = () => {
@@ -1185,7 +1194,20 @@ type MapClusterLayerProps<P extends GeoJSON.GeoJsonProperties = GeoJSON.GeoJsonP
   onPointClick?: (feature: GeoJSON.Feature<GeoJSON.Point, P>, coordinates: [number, number]) => void
   /** Callback when a cluster is clicked. If not provided, zooms into the cluster */
   onClusterClick?: (clusterId: number, coordinates: [number, number], pointCount: number) => void
+  /**
+   * Optional text label drawn on top of unclustered points (e.g. a one-letter
+   * type marker). `filter` restricts which points get the label; it is combined
+   * with the unclustered-point filter automatically.
+   */
+  pointLabel?: {
+    text: string
+    filter?: SymbolLayerFilter
+    color?: string
+  }
 }
+
+/** The filter value type MapLibre accepts for a layer, derived from its spec. */
+type SymbolLayerFilter = Extract<MapLibreGL.LayerSpecification, { type: 'symbol' }>['filter']
 
 function MapClusterLayer<P extends GeoJSON.GeoJsonProperties = GeoJSON.GeoJsonProperties>({
   data,
@@ -1196,6 +1218,7 @@ function MapClusterLayer<P extends GeoJSON.GeoJsonProperties = GeoJSON.GeoJsonPr
   pointColor = '#3b82f6',
   onPointClick,
   onClusterClick,
+  pointLabel,
 }: MapClusterLayerProps<P>) {
   const { map, isLoaded } = useMap()
   const id = useId()
@@ -1203,6 +1226,7 @@ function MapClusterLayer<P extends GeoJSON.GeoJsonProperties = GeoJSON.GeoJsonPr
   const clusterLayerId = `clusters-${id}`
   const clusterCountLayerId = `cluster-count-${id}`
   const unclusteredLayerId = `unclustered-point-${id}`
+  const pointLabelLayerId = `point-label-${id}`
 
   const stylePropsRef = useRef({
     clusterColors,
@@ -1284,8 +1308,34 @@ function MapClusterLayer<P extends GeoJSON.GeoJsonProperties = GeoJSON.GeoJsonPr
       },
     })
 
+    // Optional text label on top of unclustered points (e.g. "G" for gas wells).
+    if (pointLabel) {
+      const unclustered: SymbolLayerFilter = ['!', ['has', 'point_count']]
+      map.addLayer({
+        id: pointLabelLayerId,
+        type: 'symbol',
+        source: sourceId,
+        filter: pointLabel.filter
+          ? (['all', unclustered, pointLabel.filter] as SymbolLayerFilter)
+          : unclustered,
+        layout: {
+          'text-field': pointLabel.text,
+          'text-font': ['Open Sans'],
+          'text-size': 9,
+          'text-allow-overlap': true,
+          'text-ignore-placement': true,
+        },
+        paint: {
+          'text-color': pointLabel.color ?? '#fff',
+          'text-halo-color': 'rgba(0,0,0,0.45)',
+          'text-halo-width': 0.6,
+        },
+      })
+    }
+
     return () => {
       try {
+        if (map.getLayer(pointLabelLayerId)) map.removeLayer(pointLabelLayerId)
         if (map.getLayer(clusterCountLayerId)) map.removeLayer(clusterCountLayerId)
         if (map.getLayer(unclusteredLayerId)) map.removeLayer(unclusteredLayerId)
         if (map.getLayer(clusterLayerId)) map.removeLayer(clusterLayerId)
@@ -1458,4 +1508,4 @@ export {
   MapClusterLayer,
 }
 
-export type { MapRef, MapViewport }
+export type { MapRef, MapViewport, SymbolLayerFilter }
