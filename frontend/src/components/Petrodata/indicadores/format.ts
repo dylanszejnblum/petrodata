@@ -33,6 +33,8 @@ export function tierColor(tier: string): string {
       return '#0284c7'
     case 'proyectado':
       return '#f59e0b'
+    case 'referencia':
+      return 'var(--nd-text-secondary)'
     default:
       return 'var(--nd-text-disabled)'
   }
@@ -46,6 +48,8 @@ export function tierLabel(tier: string): string {
       return 'En marcha'
     case 'proyectado':
       return 'Proyectado'
+    case 'referencia':
+      return 'Referencia'
     default:
       return tier
   }

@@ -44,6 +44,33 @@ const TARGET_YEAR = 2030;
 // producers with explosive % growth from drowning the real story.
 const GROWTH_BASE_MIN: Record<string, number> = { oil: 100, gas: 200 };
 const GROWTH_WINDOW_YEARS = 5;
+
+// --- Política → impacto -----------------------------------------------------
+// The abductive bridge: the current policy framework unlocks the investment that
+// turns Vaca Muerta's potential into realised production — and that production
+// converts into export earnings and GDP. Every figure is a REAL, sourced series
+// (FX/inflation/fiscal from datos.gob.ar via fact_price; energy surplus from
+// INDEC). No hardcoded macro values — only citations (attribution) below.
+const MACRO_SOURCES: Record<string, { label: string; url: string }> = {
+  fx_a3500: { label: 'BCRA — Tipo de Cambio Mayorista (Com. A 3500)', url: 'https://www.bcra.gob.ar/' },
+  ipc_mensual: {
+    label: 'INDEC — IPC variación mensual (Nivel General Nacional)',
+    url: 'https://www.indec.gob.ar/indec/web/Nivel4-Tema-3-5-31',
+  },
+  fiscal_primario: {
+    label: 'Secretaría de Hacienda — Resultado primario (IMIG)',
+    url: 'https://www.argentina.gob.ar/economia/sechacienda',
+  },
+};
+// RIGI has no official time-series dataset — presented as a sourced milestone
+// (link to the official régimen), never a fabricated number.
+const RIGI_SOURCE = {
+  label: 'Ministerio de Economía — Registro RIGI (Ley 27.742)',
+  url: 'https://www.argentina.gob.ar/economia/rigi',
+};
+const RIGI_AS_OF = '2026-06'; // as-of of the compiled approved-projects registry
+const BRENT_WINDOW = 12; // months for the trailing export-price average (real Brent)
+const POLICY_CHART_SINCE = Date.UTC(2023, 0, 1); // window that shows the inflection
 // Cited external reference — NOT computed from our data. The market price beside
 // it is computed live; the headroom (margin) between them is the story.
 const BREAKEVEN_REFERENCE_USD = 45;
@@ -108,7 +135,7 @@ export class InversionesService {
       }),
     ]);
 
-    const mundo = await this.mundo();
+    const mundo = await this.mundo(tradeAnnual, gdpRows, breakeven?.brentUsd ?? null);
 
     const shareOil = pct(now.vm.oilM3, now.nat.oilM3);
     const shareGas = pct(now.vm.gasThousandM3, now.nat.gasThousandM3);
@@ -362,7 +389,17 @@ export class InversionesService {
    * PROYECTADO targets and the cited shale-resource ranking (both flagged).
    * Returns null if the world table hasn't been seeded yet — never fabricated.
    */
-  private async mundo() {
+  private async mundo(
+    tradeAnnual: {
+      period: Date;
+      energyExportsUsd: number | null;
+      energySurplusUsd: number | null;
+      sourceLabel?: string;
+      sourceUrl?: string | null;
+    }[],
+    gdpRows: { date: Date; value: number }[],
+    brentUsd: number | null,
+  ) {
     const rows = await this.prisma.factWorldProduction.findMany({
       select: { product: true, iso3: true, country: true, period: true, value: true, unit: true },
     });
@@ -488,6 +525,244 @@ export class InversionesService {
       })
       .filter((x): x is NonNullable<typeof x> => x !== null);
 
+    // --- Política → impacto: sourced policy charts + indicators + GDP payoff -
+    const oilRank = rankings.find((r) => r.product === 'oil');
+    // EIA reports crude in TBPD (thousand bbl/d); convert to bbl/d for USD math.
+    const todayBblD = oilRank?.argentina ? oilRank.argentina.value * 1000 : null;
+    const targetBblD = oilRank ? oilRank.projected.value * 1000 : null;
+    const incrementalBblD = todayBblD != null && targetBblD != null ? targetBblD - todayBblD : null;
+
+    // Real, sourced macro series (FX, inflation, fiscal) + Brent for the export
+    // price — all from fact_price. No hardcoded macro values.
+    const macroRows = await this.prisma.factPrice.findMany({
+      where: {
+        OR: [
+          { source: 'bcra', series: 'fx_a3500' },
+          { source: 'indec', series: 'ipc_mensual' },
+          { source: 'mecon', series: 'fiscal_primario' },
+          { source: 'eia', series: 'brent' },
+        ],
+      },
+      select: { series: true, date: true, value: true, unit: true },
+      orderBy: { date: 'asc' },
+    });
+    // Approved RIGI oil & gas projects (sourced registry) for the RIGI chart.
+    const rigiRows = await this.prisma.rigiProject.findMany({
+      where: { sector: { in: ['petroleo', 'gas'] } },
+      orderBy: { investmentMusd: 'desc' },
+    });
+
+    const bySeries = (s: string) => macroRows.filter((r) => r.series === s);
+    const since = new Date(POLICY_CHART_SINCE);
+    const chartPts = (s: string) =>
+      bySeries(s)
+        .filter((r) => r.date >= since)
+        .map((r) => ({ period: r.date.toISOString().slice(0, 7), value: r.value }));
+    const macroSrc = (key: string, rows: { date: Date }[]) => ({
+      ...(MACRO_SOURCES[key] ?? WORLD_SOURCE),
+      asOf: rows.length ? rows[rows.length - 1].date.toISOString().slice(0, 7) : '',
+    });
+
+    // Export price = trailing-12-mo average of REAL Brent (not a magic constant).
+    const brentRows = bySeries('brent');
+    const brentWindow = brentRows.slice(-BRENT_WINDOW);
+    const exportPriceUsd = brentWindow.length
+      ? brentWindow.reduce((a, r) => a + r.value, 0) / brentWindow.length
+      : brentUsd;
+    const incrementalExportUsd =
+      incrementalBblD != null && exportPriceUsd != null ? incrementalBblD * 365 * exportPriceUsd : null;
+
+    const latestGdpRow = gdpRows.length ? gdpRows.reduce((a, b) => (a.date > b.date ? a : b)) : null;
+    const gdpUsd = latestGdpRow?.value ?? null;
+    const gdpYear = latestGdpRow ? latestGdpRow.date.getUTCFullYear() : null;
+    const pctGdp = incrementalExportUsd != null && gdpUsd ? (incrementalExportUsd / gdpUsd) * 100 : null;
+
+    const latestTrade = tradeAnnual.length ? tradeAnnual[tradeAnnual.length - 1] : null;
+    const priorTrade = tradeAnnual.length > 1 ? tradeAnnual[tradeAnnual.length - 2] : null;
+    const tradeYear = latestTrade ? latestTrade.period.getUTCFullYear() : null;
+    const tradeSource = latestTrade
+      ? { label: latestTrade.sourceLabel ?? 'INDEC', url: latestTrade.sourceUrl ?? '', asOf: String(tradeYear) }
+      : { ...WORLD_SOURCE, asOf: '' };
+
+    // Computed-from-real indicators.
+    const ipcRows = bySeries('ipc_mensual');
+    const ipcLatest = ipcRows.length ? ipcRows[ipcRows.length - 1] : null;
+    const fiscalRows = bySeries('fiscal_primario');
+    const fiscalLast12 = fiscalRows.slice(-12);
+    const fiscalSurplusMonths = fiscalLast12.filter((r) => r.value > 0).length;
+
+    const levers = [
+      {
+        tag: 'Cambiario',
+        title: 'Normalización del tipo de cambio y acceso a divisas para exportadores',
+        chartId: 'fx',
+        indicator: ipcLatest
+          ? {
+              label: 'Inflación mensual',
+              value: ipcLatest.value,
+              format: { suffix: '%/mes', decimals: 1 },
+              tier: 'confirmado',
+              source: macroSrc('ipc_mensual', ipcRows),
+            }
+          : null,
+      },
+      {
+        tag: 'Exportación',
+        title: 'Fin de los cupos y retenciones a la exportación de crudo y gas',
+        chartId: 'superavit_energia',
+        indicator:
+          latestTrade?.energySurplusUsd != null
+            ? {
+                label: 'Superávit comercial energético',
+                value: latestTrade.energySurplusUsd / 1e9,
+                format: { prefix: 'US$', suffix: ' B', decimals: 1 },
+                delta: delta(latestTrade.energySurplusUsd, priorTrade?.energySurplusUsd ?? null) ?? undefined,
+                tier: 'confirmado',
+                source: tradeSource,
+              }
+            : null,
+      },
+      {
+        tag: 'RIGI',
+        title: 'Régimen de Incentivo a Grandes Inversiones: estabilidad fiscal a 30 años',
+        milestone: 'Régimen vigente (Ley 27.742): estabilidad fiscal, cambiaria y aduanera por 30 años.',
+        source: { ...RIGI_SOURCE, asOf: RIGI_AS_OF },
+        // Real committed investment from the approved oil & gas RIGI projects.
+        indicator: rigiRows.length
+          ? {
+              label: 'Inversión comprometida (petróleo y gas)',
+              value: rigiRows.reduce((a, r) => a + (r.investmentMusd ?? 0), 0) / 1000,
+              format: { prefix: 'US$', suffix: ' B', decimals: 1 },
+              tier: 'referencia',
+              source: { ...RIGI_SOURCE, asOf: RIGI_AS_OF },
+            }
+          : null,
+      },
+      {
+        tag: 'Fiscal',
+        title: 'Disciplina fiscal y desregulación que anclan la previsibilidad de inversión',
+        chartId: 'fiscal',
+        indicator: fiscalLast12.length
+          ? {
+              label: 'Meses con superávit primario (últ. 12)',
+              value: fiscalSurplusMonths,
+              format: { suffix: `/${fiscalLast12.length}`, decimals: 0 },
+              tier: 'confirmado',
+              source: macroSrc('fiscal_primario', fiscalRows),
+            }
+          : null,
+      },
+    ];
+
+    // The sourced graphs the section is built around.
+    const charts = [
+      {
+        id: 'inflacion',
+        title: 'Inflación mensual',
+        unit: '%/mes',
+        kind: 'area' as const,
+        source: macroSrc('ipc_mensual', ipcRows),
+        points: chartPts('ipc_mensual'),
+      },
+      {
+        id: 'fx',
+        title: 'Tipo de cambio mayorista (A3500)',
+        unit: 'ARS/USD',
+        kind: 'line' as const,
+        source: macroSrc('fx_a3500', bySeries('fx_a3500')),
+        points: chartPts('fx_a3500'),
+      },
+      {
+        id: 'fiscal',
+        title: 'Resultado primario mensual (SPN)',
+        unit: 'ARS millones',
+        kind: 'bar' as const,
+        source: macroSrc('fiscal_primario', fiscalRows),
+        points: chartPts('fiscal_primario'),
+      },
+      {
+        id: 'superavit_energia',
+        title: 'Superávit comercial energético',
+        unit: 'US$ MM',
+        kind: 'bar' as const,
+        source: tradeSource,
+        points: tradeAnnual
+          .filter((r) => r.energySurplusUsd != null)
+          .slice(-8)
+          .map((r) => ({ period: String(r.period.getUTCFullYear()), value: (r.energySurplusUsd as number) / 1e6 })),
+      },
+    ].filter((c) => c.points.length > 0);
+
+    const impacto =
+      incrementalExportUsd != null
+        ? {
+            headline:
+              pctGdp != null
+                ? `Si la producción de petróleo alcanza la meta, el valor exportable incremental equivale a ~${pctGdp.toLocaleString('es-AR', { maximumFractionDigits: 1 })}% del PBI.`
+                : 'Si la producción alcanza la meta, el salto exportador se acelera.',
+            items: [
+              {
+                label: 'Valor exportable incremental',
+                value: incrementalExportUsd / 1e9,
+                format: { prefix: 'US$', suffix: ' B/año', decimals: 1 },
+                tier: 'proyectado' as const,
+              },
+              ...(pctGdp != null
+                ? [
+                    {
+                      label: 'Equivalente en PBI',
+                      value: pctGdp,
+                      format: { suffix: '% del PBI', decimals: 1 },
+                      tier: 'proyectado' as const,
+                    },
+                  ]
+                : []),
+            ],
+            // Stated assumptions — the projection is illustrative, not a forecast.
+            // Price is the trailing-12-mo average of real Brent (sourced).
+            assumptions: {
+              priceUsd: exportPriceUsd != null ? Math.round(exportPriceUsd * 10) / 10 : null,
+              priceBasis: `Brent prom. ${brentWindow.length}m (EIA)`,
+              todayBblD,
+              targetBblD,
+              gdpUsd,
+              gdpYear,
+            },
+            source: { ...WORLD_SOURCE, asOf: oilRank ? String(oilRank.year) : '' },
+          }
+        : null;
+
+    // RIGI oil & gas projects block (sourced registry) — committed investment.
+    const rigi = rigiRows.length
+      ? {
+          title: 'Proyectos RIGI de petróleo y gas',
+          subtitle: 'Inversión comprometida en proyectos aprobados',
+          count: rigiRows.length,
+          totalMusd: rigiRows.reduce((a, r) => a + (r.investmentMusd ?? 0), 0),
+          projects: rigiRows.map((r) => ({
+            name: r.name,
+            sector: r.sector,
+            operator: r.operator,
+            province: r.province,
+            investmentMusd: r.investmentMusd,
+            approvalDate: r.approvalDate ? r.approvalDate.toISOString().slice(0, 10) : null,
+            sourceUrl: r.sourceUrl,
+          })),
+          source: { ...RIGI_SOURCE, asOf: RIGI_AS_OF },
+        }
+      : null;
+
+    const politica = {
+      intro: {
+        title: 'La política que convierte potencial en producción',
+        text: 'El recurso ya existe. Lo que cambió es el marco: las medidas actuales destraban la inversión necesaria para que la proyección se realice — y con ella, el salto en el ranking mundial.',
+      },
+      levers,
+      charts,
+      ...(rigi ? { rigi } : {}),
+      ...(impacto ? { impacto } : {}),
+    };
+
     return {
       source: WORLD_SOURCE,
       rankings,
@@ -500,6 +775,7 @@ export class InversionesService {
         tier: 'referencia' as const,
         source: SHALE_SOURCE,
       },
+      politica,
     };
   }
 }

@@ -135,6 +135,81 @@ export interface InvMundoGrowth {
   source: InvSource
 }
 
+// Política → impacto — policy levers, each with a measurable indicator, plus the
+// computed GDP payoff of reaching the production target.
+export interface InvPolicyIndicator {
+  label: string
+  value: number
+  format: { prefix?: string; suffix?: string; decimals: number }
+  delta?: { pct: number; base: 'YoY' }
+  tier: string
+  source: InvSource
+}
+
+export interface InvPolicyLever {
+  tag: string
+  title: string
+  indicator: InvPolicyIndicator | null
+  chartId?: string
+  milestone?: string
+  source?: InvSource
+}
+
+export interface InvPolicyChart {
+  id: string
+  title: string
+  unit: string
+  kind: 'line' | 'area' | 'bar'
+  source: InvSource
+  points: { period: string; value: number }[]
+}
+
+export interface InvPoliticaImpacto {
+  headline: string
+  items: {
+    label: string
+    value: number
+    format: { prefix?: string; suffix?: string; decimals: number }
+    tier: string
+  }[]
+  assumptions: {
+    priceUsd: number | null
+    priceBasis: string
+    todayBblD: number | null
+    targetBblD: number | null
+    gdpUsd: number | null
+    gdpYear: number | null
+  }
+  source: InvSource
+}
+
+export interface InvRigiProject {
+  name: string
+  sector: string // 'petroleo' | 'gas'
+  operator: string | null
+  province: string | null
+  investmentMusd: number | null
+  approvalDate: string | null
+  sourceUrl: string | null
+}
+
+export interface InvRigi {
+  title: string
+  subtitle: string
+  count: number
+  totalMusd: number
+  projects: InvRigiProject[]
+  source: InvSource
+}
+
+export interface InvPolitica {
+  intro: { title: string; text: string }
+  levers: InvPolicyLever[]
+  charts: InvPolicyChart[]
+  rigi?: InvRigi
+  impacto?: InvPoliticaImpacto
+}
+
 export interface InvMundo {
   source: { label: string; url: string }
   rankings: InvMundoRanking[]
@@ -146,6 +221,7 @@ export interface InvMundo {
     tier: string
     source: { label: string; url: string }
   }
+  politica?: InvPolitica
 }
 
 export interface InversionesData {

@@ -172,6 +172,24 @@ model FactWorldProduction {
   @@map("fact_world_production")
 }
 
+/// RIGI projects (Régimen de Incentivo para Grandes Inversiones), oil & gas only.
+/// Compiled from the official Ministerio de Economía registry — provenance per row.
+/// sector = 'petroleo' | 'gas'. investmentMusd = committed investment, US$ millions.
+model RigiProject {
+  id             Int       @id @default(autoincrement())
+  name           String    @unique
+  sector         String
+  operator       String?
+  province       String?
+  investmentMusd Float?    @map("investment_musd")
+  approvalDate   DateTime? @map("approval_date") @db.Date
+  sourceLabel    String?   @map("source_label")
+  sourceUrl      String?   @map("source_url")
+
+  @@index([sector])
+  @@map("rigi_project")
+}
+
 model FactRigCount {
   date      DateTime @id @db.Date
   oilRigs   Int?     @map("oil_rigs")
