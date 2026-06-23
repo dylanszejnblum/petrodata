@@ -40,17 +40,20 @@ export function tierColor(tier: string): string {
   }
 }
 
-export function tierLabel(tier: string): string {
+/** Translation key for a tier label, under the `indicadores` namespace. Call
+ *  sites resolve it with `t(tierLabelKey(tier))` so labels follow the UI locale
+ *  (the raw Spanish tier code, e.g. `confirmado`, never reaches the UI). */
+export function tierLabelKey(tier: string): string {
   switch (tier) {
     case 'confirmado':
-      return 'Confirmado'
+      return 'tiers.confirmado'
     case 'en_marcha':
-      return 'En marcha'
+      return 'tiers.en_marcha'
     case 'proyectado':
-      return 'Proyectado'
+      return 'tiers.proyectado'
     case 'referencia':
-      return 'Referencia'
+      return 'tiers.referencia'
     default:
-      return tier
+      return 'tiers.confirmado'
   }
 }
