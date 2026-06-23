@@ -25,6 +25,25 @@ const GDP_SOURCE = {
   label: 'Banco Mundial (PBI nominal, US$)',
   url: 'https://data.worldbank.org/indicator/NY.GDP.MKTP.CD?locations=AR',
 };
+const WORLD_SOURCE = {
+  label: 'EIA — International Energy Statistics (producción por país)',
+  url: 'https://www.eia.gov/international/data/world',
+};
+// Curated, cited — not computed from our data. EIA's one-off shale assessment:
+// Vaca Muerta is #2 shale gas / #4 shale oil in technically recoverable resources.
+const SHALE_SOURCE = {
+  label: 'EIA — Technically Recoverable Shale Oil and Shale Gas Resources (2013)',
+  url: 'https://www.eia.gov/analysis/studies/worldshalegas/',
+};
+// "Si se realiza como está proyectado" — industry/government 2030 targets. These
+// are PROYECTADO, never presented as measured. Drives the rank-jump narrative.
+const OIL_TARGET_TBPD = 1500; // ~1.5 Mbbl/d — commonly-cited VM 2030 oil target
+const GAS_TARGET_BCF = 2300; //  ~180 MMm³/d — 2030 gas target, annualised
+const TARGET_YEAR = 2030;
+// Countries below this base are excluded from "fastest growing" to stop tiny
+// producers with explosive % growth from drowning the real story.
+const GROWTH_BASE_MIN: Record<string, number> = { oil: 100, gas: 200 };
+const GROWTH_WINDOW_YEARS = 5;
 // Cited external reference — NOT computed from our data. The market price beside
 // it is computed live; the headroom (margin) between them is the story.
 const BREAKEVEN_REFERENCE_USD = 45;
@@ -88,6 +107,8 @@ export class InversionesService {
         select: { date: true, value: true },
       }),
     ]);
+
+    const mundo = await this.mundo();
 
     const shareOil = pct(now.vm.oilM3, now.nat.oilM3);
     const shareGas = pct(now.vm.gasThousandM3, now.nat.gasThousandM3);
@@ -187,6 +208,8 @@ export class InversionesService {
       },
       ...(breakeven ? { breakeven } : {}), // omitted when no Brent rows — never fabricated
       actividad,
+      ...(mundo ? { mundo } : {}), // Argentina on the world stage — omitted if no world data
+
       // agro vs energy export crossover — real INDEC history; no projected points
       // unless a cited projection is attached.
       ...(tradeAnnual.length && tradeSource
@@ -327,6 +350,156 @@ export class InversionesService {
         nuevosPozos: Number(r.nuevos),
         preliminary: r.period > asOf, // trailing month not fully reported yet
       })),
+    };
+  }
+
+  /**
+   * "Argentina en el mundo" — the catapult block. Ranks Argentina among world
+   * producers (EIA International) on oil & gas, today and at the projected 2030
+   * target, plus the climb it has already made and the fastest-growing peers.
+   *
+   * Everything here is computed from FactWorldProduction except the curated
+   * PROYECTADO targets and the cited shale-resource ranking (both flagged).
+   * Returns null if the world table hasn't been seeded yet — never fabricated.
+   */
+  private async mundo() {
+    const rows = await this.prisma.factWorldProduction.findMany({
+      select: { product: true, iso3: true, country: true, period: true, value: true, unit: true },
+    });
+    if (!rows.length) return null;
+
+    const productMeta: Record<string, { label: string; target: number }> = {
+      oil: { label: 'Petróleo crudo', target: OIL_TARGET_TBPD },
+      gas: { label: 'Gas natural', target: GAS_TARGET_BCF },
+    };
+
+    const rankings = Object.keys(productMeta)
+      .map((product) => {
+        const meta = productMeta[product];
+        const pool = rows.filter((r) => r.product === product);
+        if (!pool.length) return null;
+
+        const years = [...new Set(pool.map((r) => r.period.getUTCFullYear()))].sort((a, b) => a - b);
+        const latestYear = years[years.length - 1];
+        const unit = pool[0].unit;
+
+        // Latest-year leaderboard, sorted numerically (EIA sorts lexically — useless).
+        const latest = pool
+          .filter((r) => r.period.getUTCFullYear() === latestYear)
+          .sort((a, b) => b.value - a.value);
+        const argIdx = latest.findIndex((r) => r.iso3 === 'ARG');
+        const argRow = argIdx >= 0 ? latest[argIdx] : null;
+
+        // Projected rank: Argentina at the target vs every OTHER country's current
+        // value (Argentina is the one moving, so exclude its own current value).
+        const others = latest.filter((r) => r.iso3 !== 'ARG');
+        const projectedRank = 1 + others.filter((r) => r.value > meta.target).length;
+
+        // Top 12, always including Argentina even if it sits below the cut.
+        const top = latest.slice(0, 12).map((r, i) => ({
+          rank: i + 1,
+          iso3: r.iso3,
+          country: r.country,
+          value: r.value,
+          isArgentina: r.iso3 === 'ARG',
+        }));
+        if (argRow && argIdx >= 12) {
+          top.push({ rank: argIdx + 1, iso3: 'ARG', country: argRow.country, value: argRow.value, isArgentina: true });
+        }
+
+        // The climb: Argentina's rank per year (where it has data).
+        const history = years
+          .map((year) => {
+            const yearPool = pool
+              .filter((r) => r.period.getUTCFullYear() === year)
+              .sort((a, b) => b.value - a.value);
+            const i = yearPool.findIndex((r) => r.iso3 === 'ARG');
+            if (i < 0) return null;
+            return { year, rank: i + 1, value: yearPool[i].value, countries: yearPool.length };
+          })
+          .filter((x): x is NonNullable<typeof x> => x !== null);
+
+        return {
+          product,
+          label: meta.label,
+          unit,
+          year: latestYear,
+          countries: latest.length,
+          source: { ...WORLD_SOURCE, asOf: String(latestYear) },
+          argentina: argRow ? { rank: argIdx + 1, value: argRow.value } : null,
+          projected: {
+            value: meta.target,
+            rank: projectedRank,
+            year: TARGET_YEAR,
+            tier: 'proyectado' as const,
+          },
+          top,
+          history,
+        };
+      })
+      .filter((x): x is NonNullable<typeof x> => x !== null);
+
+    // Fastest-growing producers over the trailing window — where Argentina shines.
+    const fastestGrowing = Object.keys(productMeta)
+      .map((product) => {
+        const pool = rows.filter((r) => r.product === product);
+        if (!pool.length) return null;
+        const years = [...new Set(pool.map((r) => r.period.getUTCFullYear()))].sort((a, b) => a - b);
+        const toYear = years[years.length - 1];
+        const sinceYear = toYear - GROWTH_WINDOW_YEARS;
+        const baseMin = GROWTH_BASE_MIN[product] ?? 0;
+
+        const byCountry = new Map<string, { country: string; from?: number; to?: number }>();
+        for (const r of pool) {
+          const y = r.period.getUTCFullYear();
+          if (y !== toYear && y !== sinceYear) continue;
+          const e = byCountry.get(r.iso3) ?? { country: r.country };
+          if (y === sinceYear) e.from = r.value;
+          if (y === toYear) e.to = r.value;
+          byCountry.set(r.iso3, e);
+        }
+
+        const leaders = [...byCountry.entries()]
+          .filter(([, e]) => e.from != null && e.to != null && e.from >= baseMin)
+          .map(([iso3, e]) => ({
+            iso3,
+            country: e.country,
+            from: e.from as number,
+            to: e.to as number,
+            growthPct: (((e.to as number) - (e.from as number)) / (e.from as number)) * 100,
+            isArgentina: iso3 === 'ARG',
+          }))
+          .sort((a, b) => b.growthPct - a.growthPct);
+
+        const top = leaders.slice(0, 8);
+        const arg = leaders.find((l) => l.isArgentina);
+        if (arg && !top.some((l) => l.isArgentina)) top.push(arg); // always show Argentina
+
+        return {
+          product,
+          label: productMeta[product].label,
+          unit: pool[0].unit,
+          sinceYear,
+          toYear,
+          leaders: top,
+          argentinaRank: arg ? leaders.findIndex((l) => l.isArgentina) + 1 : null,
+          source: { ...WORLD_SOURCE, asOf: String(toYear) },
+        };
+      })
+      .filter((x): x is NonNullable<typeof x> => x !== null);
+
+    return {
+      source: WORLD_SOURCE,
+      rankings,
+      fastestGrowing,
+      // Cited, not computed — the headline resource claim.
+      shale: {
+        oilRank: 4,
+        gasRank: 2,
+        note: 'Vaca Muerta concentra el 2.º recurso de shale gas y el 4.º de shale oil técnicamente recuperable del mundo.',
+        tier: 'referencia' as const,
+        source: SHALE_SOURCE,
+      },
     };
   }
 }

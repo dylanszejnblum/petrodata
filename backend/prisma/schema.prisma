@@ -156,6 +156,22 @@ model FactPrice {
   @@map("fact_price")
 }
 
+/// World oil & gas production by country (EIA International) — the reference set
+/// used to rank Argentina on the world stage. product = 'oil' | 'gas'.
+model FactWorldProduction {
+  id      Int      @id @default(autoincrement())
+  product String // 'oil' (crude, TBPD) | 'gas' (dry gas, BCF)
+  iso3    String
+  country String
+  period  DateTime @db.Date // annual → YYYY-01-01
+  value   Float
+  unit    String
+
+  @@unique([product, iso3, period], name: "fact_world_production_product_iso3_period")
+  @@index([product, period])
+  @@map("fact_world_production")
+}
+
 model FactRigCount {
   date      DateTime @id @db.Date
   oilRigs   Int?     @map("oil_rigs")

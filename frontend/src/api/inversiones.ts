@@ -86,6 +86,68 @@ export interface InvCruce {
   points: InvCrucePoint[]
 }
 
+// "Argentina en el mundo" — world-stage ranking block (EIA International).
+export interface InvMundoRankRow {
+  rank: number
+  iso3: string
+  country: string
+  value: number
+  isArgentina: boolean
+}
+
+export interface InvMundoHistory {
+  year: number
+  rank: number
+  value: number
+  countries: number
+}
+
+export interface InvMundoRanking {
+  product: 'oil' | 'gas'
+  label: string
+  unit: string
+  year: number
+  countries: number
+  source: InvSource
+  argentina: { rank: number; value: number } | null
+  projected: { value: number; rank: number; year: number; tier: string }
+  top: InvMundoRankRow[]
+  history: InvMundoHistory[]
+}
+
+export interface InvMundoGrowthLeader {
+  iso3: string
+  country: string
+  from: number
+  to: number
+  growthPct: number
+  isArgentina: boolean
+}
+
+export interface InvMundoGrowth {
+  product: 'oil' | 'gas'
+  label: string
+  unit: string
+  sinceYear: number
+  toYear: number
+  leaders: InvMundoGrowthLeader[]
+  argentinaRank: number | null
+  source: InvSource
+}
+
+export interface InvMundo {
+  source: { label: string; url: string }
+  rankings: InvMundoRanking[]
+  fastestGrowing: InvMundoGrowth[]
+  shale: {
+    oilRank: number
+    gasRank: number
+    note: string
+    tier: string
+    source: { label: string; url: string }
+  }
+}
+
 export interface InversionesData {
   asOf: string | null
   latestMonth?: string
@@ -99,6 +161,7 @@ export interface InversionesData {
   breakeven?: InvBreakeven
   actividad?: InvActividad
   cruce?: InvCruce
+  mundo?: InvMundo
 }
 
 export async function fetchInversiones(): Promise<InversionesData | null> {
