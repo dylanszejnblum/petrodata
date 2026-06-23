@@ -10,6 +10,7 @@
 import { useEffect, useRef } from 'react'
 import { animate, prefersReducedMotion, useInView } from './anim'
 import { formatFigure, formatDeltaPct, tierColor, tierLabel } from './format'
+import { MacroChart } from './MacroChart'
 import type {
   InvMundo,
   InvMundoRanking,
@@ -44,6 +45,7 @@ const FALLBACK_POLITICA: InvPolitica = {
     { tag: 'RIGI', title: 'Régimen de Incentivo a Grandes Inversiones: estabilidad fiscal a 30 años', indicator: null },
     { tag: 'Fiscal', title: 'Disciplina fiscal y desregulación que anclan la previsibilidad de inversión', indicator: null },
   ],
+  charts: [],
 }
 
 export function WorldStage({ mundo }: { mundo: InvMundo }) {
@@ -311,17 +313,36 @@ function GrowthBlock({ growth }: { growth: InvMundoGrowth }) {
 
 function PolicyStrip({ politica }: { politica?: InvPolitica }) {
   const p = politica ?? FALLBACK_POLITICA
+  const chartById = new Map(p.charts.map((c) => [c.id, c]))
   return (
     <div className="border-t border-nd-border pt-8">
       <h3 className="mb-2 text-lg text-nd-text-display md:text-xl font-display">{p.intro.title}</h3>
-      <p className="mb-6 max-w-2xl text-pretty text-sm leading-relaxed text-nd-text-secondary font-sans">
+      <p className="mb-8 max-w-2xl text-pretty text-sm leading-relaxed text-nd-text-secondary font-sans">
         {p.intro.text}
       </p>
+
+      {/* Sourced economic charts — the data behind the policy story */}
+      {p.charts.length ? (
+        <div className="mb-10 grid grid-cols-1 gap-px overflow-hidden border border-nd-border bg-nd-border lg:grid-cols-2">
+          {p.charts.map((c) => (
+            <div key={c.id} className="bg-nd-surface p-5">
+              <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
+                <h4 className="text-sm text-nd-text-display font-display">{c.title}</h4>
+                <span className="font-mono text-[10px] uppercase tracking-[0.08em] text-nd-text-disabled">{c.unit}</span>
+              </div>
+              <MacroChart chart={c} />
+              <span className="mt-2 inline-block font-mono text-[10px] text-nd-text-disabled">
+                {c.source.label} · {c.source.asOf}
+              </span>
+            </div>
+          ))}
+        </div>
+      ) : null}
 
       {/* Levers, each with its measurable indicator */}
       <div className="grid grid-cols-1 gap-px overflow-hidden border border-nd-border bg-nd-border sm:grid-cols-2">
         {p.levers.map((lever) => (
-          <LeverCard key={lever.tag} lever={lever} />
+          <LeverCard key={lever.tag} lever={lever} hasChart={lever.chartId ? chartById.has(lever.chartId) : false} />
         ))}
       </div>
 
@@ -350,7 +371,10 @@ function PolicyStrip({ politica }: { politica?: InvPolitica }) {
             ))}
           </div>
           <p className="mt-6 max-w-2xl font-mono text-[10px] leading-relaxed text-nd-text-disabled">
-            Supuestos: precio de exportación US${p.impacto.assumptions.priceUsd}/bbl;
+            Supuestos:
+            {p.impacto.assumptions.priceUsd != null
+              ? ` precio de exportación US$${p.impacto.assumptions.priceUsd}/bbl (${p.impacto.assumptions.priceBasis});`
+              : ''}
             {p.impacto.assumptions.todayBblD != null && p.impacto.assumptions.targetBblD != null
               ? ` producción ${nf.format(p.impacto.assumptions.todayBblD)} → ${nf.format(p.impacto.assumptions.targetBblD)} bbl/d;`
               : ''}
@@ -365,11 +389,16 @@ function PolicyStrip({ politica }: { politica?: InvPolitica }) {
   )
 }
 
-function LeverCard({ lever }: { lever: InvPolicyLever }) {
+function LeverCard({ lever, hasChart }: { lever: InvPolicyLever; hasChart: boolean }) {
   const ind = lever.indicator
   return (
     <div className="bg-nd-surface p-5">
-      <span className="block font-mono text-[10px] uppercase tracking-[0.08em] text-nd-accent">{lever.tag}</span>
+      <div className="flex items-center justify-between gap-2">
+        <span className="block font-mono text-[10px] uppercase tracking-[0.08em] text-nd-accent">{lever.tag}</span>
+        {hasChart ? (
+          <span className="font-mono text-[9px] uppercase tracking-[0.06em] text-nd-text-disabled">↑ ver gráfico</span>
+        ) : null}
+      </div>
       <p className="mt-2 text-pretty text-sm leading-relaxed text-nd-text-display font-sans">{lever.title}</p>
       {ind ? (
         <div className="mt-4 border-t border-nd-border pt-3">
@@ -392,6 +421,20 @@ function LeverCard({ lever }: { lever: InvPolicyLever }) {
           <span className="mt-2 inline-block font-mono text-[9px] uppercase tracking-[0.06em]" style={{ color: tierColor(ind.tier) }}>
             {tierLabel(ind.tier)}
           </span>
+        </div>
+      ) : lever.milestone ? (
+        <div className="mt-4 border-t border-nd-border pt-3">
+          <p className="text-pretty text-[13px] leading-relaxed text-nd-text-secondary font-sans">{lever.milestone}</p>
+          {lever.source?.url ? (
+            <a
+              href={lever.source.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-2 inline-block font-mono text-[10px] text-nd-interactive underline-offset-2 hover:underline"
+            >
+              {lever.source.label} ↗
+            </a>
+          ) : null}
         </div>
       ) : null}
     </div>

@@ -150,6 +150,18 @@ export interface InvPolicyLever {
   tag: string
   title: string
   indicator: InvPolicyIndicator | null
+  chartId?: string
+  milestone?: string
+  source?: InvSource
+}
+
+export interface InvPolicyChart {
+  id: string
+  title: string
+  unit: string
+  kind: 'line' | 'area' | 'bar'
+  source: InvSource
+  points: { period: string; value: number }[]
 }
 
 export interface InvPoliticaImpacto {
@@ -161,8 +173,8 @@ export interface InvPoliticaImpacto {
     tier: string
   }[]
   assumptions: {
-    priceUsd: number
-    brentRefUsd: number | null
+    priceUsd: number | null
+    priceBasis: string
     todayBblD: number | null
     targetBblD: number | null
     gdpUsd: number | null
@@ -174,6 +186,7 @@ export interface InvPoliticaImpacto {
 export interface InvPolitica {
   intro: { title: string; text: string }
   levers: InvPolicyLever[]
+  charts: InvPolicyChart[]
   impacto?: InvPoliticaImpacto
 }
 

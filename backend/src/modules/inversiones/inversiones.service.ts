@@ -48,21 +48,28 @@ const GROWTH_WINDOW_YEARS = 5;
 // --- Política → impacto -----------------------------------------------------
 // The abductive bridge: the current policy framework unlocks the investment that
 // turns Vaca Muerta's potential into realised production — and that production
-// converts into export earnings and GDP. The Cambiario/Exportación indicators
-// are COMPUTED from FactEnergyTrade. The RIGI/Fiscal indicators are CURATED
-// milestones (tier 'referencia') — confirm the figures before publishing.
-const EXPORT_PRICE_USD = 65; // conservative export-price assumption for the impact
-// projection (Brent spot is too volatile to anchor a headline on).
-const VMOS_CAPACITY_BBL_D = 550_000; // Vaca Muerta Sur export pipeline — RIGI flagship
-const VMOS_SOURCE = {
-  label: 'Oleoducto Vaca Muerta Sur (VMOS) — capacidad ~550 mil bbl/d [confirmar]',
-  url: 'https://www.ypf.com/',
+// converts into export earnings and GDP. Every figure is a REAL, sourced series
+// (FX/inflation/fiscal from datos.gob.ar via fact_price; energy surplus from
+// INDEC). No hardcoded macro values — only citations (attribution) below.
+const MACRO_SOURCES: Record<string, { label: string; url: string }> = {
+  fx_a3500: { label: 'BCRA — Tipo de Cambio Mayorista (Com. A 3500)', url: 'https://www.bcra.gob.ar/' },
+  ipc_mensual: {
+    label: 'INDEC — IPC variación mensual (Nivel General Nacional)',
+    url: 'https://www.indec.gob.ar/indec/web/Nivel4-Tema-3-5-31',
+  },
+  fiscal_primario: {
+    label: 'Secretaría de Hacienda — Resultado primario (IMIG)',
+    url: 'https://www.argentina.gob.ar/economia/sechacienda',
+  },
 };
-const FISCAL_SURPLUS_PCT = 1.8; // 2024 primary fiscal surplus, % of GDP [confirmar]
-const FISCAL_SOURCE = {
-  label: 'Ministerio de Economía — resultado fiscal primario 2024 [confirmar]',
-  url: 'https://www.argentina.gob.ar/economia',
+// RIGI has no official time-series dataset — presented as a sourced milestone
+// (link to the official régimen), never a fabricated number.
+const RIGI_SOURCE = {
+  label: 'RIGI — Régimen de Incentivo para Grandes Inversiones (Ley 27.742)',
+  url: 'https://www.argentina.gob.ar/economia/rigi',
 };
+const BRENT_WINDOW = 12; // months for the trailing export-price average (real Brent)
+const POLICY_CHART_SINCE = Date.UTC(2023, 0, 1); // window that shows the inflection
 // Cited external reference — NOT computed from our data. The market price beside
 // it is computed live; the headroom (margin) between them is the story.
 const BREAKEVEN_REFERENCE_USD = 45;
@@ -517,13 +524,46 @@ export class InversionesService {
       })
       .filter((x): x is NonNullable<typeof x> => x !== null);
 
-    // --- Política → impacto: policy levers + the GDP payoff -----------------
+    // --- Política → impacto: sourced policy charts + indicators + GDP payoff -
     const oilRank = rankings.find((r) => r.product === 'oil');
     // EIA reports crude in TBPD (thousand bbl/d); convert to bbl/d for USD math.
     const todayBblD = oilRank?.argentina ? oilRank.argentina.value * 1000 : null;
     const targetBblD = oilRank ? oilRank.projected.value * 1000 : null;
     const incrementalBblD = todayBblD != null && targetBblD != null ? targetBblD - todayBblD : null;
-    const incrementalExportUsd = incrementalBblD != null ? incrementalBblD * 365 * EXPORT_PRICE_USD : null;
+
+    // Real, sourced macro series (FX, inflation, fiscal) + Brent for the export
+    // price — all from fact_price. No hardcoded macro values.
+    const macroRows = await this.prisma.factPrice.findMany({
+      where: {
+        OR: [
+          { source: 'bcra', series: 'fx_a3500' },
+          { source: 'indec', series: 'ipc_mensual' },
+          { source: 'mecon', series: 'fiscal_primario' },
+          { source: 'eia', series: 'brent' },
+        ],
+      },
+      select: { series: true, date: true, value: true, unit: true },
+      orderBy: { date: 'asc' },
+    });
+    const bySeries = (s: string) => macroRows.filter((r) => r.series === s);
+    const since = new Date(POLICY_CHART_SINCE);
+    const chartPts = (s: string) =>
+      bySeries(s)
+        .filter((r) => r.date >= since)
+        .map((r) => ({ period: r.date.toISOString().slice(0, 7), value: r.value }));
+    const macroSrc = (key: string, rows: { date: Date }[]) => ({
+      ...(MACRO_SOURCES[key] ?? WORLD_SOURCE),
+      asOf: rows.length ? rows[rows.length - 1].date.toISOString().slice(0, 7) : '',
+    });
+
+    // Export price = trailing-12-mo average of REAL Brent (not a magic constant).
+    const brentRows = bySeries('brent');
+    const brentWindow = brentRows.slice(-BRENT_WINDOW);
+    const exportPriceUsd = brentWindow.length
+      ? brentWindow.reduce((a, r) => a + r.value, 0) / brentWindow.length
+      : brentUsd;
+    const incrementalExportUsd =
+      incrementalBblD != null && exportPriceUsd != null ? incrementalBblD * 365 * exportPriceUsd : null;
 
     const latestGdpRow = gdpRows.length ? gdpRows.reduce((a, b) => (a.date > b.date ? a : b)) : null;
     const gdpUsd = latestGdpRow?.value ?? null;
@@ -537,25 +577,32 @@ export class InversionesService {
       ? { label: latestTrade.sourceLabel ?? 'INDEC', url: latestTrade.sourceUrl ?? '', asOf: String(tradeYear) }
       : { ...WORLD_SOURCE, asOf: '' };
 
+    // Computed-from-real indicators.
+    const ipcRows = bySeries('ipc_mensual');
+    const ipcLatest = ipcRows.length ? ipcRows[ipcRows.length - 1] : null;
+    const fiscalRows = bySeries('fiscal_primario');
+    const fiscalLast12 = fiscalRows.slice(-12);
+    const fiscalSurplusMonths = fiscalLast12.filter((r) => r.value > 0).length;
+
     const levers = [
       {
         tag: 'Cambiario',
         title: 'Normalización del tipo de cambio y acceso a divisas para exportadores',
-        indicator:
-          latestTrade?.energyExportsUsd != null
-            ? {
-                label: 'Exportaciones de energía',
-                value: latestTrade.energyExportsUsd / 1e9,
-                format: { prefix: 'US$', suffix: ' B', decimals: 1 },
-                delta: delta(latestTrade.energyExportsUsd, priorTrade?.energyExportsUsd ?? null) ?? undefined,
-                tier: 'confirmado',
-                source: tradeSource,
-              }
-            : null,
+        chartId: 'fx',
+        indicator: ipcLatest
+          ? {
+              label: 'Inflación mensual',
+              value: ipcLatest.value,
+              format: { suffix: '%/mes', decimals: 1 },
+              tier: 'confirmado',
+              source: macroSrc('ipc_mensual', ipcRows),
+            }
+          : null,
       },
       {
         tag: 'Exportación',
         title: 'Fin de los cupos y retenciones a la exportación de crudo y gas',
+        chartId: 'superavit_energia',
         indicator:
           latestTrade?.energySurplusUsd != null
             ? {
@@ -571,26 +618,65 @@ export class InversionesService {
       {
         tag: 'RIGI',
         title: 'Régimen de Incentivo a Grandes Inversiones: estabilidad fiscal a 30 años',
-        indicator: {
-          label: 'Capacidad de evacuación habilitada (VMOS)',
-          value: VMOS_CAPACITY_BBL_D / 1000,
-          format: { suffix: ' mil bbl/d', decimals: 0 },
-          tier: 'referencia',
-          source: { ...VMOS_SOURCE, asOf: '' },
-        },
+        // No official RIGI time-series exists — sourced milestone, not a number.
+        milestone: 'Régimen vigente (Ley 27.742): estabilidad fiscal, cambiaria y aduanera por 30 años.',
+        source: { ...RIGI_SOURCE, asOf: '' },
+        indicator: null,
       },
       {
         tag: 'Fiscal',
         title: 'Disciplina fiscal y desregulación que anclan la previsibilidad de inversión',
-        indicator: {
-          label: 'Superávit fiscal primario',
-          value: FISCAL_SURPLUS_PCT,
-          format: { suffix: '% del PBI', decimals: 1 },
-          tier: 'referencia',
-          source: { ...FISCAL_SOURCE, asOf: '2024' },
-        },
+        chartId: 'fiscal',
+        indicator: fiscalLast12.length
+          ? {
+              label: 'Meses con superávit primario (últ. 12)',
+              value: fiscalSurplusMonths,
+              format: { suffix: `/${fiscalLast12.length}`, decimals: 0 },
+              tier: 'confirmado',
+              source: macroSrc('fiscal_primario', fiscalRows),
+            }
+          : null,
       },
     ];
+
+    // The sourced graphs the section is built around.
+    const charts = [
+      {
+        id: 'inflacion',
+        title: 'Inflación mensual',
+        unit: '%/mes',
+        kind: 'area' as const,
+        source: macroSrc('ipc_mensual', ipcRows),
+        points: chartPts('ipc_mensual'),
+      },
+      {
+        id: 'fx',
+        title: 'Tipo de cambio mayorista (A3500)',
+        unit: 'ARS/USD',
+        kind: 'line' as const,
+        source: macroSrc('fx_a3500', bySeries('fx_a3500')),
+        points: chartPts('fx_a3500'),
+      },
+      {
+        id: 'fiscal',
+        title: 'Resultado primario mensual (SPN)',
+        unit: 'ARS millones',
+        kind: 'bar' as const,
+        source: macroSrc('fiscal_primario', fiscalRows),
+        points: chartPts('fiscal_primario'),
+      },
+      {
+        id: 'superavit_energia',
+        title: 'Superávit comercial energético',
+        unit: 'US$ MM',
+        kind: 'bar' as const,
+        source: tradeSource,
+        points: tradeAnnual
+          .filter((r) => r.energySurplusUsd != null)
+          .slice(-8)
+          .map((r) => ({ period: String(r.period.getUTCFullYear()), value: (r.energySurplusUsd as number) / 1e6 })),
+      },
+    ].filter((c) => c.points.length > 0);
 
     const impacto =
       incrementalExportUsd != null
@@ -618,9 +704,10 @@ export class InversionesService {
                 : []),
             ],
             // Stated assumptions — the projection is illustrative, not a forecast.
+            // Price is the trailing-12-mo average of real Brent (sourced).
             assumptions: {
-              priceUsd: EXPORT_PRICE_USD,
-              brentRefUsd: brentUsd,
+              priceUsd: exportPriceUsd != null ? Math.round(exportPriceUsd * 10) / 10 : null,
+              priceBasis: `Brent prom. ${brentWindow.length}m (EIA)`,
               todayBblD,
               targetBblD,
               gdpUsd,
@@ -636,6 +723,7 @@ export class InversionesService {
         text: 'El recurso ya existe. Lo que cambió es el marco: las medidas actuales destraban la inversión necesaria para que la proyección se realice — y con ella, el salto en el ranking mundial.',
       },
       levers,
+      charts,
       ...(impacto ? { impacto } : {}),
     };
 

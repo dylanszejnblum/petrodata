@@ -27,6 +27,7 @@
     "db:seed:energy-trade": "ts-node --transpile-only prisma/seed-energy-trade.ts",
     "db:seed:gdp": "ts-node --transpile-only prisma/seed-gdp.ts",
     "db:seed:world": "ts-node --transpile-only prisma/seed-world-energy.ts",
+    "db:seed:macro": "ts-node --transpile-only prisma/seed-macro-ar.ts",
     "openapi:export": "ts-node --transpile-only scripts/export-openapi.ts"
   },
   "prisma": {
