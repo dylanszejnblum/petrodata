@@ -101,12 +101,7 @@
       "wellStopped": "Pozo parado",
       "gasWell": "Pozo de gas",
       "showExploration": "Mostrar cuencas en exploración",
-      "hideExploration": "Mostrar solo cuencas productivas",
-      "gasPipeline": "Gasoducto troncal",
-      "oilPipeline": "Oleoducto troncal",
-      "showPipelines": "Mostrar ductos troncales",
-      "hidePipelines": "Ocultar ductos troncales",
-      "compressorNode": "Planta compresora"
+      "hideExploration": "Mostrar solo cuencas productivas"
     },
     "filters": {
       "title": "Filtros",
@@ -137,20 +132,6 @@
       "title": "Operadores principales · BOE",
       "clickToFilter": "Haz clic para filtrar el mapa"
     }
-  },
-  "pipelinePopup": {
-    "gas": "Gasoducto",
-    "oil": "Oleoducto",
-    "node": "Planta compresora",
-    "fields": {
-      "operator": "Operador",
-      "type": "Tipo",
-      "tramo": "Tramo",
-      "diameter": "Diámetro",
-      "length": "Longitud",
-      "gasoducto": "Gasoducto"
-    },
-    "source": "Fuente · Secretaría de Energía / ENARGAS"
   },
   "wellPopup": {
     "wellPrefix": "Pozo",

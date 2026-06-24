@@ -24,13 +24,6 @@ import { TopOperatorsCard } from './map/TopOperatorsCard'
 import { ARGENTINA_BOUNDS, BASIN_BOUNDS, PROVINCE_BOUNDS, type Bounds } from './map/regions'
 import { BasinAreasLayer } from './map/BasinAreasLayer'
 import { ExplorationBasinsLayer } from './map/ExplorationBasinsLayer'
-import { PipelinesLayer } from './map/PipelinesLayer'
-import {
-  PipelinePopup,
-  PipelineNodePopup,
-  type PipelineProps,
-  type PipelineNodeProps,
-} from './map/PipelinePopup'
 import { MapLegend } from './map/MapLegend'
 import { WellPopup } from './map/WellPopup'
 import { classifyWellStatus } from './map/wellStatus'
@@ -51,20 +44,8 @@ type Selected = {
   properties: WellProps
 }
 
-type SelectedPipeline = {
-  longitude: number
-  latitude: number
-  properties: PipelineProps
-}
-
-type SelectedNode = {
-  longitude: number
-  latitude: number
-  properties: PipelineNodeProps
-}
-
-// Default view framing the whole country, so the full trunk-pipeline network and
-// every basin are visible on load; users drill into Vaca Muerta from there.
+// Default view framing the whole country, so every basin is visible on load;
+// users drill into Vaca Muerta from there.
 const ARGENTINA_VIEWPORT: Partial<MapViewport> = {
   center: [-64, -38.5],
   zoom: 3.7,
@@ -188,11 +169,8 @@ export function MapExperience({
   const [bbox, setBbox] = useState<[number, number, number, number] | null>(null)
   const [loading, setLoading] = useState(false)
   const [selected, setSelected] = useState<Selected | null>(null)
-  const [selectedPipeline, setSelectedPipeline] = useState<SelectedPipeline | null>(null)
-  const [selectedNode, setSelectedNode] = useState<SelectedNode | null>(null)
   const [mobilePanel, setMobilePanel] = useState<'none' | 'info' | 'filters'>('none')
   const [showExploration, setShowExploration] = useState(true)
-  const [showPipelines, setShowPipelines] = useState(true)
 
   const t = useTranslations('mapPage')
 
@@ -349,9 +327,6 @@ export function MapExperience({
   const handlePointClick = useCallback(
     (feature: GeoJSON.Feature<GeoJSON.Point, WellProps>, coordinates: [number, number]) => {
       if (!feature.properties) return
-      // Well, duct and node popups are mutually exclusive — selecting one closes the others.
-      setSelectedPipeline(null)
-      setSelectedNode(null)
       setSelected({
         longitude: coordinates[0],
         latitude: coordinates[1],
@@ -362,29 +337,6 @@ export function MapExperience({
   )
 
   const handlePopupClose = useCallback(() => setSelected(null), [])
-
-  const handlePipelineSelect = useCallback(
-    (properties: PipelineProps, lngLat: [number, number]) => {
-      // Mutually exclusive with the well + node popups (see handlePointClick).
-      setSelected(null)
-      setSelectedNode(null)
-      setSelectedPipeline({ longitude: lngLat[0], latitude: lngLat[1], properties })
-    },
-    [],
-  )
-
-  const handlePipelinePopupClose = useCallback(() => setSelectedPipeline(null), [])
-
-  const handleNodeSelect = useCallback(
-    (properties: PipelineNodeProps, lngLat: [number, number]) => {
-      setSelected(null)
-      setSelectedPipeline(null)
-      setSelectedNode({ longitude: lngLat[0], latitude: lngLat[1], properties })
-    },
-    [],
-  )
-
-  const handleNodePopupClose = useCallback(() => setSelectedNode(null), [])
 
   return (
     <div className="relative h-full w-full">
@@ -401,13 +353,6 @@ export function MapExperience({
         {/* Exploration basins first so the producing basins draw on top of them. */}
         {showExploration && <ExplorationBasinsLayer />}
         <BasinAreasLayer selectedBasin={filters.basin} onBasinClick={handleBasinClick} />
-        {/* Trunk pipelines sit above the basins but below the well dots, so wells
-            stay clickable on top of the lines. */}
-        <PipelinesLayer
-          visible={showPipelines}
-          onSelect={handlePipelineSelect}
-          onSelectNode={handleNodeSelect}
-        />
         <MapClusterLayer<WellProps>
           data={featureCollection}
           clusterRadius={50}
@@ -447,32 +392,6 @@ export function MapExperience({
             </MapPopup>
           </>
         )}
-        {selectedPipeline && (
-          <MapPopup
-            longitude={selectedPipeline.longitude}
-            latitude={selectedPipeline.latitude}
-            offset={12}
-            onClose={handlePipelinePopupClose}
-            closeButton
-            maxWidth="20rem"
-            className="!p-0 rounded-none border-nd-border bg-nd-surface text-nd-text-primary"
-          >
-            <PipelinePopup pipeline={selectedPipeline.properties} />
-          </MapPopup>
-        )}
-        {selectedNode && (
-          <MapPopup
-            longitude={selectedNode.longitude}
-            latitude={selectedNode.latitude}
-            offset={12}
-            onClose={handleNodePopupClose}
-            closeButton
-            maxWidth="20rem"
-            className="!p-0 rounded-none border-nd-border bg-nd-surface text-nd-text-primary"
-          >
-            <PipelineNodePopup node={selectedNode.properties} />
-          </MapPopup>
-        )}
       </Map>
 
       {/* Desktop overlay: two columns. The left column scrolls if the stacked
@@ -493,8 +412,6 @@ export function MapExperience({
           <MapLegend
             showExploration={showExploration}
             onToggleExploration={() => setShowExploration((v) => !v)}
-            showPipelines={showPipelines}
-            onTogglePipelines={() => setShowPipelines((v) => !v)}
           />
         </div>
         <div className="w-[20rem]">
@@ -544,8 +461,6 @@ export function MapExperience({
                 <MapLegend
                   showExploration={showExploration}
                   onToggleExploration={() => setShowExploration((v) => !v)}
-                  showPipelines={showPipelines}
-                  onTogglePipelines={() => setShowPipelines((v) => !v)}
                 />
               </>
             ) : (

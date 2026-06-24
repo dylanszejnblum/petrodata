@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""Build the Argentine trunk-pipeline overlay from official Secretaría de Energía /
-ENARGAS open data.
+"""Build the Argentine trunk-pipeline network stats from official Secretaría de
+Energía / ENARGAS open data, for the indicadores "transport infrastructure" block.
 
 Sources (datos.energia.gob.ar):
   - Gasoductos de Transporte (ENARGAS)  — trunk gas pipelines, geometry in a WGS84
@@ -9,11 +9,10 @@ Sources (datos.energia.gob.ar):
     keep only the OLEODUCTO segments classified TRONCAL (the main oil arteries).
     The geometry is embedded as a `geojson` column in the CSV.
 
-Neither dataset carries throughput/capacity — only geometry + physical specs — so
-the overlay is honest about what it shows: operator, type, diameter (oil), length.
+We only need segment lengths (km by operator + gas/oil totals), so geometry is
+read for measurement and then discarded — nothing is written to /public.
 
-Outputs (regenerate after the upstream datasets refresh):
-  - public/data/ar-pipelines.geojson                              (map overlay)
+Output (regenerate after the upstream datasets refresh):
   - src/components/Petrodata/indicadores/pipelineStats.ts         (indicador block)
 
 Run:  python3 scripts/build-pipelines.py
@@ -37,7 +36,6 @@ csv.field_size_limit(10**9)
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-GEOJSON_OUT = os.path.join(ROOT, "public", "data", "ar-pipelines.geojson")
 STATS_OUT = os.path.join(
     ROOT, "src", "components", "Petrodata", "indicadores", "pipelineStats.ts"
 )
@@ -51,13 +49,6 @@ OIL_CSV = (
     "http://datos.energia.gob.ar/dataset/84681f81-dbbb-49eb-be30-e61778736ad9/"
     "resource/857bd3ad-9a8b-4cf9-8e25-a8bc73f3282f/download/"
     "instalaciones-hidrocarburos-ductos-res-319-93.csv"
-)
-# Gas compressor plants (ENARGAS) — the infrastructure "nodes" along the trunk
-# lines. Point geometry embedded in the CSV's `geojson` column (WGS84).
-NODES_CSV = (
-    "http://datos.energia.gob.ar/dataset/8758101a-1e0d-413f-8cc5-83e21ece6391/"
-    "resource/7b0c0bc3-4bc5-4aac-8004-348619a39c26/download/"
-    "plantas-compresoras-de-transporte-de-gas-enargas-.csv"
 )
 
 SOURCE_LABEL = "Secretaría de Energía · ENARGAS"
@@ -258,39 +249,6 @@ def build_oil(features):
     print(f"  oil trunk segments: {n}")
 
 
-def build_nodes(features):
-    raw = fetch(NODES_CSV).decode("utf-8-sig")
-    n = 0
-    for row in csv.DictReader(io.StringIO(raw)):
-        g = (row.get("geojson") or "").strip()
-        if not g:
-            continue
-        try:
-            geom = json.loads(g)
-        except json.JSONDecodeError:
-            continue
-        if geom.get("type") != "Point" or len(geom.get("coordinates") or []) < 2:
-            continue
-        geom["coordinates"] = round_pt(geom["coordinates"])
-        operator_full = (row.get("licenciataria") or "").strip()
-        features.append(
-            {
-                "type": "Feature",
-                "properties": {
-                    "kind": "node",
-                    "name": (row.get("nombre") or "").strip(),
-                    "gasoducto": (row.get("gasoducto") or "").strip() or None,
-                    "tramo": (row.get("tramo") or "").strip() or None,
-                    "operator": short_operator(operator_full),
-                    "operator_full": operator_full or None,
-                },
-                "geometry": geom,
-            }
-        )
-        n += 1
-    print(f"  gas compressor nodes: {n}")
-
-
 def write_stats(features, operator_km):
     gas = [f for f in features if f["properties"]["kind"] == "gas"]
     oil = [f for f in features if f["properties"]["kind"] == "oil"]
@@ -350,19 +308,6 @@ def main():
     build_gas(features, operator_km)
     print("Oil (Res. 319/93):")
     build_oil(features)
-    print("Nodes (ENARGAS compressor plants):")
-    build_nodes(features)
-
-    os.makedirs(os.path.dirname(GEOJSON_OUT), exist_ok=True)
-    fc = {
-        "type": "FeatureCollection",
-        "metadata": {"source": SOURCE_LABEL, "url": SOURCE_URL, "asOf": AS_OF},
-        "features": features,
-    }
-    with open(GEOJSON_OUT, "w", encoding="utf-8") as f:
-        json.dump(fc, f, ensure_ascii=False, separators=(",", ":"))
-    size_kb = os.path.getsize(GEOJSON_OUT) // 1024
-    print(f"  wrote {os.path.relpath(GEOJSON_OUT, ROOT)} ({len(features)} features, {size_kb} KB)")
 
     stats = write_stats(features, operator_km)
     print(

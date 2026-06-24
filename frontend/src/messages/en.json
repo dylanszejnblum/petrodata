@@ -101,12 +101,7 @@
       "wellStopped": "Stopped well",
       "gasWell": "Gas well",
       "showExploration": "Show exploration basins",
-      "hideExploration": "Show producing basins only",
-      "gasPipeline": "Gas trunk pipeline",
-      "oilPipeline": "Oil trunk pipeline",
-      "showPipelines": "Show trunk pipelines",
-      "hidePipelines": "Hide trunk pipelines",
-      "compressorNode": "Compressor station"
+      "hideExploration": "Show producing basins only"
     },
     "filters": {
       "title": "Filters",
@@ -137,20 +132,6 @@
       "title": "Top operators · BOE",
       "clickToFilter": "Click to filter the map"
     }
-  },
-  "pipelinePopup": {
-    "gas": "Gas pipeline",
-    "oil": "Oil pipeline",
-    "node": "Compressor station",
-    "fields": {
-      "operator": "Operator",
-      "type": "Type",
-      "tramo": "Section",
-      "diameter": "Diameter",
-      "length": "Length",
-      "gasoducto": "Pipeline"
-    },
-    "source": "Source · Secretaría de Energía / ENARGAS"
   },
   "wellPopup": {
     "wellPrefix": "Well",
