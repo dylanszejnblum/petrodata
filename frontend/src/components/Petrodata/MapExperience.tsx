@@ -44,11 +44,11 @@ type Selected = {
   properties: WellProps
 }
 
-// Default view centred on Vaca Muerta (Neuquina basin) rather than all of
-// Argentina — that's the focus of the product.
-const VACA_MUERTA_VIEWPORT: Partial<MapViewport> = {
-  center: [-69.2, -38.4],
-  zoom: 6,
+// Default view framing the whole country, so every basin is visible on load;
+// users drill into Vaca Muerta from there.
+const ARGENTINA_VIEWPORT: Partial<MapViewport> = {
+  center: [-64, -38.5],
+  zoom: 3.7,
 }
 
 const FETCH_DEBOUNCE_MS = 350
@@ -344,7 +344,7 @@ export function MapExperience({
         ref={mapRef}
         className="h-full w-full"
         theme={theme === 'dark' ? 'dark' : 'light'}
-        viewport={VACA_MUERTA_VIEWPORT}
+        viewport={ARGENTINA_VIEWPORT}
         onViewportChange={handleViewportChange}
         renderWorldCopies={false}
         transformRequest={transformRequest}

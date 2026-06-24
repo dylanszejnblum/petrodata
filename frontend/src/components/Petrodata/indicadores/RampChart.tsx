@@ -1,5 +1,6 @@
 'use client'
 
+import { useTranslations } from 'next-intl'
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { useMounted } from '@/hooks/useMounted'
 import { formatCompact } from '@/utilities/formatNumber'
@@ -38,6 +39,7 @@ function fmtPeriod(period: string): string {
 }
 
 export function RampChart({ points }: { points: InvSeriePoint[] }) {
+  const t = useTranslations('indicadores')
   const mounted = useMounted()
   const rows = buildRows(points)
   const hasPrelim = points.some((p) => p.preliminary)
@@ -45,7 +47,7 @@ export function RampChart({ points }: { points: InvSeriePoint[] }) {
   if (!rows.length) {
     return (
       <div className="flex h-[280px] items-center justify-center font-mono text-sm text-nd-text-disabled md:h-[400px]">
-        Sin datos de producción.
+        {t('charts.noProduction')}
       </div>
     )
   }
@@ -77,7 +79,10 @@ export function RampChart({ points }: { points: InvSeriePoint[] }) {
               axisLine={false}
               width={48}
             />
-            <Tooltip content={<RampTooltip />} cursor={{ stroke: 'var(--nd-border)', strokeWidth: 1 }} />
+            <Tooltip
+              content={<RampTooltip prelimLabel={t('charts.preliminary')} />}
+              cursor={{ stroke: 'var(--nd-border)', strokeWidth: 1 }}
+            />
             <Area
               type="monotone"
               dataKey="oil"
@@ -106,7 +111,7 @@ export function RampChart({ points }: { points: InvSeriePoint[] }) {
       {hasPrelim && (
         <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.06em] text-nd-text-disabled">
           <span className="mr-1 inline-block h-px w-4 align-middle" style={{ borderTop: '1px dashed var(--nd-accent)' }} />
-          Dato preliminar (mes parcial)
+          {t('charts.preliminaryPartial')}
         </p>
       )}
     </div>
@@ -119,10 +124,12 @@ function RampTooltip({
   active,
   payload,
   label,
+  prelimLabel,
 }: {
   active?: boolean
   payload?: TooltipPayload[]
   label?: string | number
+  prelimLabel?: string
 }) {
   if (!active || !payload || !payload.length) return null
   const row = payload[0]?.payload
@@ -131,7 +138,7 @@ function RampTooltip({
     <div className="border border-nd-border bg-nd-surface/95 px-3 py-2 font-mono shadow-[0_8px_24px_-12px_rgba(0,0,0,0.4)] backdrop-blur-md">
       <div className="mb-1 flex items-center justify-between gap-4 border-b border-nd-border pb-1 text-[10px] uppercase tracking-[0.08em] text-nd-text-disabled">
         <span>{fmtPeriod(String(label))}</span>
-        {row.preliminary && <span style={{ color: 'var(--nd-accent)' }}>preliminar</span>}
+        {row.preliminary && <span style={{ color: 'var(--nd-accent)' }}>{prelimLabel}</span>}
       </div>
       <div className="text-[12px] tabular-nums text-nd-text-display">
         {new Intl.NumberFormat('es-AR').format(Math.round(row.raw))} bbl/d
