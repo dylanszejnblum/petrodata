@@ -1,5 +1,6 @@
 'use client'
 
+import { useTranslations } from 'next-intl'
 import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { useMounted } from '@/hooks/useMounted'
 import { formatCompact } from '@/utilities/formatNumber'
@@ -16,6 +17,7 @@ function fmtPeriod(period: string): string {
 }
 
 export function ActividadChart({ actividad }: { actividad: InvActividad }) {
+  const t = useTranslations('indicadores')
   const mounted = useMounted()
   const rows: Row[] = actividad.points.map((p) => ({
     period: p.period,
@@ -26,7 +28,7 @@ export function ActividadChart({ actividad }: { actividad: InvActividad }) {
   if (!rows.length) {
     return (
       <div className="flex h-[240px] items-center justify-center font-mono text-sm text-nd-text-disabled md:h-[300px]">
-        Sin datos de actividad.
+        {t('charts.noActivity')}
       </div>
     )
   }
@@ -52,7 +54,12 @@ export function ActividadChart({ actividad }: { actividad: InvActividad }) {
               axisLine={false}
               width={40}
             />
-            <Tooltip content={<ActividadTooltip />} cursor={{ fill: 'var(--nd-border)', fillOpacity: 0.3 }} />
+            <Tooltip
+              content={
+                <ActividadTooltip prelimLabel={t('charts.preliminary')} wellsLabel={t('charts.wells')} />
+              }
+              cursor={{ fill: 'var(--nd-border)', fillOpacity: 0.3 }}
+            />
             <Bar dataKey="nuevosPozos" isAnimationActive animationDuration={800}>
               {rows.map((r) => (
                 <Cell
@@ -74,9 +81,13 @@ type TooltipPayload = { value?: number; payload?: Row }
 function ActividadTooltip({
   active,
   payload,
+  prelimLabel,
+  wellsLabel,
 }: {
   active?: boolean
   payload?: TooltipPayload[]
+  prelimLabel?: string
+  wellsLabel?: string
 }) {
   if (!active || !payload || !payload.length) return null
   const row = payload[0]?.payload
@@ -85,10 +96,10 @@ function ActividadTooltip({
     <div className="border border-nd-border bg-nd-surface/95 px-3 py-2 font-mono shadow-[0_8px_24px_-12px_rgba(0,0,0,0.4)] backdrop-blur-md">
       <div className="mb-1 flex items-center justify-between gap-4 border-b border-nd-border pb-1 text-[10px] uppercase tracking-[0.08em] text-nd-text-disabled">
         <span>{fmtPeriod(row.period)}</span>
-        {row.preliminary && <span style={{ color: 'var(--nd-accent)' }}>preliminar</span>}
+        {row.preliminary && <span style={{ color: 'var(--nd-accent)' }}>{prelimLabel}</span>}
       </div>
       <div className="text-[12px] tabular-nums text-nd-text-display">
-        {new Intl.NumberFormat('es-AR').format(row.nuevosPozos)} pozos
+        {new Intl.NumberFormat('es-AR').format(row.nuevosPozos)} {wellsLabel}
       </div>
     </div>
   )

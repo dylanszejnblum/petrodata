@@ -11,6 +11,7 @@ import { OperatorLeaderboard } from '@/components/Petrodata/indicadores/Operator
 import { BreakevenTrend } from '@/components/Petrodata/indicadores/BreakevenTrend'
 import { ActividadChart } from '@/components/Petrodata/indicadores/ActividadChart'
 import { CruceChart } from '@/components/Petrodata/indicadores/CruceChart'
+import { TransportInfra } from '@/components/Petrodata/indicadores/TransportInfra'
 import { WorldStage } from '@/components/Petrodata/indicadores/WorldStage'
 
 // ISR: investment figures update ~monthly, so a 1h revalidate makes the page
@@ -176,16 +177,27 @@ export default async function IndicadoresPage() {
           </section>
         ) : null}
 
+        {/* Transport infrastructure — the trunk pipeline network */}
+        <section className="container pb-16">
+          <h2 className="mb-2 flex items-baseline gap-3 text-xl text-nd-text-display md:text-2xl font-display">
+            <span className="font-mono text-[10px] tabular-nums text-nd-text-disabled">06</span>
+            <span>{t('transportTitle')}</span>
+          </h2>
+          <p className="mb-8 max-w-2xl text-pretty text-sm leading-relaxed text-nd-text-secondary font-sans">
+            {t('transportBlurb')}
+          </p>
+          <TransportInfra />
+        </section>
+
         {/* Argentina en el mundo — the catapult section */}
         {data.mundo && data.mundo.rankings.length ? (
           <section className="container pb-16">
             <h2 className="mb-2 flex items-baseline gap-3 text-xl text-nd-text-display md:text-2xl font-display">
-              <span className="font-mono text-[10px] tabular-nums text-nd-text-disabled">06</span>
-              <span>Argentina en el mundo</span>
+              <span className="font-mono text-[10px] tabular-nums text-nd-text-disabled">07</span>
+              <span>{t('worldTitle')}</span>
             </h2>
             <p className="mb-8 max-w-2xl text-pretty text-sm leading-relaxed text-nd-text-secondary font-sans">
-              Dónde está Argentina hoy entre los productores del mundo, y a dónde la lleva Vaca Muerta
-              si la proyección se realiza. El salto en el ranking, con datos de la EIA.
+              {t('worldBlurb')}
             </p>
             <WorldStage mundo={data.mundo} />
           </section>

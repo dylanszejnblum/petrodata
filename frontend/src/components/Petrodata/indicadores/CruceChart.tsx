@@ -35,7 +35,7 @@ export function CruceChart({ cruce }: { cruce: InvCruce }) {
   if (!rows.length) {
     return (
       <div className="flex h-[280px] items-center justify-center font-mono text-sm text-nd-text-disabled md:h-[360px]">
-        Sin datos de comercio.
+        {t('charts.noTrade')}
       </div>
     )
   }
@@ -82,7 +82,14 @@ export function CruceChart({ cruce }: { cruce: InvCruce }) {
                 width={active === 'gdp' ? 44 : 52}
               />
               <Tooltip
-                content={<CruceTooltip mode={active} />}
+                content={
+                  <CruceTooltip
+                    mode={active}
+                    agroLabel={t('charts.agro')}
+                    energyLabel={t('charts.energy')}
+                    pctGdpSuffix={t('charts.pctGdpSuffix')}
+                  />
+                }
                 cursor={{ stroke: 'var(--nd-border)', strokeWidth: 1 }}
               />
               <Line
@@ -113,8 +120,8 @@ export function CruceChart({ cruce }: { cruce: InvCruce }) {
       </div>
 
       <div className="flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-nd-border pt-4">
-        <LegendDot color={AGRO_COLOR} label="Agro (primarios + MOA)" />
-        <LegendDot color={ENERGY_COLOR} label="Energía" />
+        <LegendDot color={AGRO_COLOR} label={t('charts.agroLegend')} />
+        <LegendDot color={ENERGY_COLOR} label={t('charts.energy')} />
         {active === 'gdp' && cruce.gdpSource && (
           <span className="ml-auto font-mono text-[10px] text-nd-text-disabled">
             {t('computedBy', { source: cruce.gdpSource.label })}
@@ -141,11 +148,17 @@ function CruceTooltip({
   payload,
   label,
   mode,
+  agroLabel,
+  energyLabel,
+  pctGdpSuffix,
 }: {
   active?: boolean
   payload?: TooltipPayload[]
   label?: string | number
   mode: Mode
+  agroLabel?: string
+  energyLabel?: string
+  pctGdpSuffix?: string
 }) {
   if (!active || !payload || !payload.length) return null
   const fmt = (v: number) => (mode === 'gdp' ? fmtPct(v) : formatCompactUSD(v))
@@ -153,14 +166,14 @@ function CruceTooltip({
     <div className="border border-nd-border bg-nd-surface/95 px-3 py-2 font-mono shadow-[0_8px_24px_-12px_rgba(0,0,0,0.4)] backdrop-blur-md">
       <div className="mb-1 border-b border-nd-border pb-1 text-[10px] uppercase tracking-[0.08em] text-nd-text-disabled">
         {label}
-        {mode === 'gdp' ? ' · % PBI' : ''}
+        {mode === 'gdp' ? ` · ${pctGdpSuffix}` : ''}
       </div>
       <ul className="flex flex-col gap-0.5">
         {payload.map((p) => (
           <li key={String(p.dataKey)} className="flex items-center justify-between gap-4 text-[11px]">
             <span className="flex items-center gap-2 text-nd-text-secondary">
               <span className="inline-block size-2 rounded-full" style={{ backgroundColor: p.color }} aria-hidden />
-              {p.dataKey === 'agro' ? 'Agro' : 'Energía'}
+              {p.dataKey === 'agro' ? agroLabel : energyLabel}
             </span>
             <span className="tabular-nums text-nd-text-display">
               {p.value != null ? fmt(Number(p.value)) : '—'}

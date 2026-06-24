@@ -9,7 +9,7 @@ import { useEffect, useRef } from 'react'
 import { useTranslations } from 'next-intl'
 import { animateCounter, useInView } from './anim'
 import type { InvKpi } from '@/api/inversiones'
-import { formatDeltaPct, formatFigure, tierColor, tierLabel } from './format'
+import { formatDeltaPct, formatFigure, tierColor, tierLabelKey } from './format'
 
 function DeltaChip({ delta }: { delta: NonNullable<InvKpi['delta']> }) {
   const positive = delta.pct >= 0
@@ -27,10 +27,12 @@ function DeltaChip({ delta }: { delta: NonNullable<InvKpi['delta']> }) {
 function KpiCard({
   kpi,
   sourceText,
+  tierText,
   figureRef,
 }: {
   kpi: InvKpi
   sourceText: string
+  tierText: string
   figureRef: (el: HTMLSpanElement | null) => void
 }) {
   const accent = tierColor(kpi.tier)
@@ -53,7 +55,7 @@ function KpiCard({
             background: `color-mix(in srgb, ${accent} 12%, transparent)`,
           }}
         >
-          {tierLabel(kpi.tier)}
+          {tierText}
         </span>
       </div>
 
@@ -100,6 +102,7 @@ export function KpiGrid({ kpis }: { kpis: InvKpi[] }) {
           key={kpi.id}
           kpi={kpi}
           sourceText={t('computedBy', { source: `${kpi.source.label} · ${kpi.source.asOf}` })}
+          tierText={t(tierLabelKey(kpi.tier))}
           figureRef={(el) => {
             figureRefs.current[i] = el
           }}

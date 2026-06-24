@@ -79,7 +79,7 @@ export function BreakevenTrend({ breakeven }: { breakeven: InvBreakeven }) {
       <div className="flex flex-wrap items-baseline justify-between gap-3">
         <div>
           <span className="block font-mono text-[10px] uppercase tracking-[0.08em] text-nd-text-disabled">
-            Headroom sobre breakeven
+            {t('charts.breakevenHeadroom')}
           </span>
           <span className="mt-1 block text-3xl tabular-nums text-nd-text-display md:text-4xl font-display">
             US$<span ref={headRef}>{nf0.format(Math.round(headroomUsd))}</span>
@@ -90,7 +90,7 @@ export function BreakevenTrend({ breakeven }: { breakeven: InvBreakeven }) {
           className="rounded-full px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.06em]"
           style={{ color: stateColor, background: `color-mix(in srgb, ${stateColor} 12%, transparent)` }}
         >
-          Confirmado
+          {t('tiers.confirmado')}
         </span>
       </div>
 
@@ -171,7 +171,7 @@ export function BreakevenTrend({ breakeven }: { breakeven: InvBreakeven }) {
         </div>
       ) : (
         <div className="flex h-[200px] items-center justify-center font-mono text-sm text-nd-text-disabled md:h-[240px]">
-          Sin serie histórica de Brent.
+          {t('charts.noBrent')}
         </div>
       )}
 
