@@ -240,13 +240,18 @@ export interface InversionesData {
   mundo?: InvMundo
 }
 
-export async function fetchInversiones(): Promise<InversionesData | null> {
+export async function fetchInversiones(
+  lang: 'es' | 'en' = 'es',
+): Promise<InversionesData | null> {
   try {
     // ISR: the underlying figures update monthly, so a 1h revalidate makes the
     // page near-instant while staying fresh. Tagged so we can on-demand purge
-    // via `revalidateTag('inversiones')` from an admin hook if needed.
+    // via `revalidateTag('inversiones')` from an admin hook if needed. The lang is
+    // sent via Accept-Language (the backend localizes the payload) and folded into
+    // a per-locale tag so each language caches separately.
     const { data, error } = await api.GET('/api/v2/inversiones', {
-      next: { revalidate: 3600, tags: ['inversiones'] },
+      headers: { 'Accept-Language': lang },
+      next: { revalidate: 3600, tags: ['inversiones', `inversiones-${lang}`] },
     })
     if (error || !data) return null
     const body = (data as unknown as { data: InversionesData }).data

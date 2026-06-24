@@ -42,7 +42,7 @@ function OverviewCardImpl({
             {formatCompact(latest.boe)}
           </span>
           <abbr
-            title="Barrels of Oil Equivalent — energy-equivalent unit combining oil and gas at 6 Mcf gas ≈ 1 bbl oil"
+            title={t('boeTooltip')}
             className="text-nd-text-disabled text-[10px] uppercase cursor-help no-underline border-b border-dotted border-nd-text-disabled font-mono"
           >
             BOE

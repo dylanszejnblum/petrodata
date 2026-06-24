@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { getTranslations } from 'next-intl/server'
+import { getLocale, getTranslations } from 'next-intl/server'
 import { NothingHeader } from '@/components/Nothing/Header'
 import { NothingFooter } from '@/components/Nothing/Footer'
 import { FooterNewsletterForm } from '@/components/Nothing/FooterNewsletterForm'
@@ -25,7 +25,9 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function IndicadoresPage() {
-  const [t, data] = await Promise.all([getTranslations('indicadores'), fetchInversiones()])
+  const locale = await getLocale()
+  const lang = locale === 'en' ? 'en' : 'es'
+  const [t, data] = await Promise.all([getTranslations('indicadores'), fetchInversiones(lang)])
 
   if (!data) {
     return (

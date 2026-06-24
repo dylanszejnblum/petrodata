@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
+import { Lang, numLocale, sources, strings } from './inversiones.i18n';
 
 /**
  * /inversiones — computed, not curated. Every figure is derived from data we
@@ -9,32 +10,11 @@ import { PrismaService } from '../../prisma/prisma.service';
  * not shown (EN MARCHA / PROYECTADO tiers are pending real citations).
  */
 
-const PROD_SOURCE = {
-  label: 'Secretaría de Energía — Producción de pozos',
-  url: 'https://datos.energia.gob.ar/dataset/produccion-de-petroleo-y-gas-por-pozo',
-};
-const EXPORT_SOURCE = {
-  label: 'Exportaciones por sector (provincias)',
-  url: 'https://datos.energia.gob.ar/',
-};
-const BRENT_SOURCE = {
-  label: 'EIA (Brent)',
-  url: 'https://www.eia.gov/dnav/pet/hist/RBRTEM.htm',
-};
-const GDP_SOURCE = {
-  label: 'Banco Mundial (PBI nominal, US$)',
-  url: 'https://data.worldbank.org/indicator/NY.GDP.MKTP.CD?locations=AR',
-};
-const WORLD_SOURCE = {
-  label: 'EIA — International Energy Statistics (producción por país)',
-  url: 'https://www.eia.gov/international/data/world',
-};
-// Curated, cited — not computed from our data. EIA's one-off shale assessment:
-// Vaca Muerta is #2 shale gas / #4 shale oil in technically recoverable resources.
-const SHALE_SOURCE = {
-  label: 'EIA — Technically Recoverable Shale Oil and Shale Gas Resources (2013)',
-  url: 'https://www.eia.gov/analysis/studies/worldshalegas/',
-};
+// Source attributions (PROD/EXPORT/BRENT/GDP/WORLD/SHALE/RIGI/MACRO/BREAKEVEN)
+// now live in ./inversiones.i18n.ts via sources(lang) — labels are localized,
+// org names + URLs are kept. Curated, cited references (shale assessment, the
+// breakeven reference) are flagged there too.
+
 // "Si se realiza como está proyectado" — industry/government 2030 targets. These
 // are PROYECTADO, never presented as measured. Drives the rank-jump narrative.
 const OIL_TARGET_TBPD = 1500; // ~1.5 Mbbl/d — commonly-cited VM 2030 oil target
@@ -51,33 +31,12 @@ const GROWTH_WINDOW_YEARS = 5;
 // converts into export earnings and GDP. Every figure is a REAL, sourced series
 // (FX/inflation/fiscal from datos.gob.ar via fact_price; energy surplus from
 // INDEC). No hardcoded macro values — only citations (attribution) below.
-const MACRO_SOURCES: Record<string, { label: string; url: string }> = {
-  fx_a3500: { label: 'BCRA — Tipo de Cambio Mayorista (Com. A 3500)', url: 'https://www.bcra.gob.ar/' },
-  ipc_mensual: {
-    label: 'INDEC — IPC variación mensual (Nivel General Nacional)',
-    url: 'https://www.indec.gob.ar/indec/web/Nivel4-Tema-3-5-31',
-  },
-  fiscal_primario: {
-    label: 'Secretaría de Hacienda — Resultado primario (IMIG)',
-    url: 'https://www.argentina.gob.ar/economia/sechacienda',
-  },
-};
-// RIGI has no official time-series dataset — presented as a sourced milestone
-// (link to the official régimen), never a fabricated number.
-const RIGI_SOURCE = {
-  label: 'Ministerio de Economía — Registro RIGI (Ley 27.742)',
-  url: 'https://www.argentina.gob.ar/economia/rigi',
-};
 const RIGI_AS_OF = '2026-06'; // as-of of the compiled approved-projects registry
 const BRENT_WINDOW = 12; // months for the trailing export-price average (real Brent)
 const POLICY_CHART_SINCE = Date.UTC(2023, 0, 1); // window that shows the inflection
 // Cited external reference — NOT computed from our data. The market price beside
 // it is computed live; the headroom (margin) between them is the story.
 const BREAKEVEN_REFERENCE_USD = 45;
-const BREAKEVEN_REFERENCE_SOURCE = {
-  label: 'YPF (breakeven Vaca Muerta ~US$45/bbl)',
-  url: 'https://www.ypf.com/inversoresaccionistas/Paginas/informacion-financiera.aspx',
-};
 
 interface Sums {
   oilBblD: number | null;
@@ -91,11 +50,14 @@ interface Sums {
 export class InversionesService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getPage() {
+  async getPage(lang: Lang = 'es') {
     const ref = await this.referenceMonth();
     if (!ref) {
       return { asOf: null, kpis: [], serie: null, operadores: [], exportaciones: null, headline: '' };
     }
+    const s = strings(lang);
+    const src = sources(lang);
+    const numL = numLocale(lang);
     const { month, latestMonth } = ref;
     const yearAgo = new Date(Date.UTC(month.getUTCFullYear() - 1, month.getUTCMonth(), 1));
     const asOf = month.toISOString().slice(0, 7);
@@ -123,8 +85,8 @@ export class InversionesService {
         where: { sector: { in: ['petróleo', 'gas'] } },
         _sum: { valueAnnualUsd: true },
       }),
-      this.breakeven(),
-      this.actividad(asOf),
+      this.breakeven(lang),
+      this.actividad(asOf, lang),
       this.prisma.factEnergyTrade.findMany({
         where: { granularity: 'annual' },
         orderBy: { period: 'asc' },
@@ -135,7 +97,7 @@ export class InversionesService {
       }),
     ]);
 
-    const mundo = await this.mundo(tradeAnnual, gdpRows, breakeven?.brentUsd ?? null);
+    const mundo = await this.mundo(tradeAnnual, gdpRows, breakeven?.brentUsd ?? null, lang);
 
     const shareOil = pct(now.vm.oilM3, now.nat.oilM3);
     const shareGas = pct(now.vm.gasThousandM3, now.nat.gasThousandM3);
@@ -169,47 +131,49 @@ export class InversionesService {
 
     const source = (s: { label: string; url: string }) => ({ ...s, asOf });
 
-    const energySource = tradeSource ?? source(EXPORT_SOURCE);
+    const energySource = tradeSource ?? source(src.EXPORT);
     const kpis = [
-      kpi('produccion_vm', 'Producción de petróleo VM', vmOilBblD, { suffix: ' bbl/d', decimals: 0 },
-        delta(now.vm.oilBblD, prior.vm.oilBblD), source(PROD_SOURCE)),
-      kpi('participacion_petroleo', 'Participación en petróleo nacional', shareOil, { suffix: '%', decimals: 1 },
-        null, source(PROD_SOURCE)),
-      kpi('participacion_gas', 'Participación en gas nacional', shareGas, { suffix: '%', decimals: 1 },
-        null, source(PROD_SOURCE)),
-      kpi('produccion_nacional', 'Producción nacional de petróleo', now.nat.oilBblD ?? 0, { suffix: ' bbl/d', decimals: 0 },
-        delta(now.nat.oilBblD, prior.nat.oilBblD), source(PROD_SOURCE)),
-      kpi('pozos_activos', 'Pozos activos en VM', wells, { suffix: ' pozos', decimals: 0 },
-        delta(wells, wellsPrior), source(PROD_SOURCE)),
-      kpi('exportaciones_energia', 'Exportaciones de energía (anual)', exportEnergyUsd / 1e9, { prefix: 'US$', suffix: 'B', decimals: 1 },
+      kpi('produccion_vm', s.kpi.produccionVm, vmOilBblD, { suffix: ' bbl/d', decimals: 0 },
+        delta(now.vm.oilBblD, prior.vm.oilBblD), source(src.PROD)),
+      kpi('participacion_petroleo', s.kpi.participacionPetroleo, shareOil, { suffix: '%', decimals: 1 },
+        null, source(src.PROD)),
+      kpi('participacion_gas', s.kpi.participacionGas, shareGas, { suffix: '%', decimals: 1 },
+        null, source(src.PROD)),
+      kpi('produccion_nacional', s.kpi.produccionNacional, now.nat.oilBblD ?? 0, { suffix: ' bbl/d', decimals: 0 },
+        delta(now.nat.oilBblD, prior.nat.oilBblD), source(src.PROD)),
+      kpi('pozos_activos', s.kpi.pozosActivos, wells, { suffix: s.wellsSuffix, decimals: 0 },
+        delta(wells, wellsPrior), source(src.PROD)),
+      kpi('exportaciones_energia', s.kpi.exportacionesEnergia, exportEnergyUsd / 1e9, { prefix: 'US$', suffix: 'B', decimals: 1 },
         delta(latestTrade?.energyExportsUsd ?? null, priorTrade?.energyExportsUsd ?? null), energySource),
     ];
 
     // Energy trade surplus — real INDEC figure, only when computable.
     if (latestTrade?.energySurplusUsd != null) {
       kpis.push(
-        kpi('superavit_energia', 'Superávit comercial energético (anual)', latestTrade.energySurplusUsd / 1e9,
+        kpi('superavit_energia', s.kpi.superavitEnergia, latestTrade.energySurplusUsd / 1e9,
           { prefix: 'US$', suffix: 'B', decimals: 1 },
           delta(latestTrade.energySurplusUsd, priorTrade?.energySurplusUsd ?? null), energySource),
       );
     }
 
-    const headline =
-      `Vaca Muerta concentra el ${shareOil.toFixed(0)}% del petróleo nacional ` +
-      `y produce ${Math.round(vmOilBblD).toLocaleString('es-AR')} bbl/d (${asOf}).`;
+    const headline = s.headline(
+      shareOil.toFixed(0),
+      Math.round(vmOilBblD).toLocaleString(numL),
+      asOf,
+    );
 
     return {
       asOf,
       latestMonth: latestMonth.toISOString().slice(0, 7),
       tier: 'confirmado',
-      note: 'Todas las cifras se computan a partir de datos oficiales ya ingeridos por el pipeline. Las cifras EN MARCHA / PROYECTADO se agregarán con su fuente verificable.',
+      note: s.note,
       headline,
       kpis,
       serie: {
         id: 'produccion_vm',
-        title: 'Producción de petróleo en Vaca Muerta',
+        title: s.serieTitle,
         unit: 'bbl/d',
-        source: source(PROD_SOURCE),
+        source: source(src.PROD),
         points: serieRows.map((r) => {
           const period = r.dateMonth.toISOString().slice(0, 7);
           return {
@@ -231,7 +195,7 @@ export class InversionesService {
         energiaUsd: exportEnergyUsd, // INDEC where available, province fallback
         source: energySource,
         porSector: exportRows.map((r) => ({ sector: r.sector, usd: r._sum.valueAnnualUsd ?? 0 })),
-        porSectorSource: source(EXPORT_SOURCE), // the petróleo/gas split is province-reported
+        porSectorSource: source(src.EXPORT), // the petróleo/gas split is province-reported
       },
       ...(breakeven ? { breakeven } : {}), // omitted when no Brent rows — never fabricated
       actividad,
@@ -243,10 +207,10 @@ export class InversionesService {
         ? {
             cruce: {
               id: 'agro_vs_energia',
-              title: 'Exportaciones: agro vs energía',
+              title: s.cruceTitle,
               unit: 'US$',
               source: tradeSource,
-              gdpSource: gdpRows.length ? GDP_SOURCE : null,
+              gdpSource: gdpRows.length ? src.GDP : null,
               points: tradeAnnual
                 .filter((r) => r.agroExportsUsd != null || r.energyExportsUsd != null)
                 .map((r) => {
@@ -313,7 +277,8 @@ export class InversionesService {
    * The margin between them is the headroom. Omitted entirely if we hold no
    * Brent rows — never fabricated.
    */
-  private async breakeven() {
+  private async breakeven(lang: Lang) {
+    const src = sources(lang);
     const row = await this.prisma.factPrice.findFirst({
       where: { series: 'brent' },
       orderBy: { date: 'desc' },
@@ -340,8 +305,8 @@ export class InversionesService {
       headroomUsd: row.value - BREAKEVEN_REFERENCE_USD,
       tier: 'confirmado',
       series: history.map((h) => ({ date: h.date.toISOString().slice(0, 10), value: h.value })),
-      source: { ...BRENT_SOURCE, asOf: brentAsOf },
-      referenceSource: BREAKEVEN_REFERENCE_SOURCE,
+      source: { ...src.BRENT, asOf: brentAsOf },
+      referenceSource: src.BREAKEVEN_REFERENCE,
     };
   }
 
@@ -354,7 +319,9 @@ export class InversionesService {
    * producing at/before the window start collapses into it, so it isn't a
    * genuine "new wells" count (it would dwarf every real month).
    */
-  private async actividad(asOf: string) {
+  private async actividad(asOf: string, lang: Lang) {
+    const src = sources(lang);
+    const s = strings(lang);
     const rows = await this.prisma.$queryRaw<{ period: string; nuevos: number }[]>`
       SELECT to_char(conn_month, 'YYYY-MM') AS period, COUNT(*)::int AS nuevos
       FROM (
@@ -370,8 +337,8 @@ export class InversionesService {
       ORDER BY conn_month ASC`;
 
     return {
-      unit: 'pozos/mes',
-      source: { ...PROD_SOURCE, asOf },
+      unit: s.actividadUnit,
+      source: { ...src.PROD, asOf },
       points: rows.map((r) => ({
         period: r.period,
         nuevosPozos: Number(r.nuevos),
@@ -399,15 +366,19 @@ export class InversionesService {
     }[],
     gdpRows: { date: Date; value: number }[],
     brentUsd: number | null,
+    lang: Lang,
   ) {
+    const s = strings(lang);
+    const src = sources(lang);
+    const numL = numLocale(lang);
     const rows = await this.prisma.factWorldProduction.findMany({
       select: { product: true, iso3: true, country: true, period: true, value: true, unit: true },
     });
     if (!rows.length) return null;
 
     const productMeta: Record<string, { label: string; target: number }> = {
-      oil: { label: 'Petróleo crudo', target: OIL_TARGET_TBPD },
-      gas: { label: 'Gas natural', target: GAS_TARGET_BCF },
+      oil: { label: s.product.oil, target: OIL_TARGET_TBPD },
+      gas: { label: s.product.gas, target: GAS_TARGET_BCF },
     };
 
     const rankings = Object.keys(productMeta)
@@ -462,7 +433,7 @@ export class InversionesService {
           unit,
           year: latestYear,
           countries: latest.length,
-          source: { ...WORLD_SOURCE, asOf: String(latestYear) },
+          source: { ...src.WORLD, asOf: String(latestYear) },
           argentina: argRow ? { rank: argIdx + 1, value: argRow.value } : null,
           projected: {
             value: meta.target,
@@ -520,7 +491,7 @@ export class InversionesService {
           toYear,
           leaders: top,
           argentinaRank: arg ? leaders.findIndex((l) => l.isArgentina) + 1 : null,
-          source: { ...WORLD_SOURCE, asOf: String(toYear) },
+          source: { ...src.WORLD, asOf: String(toYear) },
         };
       })
       .filter((x): x is NonNullable<typeof x> => x !== null);
@@ -559,7 +530,7 @@ export class InversionesService {
         .filter((r) => r.date >= since)
         .map((r) => ({ period: r.date.toISOString().slice(0, 7), value: r.value }));
     const macroSrc = (key: string, rows: { date: Date }[]) => ({
-      ...(MACRO_SOURCES[key] ?? WORLD_SOURCE),
+      ...(src.MACRO[key] ?? src.WORLD),
       asOf: rows.length ? rows[rows.length - 1].date.toISOString().slice(0, 7) : '',
     });
 
@@ -582,7 +553,7 @@ export class InversionesService {
     const tradeYear = latestTrade ? latestTrade.period.getUTCFullYear() : null;
     const tradeSource = latestTrade
       ? { label: latestTrade.sourceLabel ?? 'INDEC', url: latestTrade.sourceUrl ?? '', asOf: String(tradeYear) }
-      : { ...WORLD_SOURCE, asOf: '' };
+      : { ...src.WORLD, asOf: '' };
 
     // Computed-from-real indicators.
     const ipcRows = bySeries('ipc_mensual');
@@ -593,27 +564,27 @@ export class InversionesService {
 
     const levers = [
       {
-        tag: 'Cambiario',
-        title: 'Normalización del tipo de cambio y acceso a divisas para exportadores',
+        tag: s.lever.fxTag,
+        title: s.lever.fxTitle,
         chartId: 'fx',
         indicator: ipcLatest
           ? {
-              label: 'Inflación mensual',
+              label: s.indicator.inflacionMensual,
               value: ipcLatest.value,
-              format: { suffix: '%/mes', decimals: 1 },
+              format: { suffix: s.pctMesSuffix, decimals: 1 },
               tier: 'confirmado',
               source: macroSrc('ipc_mensual', ipcRows),
             }
           : null,
       },
       {
-        tag: 'Exportación',
-        title: 'Fin de los cupos y retenciones a la exportación de crudo y gas',
+        tag: s.lever.exportTag,
+        title: s.lever.exportTitle,
         chartId: 'superavit_energia',
         indicator:
           latestTrade?.energySurplusUsd != null
             ? {
-                label: 'Superávit comercial energético',
+                label: s.indicator.superavitEnergetico,
                 value: latestTrade.energySurplusUsd / 1e9,
                 format: { prefix: 'US$', suffix: ' B', decimals: 1 },
                 delta: delta(latestTrade.energySurplusUsd, priorTrade?.energySurplusUsd ?? null) ?? undefined,
@@ -623,28 +594,28 @@ export class InversionesService {
             : null,
       },
       {
-        tag: 'RIGI',
-        title: 'Régimen de Incentivo a Grandes Inversiones: estabilidad fiscal a 30 años',
-        milestone: 'Régimen vigente (Ley 27.742): estabilidad fiscal, cambiaria y aduanera por 30 años.',
-        source: { ...RIGI_SOURCE, asOf: RIGI_AS_OF },
+        tag: s.lever.rigiTag,
+        title: s.lever.rigiTitle,
+        milestone: s.lever.rigiMilestone,
+        source: { ...src.RIGI, asOf: RIGI_AS_OF },
         // Real committed investment from the approved oil & gas RIGI projects.
         indicator: rigiRows.length
           ? {
-              label: 'Inversión comprometida (petróleo y gas)',
+              label: s.indicator.inversionComprometida,
               value: rigiRows.reduce((a, r) => a + (r.investmentMusd ?? 0), 0) / 1000,
               format: { prefix: 'US$', suffix: ' B', decimals: 1 },
               tier: 'referencia',
-              source: { ...RIGI_SOURCE, asOf: RIGI_AS_OF },
+              source: { ...src.RIGI, asOf: RIGI_AS_OF },
             }
           : null,
       },
       {
-        tag: 'Fiscal',
-        title: 'Disciplina fiscal y desregulación que anclan la previsibilidad de inversión',
+        tag: s.lever.fiscalTag,
+        title: s.lever.fiscalTitle,
         chartId: 'fiscal',
         indicator: fiscalLast12.length
           ? {
-              label: 'Meses con superávit primario (últ. 12)',
+              label: s.indicator.mesesSuperavit,
               value: fiscalSurplusMonths,
               format: { suffix: `/${fiscalLast12.length}`, decimals: 0 },
               tier: 'confirmado',
@@ -658,15 +629,15 @@ export class InversionesService {
     const charts = [
       {
         id: 'inflacion',
-        title: 'Inflación mensual',
-        unit: '%/mes',
+        title: s.chart.inflacionTitle,
+        unit: s.pctMesUnit,
         kind: 'area' as const,
         source: macroSrc('ipc_mensual', ipcRows),
         points: chartPts('ipc_mensual'),
       },
       {
         id: 'fx',
-        title: 'Tipo de cambio mayorista (A3500)',
+        title: s.chart.fxTitle,
         unit: 'ARS/USD',
         kind: 'line' as const,
         source: macroSrc('fx_a3500', bySeries('fx_a3500')),
@@ -674,15 +645,15 @@ export class InversionesService {
       },
       {
         id: 'fiscal',
-        title: 'Resultado primario mensual (SPN)',
-        unit: 'ARS millones',
+        title: s.chart.fiscalTitle,
+        unit: s.arsMillonesUnit,
         kind: 'bar' as const,
         source: macroSrc('fiscal_primario', fiscalRows),
         points: chartPts('fiscal_primario'),
       },
       {
         id: 'superavit_energia',
-        title: 'Superávit comercial energético',
+        title: s.chart.superavitTitle,
         unit: 'US$ MM',
         kind: 'bar' as const,
         source: tradeSource,
@@ -698,21 +669,21 @@ export class InversionesService {
         ? {
             headline:
               pctGdp != null
-                ? `Si la producción de petróleo alcanza la meta, el valor exportable incremental equivale a ~${pctGdp.toLocaleString('es-AR', { maximumFractionDigits: 1 })}% del PBI.`
-                : 'Si la producción alcanza la meta, el salto exportador se acelera.',
+                ? s.impacto.headline(pctGdp.toLocaleString(numL, { maximumFractionDigits: 1 }))
+                : s.impacto.headlineFallback,
             items: [
               {
-                label: 'Valor exportable incremental',
+                label: s.impacto.valorExportable,
                 value: incrementalExportUsd / 1e9,
-                format: { prefix: 'US$', suffix: ' B/año', decimals: 1 },
+                format: { prefix: 'US$', suffix: s.impacto.bAnioSuffix, decimals: 1 },
                 tier: 'proyectado' as const,
               },
               ...(pctGdp != null
                 ? [
                     {
-                      label: 'Equivalente en PBI',
+                      label: s.impacto.equivalentePbi,
                       value: pctGdp,
-                      format: { suffix: '% del PBI', decimals: 1 },
+                      format: { suffix: s.impacto.pctPbiSuffix, decimals: 1 },
                       tier: 'proyectado' as const,
                     },
                   ]
@@ -722,21 +693,21 @@ export class InversionesService {
             // Price is the trailing-12-mo average of real Brent (sourced).
             assumptions: {
               priceUsd: exportPriceUsd != null ? Math.round(exportPriceUsd * 10) / 10 : null,
-              priceBasis: `Brent prom. ${brentWindow.length}m (EIA)`,
+              priceBasis: s.impacto.priceBasis(brentWindow.length),
               todayBblD,
               targetBblD,
               gdpUsd,
               gdpYear,
             },
-            source: { ...WORLD_SOURCE, asOf: oilRank ? String(oilRank.year) : '' },
+            source: { ...src.WORLD, asOf: oilRank ? String(oilRank.year) : '' },
           }
         : null;
 
     // RIGI oil & gas projects block (sourced registry) — committed investment.
     const rigi = rigiRows.length
       ? {
-          title: 'Proyectos RIGI de petróleo y gas',
-          subtitle: 'Inversión comprometida en proyectos aprobados',
+          title: s.rigiTitle,
+          subtitle: s.rigiSubtitle,
           count: rigiRows.length,
           totalMusd: rigiRows.reduce((a, r) => a + (r.investmentMusd ?? 0), 0),
           projects: rigiRows.map((r) => ({
@@ -748,14 +719,14 @@ export class InversionesService {
             approvalDate: r.approvalDate ? r.approvalDate.toISOString().slice(0, 10) : null,
             sourceUrl: r.sourceUrl,
           })),
-          source: { ...RIGI_SOURCE, asOf: RIGI_AS_OF },
+          source: { ...src.RIGI, asOf: RIGI_AS_OF },
         }
       : null;
 
     const politica = {
       intro: {
-        title: 'La política que convierte potencial en producción',
-        text: 'El recurso ya existe. Lo que cambió es el marco: las medidas actuales destraban la inversión necesaria para que la proyección se realice — y con ella, el salto en el ranking mundial.',
+        title: s.politicaIntroTitle,
+        text: s.politicaIntroText,
       },
       levers,
       charts,
@@ -764,16 +735,16 @@ export class InversionesService {
     };
 
     return {
-      source: WORLD_SOURCE,
+      source: src.WORLD,
       rankings,
       fastestGrowing,
       // Cited, not computed — the headline resource claim.
       shale: {
         oilRank: 4,
         gasRank: 2,
-        note: 'Vaca Muerta concentra el 2.º recurso de shale gas y el 4.º de shale oil técnicamente recuperable del mundo.',
+        note: s.shaleNote,
         tier: 'referencia' as const,
-        source: SHALE_SOURCE,
+        source: src.SHALE,
       },
       politica,
     };

@@ -53,6 +53,8 @@ export const BASIN_OPTIONS: FilterOption[] = [
   { value: 'AUSTRAL', label: 'Austral' },
 ]
 
+// The `value` must stay as the raw SEN status string (it's matched against the
+// API `status_code`); only the visible label is localized, via `statusOptions.*`.
 export const STATUS_OPTIONS: FilterOption[] = [
   { value: 'En Producción Efectiva', label: 'En Producción Efectiva' },
   { value: 'Parado Transitoriamente', label: 'Parado Transitoriamente' },
@@ -61,6 +63,15 @@ export const STATUS_OPTIONS: FilterOption[] = [
   { value: 'Abandono Definitivo', label: 'Abandono Definitivo' },
   { value: 'Pozo Inyector', label: 'Pozo Inyector' },
 ]
+
+const STATUS_OPTION_KEY: Record<string, string> = {
+  'En Producción Efectiva': 'producing',
+  'Parado Transitoriamente': 'stopped',
+  'En Estudio': 'study',
+  'En Espera de Abandono': 'awaitingAbandonment',
+  'Abandono Definitivo': 'abandoned',
+  'Pozo Inyector': 'injector',
+}
 
 export const PROVINCE_OPTIONS: FilterOption[] = [
   { value: 'Jujuy', label: 'Jujuy' },
@@ -95,6 +106,12 @@ export function FilterPanel({
   loading: boolean
 }) {
   const t = useTranslations('mapPage.filters')
+  const anyLabel = t('any')
+  // Localize the status labels while keeping each `value` as the raw API string.
+  const statusOptions = STATUS_OPTIONS.map((o) => ({
+    value: o.value,
+    label: t(`statusOptions.${STATUS_OPTION_KEY[o.value]}`),
+  }))
   const update = (key: keyof WellFilters, value: string) => {
     setFilters({ ...filters, [key]: value === ANY ? null : value })
   }
@@ -133,30 +150,35 @@ export function FilterPanel({
           label={t('formation')}
           value={filters.formation}
           options={FORMATION_OPTIONS}
+          anyLabel={anyLabel}
           onChange={(v) => update('formation', v)}
         />
         <FilterRow
           label={t('operator')}
           value={filters.operator}
           options={operatorOptions}
+          anyLabel={anyLabel}
           onChange={(v) => update('operator', v)}
         />
         <FilterRow
           label={t('basin')}
           value={filters.basin}
           options={BASIN_OPTIONS}
+          anyLabel={anyLabel}
           onChange={(v) => update('basin', v)}
         />
         <FilterRow
           label={t('province')}
           value={filters.province}
           options={PROVINCE_OPTIONS}
+          anyLabel={anyLabel}
           onChange={(v) => update('province', v)}
         />
         <FilterRow
           label={t('status')}
           value={filters.status}
-          options={STATUS_OPTIONS}
+          options={statusOptions}
+          anyLabel={anyLabel}
           onChange={(v) => update('status', v)}
         />
         <label className="flex items-center justify-between gap-3 pt-1">
@@ -239,11 +261,13 @@ function FilterRow({
   label,
   value,
   options,
+  anyLabel,
   onChange,
 }: {
   label: string
   value: string | null
   options: FilterOption[]
+  anyLabel: string
   onChange: (v: string) => void
 }) {
   return (
@@ -256,7 +280,7 @@ function FilterRow({
           <SelectValue />
         </SelectTrigger>
         <SelectContent className="rounded-none border-nd-border bg-nd-surface">
-          <SelectItem value={ANY}>Any</SelectItem>
+          <SelectItem value={ANY}>{anyLabel}</SelectItem>
           {options.map((opt) => (
             <SelectItem key={opt.value} value={opt.value}>
               {opt.label}

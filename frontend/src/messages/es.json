@@ -115,6 +115,15 @@
       "basin": "Cuenca",
       "province": "Provincia",
       "status": "Estado",
+      "any": "Cualquiera",
+      "statusOptions": {
+        "producing": "En Producción Efectiva",
+        "stopped": "Parado Transitoriamente",
+        "study": "En Estudio",
+        "awaitingAbandonment": "En Espera de Abandono",
+        "abandoned": "Abandono Definitivo",
+        "injector": "Pozo Inyector"
+      },
       "hideAbandoned": "Ocultar pozos abandonados",
       "wellsCount": "{count} pozos",
       "capped": "TOPE",
@@ -126,7 +135,8 @@
       "oilUnit": "{value} bbl/d petróleo",
       "gasUnit": "{value} MMcf/d gas",
       "vmShareOfBoe": "{pct} del BOE",
-      "operatorOilBblD": "{operator} · bbl/d petróleo"
+      "operatorOilBblD": "{operator} · bbl/d petróleo",
+      "boeTooltip": "Barriles equivalentes de petróleo — unidad que combina petróleo y gas con 6 Mcf de gas ≈ 1 bbl de petróleo"
     },
     "topOperators": {
       "title": "Operadores principales · BOE",

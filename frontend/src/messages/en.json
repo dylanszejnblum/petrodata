@@ -115,6 +115,15 @@
       "basin": "Basin",
       "province": "Province",
       "status": "Status",
+      "any": "Any",
+      "statusOptions": {
+        "producing": "In effective production",
+        "stopped": "Temporarily stopped",
+        "study": "Under study",
+        "awaitingAbandonment": "Awaiting abandonment",
+        "abandoned": "Permanently abandoned",
+        "injector": "Injector well"
+      },
       "hideAbandoned": "Hide abandoned wells",
       "wellsCount": "{count} wells",
       "capped": "CAPPED",
@@ -126,7 +135,8 @@
       "oilUnit": "{value} bbl/d oil",
       "gasUnit": "{value} MMcf/d gas",
       "vmShareOfBoe": "{pct} of BOE",
-      "operatorOilBblD": "{operator} · oil bbl/d"
+      "operatorOilBblD": "{operator} · oil bbl/d",
+      "boeTooltip": "Barrels of Oil Equivalent — energy-equivalent unit combining oil and gas at 6 Mcf gas ≈ 1 bbl oil"
     },
     "topOperators": {
       "title": "Top operators · BOE",
