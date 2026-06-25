@@ -569,7 +569,7 @@
     "blurb": "The Vaca Muerta opportunity in numbers: every figure is computed from official production and export data, with its source and as-of date. No unsupported projections.",
     "asOf": "Data as of {month}",
     "source": "Source",
-    "computedBy": "Computed by Petrodata from {source}",
+    "computedBy": "Computed by vacamuerta.io from {source}",
     "operatorsTitle": "Leading operators",
     "transportTitle": "Transport infrastructure",
     "transportBlurb": "The trunk network that evacuates production: gas transport pipelines by operator and oil trunk lines. Official geometry and routes — no flow data in the source.",
