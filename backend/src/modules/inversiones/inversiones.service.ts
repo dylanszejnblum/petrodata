@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { Lang, numLocale, sources, strings } from './inversiones.i18n';
+import { fetchLiveBrent } from './brent-live';
 
 /**
  * /inversiones — computed, not curated. Every figure is derived from data we
@@ -272,10 +273,12 @@ export class InversionesService {
   }
 
   /**
-   * Breakeven headroom: the latest *measured* Brent price (computed live from
-   * FactPrice) against a *cited* breakeven reference (a constant, not computed).
-   * The margin between them is the headroom. Omitted entirely if we hold no
-   * Brent rows — never fabricated.
+   * Breakeven headroom: the live Brent price against a *cited* breakeven
+   * reference (a constant, not computed). The margin between them is the
+   * headroom. The headline price is the real-time front-month Brent future
+   * (Yahoo BZ=F); if that fetch fails we fall back to the latest *measured* EIA
+   * row from FactPrice — never fabricated. Omitted entirely if we hold no Brent
+   * rows and the live fetch is unavailable.
    */
   private async breakeven(lang: Lang) {
     const src = sources(lang);
@@ -284,28 +287,44 @@ export class InversionesService {
       orderBy: { date: 'desc' },
       select: { value: true, date: true },
     });
-    if (!row) return null;
 
-    const brentAsOf = row.date.toISOString().slice(0, 10);
+    // Real-time spot (cached). On failure we degrade to the last measured row.
+    const live = await fetchLiveBrent();
+    if (!row && !live) return null;
+
+    const brentUsd = live ? live.value : row!.value;
+    const brentAsOf = live ? live.asOf : row!.date.toISOString().slice(0, 10);
+    const source = live ? { ...src.BRENT_LIVE, asOf: live.asOf } : { ...src.BRENT, asOf: brentAsOf };
 
     // Trailing window of measured Brent for the trend sparkline. Anchored to the
     // latest row (not "now") so a stale dataset still renders a full window.
-    const since = new Date(row.date);
-    since.setUTCFullYear(since.getUTCFullYear() - 2);
-    const history = await this.prisma.factPrice.findMany({
-      where: { series: 'brent', date: { gte: since } },
-      orderBy: { date: 'asc' },
-      select: { value: true, date: true },
-    });
+    let series: { date: string; value: number }[] = [];
+    if (row) {
+      const since = new Date(row.date);
+      since.setUTCFullYear(since.getUTCFullYear() - 2);
+      const history = await this.prisma.factPrice.findMany({
+        where: { series: 'brent', date: { gte: since } },
+        orderBy: { date: 'asc' },
+        select: { value: true, date: true },
+      });
+      series = history.map((h) => ({ date: h.date.toISOString().slice(0, 10), value: h.value }));
+    }
+
+    // Cap the trend with the live spot so the sparkline tip is the real-time
+    // price. Replace the last point if it shares the live quote's date.
+    if (live) {
+      if (series.length && series[series.length - 1].date === live.date) series.pop();
+      series.push({ date: live.date, value: live.value });
+    }
 
     return {
-      brentUsd: row.value,
+      brentUsd,
       brentAsOf,
       referenceUsd: BREAKEVEN_REFERENCE_USD,
-      headroomUsd: row.value - BREAKEVEN_REFERENCE_USD,
+      headroomUsd: brentUsd - BREAKEVEN_REFERENCE_USD,
       tier: 'confirmado',
-      series: history.map((h) => ({ date: h.date.toISOString().slice(0, 10), value: h.value })),
-      source: { ...src.BRENT, asOf: brentAsOf },
+      series,
+      source,
       referenceSource: src.BREAKEVEN_REFERENCE,
     };
   }

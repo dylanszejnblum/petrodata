@@ -213,6 +213,7 @@ function WorldLeaderboard({ ranking }: { ranking: InvMundoRanking }) {
                   className="truncate font-sans text-sm"
                   style={{ color: arg ? 'var(--nd-accent)' : 'var(--nd-text-display)', fontWeight: arg ? 600 : 400 }}
                 >
+                  {arg && <span className="mr-1">🇦🇷</span>}
                   {r.country}
                 </span>
                 <span className="shrink-0 font-mono text-[11px] tabular-nums text-nd-text-secondary">
@@ -279,6 +280,7 @@ function GrowthBlock({ growth }: { growth: InvMundoGrowth }) {
                     className="truncate font-sans text-sm"
                     style={{ color: arg ? 'var(--nd-accent)' : 'var(--nd-text-display)', fontWeight: arg ? 600 : 400 }}
                   >
+                    {arg && <span className="mr-1">🇦🇷</span>}
                     {r.country}
                   </span>
                 </div>
