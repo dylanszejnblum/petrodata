@@ -33,6 +33,7 @@ export function sources(lang: Lang) {
       url: 'https://datos.energia.gob.ar/',
     },
     BRENT: { label: 'EIA (Brent)', url: 'https://www.eia.gov/dnav/pet/hist/RBRTEM.htm' },
+    BRENT_LIVE: { label: en ? 'Yahoo Finance — Brent (BZ=F), real-time' : 'Yahoo Finance — Brent (BZ=F), tiempo real', url: 'https://finance.yahoo.com/quote/BZ=F' },
     GDP: {
       label: en ? 'World Bank (nominal GDP, US$)' : 'Banco Mundial (PBI nominal, US$)',
       url: 'https://data.worldbank.org/indicator/NY.GDP.MKTP.CD?locations=AR',
