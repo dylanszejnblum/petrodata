@@ -37,6 +37,13 @@ export interface NewsCard {
   clusterId: string | null
   importanceScore: number | null
   legalMode: LegalMode
+  /**
+   * Optional card extras. Not yet in the backend list projection — when the
+   * `news.service` LIST_SELECT starts emitting them, cards light up automatically.
+   * Until then they are undefined and the UI degrades gracefully.
+   */
+  readingMinutes?: number | null
+  image?: string | null
 }
 
 /** Full document returned by the single-doc endpoint. */

@@ -7,12 +7,17 @@ import { NothingFooter } from '@/components/Nothing/Footer'
 import { buildAlternates } from '@/i18n/alternates'
 import { fetchNewsDoc } from '@/api/news'
 import { NewsCard } from '@/components/Petrodata/news/NewsCard'
+import { NewsBody } from '@/components/Petrodata/news/NewsBody'
 import {
   absoluteDate,
   entityList,
   familyColor,
   isMetadataOnly,
+  primaryCategory,
+  pullQuote,
+  readingMinutes,
   relativeTime,
+  splitAttachments,
 } from '@/components/Petrodata/news/meta'
 
 export const dynamic = 'force-dynamic'
@@ -46,7 +51,13 @@ export default async function NoticiaDetailPage({
   const metadataOnly = isMetadataOnly(doc.legalMode)
   const entities = entityList(doc)
   const topics = doc.topics ?? []
-  const attachments = (doc.attachments ?? []).filter((a) => a?.url)
+  const category = primaryCategory(doc)
+  const { images, documents } = splitAttachments(doc.attachments)
+  const hasBody = !metadataOnly && !!doc.bodyText
+  const minutes = hasBody ? readingMinutes(doc.bodyText) : 0
+  const heroImage = !metadataOnly ? images[0] : undefined
+  const bodyImages = heroImage ? images.slice(1) : []
+  const highlight = hasBody ? pullQuote(doc.bodyText) : null
 
   return (
     <>
@@ -73,6 +84,15 @@ export default async function NoticiaDetailPage({
                 {absoluteDate(doc.publishedAt)} · {relativeTime(doc.publishedAt)}
               </time>
             ) : null}
+            {category.topic ? (
+              <Link
+                href={`/noticias?topic=${encodeURIComponent(category.topic)}`}
+                className="rounded-full border border-nd-border px-2 py-0.5 text-[10px] text-nd-text-secondary transition-colors hover:border-nd-text-display hover:text-nd-text-display"
+              >
+                {category.label}
+              </Link>
+            ) : null}
+            {minutes ? <span className="text-nd-text-disabled">{t('readingTime', { minutes })}</span> : null}
             {!metadataOnly ? (
               <span className="rounded-full border border-nd-success/40 bg-nd-success/10 px-2 py-0.5 text-[10px] text-nd-success">
                 {t('regulatory')}
@@ -84,26 +104,53 @@ export default async function NoticiaDetailPage({
             {doc.title}
           </h1>
 
+          {/* TL;DR — the authored deck, surfaced as a labeled summary block. */}
           {doc.deck ? (
-            <p className="mt-5 text-pretty text-lg leading-relaxed text-nd-text-secondary font-sans">
-              {doc.deck}
-            </p>
-          ) : null}
-
-          {/* Body: only for documents we are licensed to reproduce. */}
-          {!metadataOnly && doc.bodyText ? (
-            <div className="mt-8 whitespace-pre-line text-base leading-relaxed text-nd-text-display font-sans">
-              {doc.bodyText}
+            <div className="mt-6 border-l-2 border-nd-text-disabled pl-4 sm:pl-5">
+              <span className="mb-1.5 block font-mono text-[10px] uppercase tracking-[0.08em] text-nd-text-disabled">
+                {t('tldr')}
+              </span>
+              <p className="text-pretty text-lg leading-relaxed text-nd-text-secondary font-sans">
+                {doc.deck}
+              </p>
             </div>
           ) : null}
 
+          {/* Hero image (first image attachment, when licensed to reproduce). */}
+          {heroImage ? (
+            <figure className="mt-8">
+              {/* External source URL — plain img avoids next/image domain config. */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={heroImage.url}
+                alt={heroImage.title || doc.title}
+                className="w-full border border-nd-border bg-nd-surface object-cover"
+              />
+              {heroImage.title ? (
+                <figcaption className="mt-2 font-mono text-[11px] text-nd-text-disabled">
+                  {heroImage.title}
+                </figcaption>
+              ) : null}
+            </figure>
+          ) : null}
+
+          {/* Body: only for documents we are licensed to reproduce. */}
+          {hasBody ? (
+            <NewsBody
+              text={doc.bodyText as string}
+              highlight={highlight}
+              highlightLabel={t('keyPoint')}
+              images={bodyImages}
+            />
+          ) : null}
+
           {/* Regulatory attachments (e.g. CNV PDFs). */}
-          {!metadataOnly && attachments.length ? (
+          {!metadataOnly && documents.length ? (
             <div className="mt-8 flex flex-col gap-2">
               <span className="font-mono text-[11px] uppercase tracking-[0.08em] text-nd-text-disabled">
                 {t('attachments')}
               </span>
-              {attachments.map((a, i) => (
+              {documents.map((a, i) => (
                 <a
                   key={`${a.url}-${i}`}
                   href={a.url}

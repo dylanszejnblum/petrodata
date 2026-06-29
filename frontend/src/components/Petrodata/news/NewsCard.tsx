@@ -1,12 +1,13 @@
 import { Link } from '@/i18n/navigation'
 import type { NewsCard as NewsCardType } from '@/api/news'
+import { getTranslations } from 'next-intl/server'
 import {
   absoluteDate,
   entityList,
   familyColor,
-  familyLabel,
   importanceLevel,
   isMetadataOnly,
+  primaryCategory,
   relativeTime,
 } from './meta'
 
@@ -25,9 +26,12 @@ function ImportanceDots({ score }: { score: number | null }) {
   )
 }
 
-export function NewsCard({ card }: { card: NewsCardType }) {
+export async function NewsCard({ card }: { card: NewsCardType }) {
+  const t = await getTranslations('noticias')
   const entities = entityList(card).slice(0, 3)
-  const topics = (card.topics ?? []).slice(0, 4)
+  const category = primaryCategory(card)
+  // Drop the category from the chip row so it isn't shown twice.
+  const topics = (card.topics ?? []).filter((tp) => tp !== category.topic).slice(0, 3)
   const regulatory = !isMetadataOnly(card.legalMode)
 
   return (
@@ -48,7 +52,27 @@ export function NewsCard({ card }: { card: NewsCardType }) {
         </span>
       </div>
 
-      <h3 className="mt-3 text-pretty text-lg leading-snug text-nd-text-display font-sans">
+      {card.image ? (
+        <Link href={`/noticias/${card.docId}`} className="mt-3 block">
+          {/* External source URL — plain img avoids next/image domain config. */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={card.image}
+            alt=""
+            loading="lazy"
+            className="aspect-[16/9] w-full border border-nd-border bg-nd-bg object-cover"
+          />
+        </Link>
+      ) : null}
+
+      <div className="mt-3 flex flex-wrap items-center gap-x-2.5 gap-y-1 font-mono text-[10px] uppercase tracking-[0.06em] text-nd-text-disabled">
+        <span className="text-nd-text-secondary">{category.label}</span>
+        {card.readingMinutes ? (
+          <span>· {t('readingTime', { minutes: card.readingMinutes })}</span>
+        ) : null}
+      </div>
+
+      <h3 className="mt-2 text-pretty text-lg leading-snug text-nd-text-display font-sans">
         <Link
           href={`/noticias/${card.docId}`}
           className="transition-colors hover:text-nd-accent"

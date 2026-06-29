@@ -672,6 +672,9 @@
     "attachments": "Documentos adjuntos",
     "topicsLabel": "Temas",
     "entitiesLabel": "Entidades",
-    "relatedCoverage": "Cobertura relacionada"
+    "relatedCoverage": "Cobertura relacionada",
+    "readingTime": "{minutes} min de lectura",
+    "tldr": "TL;DR",
+    "keyPoint": "Destacado"
   }
 }

@@ -1,17 +1,15 @@
 """Stage 3 — enrich: tag entities & topics, drop off-topic items.
 
-Inputs:  <out>/normalized.ndjson
+Inputs:  <out>/bodied.ndjson   (normalized docs after stage2b body-fetch)
 Outputs: <out>/enriched.ndjson
          <out>/enrich_report.json   — kept/dropped counts + dropped titles
 
-Deterministic dictionary matching over title + deck (all we have for
-metadata_only docs). No LLM, no network → no caching needed. Fills entities,
-topics, light numbers and an importance_score, and drops media docs that show
-no oil & gas signal (the mining/sports/etc. noise that slips through RSS).
-Primary/regulatory docs (e.g. CNV) are always kept.
-
-TODO (when body_text exists for fulltext_internal docs): richer NER, geo,
-embeddings for stage4 semantic clustering.
+Deterministic dictionary matching over title + deck + body_text (body is present
+for licensed fulltext docs after stage2b; metadata_only docs still only carry
+title + deck). No LLM, no network → no caching needed. Fills entities, topics,
+light numbers and an importance_score, and drops media docs that show no oil &
+gas signal (the mining/sports/etc. noise that slips through RSS). Primary/
+regulatory docs (e.g. CNV) are always kept.
 """
 
 from __future__ import annotations
@@ -135,7 +133,7 @@ def _merge(existing: dict, found: dict) -> dict:
 
 
 def enrich(out_dir: Path) -> Path:
-    src = out_dir / "normalized.ndjson"
+    src = out_dir / "bodied.ndjson"
     dst = out_dir / "enriched.ndjson"
 
     kept = 0
@@ -146,7 +144,8 @@ def enrich(out_dir: Path) -> Path:
             if not line:
                 continue
             doc = json.loads(line)
-            text = f"{doc.get('title', '')} {doc.get('deck') or ''}".lower()
+            text = (f"{doc.get('title', '')} {doc.get('deck') or ''} "
+                    f"{doc.get('body_text') or ''}").lower()
 
             found = {
                 "companies": _hits(text, _COMPANIES),
