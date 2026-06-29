@@ -28,6 +28,7 @@ from pathlib import Path
 from pipeline_news import (
     stage1_fetch,
     stage2_normalize,
+    stage2b_fetchbody,
     stage3_enrich,
     stage4_dedup,
     stage5_emit,
@@ -54,6 +55,7 @@ def main() -> int:
     if not args.no_fetch:
         stage1_fetch.fetch(args.out, args.source, args.limit)
     stage2_normalize.normalize(args.out)
+    stage2b_fetchbody.fetchbody(args.out)
     stage3_enrich.enrich(args.out)
     stage4_dedup.dedup(args.out)
     artifact = stage5_emit.emit(args.out)

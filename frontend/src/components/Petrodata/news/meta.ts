@@ -1,4 +1,4 @@
-import type { LegalMode, NewsCard } from '@/api/news'
+import type { LegalMode, NewsAttachment, NewsCard } from '@/api/news'
 
 /** A document whose full text we may not reproduce — link out to the source. */
 export function isMetadataOnly(legalMode: LegalMode): boolean {
@@ -61,6 +61,68 @@ export function relativeTime(iso: string | null, locale = 'es-AR'): string {
     if (abs >= secs) return rtf.format(Math.round(diff / secs), unit)
   }
   return rtf.format(Math.round(diff), 'second')
+}
+
+/**
+ * The card's primary category — the first topic, Title-cased, falling back to
+ * the source family. `topic` (when present) lets callers link to the filter.
+ */
+export function primaryCategory(
+  card: Pick<NewsCard, 'topics' | 'sourceFamily'>,
+): { label: string; topic: string | null } {
+  const topic = (card.topics ?? []).find(Boolean) ?? null
+  if (topic) {
+    const label = topic
+      .split(/[\s_-]+/)
+      .map((w) => (w ? w.charAt(0).toUpperCase() + w.slice(1) : w))
+      .join(' ')
+    return { label, topic }
+  }
+  return { label: familyLabel(card.sourceFamily), topic: null }
+}
+
+/** Estimated reading time in whole minutes (>= 1), at ~200 wpm. */
+export function readingMinutes(text: string | null | undefined): number {
+  if (!text) return 0
+  const words = text.trim().split(/\s+/).filter(Boolean).length
+  if (!words) return 0
+  return Math.max(1, Math.round(words / 200))
+}
+
+const IMAGE_EXT = /\.(jpe?g|png|webp|gif|avif)(\?.*)?$/i
+
+/** Split attachments into displayable images and everything else (PDFs, etc.). */
+export function splitAttachments(attachments: NewsAttachment[] | null | undefined): {
+  images: NewsAttachment[]
+  documents: NewsAttachment[]
+} {
+  const images: NewsAttachment[] = []
+  const documents: NewsAttachment[] = []
+  for (const a of attachments ?? []) {
+    if (!a?.url) continue
+    const isImage = a.type?.toLowerCase().startsWith('image') || IMAGE_EXT.test(a.url)
+    ;(isImage ? images : documents).push(a)
+  }
+  return { images, documents }
+}
+
+/**
+ * Pull a single "key" sentence out of the body to surface as a large highlighted
+ * block. Prefers a sentence carrying a number/figure (the substantive remark);
+ * otherwise the longest sentence in a readable length window. Returns null when
+ * nothing suitable is found.
+ */
+export function pullQuote(text: string | null | undefined): string | null {
+  if (!text) return null
+  const sentences = text
+    .replace(/\s+/g, ' ')
+    .split(/(?<=[.!?])\s+/)
+    .map((s) => s.trim())
+    .filter((s) => s.length >= 60 && s.length <= 220)
+  if (!sentences.length) return null
+  const withNumber = sentences.find((s) => /\d/.test(s))
+  if (withNumber) return withNumber
+  return sentences.reduce((a, b) => (b.length > a.length ? b : a))
 }
 
 export function absoluteDate(iso: string | null, locale = 'es-AR'): string {

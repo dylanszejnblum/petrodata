@@ -28,6 +28,38 @@ const LIST_SELECT = {
   legalMode: true,
 } satisfies Prisma.NewsDocumentSelect;
 
+/** Adds the fields needed to derive card extras (reading time, thumbnail). These
+ *  are consumed server-side in `toCard` and stripped before the response — the
+ *  feed still never ships raw `bodyText`. */
+const LIST_SELECT_CARD = {
+  ...LIST_SELECT,
+  bodyText: true,
+  attachments: true,
+} satisfies Prisma.NewsDocumentSelect;
+
+const IMAGE_EXT = /\.(jpe?g|png|webp|gif|avif)(\?.*)?$/i;
+
+/** Estimated reading time in whole minutes (>= 1) at ~200 wpm; null when no body. */
+function readingMinutes(text: string | null): number | null {
+  if (!text) return null;
+  const words = text.trim().split(/\s+/).filter(Boolean).length;
+  return words ? Math.max(1, Math.round(words / 200)) : null;
+}
+
+/** First image URL among attachments, if any. */
+function firstImageUrl(attachments: unknown): string | null {
+  if (!Array.isArray(attachments)) return null;
+  for (const a of attachments) {
+    const url = a && typeof a === 'object' ? (a as { url?: unknown }).url : null;
+    if (typeof url !== 'string' || !url) continue;
+    const type = (a as { type?: unknown }).type;
+    const isImage =
+      (typeof type === 'string' && type.toLowerCase().startsWith('image')) || IMAGE_EXT.test(url);
+    if (isImage) return url;
+  }
+  return null;
+}
+
 export interface IngestResult {
   upserted: number;
   skipped: number;
@@ -44,6 +76,18 @@ export class NewsService {
   private readonly logger = new Logger(NewsService.name);
 
   constructor(private readonly prisma: PrismaService) {}
+
+  /** Project a `LIST_SELECT_CARD` row to the card shape: derive `readingMinutes`
+   *  and `image`, then drop the raw `bodyText`/`attachments` so they never ship.
+   *  The thumbnail is gated to docs we're licensed to reproduce. */
+  private toCard(row: Prisma.NewsDocumentGetPayload<{ select: typeof LIST_SELECT_CARD }>) {
+    const { bodyText, attachments, ...card } = row;
+    return {
+      ...card,
+      readingMinutes: readingMinutes(bodyText),
+      image: card.legalMode === 'fulltext_internal' ? firstImageUrl(attachments) : null,
+    };
+  }
 
   /** Idempotent upsert by doc_id. Re-ingesting an existing doc updates it but
    *  never clobbers `editorNotes` (human-in-the-loop) or `createdAt`. */
@@ -96,14 +140,14 @@ export class NewsService {
       this.prisma.newsDocument.findMany({
         where,
         orderBy,
-        select: LIST_SELECT,
+        select: LIST_SELECT_CARD,
         skip,
         take: limit,
       }),
       this.prisma.newsDocument.count({ where }),
     ]);
 
-    return { data: rows, pagination: { page, limit, total } };
+    return { data: rows.map((r) => this.toCard(r)), pagination: { page, limit, total } };
   }
 
   /** Single document + its cluster siblings (other docs sharing `clusterId`). */
@@ -115,12 +159,12 @@ export class NewsService {
       ? await this.prisma.newsDocument.findMany({
           where: { clusterId: document.clusterId, docId: { not: docId } },
           orderBy: { publishedAt: { sort: 'desc', nulls: 'last' } },
-          select: LIST_SELECT,
+          select: LIST_SELECT_CARD,
           take: 20,
         })
       : [];
 
-    return { document, cluster };
+    return { document, cluster: cluster.map((r) => this.toCard(r)) };
   }
 
   /** Distinct topics / source families / regions / top entities with counts, for filter UI. */
