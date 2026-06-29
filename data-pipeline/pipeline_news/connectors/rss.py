@@ -39,10 +39,11 @@ FEEDS = [
         "legal_mode": "metadata_only",
     },
     {
+        # Licensed for full-text reproduction: stage2b fetches body + lead image.
         "url": "https://econojournal.com.ar/feed/",
         "source_name": "EconoJournal",
         "source_family": "medio",
-        "legal_mode": "metadata_only",
+        "legal_mode": "fulltext_internal",
     },
     {
         "url": "https://www.energiaonline.com.ar/feed/",
