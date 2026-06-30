@@ -18,14 +18,20 @@ ENV UV_LINK_MODE=copy \
 COPY pyproject.toml uv.lock ./
 RUN uv sync --frozen --no-dev --no-install-project
 
-# Only the files the news pipeline needs (keeps the image lean; see .dockerignore)
-COPY news_schema.py run_news.py ./
+# Only the files the news pipeline + backoffice need (keeps the image lean; see .dockerignore)
+COPY news_schema.py run_news.py dashboard.py ./
 COPY pipeline_news ./pipeline_news
 COPY docker/run-news-cron.sh /usr/local/bin/run-news-cron
-RUN chmod +x /usr/local/bin/run-news-cron && mkdir -p /data
+COPY docker/entrypoint.sh /usr/local/bin/entrypoint
+RUN chmod +x /usr/local/bin/run-news-cron /usr/local/bin/entrypoint && mkdir -p /data
 
 # Default config (override in Coolify env). BACKEND_INGEST_URL + NEWS_INGEST_TOKEN are required.
+# Set DASHBOARD_PASS in Coolify to protect the public backoffice URL.
 ENV NEWS_INTERVAL_SECONDS=21600 \
-    NEWS_OUT_DIR=/data/out_news
+    NEWS_OUT_DIR=/data/out_news \
+    DASHBOARD_PORT=8800
 
-CMD ["run-news-cron"]
+EXPOSE 8800
+
+# Runs the cron loop (background) + backoffice web UI (foreground).
+CMD ["entrypoint"]
