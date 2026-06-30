@@ -17,8 +17,13 @@ Env (Coolify):
     NEWS_OUT_DIR     dir to read/write (default out_news; --out overrides)
     DASHBOARD_PORT   listen port (default 8800)
     DASHBOARD_USER   login user (default 'admin')
-    DASHBOARD_PASS   login password + session-signing key. If UNSET the UI is
-                     OPEN (local dev only) — always set it in production.
+    DASHBOARD_PASS   login password. REQUIRED — if unset the server refuses to
+                     start (fail closed) unless DASHBOARD_ALLOW_OPEN=1. Use a
+                     long, random value; it also seeds session signing.
+    DASHBOARD_SECRET optional dedicated session-signing key (else derived from
+                     DASHBOARD_PASS). Set a random one to rotate independently.
+    DASHBOARD_ALLOW_OPEN=1   run with NO auth — local dev only.
+    DASHBOARD_INSECURE_COOKIE=1   drop the Secure cookie flag — local http dev.
     BACKEND_INGEST_URL / NEWS_INGEST_TOKEN
                      if both set, a manual run also POSTs to the backend.
 
@@ -183,8 +188,24 @@ def _user() -> str:
     return os.environ.get("DASHBOARD_USER", "admin")
 
 
+def auth_enabled() -> bool:
+    return bool(_key())
+
+
+def open_mode() -> bool:
+    """Auth off — only honoured when explicitly opted in (local dev)."""
+    return not auth_enabled() and os.environ.get("DASHBOARD_ALLOW_OPEN") == "1"
+
+
+def _sign_key() -> bytes:
+    # Sign sessions with a dedicated secret if provided, else derive one from the
+    # password — domain-separated so the raw password is never the HMAC key.
+    secret = os.environ.get("DASHBOARD_SECRET") or _key() or ""
+    return hashlib.sha256(f"news-backoffice-session::{secret}".encode()).digest()
+
+
 def _sign(msg: str) -> str:
-    return hmac.new(_key().encode(), msg.encode(), hashlib.sha256).hexdigest()
+    return hmac.new(_sign_key(), msg.encode(), hashlib.sha256).hexdigest()
 
 
 def make_session() -> str:
@@ -193,23 +214,53 @@ def make_session() -> str:
 
 
 def valid_session(tok: str | None, max_age: int = 7 * 86400) -> bool:
-    if not _key():
-        return True  # auth disabled (dev)
+    if not auth_enabled():
+        return open_mode()  # locked unless explicitly opened for local dev
     if not tok or "." not in tok:
         return False
     ts, sig = tok.split(".", 1)
     if not hmac.compare_digest(sig, _sign(ts)):
         return False
     try:
-        return (time.time() - int(ts)) < max_age
+        return 0 <= (time.time() - int(ts)) < max_age
     except ValueError:
         return False
 
 
 def check_login(user: str, pw: str) -> bool:
     key = _key()
-    return bool(key) and hmac.compare_digest(user, _user()) and \
-        hmac.compare_digest(pw, key)
+    if not key:
+        return False
+    # compare both fields regardless, so timing can't reveal which was wrong
+    u_ok = hmac.compare_digest(user, _user())
+    p_ok = hmac.compare_digest(pw, key)
+    return u_ok and p_ok
+
+
+# Login throttle: per-IP failed-attempt window (in-memory; resets on restart).
+# A speed bump, not the primary defence — that's a strong DASHBOARD_PASS.
+_login_lock = threading.Lock()
+_login_fails: dict[str, list[float]] = {}
+_LOGIN_MAX = 5
+_LOGIN_WINDOW = 900  # 15 min
+
+
+def login_blocked(ip: str) -> bool:
+    now = time.time()
+    with _login_lock:
+        fails = [t for t in _login_fails.get(ip, []) if now - t < _LOGIN_WINDOW]
+        _login_fails[ip] = fails
+        return len(fails) >= _LOGIN_MAX
+
+
+def note_login_fail(ip: str) -> None:
+    with _login_lock:
+        _login_fails.setdefault(ip, []).append(time.time())
+
+
+def clear_login_fails(ip: str) -> None:
+    with _login_lock:
+        _login_fails.pop(ip, None)
 
 
 # ── rendering ────────────────────────────────────────────────────────────────
@@ -558,6 +609,17 @@ def make_handler(out_dir: Path):
         def _authed(self) -> bool:
             return valid_session(self._cookie("sid"))
 
+        def _client_ip(self) -> str:
+            # Coolify/Traefik sets X-Forwarded-For; take the left-most (client).
+            xff = self.headers.get("X-Forwarded-For")
+            return xff.split(",")[0].strip() if xff else self.client_address[0]
+
+        def _session_cookie(self) -> str:
+            # Secure by default (prod is behind TLS); opt out only for http dev.
+            secure = "" if os.environ.get("DASHBOARD_INSECURE_COOKIE") == "1" else " Secure;"
+            return (f"sid={make_session()}; HttpOnly; Path=/; SameSite=Strict;"
+                    f"{secure} Max-Age={7 * 86400}")
+
         def _form(self) -> dict:
             n = int(self.headers.get("Content-Length") or 0)
             return parse_qs(self.rfile.read(n).decode("utf-8")) if n else {}
@@ -608,14 +670,19 @@ def make_handler(out_dir: Path):
         def do_POST(self):  # noqa: N802
             path = urlsplit(self.path).path
             if path == "/login":
+                ip = self._client_ip()
+                if login_blocked(ip):
+                    self._send(_page("login", render_login(
+                        "Too many attempts — wait a few minutes.")), 429)
+                    return
                 form = self._form()
                 user = (form.get("user") or [""])[0]
                 pw = (form.get("password") or [""])[0]
                 if check_login(user, pw):
-                    cookie = (f"sid={make_session()}; HttpOnly; Path=/; "
-                              f"SameSite=Strict; Max-Age={7 * 86400}")
-                    self._redirect("/", cookie)
+                    clear_login_fails(ip)
+                    self._redirect("/", self._session_cookie())
                 else:
+                    note_login_fail(ip)
                     self._send(_page("login", render_login("Wrong user or password.")), 401)
                 return
             if not self._authed():
@@ -639,16 +706,22 @@ def make_handler(out_dir: Path):
     return Handler
 
 
-def serve(out_dir: Path, port: int) -> None:
+def serve(out_dir: Path, port: int) -> bool:
     os.environ.setdefault("NEWS_OUT_DIR", str(out_dir))  # connector + subprocess agree
-    if not _key():
-        print("[dashboard] WARNING: DASHBOARD_PASS unset — UI is OPEN (local dev only)")
+    if not auth_enabled():
+        if os.environ.get("DASHBOARD_ALLOW_OPEN") != "1":
+            print("[dashboard] REFUSING TO START — DASHBOARD_PASS is not set.\n"
+                  "  Set DASHBOARD_PASS to a strong secret (recommended), or set\n"
+                  "  DASHBOARD_ALLOW_OPEN=1 to run with NO auth (local dev only).")
+            return False
+        print("[dashboard] WARNING: NO auth (DASHBOARD_ALLOW_OPEN=1) — local dev only")
     httpd = ThreadingHTTPServer(("0.0.0.0", port), make_handler(out_dir))
     print(f"[dashboard] serving {out_dir} at http://localhost:{port}  (ctrl-c to stop)")
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:
         print("\n[dashboard] bye")
+    return True
 
 
 # ── self-check ───────────────────────────────────────────────────────────────
@@ -698,15 +771,33 @@ def _selfcheck() -> None:
                                     "legal_mode": ["metadata_only"]})
         assert bad == "err"
 
-    # auth: signed session verifies, tamper fails
+    # auth: signed session verifies, tamper + forgery + wrong-cred fail
     os.environ["DASHBOARD_PASS"] = "secret"
+    os.environ.pop("DASHBOARD_ALLOW_OPEN", None)
+    os.environ.pop("DASHBOARD_SECRET", None)
     tok = make_session()
     assert valid_session(tok)
-    assert not valid_session(tok + "x")
-    assert not valid_session("999.deadbeef")
-    assert check_login("admin", "secret") and not check_login("admin", "nope")
+    assert not valid_session(tok + "x")          # tampered sig
+    assert not valid_session("999.deadbeef")     # forged
+    assert not valid_session(f"{int(time.time()) - 8 * 86400}.{_sign(str(int(time.time()) - 8 * 86400))}")  # expired
+    assert check_login("admin", "secret")
+    assert not check_login("admin", "nope")      # wrong pass
+    assert not check_login("root", "secret")     # wrong user
+    # session signing must not be the raw password (offline brute-force guard)
+    assert _sign("x") != hmac.new(b"secret", b"x", hashlib.sha256).hexdigest()
+    # login throttle trips after _LOGIN_MAX and clears
+    for _ in range(_LOGIN_MAX):
+        note_login_fail("9.9.9.9")
+    assert login_blocked("9.9.9.9")
+    clear_login_fails("9.9.9.9")
+    assert not login_blocked("9.9.9.9")
+    # fail closed: no key + no opt-in → locked; explicit opt-in → open
     del os.environ["DASHBOARD_PASS"]
-    assert valid_session(None)  # auth disabled when key unset
+    assert not valid_session(None)
+    assert not check_login("admin", "")
+    os.environ["DASHBOARD_ALLOW_OPEN"] = "1"
+    assert valid_session(None)
+    del os.environ["DASHBOARD_ALLOW_OPEN"]
     print("selfcheck ok")
 
 
@@ -721,8 +812,7 @@ def main() -> int:
     if args.selfcheck:
         _selfcheck()
         return 0
-    serve(args.out, args.port)
-    return 0
+    return 0 if serve(args.out, args.port) else 1
 
 
 if __name__ == "__main__":
