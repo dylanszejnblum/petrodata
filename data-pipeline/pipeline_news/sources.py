@@ -26,13 +26,13 @@ from pathlib import Path
 
 DEFAULT_FEEDS: list[dict] = [
     {"url": "https://www.shale24.com/feed/", "source_name": "Shale24",
-     "source_family": "medio", "legal_mode": "metadata_only",
+     "source_family": "medio", "legal_mode": "fulltext_internal",
      "region": [], "enabled": True, "status": "active"},
     {"url": "https://econojournal.com.ar/feed/", "source_name": "EconoJournal",
      "source_family": "medio", "legal_mode": "fulltext_internal",
      "region": [], "enabled": True, "status": "active"},
     {"url": "https://www.energiaonline.com.ar/feed/", "source_name": "Energía Online",
-     "source_family": "medio", "legal_mode": "metadata_only",
+     "source_family": "medio", "legal_mode": "fulltext_internal",
      "region": [], "enabled": True, "status": "active"},
     {"url": "https://www.rionegro.com.ar/feed/", "source_name": "Diario Río Negro",
      "source_family": "medio", "legal_mode": "metadata_only",
