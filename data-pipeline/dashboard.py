@@ -17,11 +17,15 @@ Env (Coolify):
     NEWS_OUT_DIR     dir to read/write (default out_news; --out overrides)
     DASHBOARD_PORT   listen port (default 8800)
     DASHBOARD_USER   login user (default 'admin')
-    DASHBOARD_PASS   login password. REQUIRED — if unset the server refuses to
-                     start (fail closed) unless DASHBOARD_ALLOW_OPEN=1. Use a
-                     long, random value; it also seeds session signing.
+    DASHBOARD_PASS_HASH  RECOMMENDED for prod — a salted scrypt hash so the
+                     plaintext password is never stored in the env. Generate
+                     with:  uv run dashboard.py --hash-password
+    DASHBOARD_PASS   plaintext password (local-dev fallback; used only if
+                     DASHBOARD_PASS_HASH is unset). One of these two is REQUIRED:
+                     with neither, the server refuses to start (fail closed)
+                     unless DASHBOARD_ALLOW_OPEN=1.
     DASHBOARD_SECRET optional dedicated session-signing key (else derived from
-                     DASHBOARD_PASS). Set a random one to rotate independently.
+                     the configured secret). Set a random one to rotate sessions.
     DASHBOARD_ALLOW_OPEN=1   run with NO auth — local dev only.
     DASHBOARD_INSECURE_COOKIE=1   drop the Secure cookie flag — local http dev.
     BACKEND_INGEST_URL / NEWS_INGEST_TOKEN
@@ -180,16 +184,47 @@ def _run_worker(out_dir: Path, source: str | None) -> None:
 # ── auth (cookie session) ────────────────────────────────────────────────────
 
 
-def _key() -> str | None:
-    return os.environ.get("DASHBOARD_PASS")
-
-
 def _user() -> str:
     return os.environ.get("DASHBOARD_USER", "admin")
 
 
+# scrypt params (~50ms/verify). Stored hash format: "scrypt$<salt_hex>$<dk_hex>".
+_SCRYPT = dict(n=2 ** 14, r=8, p=1, dklen=32, maxmem=72 * 1024 * 1024)
+
+
+def hash_password(pw: str, salt: bytes | None = None) -> str:
+    salt = salt if salt is not None else os.urandom(16)
+    dk = hashlib.scrypt(pw.encode(), salt=salt, **_SCRYPT)
+    return f"scrypt${salt.hex()}${dk.hex()}"
+
+
+def verify_password(pw: str) -> bool:
+    """Check a submitted password against the configured secret, constant-time.
+
+    Prefers a salted scrypt hash (DASHBOARD_PASS_HASH); falls back to a plaintext
+    DASHBOARD_PASS for local dev. Returns False if nothing is configured."""
+    h = os.environ.get("DASHBOARD_PASS_HASH")
+    if h:
+        try:
+            algo, salt_hex, dig_hex = h.split("$")
+            if algo != "scrypt":
+                return False
+            dk = hashlib.scrypt(pw.encode(), salt=bytes.fromhex(salt_hex), **_SCRYPT)
+            return hmac.compare_digest(dk.hex(), dig_hex)
+        except (ValueError, TypeError):
+            return False
+    plain = os.environ.get("DASHBOARD_PASS")
+    return bool(plain) and hmac.compare_digest(pw, plain)
+
+
+def _secret() -> str | None:
+    """The configured auth secret (hash preferred, else plaintext). Gates auth
+    and seeds session signing — never the recoverable password when a hash is set."""
+    return os.environ.get("DASHBOARD_PASS_HASH") or os.environ.get("DASHBOARD_PASS")
+
+
 def auth_enabled() -> bool:
-    return bool(_key())
+    return bool(_secret())
 
 
 def open_mode() -> bool:
@@ -199,8 +234,9 @@ def open_mode() -> bool:
 
 def _sign_key() -> bytes:
     # Sign sessions with a dedicated secret if provided, else derive one from the
-    # password — domain-separated so the raw password is never the HMAC key.
-    secret = os.environ.get("DASHBOARD_SECRET") or _key() or ""
+    # configured secret — domain-separated, and the password hash (not the raw
+    # password) when DASHBOARD_PASS_HASH is used.
+    secret = os.environ.get("DASHBOARD_SECRET") or _secret() or ""
     return hashlib.sha256(f"news-backoffice-session::{secret}".encode()).digest()
 
 
@@ -228,12 +264,11 @@ def valid_session(tok: str | None, max_age: int = 7 * 86400) -> bool:
 
 
 def check_login(user: str, pw: str) -> bool:
-    key = _key()
-    if not key:
+    if not auth_enabled():
         return False
-    # compare both fields regardless, so timing can't reveal which was wrong
+    # evaluate both regardless, so timing can't reveal which field was wrong
     u_ok = hmac.compare_digest(user, _user())
-    p_ok = hmac.compare_digest(pw, key)
+    p_ok = verify_password(pw)
     return u_ok and p_ok
 
 
@@ -339,7 +374,7 @@ def _page(title: str, body: str, flash: tuple[str, str] | None = None) -> str:
             f"<nav><a href='/'>Overview</a><a href='/sources'>Sources</a>"
             f"<a href='/images'>Images</a></nav>"
             f"<span class=right>{_esc(title)}"
-            + ("" if not _key() else " · <a href='/logout'>logout</a>")
+            + ("" if not auth_enabled() else " · <a href='/logout'>logout</a>")
             + f"</span></header><div class=wrap>{fl}{body}</div></body></html>")
 
 
@@ -771,6 +806,19 @@ def _selfcheck() -> None:
                                     "legal_mode": ["metadata_only"]})
         assert bad == "err"
 
+    # password hashing: scrypt roundtrip, wrong pass, malformed hash, no plaintext
+    os.environ.pop("DASHBOARD_PASS", None)
+    os.environ.pop("DASHBOARD_SECRET", None)
+    h = hash_password("hunter2")
+    assert h.startswith("scrypt$") and "hunter2" not in h
+    os.environ["DASHBOARD_PASS_HASH"] = h
+    assert auth_enabled() and verify_password("hunter2")
+    assert not verify_password("wrong")
+    assert check_login("admin", "hunter2") and not check_login("admin", "x")
+    os.environ["DASHBOARD_PASS_HASH"] = "scrypt$zz$zz"  # malformed
+    assert not verify_password("hunter2")
+    os.environ.pop("DASHBOARD_PASS_HASH", None)
+
     # auth: signed session verifies, tamper + forgery + wrong-cred fail
     os.environ["DASHBOARD_PASS"] = "secret"
     os.environ.pop("DASHBOARD_ALLOW_OPEN", None)
@@ -808,9 +856,19 @@ def main() -> int:
     ap.add_argument("--port", type=int,
                     default=int(os.environ.get("DASHBOARD_PORT", "8800")))
     ap.add_argument("--selfcheck", action="store_true")
+    ap.add_argument("--hash-password", action="store_true",
+                    help="generate a DASHBOARD_PASS_HASH and exit")
     args = ap.parse_args()
     if args.selfcheck:
         _selfcheck()
+        return 0
+    if args.hash_password:
+        import getpass
+        pw = getpass.getpass("Password: ")
+        if not pw or pw != getpass.getpass("Confirm:  "):
+            print("passwords empty or do not match")
+            return 1
+        print(f"\nDASHBOARD_PASS_HASH={hash_password(pw)}")
         return 0
     return 0 if serve(args.out, args.port) else 1
 
