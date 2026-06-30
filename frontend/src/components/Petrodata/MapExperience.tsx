@@ -17,6 +17,7 @@ import {
   type CircleColorValue,
 } from '@/components/ui/map'
 import { api, type ApiSchemas } from '@/api/client'
+import { track } from '@/utilities/analytics'
 import type { paths } from '@/api/types'
 import { OverviewCard } from './map/OverviewCard'
 import { FilterPanel, DEFAULT_FILTERS, type WellFilters, type FilterOption } from './map/FilterPanel'
@@ -321,12 +322,19 @@ export function MapExperience({
   }, [])
 
   const handleBasinClick = useCallback((name: string) => {
+    track('map_feature_click', { type: 'basin', name })
     setFilters((prev) => ({ ...prev, basin: name }))
   }, [])
 
   const handlePointClick = useCallback(
     (feature: GeoJSON.Feature<GeoJSON.Point, WellProps>, coordinates: [number, number]) => {
       if (!feature.properties) return
+      track('map_feature_click', {
+        type: 'well',
+        id: feature.properties.sigla,
+        operator: feature.properties.operator_name,
+        basin: feature.properties.basin,
+      })
       setSelected({
         longitude: coordinates[0],
         latitude: coordinates[1],

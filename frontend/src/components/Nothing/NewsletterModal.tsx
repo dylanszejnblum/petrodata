@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, useCallback, useRef, FormEvent } from 'react'
+import { track } from '@/utilities/analytics'
 import { api } from '@/api/client'
 
 type ModalState = 'idle' | 'entering' | 'visible' | 'exiting' | 'success' | 'success-exiting'
@@ -108,6 +109,7 @@ export function NewsletterModal() {
       })
 
       if (response.ok) {
+        track('newsletter_signup', { source: 'newsletter-modal' })
         setState('success')
       } else {
         setError('Something went wrong')
