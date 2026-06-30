@@ -1,41 +1,63 @@
-"""News pipeline backoffice — v0.
+"""News pipeline backoffice — v1.
 
-Read-only web window onto a pipeline output dir. Shows sources, article counts
-and images straight from the emitted artifacts — no DB, no build step. Reads the
-files fresh on every request, so it always reflects the latest cron tick. Runs
-in the same container as the news cron, reading the same NEWS_OUT_DIR volume.
+A small web backoffice for the news pipeline, served from the same container as
+the ingest cron (shared NEWS_OUT_DIR volume). It:
+
+  • shows sources, article counts, images and the emitted docs (read fresh per
+    request from the pipeline artifacts — no DB);
+  • lets you add / edit / enable / disable RSS sources (persisted to
+    <out>/sources.json, which the connector reads);
+  • triggers a news fetch on demand (spawns run_news.py in the background);
+  • is gated by a cookie-session login when DASHBOARD_PASS is set.
 
     uv run dashboard.py --out out_news/            # http://localhost:8800
-    uv run dashboard.py --out out_news/ --port 9000
-    uv run dashboard.py --selfcheck                # offline aggregation test
+    uv run dashboard.py --selfcheck               # offline tests
 
-Env (for the Coolify deploy):
-    NEWS_OUT_DIR     dir to read (default out_news; --out overrides)
-    DASHBOARD_PORT   listen port (default 8800; --port overrides)
-    DASHBOARD_USER   basic-auth user (default 'admin')
-    DASHBOARD_PASS   basic-auth password; if UNSET, the UI is open (local dev)
+Env (Coolify):
+    NEWS_OUT_DIR     dir to read/write (default out_news; --out overrides)
+    DASHBOARD_PORT   listen port (default 8800)
+    DASHBOARD_USER   login user (default 'admin')
+    DASHBOARD_PASS_HASH  RECOMMENDED for prod — a salted scrypt hash so the
+                     plaintext password is never stored in the env. Generate
+                     with:  uv run dashboard.py --hash-password
+    DASHBOARD_PASS   plaintext password (local-dev fallback; used only if
+                     DASHBOARD_PASS_HASH is unset). One of these two is REQUIRED:
+                     with neither, the server refuses to start (fail closed)
+                     unless DASHBOARD_ALLOW_OPEN=1.
+    DASHBOARD_SECRET optional dedicated session-signing key (else derived from
+                     the configured secret). Set a random one to rotate sessions.
+    DASHBOARD_ALLOW_OPEN=1   run with NO auth — local dev only.
+    DASHBOARD_INSECURE_COOKIE=1   drop the Secure cookie flag — local http dev.
+    BACKEND_INGEST_URL / NEWS_INGEST_TOKEN
+                     if both set, a manual run also POSTs to the backend.
 
-Reads, if present, under <out>/:
-    normalized/news_documents.ndjson   the emitted, validated docs (source of truth)
-    state.json                         per-connector watermarks (last seen)
-    emit_report.json                   emitted / rejected counts
-
-ponytail: stdlib only, reloads per request. Fine while the doc set is small
-(thousands). If it ever gets large, cache by file mtime — not before.
+ponytail: stdlib only, files reloaded per request. Fine at this scale (low
+thousands of docs). Cache by mtime only if it ever gets slow.
 """
 
 from __future__ import annotations
 
 import argparse
-import base64
+import hashlib
 import hmac
 import html
 import json
 import os
-from datetime import datetime
+import subprocess
+import sys
+import threading
+import time
+from datetime import datetime, timezone
+from http.cookies import SimpleCookie
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import parse_qs, urlsplit
+from urllib.parse import parse_qs, quote, urlsplit
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))  # import pipeline pkgs
+import news_schema as schema  # noqa: E402
+from pipeline_news import sources  # noqa: E402
+
+APP_DIR = Path(__file__).resolve().parent
 
 
 # ── data loading / aggregation ───────────────────────────────────────────────
@@ -62,17 +84,17 @@ def load(out_dir: Path) -> dict:
     docs = _read_ndjson(out_dir / "normalized" / "news_documents.ndjson")
     state = _read_json(out_dir / "state.json", {})
     report = _read_json(out_dir / "emit_report.json", {})
+    last_run = _read_json(out_dir / "last_run.json", {})
 
     by_source: dict[str, dict] = {}
     total_images = 0
-    last_run = None
+    fetched_at = None
     for d in docs:
         imgs = _images(d)
         total_images += len(imgs)
         ra = d.get("retrieved_at")
-        if ra and (last_run is None or ra > last_run):
-            last_run = ra
-
+        if ra and (fetched_at is None or ra > fetched_at):
+            fetched_at = ra
         name = d.get("source_name", "?")
         s = by_source.setdefault(name, {
             "source_name": name, "family": d.get("source_family", "?"),
@@ -88,53 +110,240 @@ def load(out_dir: Path) -> dict:
     return {
         "docs": docs,
         "sources": sorted(by_source.values(), key=lambda s: -s["count"]),
+        "counts_by_name": {n: v["count"] for n, v in by_source.items()},
         "state": state,
         "report": report,
+        "last_run": last_run,
         "totals": {
             "articles": len(docs),
             "sources": len(by_source),
             "images": total_images,
             "with_body": sum(1 for d in docs if d.get("body_text")),
-            "last_run": last_run,
+            "last_run": fetched_at,
             "rejected": report.get("rejected", 0),
         },
     }
+
+
+# ── manual run ───────────────────────────────────────────────────────────────
+
+_run_lock = threading.Lock()
+_running = {"flag": False}
+
+
+def _now_iso() -> str:
+    return datetime.now(timezone.utc).isoformat()
+
+
+def is_running() -> bool:
+    return _running["flag"]
+
+
+def trigger_run(out_dir: Path, source: str | None) -> bool:
+    """Kick a pipeline run in the background. Returns False if one is already up."""
+    with _run_lock:
+        if _running["flag"]:
+            return False
+        _running["flag"] = True
+    threading.Thread(target=_run_worker, args=(out_dir, source), daemon=True).start()
+    return True
+
+
+def _run_worker(out_dir: Path, source: str | None) -> None:
+    cmd = [sys.executable, "run_news.py", "--out", str(out_dir)]
+    if source and source != "all":
+        cmd += ["--source", source]
+    display = " ".join(cmd)  # before the token is appended — never log secrets
+    url, tok = os.environ.get("BACKEND_INGEST_URL"), os.environ.get("NEWS_INGEST_TOKEN")
+    if url and tok:
+        cmd += ["--post-to", url, "--token", tok]
+        display += f" --post-to {url} --token ***"
+
+    rec = {"source": source or "all", "started": _now_iso(),
+           "finished": None, "ok": None, "returncode": None}
+    (out_dir / "last_run.json").write_text(json.dumps({**rec, "running": True}))
+    log = out_dir / "last_run.log"
+    try:
+        with log.open("w", encoding="utf-8") as f:
+            f.write(f"$ {display}\n\n")
+            f.flush()
+            p = subprocess.run(cmd, cwd=str(APP_DIR), stdout=f,
+                               stderr=subprocess.STDOUT)
+        rec["returncode"], rec["ok"] = p.returncode, p.returncode == 0
+    except Exception as exc:  # never let the worker die silently
+        rec["ok"], rec["returncode"] = False, -1
+        with log.open("a", encoding="utf-8") as f:
+            f.write(f"\n[dashboard] run failed: {exc!r}\n")
+    finally:
+        rec["finished"] = _now_iso()
+        (out_dir / "last_run.json").write_text(json.dumps({**rec, "running": False}))
+        with _run_lock:
+            _running["flag"] = False
+
+
+# ── auth (cookie session) ────────────────────────────────────────────────────
+
+
+def _user() -> str:
+    return os.environ.get("DASHBOARD_USER", "admin")
+
+
+# scrypt params (~50ms/verify). Stored hash format: "scrypt$<salt_hex>$<dk_hex>".
+_SCRYPT = dict(n=2 ** 14, r=8, p=1, dklen=32, maxmem=72 * 1024 * 1024)
+
+
+def hash_password(pw: str, salt: bytes | None = None) -> str:
+    salt = salt if salt is not None else os.urandom(16)
+    dk = hashlib.scrypt(pw.encode(), salt=salt, **_SCRYPT)
+    return f"scrypt${salt.hex()}${dk.hex()}"
+
+
+def verify_password(pw: str) -> bool:
+    """Check a submitted password against the configured secret, constant-time.
+
+    Prefers a salted scrypt hash (DASHBOARD_PASS_HASH); falls back to a plaintext
+    DASHBOARD_PASS for local dev. Returns False if nothing is configured."""
+    h = os.environ.get("DASHBOARD_PASS_HASH")
+    if h:
+        try:
+            algo, salt_hex, dig_hex = h.split("$")
+            if algo != "scrypt":
+                return False
+            dk = hashlib.scrypt(pw.encode(), salt=bytes.fromhex(salt_hex), **_SCRYPT)
+            return hmac.compare_digest(dk.hex(), dig_hex)
+        except (ValueError, TypeError):
+            return False
+    plain = os.environ.get("DASHBOARD_PASS")
+    return bool(plain) and hmac.compare_digest(pw, plain)
+
+
+def _secret() -> str | None:
+    """The configured auth secret (hash preferred, else plaintext). Gates auth
+    and seeds session signing — never the recoverable password when a hash is set."""
+    return os.environ.get("DASHBOARD_PASS_HASH") or os.environ.get("DASHBOARD_PASS")
+
+
+def auth_enabled() -> bool:
+    return bool(_secret())
+
+
+def open_mode() -> bool:
+    """Auth off — only honoured when explicitly opted in (local dev)."""
+    return not auth_enabled() and os.environ.get("DASHBOARD_ALLOW_OPEN") == "1"
+
+
+def _sign_key() -> bytes:
+    # Sign sessions with a dedicated secret if provided, else derive one from the
+    # configured secret — domain-separated, and the password hash (not the raw
+    # password) when DASHBOARD_PASS_HASH is used.
+    secret = os.environ.get("DASHBOARD_SECRET") or _secret() or ""
+    return hashlib.sha256(f"news-backoffice-session::{secret}".encode()).digest()
+
+
+def _sign(msg: str) -> str:
+    return hmac.new(_sign_key(), msg.encode(), hashlib.sha256).hexdigest()
+
+
+def make_session() -> str:
+    ts = str(int(time.time()))
+    return f"{ts}.{_sign(ts)}"
+
+
+def valid_session(tok: str | None, max_age: int = 7 * 86400) -> bool:
+    if not auth_enabled():
+        return open_mode()  # locked unless explicitly opened for local dev
+    if not tok or "." not in tok:
+        return False
+    ts, sig = tok.split(".", 1)
+    if not hmac.compare_digest(sig, _sign(ts)):
+        return False
+    try:
+        return 0 <= (time.time() - int(ts)) < max_age
+    except ValueError:
+        return False
+
+
+def check_login(user: str, pw: str) -> bool:
+    if not auth_enabled():
+        return False
+    # evaluate both regardless, so timing can't reveal which field was wrong
+    u_ok = hmac.compare_digest(user, _user())
+    p_ok = verify_password(pw)
+    return u_ok and p_ok
+
+
+# Login throttle: per-IP failed-attempt window (in-memory; resets on restart).
+# A speed bump, not the primary defence — that's a strong DASHBOARD_PASS.
+_login_lock = threading.Lock()
+_login_fails: dict[str, list[float]] = {}
+_LOGIN_MAX = 5
+_LOGIN_WINDOW = 900  # 15 min
+
+
+def login_blocked(ip: str) -> bool:
+    now = time.time()
+    with _login_lock:
+        fails = [t for t in _login_fails.get(ip, []) if now - t < _LOGIN_WINDOW]
+        _login_fails[ip] = fails
+        return len(fails) >= _LOGIN_MAX
+
+
+def note_login_fail(ip: str) -> None:
+    with _login_lock:
+        _login_fails.setdefault(ip, []).append(time.time())
+
+
+def clear_login_fails(ip: str) -> None:
+    with _login_lock:
+        _login_fails.pop(ip, None)
 
 
 # ── rendering ────────────────────────────────────────────────────────────────
 
 CSS = """
 :root{--bg:#0c0e12;--panel:#15181f;--line:#252a34;--ink:#e7ebf0;--mut:#8a94a6;
---acc:#3aa0ff;--good:#3ad29f;--warn:#f5a623}
+--acc:#3aa0ff;--good:#3ad29f;--warn:#f5a623;--bad:#f56565}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);
 font:14px/1.5 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
 a{color:var(--acc);text-decoration:none}a:hover{text-decoration:underline}
-header{padding:20px 28px;border-bottom:1px solid var(--line);display:flex;
-align-items:baseline;gap:14px}header h1{font-size:17px;margin:0;font-weight:650}
-header .sub{color:var(--mut);font-size:12px}.wrap{max-width:1100px;margin:0 auto;
-padding:24px 28px}.cards{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;
-margin-bottom:26px}.card{background:var(--panel);border:1px solid var(--line);
-border-radius:10px;padding:14px 16px}.card .n{font-size:26px;font-weight:680}
-.card .l{color:var(--mut);font-size:12px;margin-top:2px}h2{font-size:13px;
-text-transform:uppercase;letter-spacing:.06em;color:var(--mut);margin:30px 0 12px}
-table{width:100%;border-collapse:collapse;background:var(--panel);
-border:1px solid var(--line);border-radius:10px;overflow:hidden}
-th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);font-size:13px}
+header{padding:18px 28px;border-bottom:1px solid var(--line);display:flex;
+align-items:center;gap:18px}header h1{font-size:16px;margin:0;font-weight:650}
+header nav{display:flex;gap:16px;font-size:13px}header .right{margin-left:auto;
+color:var(--mut);font-size:12px}.wrap{max-width:1100px;margin:0 auto;padding:24px 28px}
+.cards{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:22px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.card .n{font-size:26px;font-weight:680}.card .l{color:var(--mut);font-size:12px;margin-top:2px}
+h2{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--mut);margin:30px 0 12px}
+table{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--line);
+border-radius:10px;overflow:hidden}th,td{text-align:left;padding:10px 14px;
+border-bottom:1px solid var(--line);font-size:13px;vertical-align:middle}
 th{color:var(--mut);font-weight:550;font-size:11px;text-transform:uppercase;letter-spacing:.05em}
 tr:last-child td{border-bottom:none}td.num{text-align:right;font-variant-numeric:tabular-nums}
 .tag{display:inline-block;background:#1d2230;border:1px solid var(--line);color:var(--mut);
 border-radius:20px;padding:1px 9px;font-size:11px;margin:0 4px 4px 0}
-.art{display:flex;gap:14px;padding:14px;border:1px solid var(--line);
-background:var(--panel);border-radius:10px;margin-bottom:10px}
-.art img{width:120px;height:80px;object-fit:cover;border-radius:7px;background:#1d2230;flex:none}
-.art .t{font-weight:600;margin:0 0 4px}.art .m{color:var(--mut);font-size:12px;margin-bottom:6px}
+.art{display:flex;gap:14px;padding:14px;border:1px solid var(--line);background:var(--panel);
+border-radius:10px;margin-bottom:10px}.art img{width:120px;height:80px;object-fit:cover;
+border-radius:7px;background:#1d2230;flex:none}.art .t{font-weight:600;margin:0 0 4px}
+.art .m{color:var(--mut);font-size:12px;margin-bottom:6px}
 .gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
 .gal a img{width:100%;height:110px;object-fit:cover;border-radius:8px;border:1px solid var(--line)}
-.body{background:var(--panel);border:1px solid var(--line);border-radius:10px;
-padding:20px 24px;white-space:pre-wrap;max-width:760px}
+.body{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:20px 24px;
+white-space:pre-wrap;max-width:760px}
 .pill{font-size:11px;padding:1px 8px;border-radius:6px;border:1px solid var(--line)}
 .pill.full{color:var(--good);border-color:#1e4a3a}.pill.meta{color:var(--mut)}
+.pill.on{color:var(--good);border-color:#1e4a3a}.pill.off{color:var(--mut)}
+.pill.soon{color:var(--warn);border-color:#4a3a1e}
 .empty{color:var(--mut);padding:40px;text-align:center;border:1px dashed var(--line);border-radius:10px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px 20px}
+input,select,button{font:inherit;color:var(--ink);background:#0f1217;border:1px solid var(--line);
+border-radius:8px;padding:8px 11px}button{cursor:pointer;background:#1d2230}
+button.primary{background:var(--acc);color:#04121f;border-color:var(--acc);font-weight:600}
+button.danger{color:var(--bad);border-color:#4a1e1e;background:#1d1417}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.flash{padding:10px 14px;border-radius:8px;margin-bottom:16px;font-size:13px}
+.flash.ok{background:#10271f;color:var(--good)}.flash.err{background:#271414;color:var(--bad)}
+form.inline{display:inline}.login{max-width:340px;margin:80px auto}
+.login input{width:100%;margin-bottom:10px}
 """
 
 
@@ -147,8 +356,8 @@ def _fmt_dt(iso: str | None) -> str:
         return "—"
     try:
         return datetime.fromisoformat(iso.replace("Z", "+00:00")).strftime("%Y-%m-%d %H:%M")
-    except ValueError:
-        return iso[:16]
+    except (ValueError, AttributeError):
+        return str(iso)[:16]
 
 
 def _legal_pill(mode: str) -> str:
@@ -156,60 +365,68 @@ def _legal_pill(mode: str) -> str:
     return f'<span class="pill {cls}">{_esc(mode)}</span>'
 
 
-def _page(title: str, body: str) -> str:
+def _page(title: str, body: str, flash: tuple[str, str] | None = None) -> str:
+    fl = (f"<div class='flash {flash[0]}'>{_esc(flash[1])}</div>" if flash else "")
     return (f"<!doctype html><html><head><meta charset=utf-8>"
             f"<meta name=viewport content='width=device-width,initial-scale=1'>"
-            f"<title>{_esc(title)}</title><style>{CSS}</style></head><body>"
+            f"<title>{_esc(title)} · News backoffice</title><style>{CSS}</style></head><body>"
             f"<header><h1>📰 News Pipeline</h1>"
-            f"<span class=sub>{_esc(title)}</span>"
-            f"<span class=sub style='margin-left:auto'><a href='/'>overview</a> · "
-            f"<a href='/images'>images</a></span></header>"
-            f"<div class=wrap>{body}</div></body></html>")
+            f"<nav><a href='/'>Overview</a><a href='/sources'>Sources</a>"
+            f"<a href='/images'>Images</a></nav>"
+            f"<span class=right>{_esc(title)}"
+            + ("" if not auth_enabled() else " · <a href='/logout'>logout</a>")
+            + f"</span></header><div class=wrap>{fl}{body}</div></body></html>")
+
+
+def render_run_card(data: dict) -> str:
+    lr = data.get("last_run") or {}
+    if is_running():
+        status = "<span class='pill soon'>running…</span>"
+    elif lr.get("ok") is True:
+        status = "<span class='pill on'>last run ok</span>"
+    elif lr.get("ok") is False:
+        status = "<span class='pill off' style='color:var(--bad)'>last run failed</span>"
+    else:
+        status = "<span class='pill off'>never run here</span>"
+    when = _fmt_dt(lr.get("finished") or lr.get("started"))
+    log_link = " · <a href='/run/log'>view log</a>" if lr else ""
+    opts = "".join(f"<option value='{s}'>{s}</option>"
+                   for s in ("all", "rss", "gdelt", "cnv"))
+    return (f"<div class=panel><div class=row style='justify-content:space-between'>"
+            f"<div>{status} <span style='color:var(--mut)'>· {_esc(lr.get('source') or '—')} "
+            f"· {when}{log_link}</span></div>"
+            f"<form class=inline method=post action='/run'><div class=row>"
+            f"<select name=source>{opts}</select>"
+            f"<button class=primary type=submit"
+            + (" disabled" if is_running() else "")
+            + ">▶ Run fetch now</button></div></form></div></div>")
 
 
 def render_overview(data: dict, source_filter: str | None) -> str:
     t = data["totals"]
-    cards = [
-        (t["articles"], "articles"), (t["sources"], "sources"),
-        (t["images"], "images"), (t["with_body"], "with full text"),
-        (t["rejected"], "rejected"),
-    ]
+    cards = [(t["articles"], "articles"), (t["sources"], "sources"),
+             (t["images"], "images"), (t["with_body"], "with full text"),
+             (t["rejected"], "rejected")]
     cards_html = "".join(
         f"<div class=card><div class=n>{n}</div><div class=l>{l}</div></div>"
         for n, l in cards)
 
-    # sources table
     rows = "".join(
-        f"<tr><td><a href='/?source={_esc(s['source_name'])}'>{_esc(s['source_name'])}</a></td>"
+        f"<tr><td><a href='/?source={quote(s['source_name'])}'>{_esc(s['source_name'])}</a></td>"
         f"<td>{_esc(s['family'])}</td><td>{_legal_pill(s['legal_mode'])}</td>"
         f"<td class=num>{s['count']}</td><td class=num>{s['images']}</td>"
-        f"<td>{_fmt_dt(s['latest'])}</td></tr>"
-        for s in data["sources"])
+        f"<td>{_fmt_dt(s['latest'])}</td></tr>" for s in data["sources"])
     src_table = (
-        "<table><tr><th>Source</th><th>Family</th><th>Legal</th>"
-        "<th class=num>Articles</th><th class=num>Images</th><th>Latest</th></tr>"
-        f"{rows}</table>" if data["sources"]
-        else "<div class=empty>No articles yet. Run <code>uv run run_news.py "
-             "--out out_news/</code>.</div>")
+        "<table><tr><th>Source</th><th>Family</th><th>Legal</th><th class=num>Articles</th>"
+        f"<th class=num>Images</th><th>Latest</th></tr>{rows}</table>" if data["sources"]
+        else "<div class=empty>No articles ingested here yet — hit "
+             "<b>Run fetch now</b> above, or add sources in "
+             "<a href='/sources'>Sources</a>.</div>")
 
-    # connector watermarks
-    wm_rows = ""
-    for conn, slice_ in (data["state"] or {}).items():
-        if isinstance(slice_, dict):
-            for feed, seen in slice_.items():
-                wm_rows += (f"<tr><td>{_esc(conn)}</td><td style='color:var(--mut);"
-                            f"font-size:12px'>{_esc(feed)}</td><td>{_fmt_dt(seen)}</td></tr>")
-        else:
-            wm_rows += f"<tr><td>{_esc(conn)}</td><td>—</td><td>{_esc(slice_)}</td></tr>"
-    wm = (f"<table><tr><th>Connector</th><th>Feed / key</th><th>Last seen</th></tr>"
-          f"{wm_rows}</table>" if wm_rows else "")
-
-    # articles
     docs = data["docs"]
     if source_filter:
         docs = [d for d in docs if d.get("source_name") == source_filter]
     docs = sorted(docs, key=lambda d: d.get("published_at") or "", reverse=True)
-
     arts = []
     for d in docs:
         imgs = _images(d)
@@ -220,16 +437,92 @@ def render_overview(data: dict, source_filter: str | None) -> str:
             f"<div class=art>{thumb}<div>"
             f"<div class=t><a href='/doc/{_esc(d['doc_id'])}'>{_esc(d.get('title'))}</a></div>"
             f"<div class=m>{_esc(d.get('source_name'))} · {_fmt_dt(d.get('published_at'))} "
-            f"· {_legal_pill(d.get('legal_mode'))}</div>"
-            f"<div>{topics}</div></div></div>")
+            f"· {_legal_pill(d.get('legal_mode'))}</div><div>{topics}</div></div></div>")
     filt = (f" — <a href='/'>{_esc(source_filter)} ✕</a>" if source_filter else "")
     arts_html = "".join(arts) or "<div class=empty>No articles.</div>"
 
     return (f"<div class=cards>{cards_html}</div>"
-            f"<div class=l style='color:var(--mut)'>Last run: {_fmt_dt(t['last_run'])}</div>"
+            f"<h2>Fetch</h2>{render_run_card(data)}"
             f"<h2>Sources</h2>{src_table}"
-            + (f"<h2>Connector watermarks</h2>{wm}" if wm else "")
-            + f"<h2>Articles{filt}</h2>{arts_html}")
+            f"<h2>Articles{filt}</h2>{arts_html}")
+
+
+# Connectors that aren't per-feed editable (single, code-driven sources).
+SYSTEM_CONNECTORS = [
+    ("gdelt", "GDELT DOC 2.0 — wide media radar (AR, O&G query), metadata-only.", "active"),
+    ("cnv", "CNV Hechos Relevantes — regulatory disclosures, fulltext_internal.", "active"),
+]
+COMING_SOON = [
+    "Boletín Oficial (oficial)", "Secretaría de Energía / datos.gob.ar (oficial)",
+    "Neuquén · Río Negro · Mendoza boletines (oficial_provincial)",
+    "YPF · PAE · Tecpetrol newsrooms (corporativa)",
+    "CEPH · IAPG (cámara)", "Podcasts: VM News Radio, Mejor Energía (podcast)",
+]
+
+
+def render_sources(data: dict) -> str:
+    feeds = sources.all_feeds()
+    counts = data["counts_by_name"]
+    rows = ""
+    for i, f in enumerate(feeds):
+        en = f.get("enabled", True)
+        st = f.get("status", "active")
+        en_pill = (f"<span class='pill {'on' if en else 'off'}'>{'enabled' if en else 'disabled'}</span>"
+                   if st == "active" else "<span class='pill soon'>coming soon</span>")
+        region = ", ".join(f.get("region") or [])
+        rows += (
+            f"<tr><td>{_esc(f.get('source_name'))}<br>"
+            f"<span style='color:var(--mut);font-size:11px'>{_esc(f.get('url'))}</span></td>"
+            f"<td>{_esc(f.get('source_family'))}</td><td>{_legal_pill(f.get('legal_mode'))}</td>"
+            f"<td>{_esc(region) or '—'}</td>"
+            f"<td class=num>{counts.get(f.get('source_name'), 0)}</td>"
+            f"<td>{en_pill}</td>"
+            f"<td><form class=inline method=post action='/sources/edit'>"
+            f"<input type=hidden name=action value=toggle>"
+            f"<input type=hidden name=i value={i}>"
+            f"<button type=submit>{'Disable' if en else 'Enable'}</button></form> "
+            f"<form class=inline method=post action='/sources/edit' "
+            f"onsubmit=\"return confirm('Delete this source?')\">"
+            f"<input type=hidden name=action value=delete>"
+            f"<input type=hidden name=i value={i}>"
+            f"<button class=danger type=submit>Delete</button></form></td></tr>")
+    feed_table = (
+        "<table><tr><th>Source</th><th>Family</th><th>Legal</th><th>Region</th>"
+        f"<th class=num>Articles</th><th>Status</th><th>Actions</th></tr>{rows}</table>"
+        if feeds else "<div class=empty>No feeds configured.</div>")
+
+    fam_opts = "".join(f"<option value='{s}'>{s}</option>"
+                       for s in sorted(schema.SOURCE_FAMILIES))
+    legal_opts = "".join(f"<option value='{s}'>{s}</option>"
+                         for s in sorted(schema.LEGAL_MODES))
+    add_form = (
+        "<div class=panel><form method=post action='/sources/edit'>"
+        "<input type=hidden name=action value=add>"
+        "<div class=row>"
+        "<input name=source_name placeholder='Source name' required style='flex:1;min-width:160px'>"
+        "<input name=url placeholder='https://site/feed/' required style='flex:2;min-width:240px'>"
+        "</div><div class=row style='margin-top:10px'>"
+        f"<select name=source_family>{fam_opts}</select>"
+        f"<select name=legal_mode>{legal_opts}</select>"
+        "<input name=region placeholder='Region (optional, comma-sep)'>"
+        "<button class=primary type=submit>+ Add RSS source</button>"
+        "</div></form></div>")
+
+    sysrows = "".join(
+        f"<tr><td>{_esc(n)}</td><td style='color:var(--mut)'>{_esc(desc)}</td>"
+        f"<td class=num>{counts.get(n, 0)}</td>"
+        f"<td><span class='pill on'>{_esc(st)}</span></td></tr>"
+        for n, desc, st in SYSTEM_CONNECTORS)
+    sys_table = ("<table><tr><th>Connector</th><th>What</th><th class=num>Articles</th>"
+                 f"<th>Status</th></tr>{sysrows}</table>")
+
+    soon = "".join(f"<li>{_esc(x)}</li>" for x in COMING_SOON)
+
+    return (f"<h2>Curated RSS feeds (editable)</h2>{feed_table}"
+            f"<h2>Add a source</h2>{add_form}"
+            f"<h2>System connectors</h2>{sys_table}"
+            f"<h2>Coming soon</h2><div class=panel><ul style='margin:0;padding-left:18px;"
+            f"color:var(--mut)'>{soon}</ul></div>")
 
 
 def render_doc(data: dict, doc_id: str) -> str | None:
@@ -241,15 +534,14 @@ def render_doc(data: dict, doc_id: str) -> str | None:
                        f"margin:0 0 14px' alt=''>" for u in imgs)
     topics = "".join(f"<span class=tag>{_esc(x)}</span>" for x in (doc.get("topics") or []))
     ents = doc.get("entities") or {}
-    ent_html = "".join(
-        f"<div class=m><b>{_esc(k)}:</b> {_esc(', '.join(v))}</div>"
-        for k, v in ents.items() if v)
+    ent_html = "".join(f"<div class=m><b>{_esc(k)}:</b> {_esc(', '.join(v))}</div>"
+                       for k, v in ents.items() if v)
     body = doc.get("body_text") or doc.get("deck") or "(no body — metadata only)"
     meta = (f"{_esc(doc.get('source_name'))} · {_esc(doc.get('source_family'))} · "
             f"{_fmt_dt(doc.get('published_at'))} · {_legal_pill(doc.get('legal_mode'))}")
     return (f"<p><a href='/'>← back</a></p>"
             f"<h1 style='max-width:760px'>{_esc(doc.get('title'))}</h1>"
-            f"<div class=m style='margin:-6px 0 16px'>{meta} · "
+            f"<div class=m style='margin:-6px 0 16px;color:var(--mut)'>{meta} · "
             f"<a href='{_esc(doc.get('source_url'))}' target=_blank>source ↗</a></div>"
             f"<div style='margin-bottom:10px'>{topics}</div>"
             f"{img_html}<div class=body>{_esc(body)}</div>"
@@ -266,12 +558,64 @@ def render_images(data: dict) -> str:
     return f"<h2>Images ({len(cells)})</h2><div class=gal>{grid}</div>"
 
 
+def render_login(error: str | None = None) -> str:
+    err = f"<div class='flash err'>{_esc(error)}</div>" if error else ""
+    return (f"<div class=login><div class=panel>"
+            f"<h2 style='margin-top:0'>Sign in</h2>{err}"
+            f"<form method=post action='/login'>"
+            f"<input name=user placeholder='User' autofocus>"
+            f"<input name=password type=password placeholder='Password'>"
+            f"<button class=primary type=submit style='width:100%'>Sign in</button>"
+            f"</form></div></div>")
+
+
+# ── sources mutations ────────────────────────────────────────────────────────
+
+
+def apply_source_edit(form: dict) -> tuple[str, str]:
+    """Mutate sources.json from a posted form. Returns (flash_kind, message)."""
+    action = (form.get("action") or [""])[0]
+    feeds = sources.all_feeds()
+    if action == "add":
+        name = (form.get("source_name") or [""])[0].strip()
+        url = (form.get("url") or [""])[0].strip()
+        fam = (form.get("source_family") or [""])[0].strip()
+        legal = (form.get("legal_mode") or [""])[0].strip()
+        if not (name and url.startswith("http")):
+            return ("err", "Name and a valid http(s) URL are required.")
+        if fam not in schema.SOURCE_FAMILIES:
+            return ("err", f"Unknown family '{fam}'.")
+        if legal not in schema.LEGAL_MODES:
+            return ("err", f"Unknown legal mode '{legal}'.")
+        if any(f.get("url") == url for f in feeds):
+            return ("err", "That feed URL is already configured.")
+        region = [r.strip() for r in (form.get("region") or [""])[0].split(",") if r.strip()]
+        feeds.append({"url": url, "source_name": name, "source_family": fam,
+                      "legal_mode": legal, "region": region,
+                      "enabled": True, "status": "active"})
+        sources.save(feeds)
+        return ("ok", f"Added “{name}”.")
+
+    try:
+        i = int((form.get("i") or [""])[0])
+        feed = feeds[i]
+    except (ValueError, IndexError):
+        return ("err", "Source not found.")
+    if action == "toggle":
+        feed["enabled"] = not feed.get("enabled", True)
+        sources.save(feeds)
+        return ("ok", f"{'Enabled' if feed['enabled'] else 'Disabled'} “{feed.get('source_name')}”.")
+    if action == "delete":
+        removed = feeds.pop(i)
+        sources.save(feeds)
+        return ("ok", f"Deleted “{removed.get('source_name')}”.")
+    return ("err", "Unknown action.")
+
+
 # ── server ───────────────────────────────────────────────────────────────────
 
 
-def make_handler(out_dir: Path, auth: str | None):
-    """auth: the expected 'user:pass' string, or None to leave the UI open."""
-
+def make_handler(out_dir: Path):
     class Handler(BaseHTTPRequestHandler):
         def _send(self, body: str, code: int = 200, headers: dict | None = None):
             payload = body.encode("utf-8")
@@ -283,110 +627,250 @@ def make_handler(out_dir: Path, auth: str | None):
             self.end_headers()
             self.wfile.write(payload)
 
-        def _authed(self) -> bool:
-            if not auth:
-                return True
-            hdr = self.headers.get("Authorization", "")
-            if not hdr.startswith("Basic "):
-                return False
-            try:
-                got = base64.b64decode(hdr[6:]).decode("utf-8")
-            except Exception:
-                return False
-            return hmac.compare_digest(got, auth)  # constant-time
+        def _redirect(self, location: str, cookie: str | None = None):
+            h = {"Location": location}
+            if cookie:
+                h["Set-Cookie"] = cookie
+            self._send("", 303, h)
 
+        def _cookie(self, name: str) -> str | None:
+            raw = self.headers.get("Cookie")
+            if not raw:
+                return None
+            c = SimpleCookie()
+            c.load(raw)
+            return c[name].value if name in c else None
+
+        def _authed(self) -> bool:
+            return valid_session(self._cookie("sid"))
+
+        def _client_ip(self) -> str:
+            # Coolify/Traefik sets X-Forwarded-For; take the left-most (client).
+            xff = self.headers.get("X-Forwarded-For")
+            return xff.split(",")[0].strip() if xff else self.client_address[0]
+
+        def _session_cookie(self) -> str:
+            # Secure by default (prod is behind TLS); opt out only for http dev.
+            secure = "" if os.environ.get("DASHBOARD_INSECURE_COOKIE") == "1" else " Secure;"
+            return (f"sid={make_session()}; HttpOnly; Path=/; SameSite=Strict;"
+                    f"{secure} Max-Age={7 * 86400}")
+
+        def _form(self) -> dict:
+            n = int(self.headers.get("Content-Length") or 0)
+            return parse_qs(self.rfile.read(n).decode("utf-8")) if n else {}
+
+        def _flash(self) -> tuple[str, str] | None:
+            q = parse_qs(urlsplit(self.path).query)
+            if "msg" in q:
+                return (q.get("kind", ["ok"])[0], q["msg"][0])
+            return None
+
+        # — GET —
         def do_GET(self):  # noqa: N802
-            parts = urlsplit(self.path)
-            path = parts.path
-            if path == "/healthz":  # unauthenticated, for Coolify health checks
+            path = urlsplit(self.path).path
+            if path == "/healthz":
                 self._send("ok")
                 return
-            if not self._authed():
-                self._send("<h1>401</h1>", 401,
-                           {"WWW-Authenticate": 'Basic realm="news-backoffice"'})
+            if path == "/login":
+                self._send(_page("login", render_login()))
                 return
-            data = load(out_dir)  # fresh every request
+            if path == "/logout":
+                self._redirect("/login", "sid=; Path=/; Max-Age=0")
+                return
+            if not self._authed():
+                self._redirect("/login")
+                return
+
+            data = load(out_dir)
             if path == "/":
-                q = parse_qs(parts.query)
-                src = q.get("source", [None])[0]
-                self._send(_page("overview", render_overview(data, src)))
+                src = parse_qs(urlsplit(self.path).query).get("source", [None])[0]
+                self._send(_page("overview", render_overview(data, src), self._flash()))
+            elif path == "/sources":
+                self._send(_page("sources", render_sources(data), self._flash()))
             elif path == "/images":
                 self._send(_page("images", render_images(data)))
+            elif path == "/run/log":
+                log = (out_dir / "last_run.log")
+                txt = log.read_text(encoding="utf-8") if log.exists() else "(no run yet)"
+                self._send(_page("run log",
+                                 f"<p><a href='/'>← back</a></p><div class=body>{_esc(txt)}</div>"))
             elif path.startswith("/doc/"):
                 doc_html = render_doc(data, path[len("/doc/"):])
-                if doc_html is None:
+                self._send(_page("article", doc_html), 200) if doc_html else \
                     self._send(_page("not found", "<div class=empty>Doc not found.</div>"), 404)
-                else:
-                    self._send(_page("article", doc_html))
             else:
                 self._send(_page("not found", "<div class=empty>Not found.</div>"), 404)
 
-        def log_message(self, *a):  # quieter logs
+        # — POST —
+        def do_POST(self):  # noqa: N802
+            path = urlsplit(self.path).path
+            if path == "/login":
+                ip = self._client_ip()
+                if login_blocked(ip):
+                    self._send(_page("login", render_login(
+                        "Too many attempts — wait a few minutes.")), 429)
+                    return
+                form = self._form()
+                user = (form.get("user") or [""])[0]
+                pw = (form.get("password") or [""])[0]
+                if check_login(user, pw):
+                    clear_login_fails(ip)
+                    self._redirect("/", self._session_cookie())
+                else:
+                    note_login_fail(ip)
+                    self._send(_page("login", render_login("Wrong user or password.")), 401)
+                return
+            if not self._authed():
+                self._redirect("/login")
+                return
+
+            if path == "/sources/edit":
+                kind, msg = apply_source_edit(self._form())
+                self._redirect(f"/sources?kind={kind}&msg={quote(msg)}")
+            elif path == "/run":
+                source = (self._form().get("source") or ["all"])[0]
+                ok = trigger_run(out_dir, source)
+                msg = "Fetch started." if ok else "A run is already in progress."
+                self._redirect(f"/?kind={'ok' if ok else 'err'}&msg={quote(msg)}")
+            else:
+                self._send(_page("not found", "<div class=empty>Not found.</div>"), 404)
+
+        def log_message(self, *a):
             pass
 
     return Handler
 
 
-def serve(out_dir: Path, port: int) -> None:
-    user = os.environ.get("DASHBOARD_USER", "admin")
-    pw = os.environ.get("DASHBOARD_PASS")
-    auth = f"{user}:{pw}" if pw else None
-    if not auth:
-        print("[dashboard] WARNING: DASHBOARD_PASS unset — UI is OPEN (fine for local dev)")
-    httpd = ThreadingHTTPServer(("0.0.0.0", port), make_handler(out_dir, auth))
+def serve(out_dir: Path, port: int) -> bool:
+    os.environ.setdefault("NEWS_OUT_DIR", str(out_dir))  # connector + subprocess agree
+    if not auth_enabled():
+        if os.environ.get("DASHBOARD_ALLOW_OPEN") != "1":
+            print("[dashboard] REFUSING TO START — DASHBOARD_PASS is not set.\n"
+                  "  Set DASHBOARD_PASS to a strong secret (recommended), or set\n"
+                  "  DASHBOARD_ALLOW_OPEN=1 to run with NO auth (local dev only).")
+            return False
+        print("[dashboard] WARNING: NO auth (DASHBOARD_ALLOW_OPEN=1) — local dev only")
+    httpd = ThreadingHTTPServer(("0.0.0.0", port), make_handler(out_dir))
     print(f"[dashboard] serving {out_dir} at http://localhost:{port}  (ctrl-c to stop)")
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:
         print("\n[dashboard] bye")
+    return True
+
+
+# ── self-check ───────────────────────────────────────────────────────────────
 
 
 def _selfcheck() -> None:
+    import tempfile
     docs = [
         {"doc_id": "a", "source_name": "EconoJournal", "source_family": "medio",
          "legal_mode": "fulltext_internal", "published_at": "2026-06-30T00:00:00+00:00",
          "retrieved_at": "2026-06-30T10:00:00+00:00", "body_text": "x",
          "attachments": [{"type": "image", "url": "http://i/1.jpg"}]},
         {"doc_id": "b", "source_name": "EconoJournal", "source_family": "medio",
-         "legal_mode": "fulltext_internal", "published_at": "2026-06-29T00:00:00+00:00",
-         "retrieved_at": "2026-06-30T11:00:00+00:00", "attachments": []},
+         "legal_mode": "fulltext_internal", "retrieved_at": "2026-06-30T11:00:00+00:00"},
         {"doc_id": "c", "source_name": "Shale24", "source_family": "medio",
          "legal_mode": "metadata_only", "retrieved_at": "2026-06-30T09:00:00+00:00"},
     ]
-    import tempfile
     with tempfile.TemporaryDirectory() as td:
         out = Path(td)
         (out / "normalized").mkdir()
         (out / "normalized" / "news_documents.ndjson").write_text(
             "\n".join(json.dumps(d) for d in docs))
         (out / "emit_report.json").write_text('{"emitted":3,"rejected":1}')
+        os.environ["NEWS_OUT_DIR"] = str(out)
         data = load(out)
-    t = data["totals"]
-    assert t["articles"] == 3, t
-    assert t["sources"] == 2, t
-    assert t["images"] == 1, t
-    assert t["with_body"] == 1, t
-    assert t["rejected"] == 1, t
-    assert t["last_run"] == "2026-06-30T11:00:00+00:00", t
-    assert data["sources"][0]["source_name"] == "EconoJournal"  # sorted by count
-    assert data["sources"][0]["count"] == 2
-    assert render_doc(data, "a") and render_doc(data, "zzz") is None
+        t = data["totals"]
+        assert (t["articles"], t["sources"], t["images"], t["with_body"], t["rejected"]) \
+            == (3, 2, 1, 1, 1), t
+        assert data["counts_by_name"]["EconoJournal"] == 2
+        assert render_doc(data, "a") and render_doc(data, "zzz") is None
+
+        # sources roundtrip
+        assert len(sources.active_feeds(out)) == 4  # seeded defaults
+        k, m = apply_source_edit({"action": ["add"], "source_name": ["Test"],
+                                  "url": ["https://t.example/feed"],
+                                  "source_family": ["medio"],
+                                  "legal_mode": ["metadata_only"], "region": ["Neuquén"]})
+        assert k == "ok", (k, m)
+        assert any(f["source_name"] == "Test" for f in sources.all_feeds(out))
+        n = len(sources.all_feeds(out))
+        apply_source_edit({"action": ["toggle"], "i": [str(n - 1)]})
+        assert sources.all_feeds(out)[n - 1]["enabled"] is False
+        apply_source_edit({"action": ["delete"], "i": [str(n - 1)]})
+        assert len(sources.all_feeds(out)) == n - 1
+        bad, _ = apply_source_edit({"action": ["add"], "source_name": ["x"],
+                                    "url": ["nope"], "source_family": ["medio"],
+                                    "legal_mode": ["metadata_only"]})
+        assert bad == "err"
+
+    # password hashing: scrypt roundtrip, wrong pass, malformed hash, no plaintext
+    os.environ.pop("DASHBOARD_PASS", None)
+    os.environ.pop("DASHBOARD_SECRET", None)
+    h = hash_password("hunter2")
+    assert h.startswith("scrypt$") and "hunter2" not in h
+    os.environ["DASHBOARD_PASS_HASH"] = h
+    assert auth_enabled() and verify_password("hunter2")
+    assert not verify_password("wrong")
+    assert check_login("admin", "hunter2") and not check_login("admin", "x")
+    os.environ["DASHBOARD_PASS_HASH"] = "scrypt$zz$zz"  # malformed
+    assert not verify_password("hunter2")
+    os.environ.pop("DASHBOARD_PASS_HASH", None)
+
+    # auth: signed session verifies, tamper + forgery + wrong-cred fail
+    os.environ["DASHBOARD_PASS"] = "secret"
+    os.environ.pop("DASHBOARD_ALLOW_OPEN", None)
+    os.environ.pop("DASHBOARD_SECRET", None)
+    tok = make_session()
+    assert valid_session(tok)
+    assert not valid_session(tok + "x")          # tampered sig
+    assert not valid_session("999.deadbeef")     # forged
+    assert not valid_session(f"{int(time.time()) - 8 * 86400}.{_sign(str(int(time.time()) - 8 * 86400))}")  # expired
+    assert check_login("admin", "secret")
+    assert not check_login("admin", "nope")      # wrong pass
+    assert not check_login("root", "secret")     # wrong user
+    # session signing must not be the raw password (offline brute-force guard)
+    assert _sign("x") != hmac.new(b"secret", b"x", hashlib.sha256).hexdigest()
+    # login throttle trips after _LOGIN_MAX and clears
+    for _ in range(_LOGIN_MAX):
+        note_login_fail("9.9.9.9")
+    assert login_blocked("9.9.9.9")
+    clear_login_fails("9.9.9.9")
+    assert not login_blocked("9.9.9.9")
+    # fail closed: no key + no opt-in → locked; explicit opt-in → open
+    del os.environ["DASHBOARD_PASS"]
+    assert not valid_session(None)
+    assert not check_login("admin", "")
+    os.environ["DASHBOARD_ALLOW_OPEN"] = "1"
+    assert valid_session(None)
+    del os.environ["DASHBOARD_ALLOW_OPEN"]
     print("selfcheck ok")
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser(description="News pipeline backoffice (v0).")
+    ap = argparse.ArgumentParser(description="News pipeline backoffice (v1).")
     ap.add_argument("--out", type=Path,
                     default=Path(os.environ.get("NEWS_OUT_DIR", "out_news")))
     ap.add_argument("--port", type=int,
                     default=int(os.environ.get("DASHBOARD_PORT", "8800")))
     ap.add_argument("--selfcheck", action="store_true")
+    ap.add_argument("--hash-password", action="store_true",
+                    help="generate a DASHBOARD_PASS_HASH and exit")
     args = ap.parse_args()
     if args.selfcheck:
         _selfcheck()
         return 0
-    serve(args.out, args.port)
-    return 0
+    if args.hash_password:
+        import getpass
+        pw = getpass.getpass("Password: ")
+        if not pw or pw != getpass.getpass("Confirm:  "):
+            print("passwords empty or do not match")
+            return 1
+        print(f"\nDASHBOARD_PASS_HASH={hash_password(pw)}")
+        return 0
+    return 0 if serve(args.out, args.port) else 1
 
 
 if __name__ == "__main__":

@@ -25,41 +25,14 @@ import feedparser
 import httpx
 
 import news_schema as schema
+from pipeline_news import sources
 
 NAME = "rss"
 
-# Each feed carries its own identity + legal handling. Add a source = add a row.
-# Optional "region": tags docs with a province (general feeds rely on stage3 to
-# drop the non-O&G items).
-FEEDS = [
-    {
-        "url": "https://www.shale24.com/feed/",
-        "source_name": "Shale24",
-        "source_family": "medio",
-        "legal_mode": "metadata_only",
-    },
-    {
-        # Licensed for full-text reproduction: stage2b fetches body + lead image.
-        "url": "https://econojournal.com.ar/feed/",
-        "source_name": "EconoJournal",
-        "source_family": "medio",
-        "legal_mode": "fulltext_internal",
-    },
-    {
-        "url": "https://www.energiaonline.com.ar/feed/",
-        "source_name": "Energía Online",
-        "source_family": "medio",
-        "legal_mode": "metadata_only",
-    },
-    {
-        # General regional outlet — no O&G-specific feed exists; stage3 filters.
-        "url": "https://www.rionegro.com.ar/feed/",
-        "source_name": "Diario Río Negro",
-        "source_family": "medio",
-        "legal_mode": "metadata_only",
-        "region": ["Río Negro"],
-    },
-]
+# The curated feed list is editable at runtime via the backoffice; it lives in
+# <NEWS_OUT_DIR>/sources.json (seeded from pipeline_news/sources.DEFAULT_FEEDS).
+# Each feed carries its own identity + legal handling; optional "region" tags
+# docs with a province (general feeds rely on stage3 to drop non-O&G items).
 
 SNIPPET_MAX = 300  # cap the stored excerpt; metadata-only, not full text
 
@@ -88,7 +61,7 @@ def fetch(state: dict, limit: int | None = None) -> tuple[list[dict], dict]:
     state = dict(state or {})
     raws: list[dict] = []
 
-    for feed in FEEDS:
+    for feed in sources.active_feeds():
         url = feed["url"]
         last_seen = state.get(url)
         try:
