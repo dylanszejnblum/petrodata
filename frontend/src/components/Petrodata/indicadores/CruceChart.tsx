@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { useMounted } from '@/hooks/useMounted'
+import { track } from '@/utilities/analytics'
 import { formatCompactUSD } from '@/utilities/formatCompactUSD'
 import type { InvCruce } from '@/api/inversiones'
 
@@ -48,7 +49,10 @@ export function CruceChart({ cruce }: { cruce: InvCruce }) {
             <button
               key={m}
               type="button"
-              onClick={() => setMode(m)}
+              onClick={() => {
+                track('chart_interact', { chart: 'cruce', mode: m })
+                setMode(m)
+              }}
               aria-pressed={active === m}
               className="px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.06em] transition-colors"
               style={{

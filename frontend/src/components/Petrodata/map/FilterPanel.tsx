@@ -1,6 +1,7 @@
 'use client'
 
 import { useTranslations } from 'next-intl'
+import { track } from '@/utilities/analytics'
 import {
   Select,
   SelectContent,
@@ -113,11 +114,17 @@ export function FilterPanel({
     label: t(`statusOptions.${STATUS_OPTION_KEY[o.value]}`),
   }))
   const update = (key: keyof WellFilters, value: string) => {
+    track('map_filter_change', { filter: key, value: value === ANY ? 'any' : value })
     setFilters({ ...filters, [key]: value === ANY ? null : value })
   }
-  const setWellType = (next: WellType) => setFilters({ ...filters, wellType: next })
-  const toggleHideAbandoned = () =>
+  const setWellType = (next: WellType) => {
+    track('map_filter_change', { filter: 'wellType', value: next ?? 'all' })
+    setFilters({ ...filters, wellType: next })
+  }
+  const toggleHideAbandoned = () => {
+    track('map_filter_change', { filter: 'hideAbandoned', value: !filters.hideAbandoned })
     setFilters({ ...filters, hideAbandoned: !filters.hideAbandoned })
+  }
   const reset = () => setFilters(DEFAULT_FILTERS)
   const isCapped = rawCount >= resultCap
 

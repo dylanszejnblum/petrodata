@@ -8,6 +8,7 @@
 import { useMemo, useRef, useState, useEffect } from 'react'
 import { ArrowDown, ArrowUp } from 'lucide-react'
 import { staggerIn, useInView } from '@/components/Petrodata/uranium/anim'
+import { track } from '@/utilities/analytics'
 import type { TableCol, TableFilter, TableRow } from './types'
 
 export function SortableProjectsTable({
@@ -61,6 +62,7 @@ export function SortableProjectsTable({
   }, [inView, ref])
 
   const toggleSort = (key: string) => {
+    track('projects_table_sort', { column: key })
     if (key === sortKey) setDir((d) => (d === 'asc' ? 'desc' : 'asc'))
     else {
       setSortKey(key)

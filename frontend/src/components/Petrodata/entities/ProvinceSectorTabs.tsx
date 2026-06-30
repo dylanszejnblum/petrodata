@@ -7,6 +7,7 @@ import { OperatorAvatar } from '@/components/Petrodata/map/OperatorAvatar'
 import { CompanyLink } from '@/components/Petrodata/entities/CompanyLink'
 import { commodityColor } from '@/components/Petrodata/minerals/commodityColors'
 import { formatCompact } from '@/utilities/formatNumber'
+import { track } from '@/utilities/analytics'
 import { staggerIn, useInView } from '@/components/Petrodata/uranium/anim'
 
 type OilGas = {
@@ -99,7 +100,10 @@ export function ProvinceSectorTabs({ oilGas, mining, exports }: ProvinceSectorTa
               aria-selected={isActive}
               aria-controls={`province-panel-${tab.key}`}
               tabIndex={isActive ? 0 : -1}
-              onClick={() => setActive(tab.key)}
+              onClick={() => {
+                track('province_tab_change', { tab: tab.key })
+                setActive(tab.key)
+              }}
               className={[
                 'relative px-4 py-3 font-mono text-[11px] uppercase tracking-[0.08em] transition-colors',
                 'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--nd-accent)]',

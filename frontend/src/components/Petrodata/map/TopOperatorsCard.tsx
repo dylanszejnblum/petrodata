@@ -2,6 +2,7 @@
 
 import { memo } from 'react'
 import { useTranslations } from 'next-intl'
+import { track } from '@/utilities/analytics'
 import type { ApiSchemas } from '@/api/client'
 import { formatCompact } from '@/utilities/formatNumber'
 import { OverlayCard, OverlayLabel } from './OverlayCard'
@@ -34,7 +35,10 @@ function TopOperatorsCardImpl({
             <li key={op.operator_slug}>
               <button
                 type="button"
-                onClick={() => onSelect(isActive ? null : op.operator_slug)}
+                onClick={() => {
+                  if (!isActive) track('map_operator_click', { operator: op.operator_name })
+                  onSelect(isActive ? null : op.operator_slug)
+                }}
                 className="group flex w-full items-center gap-3 px-5 py-3 text-left transition-colors hover:bg-nd-surface-raised"
               >
                 <span
