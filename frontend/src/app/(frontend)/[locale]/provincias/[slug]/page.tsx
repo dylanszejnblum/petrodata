@@ -10,6 +10,7 @@ import { buildAlternates } from '@/i18n/alternates'
 import { StatCounters } from '@/components/Petrodata/entities/StatCounters'
 import { ProvinceSectorTabs } from '@/components/Petrodata/entities/ProvinceSectorTabs'
 import { ProvinceProductionChart } from '@/components/Petrodata/entities/ProvinceProductionChart'
+import { SourceChip } from '@/components/Petrodata/indicadores/SourceChip'
 import { type StatItem } from '@/components/Petrodata/entities/types'
 
 export const dynamic = 'force-dynamic'
@@ -78,6 +79,8 @@ export default async function ProvinceDetailPage({ params }: { params: Promise<{
   ]
 
   const prodPoints = production.map((p) => ({ date: p.date_month, oilBblD: p.oil_bbl_d, gasMmcfD: p.gas_mmcf_d }))
+  // Production is ordered ascending, so the last point is the latest month available.
+  const latestMonth = production.length ? production[production.length - 1].date_month.slice(0, 7) : null
 
   const sorted = [...all].sort((a, b) => a.name.localeCompare(b.name))
   const idx = sorted.findIndex((p) => p.slug === slug)
@@ -132,6 +135,11 @@ export default async function ProvinceDetailPage({ params }: { params: Promise<{
               mining={null}
               exports={exportsRows.map((e) => ({ sector: e.sector, product: e.product, value: e.value_annual_usd }))}
             />
+            {latestMonth ? (
+              <span className="mt-4 inline-block">
+                <SourceChip source={{ asOf: latestMonth }} />
+              </span>
+            ) : null}
           </section>
         )}
 
@@ -142,6 +150,11 @@ export default async function ProvinceDetailPage({ params }: { params: Promise<{
             <div className="border border-nd-border bg-nd-surface p-5 md:p-6">
               <ProvinceProductionChart points={prodPoints} />
             </div>
+            {latestMonth ? (
+              <span className="mt-4 inline-block">
+                <SourceChip source={{ asOf: latestMonth }} />
+              </span>
+            ) : null}
           </section>
         )}
 
