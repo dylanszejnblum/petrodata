@@ -27,6 +27,7 @@ const num = (v: unknown): number | null => (typeof v === 'number' && Number.isFi
 export function CompanyList({ companies }: { companies: CompanyCard[] }) {
   const t = useTranslations('companies')
   const [q, setQ] = useState('')
+  const [onlyWells, setOnlyWells] = useState(true) // default: only companies with ≥1 well
   const [prices, setPrices] = useState<Record<string, Price>>({})
 
   // Live stock prices — fetched client-side, refreshed every 5 min.
@@ -58,13 +59,36 @@ export function CompanyList({ companies }: { companies: CompanyCard[] }) {
   }, [])
 
   const filtered = useMemo(
-    () => companies.filter((c) => !q || c.name.toLowerCase().includes(q.toLowerCase())),
-    [companies, q],
+    () =>
+      companies.filter(
+        (c) =>
+          (!q || c.name.toLowerCase().includes(q.toLowerCase())) &&
+          (!onlyWells || c.projectCount >= 1),
+      ),
+    [companies, q, onlyWells],
   )
 
   return (
     <div className="flex flex-col gap-5">
-      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-end">
+      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+        <button
+          type="button"
+          role="switch"
+          aria-checked={onlyWells}
+          onClick={() => setOnlyWells((v) => !v)}
+          className="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.08em] text-nd-text-secondary font-mono"
+        >
+          <span
+            className="relative inline-flex h-4 w-7 items-center rounded-full transition-colors"
+            style={{ background: onlyWells ? 'var(--nd-accent)' : 'var(--nd-border)' }}
+          >
+            <span
+              className="inline-block size-3 rounded-full bg-white transition-transform"
+              style={{ transform: onlyWells ? 'translateX(14px)' : 'translateX(2px)' }}
+            />
+          </span>
+          {t('withWells')}
+        </button>
         <label className="relative block md:w-72">
           <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-nd-text-disabled" />
           <input
@@ -87,7 +111,6 @@ export function CompanyList({ companies }: { companies: CompanyCard[] }) {
                 <th className="px-5 py-3 text-left">{t('listEyebrow')}</th>
                 <th className="px-5 py-3 text-left">{t('sector')}</th>
                 <th className="px-5 py-3 text-right">{t('stats.projects')}</th>
-                <th className="px-5 py-3 text-right">{t('stock')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-nd-border">
@@ -95,22 +118,32 @@ export function CompanyList({ companies }: { companies: CompanyCard[] }) {
                 <tr key={c.slug} className="transition-colors hover:bg-nd-surface-raised">
                   <td className="px-5 py-3 text-nd-text-disabled tabular-nums">{i + 1}</td>
                   <td className="px-5 py-3">
-                    <Link href={`/companies/${c.slug}`} className="inline-flex items-center gap-3 text-nd-text-display hover:underline">
+                    <div className="flex items-start gap-3">
                       <CompanyLogo name={c.name} logoUrl={c.logoUrl} size="sm" />
-                      <span className="font-sans">{c.name}</span>
-                    </Link>
+                      <div className="flex flex-col items-start gap-1">
+                        <Link href={`/companies/${c.slug}`} className="font-sans text-nd-text-display hover:underline">
+                          {c.name}
+                        </Link>
+                        <CompanyBadge ticker={c.ticker} exchange={c.exchange} isPublic={c.isPublic} price={prices[c.slug]} />
+                      </div>
+                    </div>
                   </td>
                   <td className="px-5 py-3 text-nd-text-secondary">{typeLabel(c.type, t)}</td>
                   <td className="px-5 py-3 text-right text-nd-text-secondary tabular-nums">{c.projectCount}</td>
-                  <td className="px-5 py-3 text-right">
-                    <StockCell ticker={c.ticker} exchange={c.exchange} price={prices[c.slug]} />
-                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
       )}
+
+      {/* CTA — invite operators to get listed */}
+      <div className="flex flex-wrap items-center gap-x-2 gap-y-1 border border-nd-border bg-nd-surface px-4 py-3 text-sm text-nd-text-secondary font-sans">
+        <span>{t('ctaWells')}</span>
+        <a href="mailto:info@vacamuerta.io" className="text-nd-text-display underline underline-offset-2 hover:text-nd-accent">
+          info@vacamuerta.io
+        </a>
+      </div>
     </div>
   )
 }
@@ -119,22 +152,59 @@ function typeLabel(type: CompanyCard['type'], t: ReturnType<typeof useTranslatio
   return type === 'mining' ? t('typeMining') : type === 'oil_and_gas' ? t('typeOil') : t('typeBoth')
 }
 
-function StockCell({ ticker, exchange, price }: { ticker: string | null; exchange: string | null; price?: Price }) {
-  if (!ticker) return <span className="text-nd-text-disabled">—</span>
-  if (!price || price.price == null) {
-    return <span className="text-nd-text-disabled">{exchange ?? ticker}</span>
+// Badges shown under the company name. A listed company shows three separate
+// chips — exchange, price, and % change (colored) — with the exchange also on
+// hover; a private one shows a single "Private" tag.
+function CompanyBadge({
+  ticker,
+  exchange,
+  isPublic,
+  price,
+}: {
+  ticker: string | null
+  exchange: string | null
+  isPublic: boolean
+  price?: Price
+}) {
+  const t = useTranslations('companies')
+  const badge = 'inline-flex items-center rounded-full border border-nd-border px-2 py-0.5 text-[10px] tabular-nums'
+  const ex = price?.exchange ?? exchange
+
+  // Listed with a live price → exchange + price + change, as separate chips.
+  if (ticker && price && price.price != null) {
+    const up = (price.changePct ?? 0) >= 0
+    return (
+      <div className="flex flex-wrap items-center gap-1">
+        {ex ? (
+          <span title={t('tradedOn', { exchange: ex })} className={`${badge} cursor-help text-nd-text-disabled`}>
+            {ex}
+          </span>
+        ) : null}
+        <span className={`${badge} text-nd-text-display`}>${price.price.toFixed(2)}</span>
+        {price.changePct != null ? (
+          <span className={`${badge} gap-0.5`} style={{ color: up ? 'var(--nd-success)' : 'var(--nd-accent)' }}>
+            <span className="text-[7px] leading-none">{up ? '▲' : '▼'}</span>
+            {Math.abs(price.changePct).toFixed(1)}%
+          </span>
+        ) : null}
+      </div>
+    )
   }
-  const up = (price.changePct ?? 0) >= 0
-  return (
-    <span className="inline-flex items-center gap-1.5 tabular-nums" style={{ color: up ? 'var(--nd-success)' : 'var(--nd-accent)' }}>
-      <span className="text-nd-text-disabled">{price.exchange ?? exchange}</span>
-      ${price.price.toFixed(2)}
-      {price.changePct != null && (
-        <>
-          {up ? '▲' : '▼'} {Math.abs(price.changePct).toFixed(1)}%
-        </>
-      )}
-    </span>
-  )
+
+  // Listed but price not loaded yet → exchange chip only.
+  if (ticker && ex) {
+    return (
+      <span title={t('tradedOn', { exchange: ex })} className={`${badge} cursor-help text-nd-text-disabled`}>
+        {ex}
+      </span>
+    )
+  }
+
+  // Not listed → mark private when we know it's not public.
+  if (!isPublic) {
+    return <span className={`${badge} text-nd-text-disabled`}>{t('private')}</span>
+  }
+
+  return null
 }
 
