@@ -1,10 +1,9 @@
 'use client'
 
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { usePathname, useRouter } from '@/i18n/navigation'
-import { useDebounce } from '@/utilities/useDebounce'
 import type { NewsFacets } from '@/api/news'
 
 type ChipGroupProps = {
@@ -56,8 +55,26 @@ export function NewsFilters({ facets }: { facets: NewsFacets }) {
 
   // Recent is the default (no `sort` param); importance is the explicit opt-in.
   const sort = get('sort') === 'importance' ? 'importance' : 'recent'
-  const [qInput, setQInput] = useState(get('q') ?? '')
-  const debouncedQ = useDebounce(qInput, 350)
+
+  const [open, setOpen] = useState(false)
+  const menuRef = useRef<HTMLDivElement>(null)
+
+  // Close the dropdown on outside click / Escape.
+  useEffect(() => {
+    if (!open) return
+    const onDown = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) setOpen(false)
+    }
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false)
+    }
+    document.addEventListener('mousedown', onDown)
+    document.addEventListener('keydown', onKey)
+    return () => {
+      document.removeEventListener('mousedown', onDown)
+      document.removeEventListener('keydown', onKey)
+    }
+  }, [open])
 
   const pushParams = useCallback(
     (mutate: (p: URLSearchParams) => void) => {
@@ -69,17 +86,6 @@ export function NewsFilters({ facets }: { facets: NewsFacets }) {
     },
     [pathname, router, searchParams],
   )
-
-  // Reflect debounced search into the URL (only when it actually changed).
-  useEffect(() => {
-    const current = get('q') ?? ''
-    if (debouncedQ === current) return
-    pushParams((p) => {
-      if (debouncedQ) p.set('q', debouncedQ)
-      else p.delete('q')
-    })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedQ])
 
   const toggle = useCallback(
     (param: string, value: string) => {
@@ -102,65 +108,74 @@ export function NewsFilters({ facets }: { facets: NewsFacets }) {
   )
 
   const clearAll = useCallback(() => {
-    setQInput('')
     router.push(pathname)
+    setOpen(false)
   }, [pathname, router])
 
-  const hasFilters = useMemo(
-    () => ['family', 'topic', 'entity', 'region', 'q'].some((k) => get(k)),
+  const activeCount = useMemo(
+    () => ['family', 'topic', 'entity', 'region'].filter((k) => get(k)).length,
     [get],
   )
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-        <div className="relative flex-1">
-          <input
-            type="search"
-            value={qInput}
-            onChange={(e) => setQInput(e.target.value)}
-            placeholder={t('searchPlaceholder')}
-            className="w-full border border-nd-border bg-nd-surface px-3 py-2 font-sans text-sm text-nd-text-display placeholder:text-nd-text-disabled focus:border-nd-text-disabled focus:outline-none"
-            aria-label={t('searchPlaceholder')}
-          />
-        </div>
-        <div className="inline-flex border border-nd-border" role="group" aria-label={t('sortLabel')}>
-          {(['importance', 'recent'] as const).map((value) => (
-            <button
-              key={value}
-              type="button"
-              onClick={() => setSort(value)}
-              aria-pressed={sort === value}
-              className="px-3 py-2 font-mono text-[11px] uppercase tracking-[0.06em] transition-colors"
-              style={{
-                color: sort === value ? 'var(--nd-text-display)' : 'var(--nd-text-disabled)',
-                background: sort === value ? 'var(--nd-surface-raised)' : 'transparent',
-              }}
-            >
-              {value === 'importance' ? t('sortImportance') : t('sortRecent')}
-            </button>
-          ))}
-        </div>
+    <div className="flex flex-wrap items-center gap-3">
+      {/* Filters dropdown */}
+      <div className="relative" ref={menuRef}>
+        <button
+          type="button"
+          onClick={() => setOpen((o) => !o)}
+          aria-expanded={open}
+          aria-haspopup="true"
+          className="inline-flex items-center gap-2 border border-nd-border px-3 py-2 font-mono text-[11px] uppercase tracking-[0.06em] text-nd-text-secondary transition-colors hover:text-nd-text-display"
+        >
+          {t('filtersButton')}
+          {activeCount ? (
+            <span className="rounded-full bg-[color-mix(in_srgb,var(--nd-accent)_15%,transparent)] px-1.5 text-nd-accent">
+              {activeCount}
+            </span>
+          ) : null}
+          <span aria-hidden className="text-nd-text-disabled">
+            ▾
+          </span>
+        </button>
+
+        {open ? (
+          <div className="absolute left-0 z-20 mt-1 flex w-[min(90vw,340px)] flex-col gap-3 border border-nd-border bg-nd-surface p-4 shadow-lg">
+            <ChipGroup label={t('filterFamily')} param="family" active={get('family')} options={facets.families} onToggle={toggle} />
+            <ChipGroup label={t('filterTopic')} param="topic" active={get('topic')} options={facets.topics.slice(0, 14)} onToggle={toggle} />
+            <ChipGroup label={t('filterRegion')} param="region" active={get('region')} options={facets.regions} onToggle={toggle} />
+            <ChipGroup label={t('filterEntity')} param="entity" active={get('entity')} options={facets.entities.slice(0, 14)} onToggle={toggle} />
+            {activeCount ? (
+              <button
+                type="button"
+                onClick={clearAll}
+                className="self-start font-mono text-[11px] uppercase tracking-[0.06em] text-nd-text-disabled transition-colors hover:text-nd-text-display"
+              >
+                {t('clearFilters')}
+              </button>
+            ) : null}
+          </div>
+        ) : null}
       </div>
 
-      <div className="flex flex-col gap-2.5">
-        <ChipGroup label={t('filterFamily')} param="family" active={get('family')} options={facets.families} onToggle={toggle} />
-        <ChipGroup label={t('filterTopic')} param="topic" active={get('topic')} options={facets.topics.slice(0, 14)} onToggle={toggle} />
-        <ChipGroup label={t('filterRegion')} param="region" active={get('region')} options={facets.regions} onToggle={toggle} />
-        <ChipGroup label={t('filterEntity')} param="entity" active={get('entity')} options={facets.entities.slice(0, 14)} onToggle={toggle} />
-      </div>
-
-      {hasFilters ? (
-        <div>
+      {/* Sort toggle */}
+      <div className="inline-flex border border-nd-border" role="group" aria-label={t('sortLabel')}>
+        {(['importance', 'recent'] as const).map((value) => (
           <button
+            key={value}
             type="button"
-            onClick={clearAll}
-            className="font-mono text-[11px] uppercase tracking-[0.06em] text-nd-text-disabled transition-colors hover:text-nd-text-display"
+            onClick={() => setSort(value)}
+            aria-pressed={sort === value}
+            className="px-3 py-2 font-mono text-[11px] uppercase tracking-[0.06em] transition-colors"
+            style={{
+              color: sort === value ? 'var(--nd-text-display)' : 'var(--nd-text-disabled)',
+              background: sort === value ? 'var(--nd-surface-raised)' : 'transparent',
+            }}
           >
-            {t('clearFilters')}
+            {value === 'importance' ? t('sortImportance') : t('sortRecent')}
           </button>
-        </div>
-      ) : null}
+        ))}
+      </div>
     </div>
   )
 }

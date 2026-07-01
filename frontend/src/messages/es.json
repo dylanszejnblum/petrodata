@@ -650,9 +650,10 @@
   },
   "noticias": {
     "eyebrow": "Monitor de noticias",
-    "title": "Noticias",
+    "title": "Principales noticias del sector",
     "blurb": "Seguimiento continuo de noticias, regulación y comunicados del sector de petróleo y gas de Vaca Muerta. Filtrá por fuente, tema, empresa y región.",
     "searchPlaceholder": "Buscar por título…",
+    "filtersButton": "Filtros",
     "sortLabel": "Ordenar",
     "sortImportance": "Relevancia",
     "sortRecent": "Reciente",
