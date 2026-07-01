@@ -570,6 +570,7 @@
     "asOf": "Datos al {month}",
     "source": "Fuente",
     "computedBy": "Computado por vacamuerta.io a partir de {source}",
+    "sourceLatest": "Computado por vacamuerta.io · último dato disponible {date}",
     "operatorsTitle": "Operadores principales",
     "transportTitle": "Infraestructura de transporte",
     "transportBlurb": "La red troncal que evacúa la producción: gasoductos de transporte por operador y oleoductos troncales. Geometría y trazas oficiales — sin datos de caudal en la fuente.",

@@ -13,6 +13,7 @@ import { ActividadChart } from '@/components/Petrodata/indicadores/ActividadChar
 import { CruceChart } from '@/components/Petrodata/indicadores/CruceChart'
 import { TransportInfra } from '@/components/Petrodata/indicadores/TransportInfra'
 import { WorldStage } from '@/components/Petrodata/indicadores/WorldStage'
+import { SourceChip } from '@/components/Petrodata/indicadores/SourceChip'
 
 // ISR: investment figures update ~monthly, so a 1h revalidate makes the page
 // near-instant while staying fresh (the fetch is also tagged 'inversiones' for
@@ -92,9 +93,9 @@ export default async function IndicadoresPage() {
           ) : null}
         </section>
 
-        {/* KPI grid */}
+        {/* KPI grid — national oil production is intentionally hidden (VM-focused page) */}
         <section className="container pb-16">
-          <KpiGrid kpis={data.kpis} />
+          <KpiGrid kpis={data.kpis.filter((k) => k.id !== 'produccion_nacional')} />
         </section>
 
         {/* Breakeven headroom trend */}
@@ -121,8 +122,8 @@ export default async function IndicadoresPage() {
               </span>
             </div>
             <RampChart points={data.serie.points} />
-            <span className="mt-3 inline-block font-mono text-[10px] text-nd-text-disabled">
-              {t('computedBy', { source: `${data.serie.source.label} · ${data.serie.source.asOf}` })}
+            <span className="mt-3 inline-block">
+              <SourceChip source={data.serie.source} />
             </span>
           </section>
         ) : null}
@@ -140,8 +141,8 @@ export default async function IndicadoresPage() {
               </span>
             </div>
             <ActividadChart actividad={data.actividad} />
-            <span className="mt-3 inline-block font-mono text-[10px] text-nd-text-disabled">
-              {t('computedBy', { source: `${data.actividad.source.label} · ${data.actividad.source.asOf}` })}
+            <span className="mt-3 inline-block">
+              <SourceChip source={data.actividad.source} />
             </span>
           </section>
         ) : null}
@@ -162,8 +163,8 @@ export default async function IndicadoresPage() {
               {t('cruceBlurb')}
             </p>
             <CruceChart cruce={data.cruce} />
-            <span className="mt-3 inline-block font-mono text-[10px] text-nd-text-disabled">
-              {t('computedBy', { source: `${data.cruce.source.label} · ${data.cruce.source.asOf}` })}
+            <span className="mt-3 inline-block">
+              <SourceChip source={data.cruce.source} />
             </span>
           </section>
         ) : null}
@@ -176,6 +177,11 @@ export default async function IndicadoresPage() {
               <span>{t('operatorsTitle')}</span>
             </h2>
             <OperatorLeaderboard operadores={data.operadores} />
+            {data.asOf ? (
+              <span className="mt-3 inline-block">
+                <SourceChip source={{ asOf: data.asOf }} />
+              </span>
+            ) : null}
           </section>
         ) : null}
 

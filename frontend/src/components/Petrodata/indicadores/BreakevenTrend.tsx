@@ -23,6 +23,7 @@ import {
 import { useMounted } from '@/hooks/useMounted'
 import { animateCounter, prefersReducedMotion, useInView } from './anim'
 import type { InvBreakeven } from '@/api/inversiones'
+import { SourceChip } from './SourceChip'
 
 const nf0 = new Intl.NumberFormat('es-AR', { maximumFractionDigits: 0 })
 const nf1 = new Intl.NumberFormat('es-AR', { maximumFractionDigits: 1 })
@@ -185,9 +186,7 @@ export function BreakevenTrend({ breakeven }: { breakeven: InvBreakeven }) {
         </span>
       </div>
 
-      <span className="font-mono text-[10px] text-nd-text-disabled">
-        {t('computedBy', { source: `${breakeven.source.label} · ${breakeven.source.asOf}` })}
-      </span>
+      <SourceChip source={breakeven.source} />
     </div>
   )
 }
