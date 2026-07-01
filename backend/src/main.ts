@@ -12,12 +12,25 @@ import { buildSwaggerConfig } from './swagger.config';
 async function createApp(): Promise<NestExpressApplication> {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
+  // Behind Coolify's Traefik proxy: trust X-Forwarded-For so req.ip is the real
+  // client (per-IP rate limiting buckets everyone together otherwise).
+  app.set('trust proxy', 1);
   app.setGlobalPrefix('api');
   app.enableVersioning({
     type: VersioningType.URI,
     defaultVersion: '1',
   });
-  app.enableCors();
+  // Browser CORS is only for our own frontend; third-party API consumers call
+  // server-to-server with a key (no Origin header, unaffected by this). Allowlist
+  // from CORS_ORIGINS (comma-separated); falls back to the known app origins.
+  const corsOrigins = (
+    process.env.CORS_ORIGINS ??
+    'https://vacamuerta.io,https://www.vacamuerta.io,http://localhost:3000'
+  )
+    .split(',')
+    .map((o) => o.trim())
+    .filter(Boolean);
+  app.enableCors({ origin: corsOrigins, credentials: true });
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
