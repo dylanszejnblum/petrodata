@@ -421,3 +421,19 @@ model NewsletterSubscriber {
 
   @@map("newsletter_subscriber")
 }
+
+/// API keys for premium (metered/paid) endpoints. Keys are high-entropy and
+/// stored only as a SHA-256 hash — the plaintext is shown once at creation and
+/// never persisted. `prefix` is the leading, non-secret slice for identifying a
+/// key in logs/UI without revealing it. A route becomes premium via @Premium();
+/// unmarked routes stay public. Created manually (email → charge → apikey:create).
+model ApiKey {
+  id        Int      @id @default(autoincrement())
+  label     String // who it's for, e.g. "Acme Corp — dylan@acme.com"
+  keyHash   String   @unique @map("key_hash") // sha256(plaintext), hex
+  prefix    String // first chars of the key, safe to display
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("api_key")
+}

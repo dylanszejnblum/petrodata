@@ -1,4 +1,5 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
 import {
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -96,6 +97,7 @@ export class MineralsController {
   }
 
   @Get('prices')
+  @Throttle({ default: { ttl: 60_000, limit: 30 } }) // outbound Yahoo fetch — protect the upstream
   @ApiOperation({
     summary: 'Live commodity prices',
     description: 'Latest quotes for the tracked commodities (Silver, Gold, Copper, Uranium, Lithium). Uranium and Lithium use sector ETFs as proxies. Sourced from Yahoo Finance; 5-minute server-side cache.',
@@ -106,6 +108,7 @@ export class MineralsController {
   }
 
   @Get('prices/:commodity')
+  @Throttle({ default: { ttl: 60_000, limit: 30 } }) // outbound Yahoo fetch — protect the upstream
   @ApiOperation({
     summary: 'Live commodity price (single)',
     description: 'Latest quote for one commodity. Case-insensitive name match against the supported set.',

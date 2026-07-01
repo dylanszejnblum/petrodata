@@ -51,10 +51,16 @@ interface Sums {
 export class InversionesService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getPage(lang: Lang = 'es') {
-    const ref = await this.referenceMonth();
+  /**
+   * The full page. `trimestre` ('YYYY-Qn') filters the whole payload to a chosen
+   * quarter by moving the reference anchor to the latest complete month within
+   * that quarter; omit it for the latest complete month (default behaviour).
+   */
+  async getPage(lang: Lang = 'es', trimestre?: string) {
+    const bound = trimestre ? (quarterEndMonth(trimestre) ?? undefined) : undefined;
+    const ref = await this.referenceMonth(bound);
     if (!ref) {
-      return { asOf: null, kpis: [], serie: null, operadores: [], exportaciones: null, headline: '' };
+      return { asOf: null, trimestre: null, trimestresDisponibles: [], kpis: [], serie: null, operadores: [], exportaciones: null, headline: '' };
     }
     const s = strings(lang);
     const src = sources(lang);
@@ -163,8 +169,13 @@ export class InversionesService {
       asOf,
     );
 
+    // Distinct quarters that have data — the valid values for the ?trimestre filter.
+    const trimestresDisponibles = [...new Set(serieRows.map((r) => quarterOf(r.dateMonth)))];
+
     return {
       asOf,
+      trimestre: quarterOf(month),
+      trimestresDisponibles,
       latestMonth: latestMonth.toISOString().slice(0, 7),
       tier: 'confirmado',
       note: s.note,
@@ -239,10 +250,10 @@ export class InversionesService {
    * report with a lag). Pick the latest *complete* month: step back if the
    * newest month's active-well count drops sharply vs. the prior month.
    */
-  private async referenceMonth(): Promise<{ month: Date; latestMonth: Date } | null> {
+  private async referenceMonth(bound?: Date): Promise<{ month: Date; latestMonth: Date } | null> {
     const recent = await this.prisma.factProductionMonthly.groupBy({
       by: ['dateMonth'],
-      where: { vmCombined: true, boe: { gt: 0 } },
+      where: { vmCombined: true, boe: { gt: 0 }, ...(bound ? { dateMonth: { lte: bound } } : {}) },
       _count: { _all: true },
       orderBy: { dateMonth: 'desc' },
       take: 4,
@@ -768,6 +779,18 @@ export class InversionesService {
       politica,
     };
   }
+}
+
+/** 'YYYY-Qn' for a month's calendar quarter. */
+function quarterOf(d: Date): string {
+  return `${d.getUTCFullYear()}-Q${Math.floor(d.getUTCMonth() / 3) + 1}`;
+}
+
+/** Last month of a 'YYYY-Qn' quarter (the anchor upper-bound), or null if malformed. */
+function quarterEndMonth(trimestre: string): Date | null {
+  const m = /^(\d{4})-Q([1-4])$/.exec(trimestre);
+  if (!m) return null;
+  return new Date(Date.UTC(Number(m[1]), Number(m[2]) * 3 - 1, 1));
 }
 
 function pct(part: number | null, whole: number | null): number {
