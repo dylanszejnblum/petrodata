@@ -25,7 +25,7 @@ async function createApp(): Promise<NestExpressApplication> {
   // from CORS_ORIGINS (comma-separated); falls back to the known app origins.
   const corsOrigins = (
     process.env.CORS_ORIGINS ??
-    'https://vacamuerta.io,https://www.vacamuerta.io,http://localhost:3000'
+    'https://vacamuerta.io,https://www.vacamuerta.io,https://petrodata.dylansz.com,http://localhost:3000'
   )
     .split(',')
     .map((o) => o.trim())
