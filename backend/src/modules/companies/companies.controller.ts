@@ -1,4 +1,5 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
 import { ApiNotFoundResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { ApiErrorDto, ApiOkEnvelope } from '../../common/swagger';
 import { ListCompaniesQueryDto, StockHistoryQueryDto } from './companies.dto';
@@ -37,6 +38,7 @@ export class CompaniesController {
   }
 
   @Get('prices')
+  @Throttle({ default: { ttl: 60_000, limit: 30 } }) // outbound Yahoo fetch — protect the upstream
   @ApiOperation({
     summary: 'Live stock prices',
     description: 'Current price and daily change for every public company, sourced from Yahoo Finance and cached for 5 minutes.',
@@ -47,6 +49,7 @@ export class CompaniesController {
   }
 
   @Get('prices/:ticker')
+  @Throttle({ default: { ttl: 60_000, limit: 30 } }) // outbound Yahoo fetch — protect the upstream
   @ApiOperation({
     summary: 'Stock price history (OHLCV)',
     description:

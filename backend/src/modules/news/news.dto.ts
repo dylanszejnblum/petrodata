@@ -1,6 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
+  ArrayMaxSize,
   IsArray,
   IsIn,
   IsInt,
@@ -21,6 +22,7 @@ export class IngestNewsBodyDto {
     items: { type: 'object', additionalProperties: true },
   })
   @IsArray()
+  @ArrayMaxSize(500) // cap batch size; the pipeline sends far fewer per POST
   documents: NewsDocumentInput[];
 }
 
