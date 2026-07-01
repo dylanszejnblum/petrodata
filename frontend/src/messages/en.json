@@ -650,9 +650,10 @@
   },
   "noticias": {
     "eyebrow": "News monitor",
-    "title": "News",
+    "title": "Leading sector news",
     "blurb": "Continuous tracking of news, regulation and disclosures across Vaca Muerta's oil and gas sector. Filter by source, topic, company and region.",
     "searchPlaceholder": "Search by title…",
+    "filtersButton": "Filters",
     "sortLabel": "Sort",
     "sortImportance": "Relevance",
     "sortRecent": "Recent",
