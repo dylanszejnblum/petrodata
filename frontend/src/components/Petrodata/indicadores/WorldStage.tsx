@@ -41,9 +41,6 @@ function unitLabel(unit: string, t: T): string {
 export function WorldStage({ mundo }: { mundo: InvMundo }) {
   return (
     <div className="flex flex-col gap-14">
-      {/* Shale headline — the resource claim */}
-      <ShaleBanner shale={mundo.shale} />
-
       {/* Per-product: rank jump + world leaderboard */}
       {mundo.rankings.map((r) => (
         <RankingBlock key={r.product} ranking={r} />
@@ -56,34 +53,6 @@ export function WorldStage({ mundo }: { mundo: InvMundo }) {
 
       {/* Policy levers → GDP impact */}
       <PolicyStrip politica={mundo.politica} />
-    </div>
-  )
-}
-
-function ShaleBanner({ shale }: { shale: InvMundo['shale'] }) {
-  const t = useTranslations('indicadores')
-  return (
-    <div className="border border-nd-border bg-nd-surface-raised/40 p-6 md:p-8">
-      <div className="flex flex-wrap items-center gap-x-8 gap-y-4">
-        <RankBadge n={shale.gasRank} label="shale gas" />
-        <RankBadge n={shale.oilRank} label="shale oil" />
-        <p className="max-w-md flex-1 text-pretty text-base leading-snug text-nd-text-display font-display">
-          {shale.note}
-        </p>
-      </div>
-      <span className="mt-5 inline-block font-mono text-[10px] text-nd-text-disabled">
-        {t('world.reference', { source: shale.source.label })}
-      </span>
-    </div>
-  )
-}
-
-function RankBadge({ n, label }: { n: number; label: string }) {
-  return (
-    <div className="flex items-baseline gap-2">
-      <span className="font-mono text-[11px] text-nd-text-disabled">#</span>
-      <span className="text-5xl leading-none tabular-nums text-nd-accent font-display md:text-6xl">{n}</span>
-      <span className="font-mono text-[11px] uppercase tracking-[0.06em] text-nd-text-secondary">{label}</span>
     </div>
   )
 }

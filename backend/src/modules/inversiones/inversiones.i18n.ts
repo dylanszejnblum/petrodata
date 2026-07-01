@@ -99,7 +99,6 @@ export function strings(lang: Lang) {
       produccionVm: en ? 'VM oil production' : 'Producción de petróleo VM',
       participacionPetroleo: en ? 'Share of national oil' : 'Participación en petróleo nacional',
       participacionGas: en ? 'Share of national gas' : 'Participación en gas nacional',
-      produccionNacional: en ? 'National oil production' : 'Producción nacional de petróleo',
       pozosActivos: en ? 'Active wells in VM' : 'Pozos activos en VM',
       exportacionesEnergia: en ? 'Energy exports (annual)' : 'Exportaciones de energía (anual)',
       superavitEnergia: en ? 'Energy trade surplus (annual)' : 'Superávit comercial energético (anual)',

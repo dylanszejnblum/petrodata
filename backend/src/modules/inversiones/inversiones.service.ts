@@ -146,8 +146,7 @@ export class InversionesService {
         null, source(src.PROD)),
       kpi('participacion_gas', s.kpi.participacionGas, shareGas, { suffix: '%', decimals: 1 },
         null, source(src.PROD)),
-      kpi('produccion_nacional', s.kpi.produccionNacional, now.nat.oilBblD ?? 0, { suffix: ' bbl/d', decimals: 0 },
-        delta(now.nat.oilBblD, prior.nat.oilBblD), source(src.PROD)),
+      // produccion_nacional removed — the page focuses on Vaca Muerta, not national totals.
       kpi('pozos_activos', s.kpi.pozosActivos, wells, { suffix: s.wellsSuffix, decimals: 0 },
         delta(wells, wellsPrior), source(src.PROD)),
       kpi('exportaciones_energia', s.kpi.exportacionesEnergia, exportEnergyUsd / 1e9, { prefix: 'US$', suffix: 'B', decimals: 1 },
