@@ -795,7 +795,7 @@
       "ofGdp": "of GDP",
       "anchorBasis": "Gross production value · last {months} months · oil at Brent less quality + gas at PIST",
       "sliderLabel": "Scenario: oil price (Brent)",
-      "scenarioLabel": "At that price, oil alone:",
+      "scenarioLabel": "What-if scenario · oil only, at the selected Brent:",
       "margin": "Margin over breakeven:",
       "avgChip": "Period average US$ {price}",
       "spotChip": "Brent today US$ {price}",

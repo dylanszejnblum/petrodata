@@ -25,8 +25,14 @@ import { animateCounter, prefersReducedMotion, useInView } from './anim'
 import type { InvBreakeven } from '@/api/inversiones'
 import { SourceChip } from './SourceChip'
 
+// Axis ticks and the breakeven reference round to whole dollars; every Brent
+// price and every headroom/margin figure keeps one decimal, matching how the
+// day-value card prints the same numbers (and the slider's 0.5 step).
 const nf0 = new Intl.NumberFormat('es-AR', { maximumFractionDigits: 0 })
-const nf1 = new Intl.NumberFormat('es-AR', { maximumFractionDigits: 1 })
+const nf1 = new Intl.NumberFormat('es-AR', {
+  minimumFractionDigits: 1,
+  maximumFractionDigits: 1,
+})
 
 function fmtDate(iso: string): string {
   // "2026-04-21" → "abr '26"
@@ -50,13 +56,13 @@ export function BreakevenTrend({ breakeven }: { breakeven: InvBreakeven }) {
   useEffect(() => {
     if (!inView || !headRef.current) return
     if (prefersReducedMotion()) {
-      headRef.current.textContent = nf0.format(Math.round(headroomUsd))
+      headRef.current.textContent = nf1.format(headroomUsd)
       return
     }
-    const a = animateCounter(headRef.current, Math.round(headroomUsd), {
+    const a = animateCounter(headRef.current, headroomUsd, {
       duration: 1500,
       delay: 250,
-      format: (v) => nf0.format(Math.round(v)),
+      format: (v) => nf1.format(v),
     })
     return () => {
       a?.pause?.()
@@ -83,7 +89,7 @@ export function BreakevenTrend({ breakeven }: { breakeven: InvBreakeven }) {
             {t('charts.breakevenHeadroom')}
           </span>
           <span className="mt-1 block text-3xl tabular-nums text-nd-text-display md:text-4xl font-display">
-            US$<span ref={headRef}>{nf0.format(Math.round(headroomUsd))}</span>
+            US$<span ref={headRef}>{nf1.format(headroomUsd)}</span>
             <span className="ml-1 text-base text-nd-text-secondary">/bbl</span>
           </span>
         </div>
@@ -179,7 +185,7 @@ export function BreakevenTrend({ breakeven }: { breakeven: InvBreakeven }) {
       <div className="flex flex-wrap items-center justify-between gap-3 font-mono text-[11px]">
         <span className="text-nd-text-secondary">
           <span className="mr-1 inline-block size-2 rounded-full align-middle" style={{ background: stateColor }} />{' '}
-          Brent · {breakeven.source.asOf} · US${nf0.format(Math.round(brentUsd))}
+          Brent · {breakeven.source.asOf} · US${nf1.format(brentUsd)}
         </span>
         <span className="text-nd-text-disabled">
           Ref. US${nf0.format(referenceUsd)} — {breakeven.referenceSource.label}

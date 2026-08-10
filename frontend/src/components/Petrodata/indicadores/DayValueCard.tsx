@@ -155,9 +155,12 @@ export function DayValueCard({ inputs }: { inputs: DayValueInputs }) {
           />
         </div>
 
+        {/* Subordinate to the anchor on purpose: the copy names it a what-if and
+            the type stays small and dimmed, so it never reads as a second
+            published total. */}
         <p className="mt-4 text-xs tabular-nums text-white/70 font-sans">
           <span className="text-white/45">{t('scenarioLabel')}</span>{' '}
-          <span className="font-semibold text-white">US$ {nf(scenarioPerYear, 1)}B</span>{' '}
+          <span className="font-semibold text-white/80">US$ {nf(scenarioPerYear, 1)}B</span>{' '}
           <span className="text-white/45">
             {t('perYear')} · US$ {nf(scenarioPerDay, 1)}M {t('perDay')}
           </span>
