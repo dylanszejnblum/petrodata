@@ -8,7 +8,7 @@
 // final state at once. All figures are also stated in the legend.
 
 import { useEffect, useRef } from 'react'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import {
   Area,
   AreaChart,
@@ -28,10 +28,9 @@ import { SourceChip } from './SourceChip'
 // Axis ticks and the breakeven reference round to whole dollars; every Brent
 // price and every headroom/margin figure keeps one decimal, matching how the
 // day-value card prints the same numbers (and the slider's 0.5 step).
-const nf0 = new Intl.NumberFormat('es-AR', { maximumFractionDigits: 0 })
-const nf1 = new Intl.NumberFormat('es-AR', {
-  minimumFractionDigits: 1,
-  maximumFractionDigits: 1,
+const numberFormats = (locale: string) => ({
+  nf0: new Intl.NumberFormat(locale, { maximumFractionDigits: 0 }),
+  nf1: new Intl.NumberFormat(locale, { minimumFractionDigits: 1, maximumFractionDigits: 1 }),
 })
 
 function fmtDate(iso: string): string {
@@ -46,6 +45,8 @@ const clamp01 = (n: number) => Math.min(1, Math.max(0, n))
 
 export function BreakevenTrend({ breakeven }: { breakeven: InvBreakeven }) {
   const t = useTranslations('indicadores')
+  const locale = useLocale()
+  const { nf0, nf1 } = numberFormats(locale)
   const mounted = useMounted()
   const { brentUsd, referenceUsd, headroomUsd } = breakeven
   const rows = (breakeven.series ?? []).map((p) => ({ date: p.date, value: p.value }))
@@ -208,6 +209,7 @@ function BeTooltip({
   payload?: TooltipPayload[]
   referenceUsd: number
 }) {
+  const { nf1 } = numberFormats(useLocale())
   if (!active || !payload || !payload.length) return null
   const row = payload[0]?.payload
   if (!row) return null

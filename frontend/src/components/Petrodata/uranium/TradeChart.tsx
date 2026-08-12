@@ -5,6 +5,7 @@ import { formatCompact } from '@/utilities/formatNumber'
 import { URANIUM } from './theme'
 import { animate, prefersReducedMotion, stagger, useInView, utils } from './anim'
 import type { TradeRow } from './types'
+import { useLocale } from 'next-intl'
 
 const PLOT_H = 280
 
@@ -18,6 +19,7 @@ export function TradeChart({
   exportsLabel: string
 }) {
   const { ref, inView } = useInView<HTMLDivElement>()
+  const locale = useLocale()
   const plotRef = useRef<HTMLDivElement>(null)
 
   const { years, max } = useMemo(() => {
@@ -86,7 +88,7 @@ export function TradeChart({
               className="absolute right-0 -translate-y-1/2"
               style={{ top: (1 - a.frac) * PLOT_H }}
             >
-              {`$${formatCompact(a.value)}`}
+              {`$${formatCompact(a.value, locale)}`}
             </span>
           ))}
         </div>
@@ -126,6 +128,7 @@ function showYearLabel(i: number, n: number): boolean {
 }
 
 function Bar({ value, max, color, label }: { value: number; max: number; color: string; label: string }) {
+  const locale = useLocale()
   const pct = Math.max((value / max) * 100, value > 0 ? 0.5 : 0)
   return (
     <div
@@ -137,7 +140,7 @@ function Bar({ value, max, color, label }: { value: number; max: number; color: 
         transform: 'scaleY(0)',
       }}
       role="img"
-      aria-label={`${label}: ${formatCompact(value)}`}
+      aria-label={`${label}: ${formatCompact(value, locale)}`}
     />
   )
 }

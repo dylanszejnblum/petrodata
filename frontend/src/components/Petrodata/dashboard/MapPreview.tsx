@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { Link } from '@/i18n/navigation'
 import { ArrowRight } from 'lucide-react'
 import { useTheme } from '@/providers/Theme'
@@ -27,6 +27,7 @@ type WellFC = ApiSchemas['GeoWellFeatureCollectionDto']
 
 export function MapPreview({ wells, totalWells }: { wells: WellFC; totalWells: number | null }) {
   const t = useTranslations('dashboard.mapPreview')
+  const locale = useLocale()
   const { theme } = useTheme()
   const mapRef = useRef<MapRef | null>(null)
   const bearingRef = useRef(0)
@@ -107,7 +108,7 @@ export function MapPreview({ wells, totalWells }: { wells: WellFC; totalWells: n
         <span
           className="text-nd-text-display text-2xl tabular-nums leading-none font-display"
         >
-          {totalWells != null ? formatCompact(totalWells) : '—'}
+          {totalWells != null ? formatCompact(totalWells, locale) : '—'}
         </span>
         <Link
           href="/map"

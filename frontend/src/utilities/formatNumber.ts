@@ -8,13 +8,12 @@ export const decimalMark = (locale: string): string =>
 // Suffix thresholds and trailing-zero trimming are locale-independent; only the
 // decimal mark follows the locale, so a compact figure never renders "22.3B"
 // next to an Intl es-AR "11,1B" on the same page.
-export const formatCompact = (num: number, fractionDigits = 1, locale = 'es-AR'): string => {
+export const formatCompact = (num: number, locale = 'es-AR'): string => {
   const abs = Math.abs(num)
   const mark = decimalMark(locale)
 
   const format = (value: number, suffix: string) => {
-    const formatted =
-      value >= 100 ? value.toFixed(0) : value >= 10 ? value.toFixed(fractionDigits) : value.toFixed(fractionDigits + 1)
+    const formatted = value >= 100 ? value.toFixed(0) : value >= 10 ? value.toFixed(1) : value.toFixed(2)
     return `${formatted.replace(/\.0+$/, '').replace(/(\.\d*[1-9])0+$/, '$1').replace('.', mark)}${suffix}`
   }
 
@@ -23,11 +22,11 @@ export const formatCompact = (num: number, fractionDigits = 1, locale = 'es-AR')
   if (abs >= 1_000_000) return format(num / 1_000_000, 'M')
   if (abs >= 1_000) return format(num / 1_000, 'K')
 
-  return num.toFixed(fractionDigits).replace(/\.0+$/, '').replace('.', mark)
+  return num.toFixed(1).replace(/\.0+$/, '').replace('.', mark)
 }
 
-export const formatPercent = (ratio: number, fractionDigits = 1, locale = 'es-AR'): string =>
-  `${(ratio * 100).toFixed(fractionDigits).replace('.', decimalMark(locale))}%`
+export const formatPercent = (ratio: number, locale = 'es-AR'): string =>
+  `${(ratio * 100).toFixed(1).replace('.', decimalMark(locale))}%`
 
 export const formatMonth = (iso: string | null | undefined): string => {
   if (!iso) return '—'

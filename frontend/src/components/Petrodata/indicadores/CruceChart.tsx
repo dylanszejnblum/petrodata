@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { useMounted } from '@/hooks/useMounted'
 import { track } from '@/utilities/analytics'
@@ -19,6 +19,7 @@ const fmtPct = (v: number) => `${v.toFixed(1)}%`
 
 export function CruceChart({ cruce }: { cruce: InvCruce }) {
   const t = useTranslations('indicadores')
+  const locale = useLocale()
   const mounted = useMounted()
   const [mode, setMode] = useState<Mode>('usd')
 
@@ -31,7 +32,7 @@ export function CruceChart({ cruce }: { cruce: InvCruce }) {
     energia: active === 'gdp' ? p.energiaPctGdp : p.energiaUsd,
   }))
 
-  const fmtVal = active === 'gdp' ? fmtPct : (v: number) => formatCompactUSD(v)
+  const fmtVal = active === 'gdp' ? fmtPct : (v: number) => formatCompactUSD(v, locale)
 
   if (!rows.length) {
     return (
@@ -164,8 +165,9 @@ function CruceTooltip({
   energyLabel?: string
   pctGdpSuffix?: string
 }) {
+  const locale = useLocale()
   if (!active || !payload || !payload.length) return null
-  const fmt = (v: number) => (mode === 'gdp' ? fmtPct(v) : formatCompactUSD(v))
+  const fmt = (v: number) => (mode === 'gdp' ? fmtPct(v) : formatCompactUSD(v, locale))
   return (
     <div className="border border-nd-border bg-nd-surface/95 px-3 py-2 font-mono shadow-[0_8px_24px_-12px_rgba(0,0,0,0.4)] backdrop-blur-md">
       <div className="mb-1 border-b border-nd-border pb-1 text-[10px] uppercase tracking-[0.08em] text-nd-text-disabled">

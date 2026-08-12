@@ -20,6 +20,7 @@ import {
   XAxis,
   YAxis,
 } from 'recharts'
+import { useLocale } from 'next-intl'
 import { useMounted } from '@/hooks/useMounted'
 import { formatCompact } from '@/utilities/formatNumber'
 import type { InvPolicyChart } from '@/api/inversiones'
@@ -32,15 +33,15 @@ function fmtPeriod(period: string): string {
   return `${month} '${y.slice(2)}`
 }
 
-function fmtValue(value: number, unit: string): string {
+function fmtValue(value: number, unit: string, locale: string): string {
   switch (unit) {
     case '%/mes':
       return `${value.toLocaleString('es-AR', { maximumFractionDigits: 1 })}%`
     case 'ARS/USD':
-      return `$${formatCompact(value)}`
+      return `$${formatCompact(value, locale)}`
     case 'ARS millones':
     case 'US$ MM':
-      return formatCompact(value)
+      return formatCompact(value, locale)
     default:
       return value.toLocaleString('es-AR', { maximumFractionDigits: 1 })
   }
@@ -51,11 +52,12 @@ const AXIS = {
 } as const
 
 export function MacroChart({ chart }: { chart: InvPolicyChart }) {
+  const locale = useLocale()
   const mounted = useMounted()
   const rows = chart.points
   if (!rows.length) return null
 
-  const yFmt = (v: number) => (chart.unit === '%/mes' ? `${v}%` : formatCompact(v))
+  const yFmt = (v: number) => (chart.unit === '%/mes' ? `${v}%` : formatCompact(v, locale))
   const tip = (
     <Tooltip content={<MacroTooltip unit={chart.unit} />} cursor={{ stroke: 'var(--nd-border)', strokeWidth: 1 }} />
   )
@@ -149,6 +151,7 @@ function MacroTooltip({
   label?: string | number
   unit: string
 }) {
+  const locale = useLocale()
   if (!active || !payload || !payload.length) return null
   const row = payload[0]?.payload
   if (!row) return null
@@ -157,7 +160,7 @@ function MacroTooltip({
       <div className="mb-1 border-b border-nd-border pb-1 text-[10px] uppercase tracking-[0.08em] text-nd-text-disabled">
         {fmtPeriod(String(label))}
       </div>
-      <div className="text-[12px] tabular-nums text-nd-text-display">{fmtValue(row.value, unit)}</div>
+      <div className="text-[12px] tabular-nums text-nd-text-display">{fmtValue(row.value, unit, locale)}</div>
     </div>
   )
 }

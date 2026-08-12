@@ -42,7 +42,7 @@ export function ProvinceStatCards({ stats }: { stats: ProvinceStats }) {
       <Card
         accent={GAS}
         label={t('gasProduction')}
-        value={formatGas(stats.gasMmcfD, gasUnit)}
+        value={formatGas(stats.gasMmcfD, gasUnit, locale)}
         unit={GAS_UNIT_LABEL[gasUnit]}
         sublabel={stats.asOf}
         delta={stats.gasYoy}

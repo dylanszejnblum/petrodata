@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { Link } from '@/i18n/navigation'
 import nextDynamic from 'next/dynamic'
 import { notFound } from 'next/navigation'
-import { getTranslations } from 'next-intl/server'
+import { getLocale, getTranslations } from 'next-intl/server'
 import { NothingHeader } from '@/components/Nothing/Header'
 import { NothingFooter } from '@/components/Nothing/Footer'
 import { api, type ApiSchemas } from '@/api/client'
@@ -143,6 +143,7 @@ export default async function ProjectDetailPage({
   params: Promise<{ name: string }>
 }) {
   const { name } = await params
+  const locale = await getLocale()
   const decoded = decodeURIComponent(name)
   const [t, tCommodity, project, companySlugs] = await Promise.all([
     getTranslations('projectDetail'),
@@ -312,6 +313,7 @@ export default async function ProjectDetailPage({
               }
             />
             <EntriesTable
+              locale={locale}
               entries={resources}
               accent={color}
               labels={{ category: t('tables.category'), noNumeric: t('tables.noNumeric') }}
@@ -327,6 +329,7 @@ export default async function ProjectDetailPage({
               title={t('sections.reservesTitle')}
             />
             <EntriesTable
+              locale={locale}
               entries={reserves}
               accent={color}
               labels={{ category: t('tables.category'), noNumeric: t('tables.noNumeric') }}
@@ -538,10 +541,12 @@ function EntriesTable({
   entries,
   accent,
   labels,
+  locale,
 }: {
   entries: ResourceEntry[]
   accent: string
   labels: { category: string; noNumeric: string }
+  locale: string
 }) {
   const valueKeys = collectValueKeys(entries)
   if (valueKeys.length === 0) {
@@ -590,7 +595,7 @@ function EntriesTable({
                     className="px-5 py-3 text-right tabular-nums text-nd-text-secondary"
                   >
                     {numeric && (v as number) >= 1000
-                      ? formatCompact(v as number)
+                      ? formatCompact(v as number, locale)
                       : formatValue(v)}
                   </td>
                 )

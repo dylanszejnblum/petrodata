@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import type { ApiSchemas } from '@/api/client'
 import { api } from '@/api/client'
 import { commodityColor } from '@/components/Petrodata/minerals/commodityColors'
@@ -30,6 +30,7 @@ export function TradeFlowExplorer({
 }) {
   const t = useTranslations('trade')
 
+  const locale = useLocale()
   const [selectedMineral, setSelectedMineral] = useState<string>(initial.mineral)
   const [selectedYear, setSelectedYear] = useState<number | null>(yearOf(initial))
   const [topN, setTopN] = useState<number>(10)
@@ -231,13 +232,13 @@ export function TradeFlowExplorer({
           <span className="text-nd-text-disabled">
             {t('imports')}{' '}
             <span className="tabular-nums text-nd-text-primary">
-              ${formatCompact(data.total_import_usd ?? 0)}
+              ${formatCompact(data.total_import_usd ?? 0, locale)}
             </span>
           </span>
           <span className="text-nd-text-disabled">
             {t('exports')}{' '}
             <span className="tabular-nums text-nd-text-primary">
-              ${formatCompact(data.total_export_usd ?? 0)}
+              ${formatCompact(data.total_export_usd ?? 0, locale)}
             </span>
           </span>
           <span
@@ -247,7 +248,7 @@ export function TradeFlowExplorer({
             <span className="uppercase tracking-[0.08em]">
               {surplus ? t('surplus') : t('deficit')}
             </span>
-            <span className="tabular-nums">${formatCompact(Math.abs(balance))}</span>
+            <span className="tabular-nums">${formatCompact(Math.abs(balance), locale)}</span>
           </span>
           {loading && (
             <span className="animate-pulse text-nd-text-disabled" aria-live="polite">
@@ -276,6 +277,7 @@ export function TradeFlowExplorer({
 /** Mobile fallback: horizontal bars per country, imports (accent) + exports (muted). */
 function BarsFallback({ flow, topN }: { flow: TradeFlowDto; topN: number }) {
   const t = useTranslations('trade')
+  const locale = useLocale()
   const accent = commodityColor(flow.mineral).color
 
   const top = (edges: Edge[]) =>
@@ -314,7 +316,7 @@ function BarsFallback({ flow, topN }: { flow: TradeFlowDto; topN: number }) {
             <div className="flex items-center justify-between font-mono text-[11px]">
               <span className="truncate text-nd-text-primary">{e.country}</span>
               <span className="tabular-nums text-nd-text-disabled">
-                ${formatCompact(e.value_usd)}
+                ${formatCompact(e.value_usd, locale)}
               </span>
             </div>
             <div className="h-2 w-full bg-nd-border">

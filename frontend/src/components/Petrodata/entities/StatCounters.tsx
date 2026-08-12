@@ -45,7 +45,7 @@ export function StatCounters({
       if (!el) return undefined
       const fmt =
         it.format === 'compact'
-          ? (v: number) => formatCompact(v)
+          ? (v: number) => formatCompact(v, locale)
           : it.format === 'percent'
             ? (v: number) => `${(v * 100).toFixed(1)}%`
             : (v: number) => nf.format(Math.round(v))
@@ -61,7 +61,7 @@ export function StatCounters({
 
   const fmtStatic = (it: StatItem) =>
     it.format === 'compact'
-      ? formatCompact(it.value)
+      ? formatCompact(it.value, locale)
       : it.format === 'percent'
         ? `${(it.value * 100).toFixed(1)}%`
         : nf.format(Math.round(it.value))

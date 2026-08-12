@@ -5,19 +5,20 @@
 // leaderboard) and a methodology footnote built from the API's assumptions.
 
 import { useEffect, useRef } from 'react'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import type { ApiSchemas } from '@/api/client'
 import { formatCompact } from '@/utilities/formatNumber'
 import { animate, prefersReducedMotion, useInView } from './anim'
 
 type Contribution = ApiSchemas['OperatorContributionDto']
 
-const usd = (v: number) => `US$ ${formatCompact(v)}`
-const pct = (ratio: number, digits = 1) =>
-  `${(ratio * 100).toLocaleString('es-AR', { maximumFractionDigits: digits, minimumFractionDigits: digits })}%`
-
 export function ContributionTable({ data }: { data: Contribution }) {
   const t = useTranslations('indicadores.contribution')
+  const locale = useLocale()
+  const usd = (v: number) => `US$ ${formatCompact(v, locale)}`
+  const pct = (ratio: number, digits = 1) =>
+    `${(ratio * 100).toLocaleString(locale, { maximumFractionDigits: digits, minimumFractionDigits: digits })}%`
+
   const top = data.operators.slice(0, 8)
   const maxGross = Math.max(...top.map((o) => o.gross_value_usd), 1)
 

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import nextDynamic from 'next/dynamic'
-import { getTranslations } from 'next-intl/server'
+import { getLocale, getTranslations } from 'next-intl/server'
 import { NothingHeader } from '@/components/Nothing/Header'
 import { NothingFooter } from '@/components/Nothing/Footer'
 import { StatCard } from '@/components/Nothing/StatCard'
@@ -116,6 +116,7 @@ async function getMap(): Promise<MineralsFeatureCollection> {
 }
 
 export default async function MineralsOverviewPage() {
+  const locale = await getLocale()
   const [t, tCommon, summary, commodities, projects, geojson, prices] = await Promise.all([
     getTranslations('mineralsPage'),
     getTranslations('common'),
@@ -239,7 +240,7 @@ export default async function MineralsOverviewPage() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-nd-border">
             {commodities.map((c) => (
-              <CommodityRollupCard key={c.commodity} rollup={c} />
+              <CommodityRollupCard key={c.commodity} rollup={c} locale={locale} />
             ))}
           </div>
         </section>

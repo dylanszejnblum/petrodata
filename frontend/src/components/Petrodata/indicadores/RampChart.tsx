@@ -1,6 +1,6 @@
 'use client'
 
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { useMounted } from '@/hooks/useMounted'
 import { formatCompact } from '@/utilities/formatNumber'
@@ -40,6 +40,7 @@ function fmtPeriod(period: string): string {
 
 export function RampChart({ points }: { points: InvSeriePoint[] }) {
   const t = useTranslations('indicadores')
+  const locale = useLocale()
   const mounted = useMounted()
   const rows = buildRows(points)
   const hasPrelim = points.some((p) => p.preliminary)
@@ -73,7 +74,7 @@ export function RampChart({ points }: { points: InvSeriePoint[] }) {
               minTickGap={28}
             />
             <YAxis
-              tickFormatter={(v) => formatCompact(v as number)}
+              tickFormatter={(v) => formatCompact(v as number, locale)}
               tick={{ fill: 'var(--nd-text-disabled)', fontSize: 11, fontFamily: 'var(--font-mono)' }}
               tickLine={false}
               axisLine={false}

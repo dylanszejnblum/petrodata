@@ -86,7 +86,7 @@ export function ProvinceList({ provinces }: { provinces: ProvinceCard[] }) {
                   {p.exportUsd != null && p.exportUsd > 0 && (
                     <div>
                       <div className="text-base font-semibold leading-none tabular-nums text-white font-display">
-                        {formatCompactUSD(p.exportUsd)}
+                        {formatCompactUSD(p.exportUsd, locale)}
                       </div>
                       <div className="mt-1 text-[9px] font-medium uppercase tracking-[0.1em] text-white/70 font-mono">
                         {t('exports')}

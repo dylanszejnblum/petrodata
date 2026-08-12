@@ -9,11 +9,11 @@ import { formatCompactUSD } from '@/utilities/formatCompactUSD'
 describe('compact formatters', () => {
   it('uses the locale decimal mark', () => {
     expect(formatCompact(22_300_000_000)).toBe('22,3B')
-    expect(formatCompact(22_300_000_000, 1, 'en-US')).toBe('22.3B')
+    expect(formatCompact(22_300_000_000, 'en-US')).toBe('22.3B')
     expect(formatCompactUSD(22_300_000_000)).toBe('$22,3B')
     expect(formatCompactUSD(22_300_000_000, 'en-US')).toBe('$22.3B')
     expect(formatPercent(0.035)).toBe('3,5%')
-    expect(formatPercent(0.035, 1, 'en-US')).toBe('3.5%')
+    expect(formatPercent(0.035, 'en-US')).toBe('3.5%')
   })
 
   it('keeps the suffix thresholds', () => {
@@ -40,9 +40,32 @@ describe('compact formatters', () => {
 
   it('handles negatives', () => {
     expect(formatCompact(-1_500_000)).toBe('-1,5M')
-    expect(formatCompact(-1_500_000, 1, 'en-US')).toBe('-1.5M')
+    expect(formatCompact(-1_500_000, 'en-US')).toBe('-1.5M')
     expect(formatCompact(-12.5)).toBe('-12,5')
     expect(formatCompactUSD(-1_500_000)).toBe('$-1,5M')
     expect(formatPercent(-0.035)).toBe('-3,5%')
+  })
+
+  // The locale defaults to es-AR, so a call site that forgets to pass one fails
+  // silently: Spanish separators on an English page. Catch it here instead.
+  it('is called with an explicit locale everywhere', async () => {
+    const { readdirSync, readFileSync } = await import('node:fs')
+    const files = readdirSync('src', { recursive: true, encoding: 'utf8' })
+      .filter((f) => /\.tsx?$/.test(f))
+      .filter((f) => !f.includes('formatNumber') && !f.includes('formatCompactUSD'))
+      .map((f) => `src/${f}`)
+    const formatters =
+      /\b(formatCompactUSD|formatCompact|formatPercent|formatGas|formatGrade|formatResource)\(([^()]*)\)/
+    const offenders: string[] = []
+    for (const file of files) {
+      readFileSync(file, 'utf8')
+        .split('\n')
+        .forEach((line, i) => {
+          if (line.includes('function ')) return // the declarations themselves
+          const call = formatters.exec(line)
+          if (call && !/,\s*locale\s*$/.test(call[2])) offenders.push(`${file}:${i + 1}`)
+        })
+    }
+    expect(offenders).toEqual([])
   })
 })
