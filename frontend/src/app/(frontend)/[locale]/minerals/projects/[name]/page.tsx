@@ -9,7 +9,7 @@ import { api, type ApiSchemas } from '@/api/client'
 import { commodityColor, commoditySlug } from '@/components/Petrodata/minerals/commodityColors'
 import { slugify } from '@/components/Petrodata/entities/types'
 import { PriceCard } from '@/components/Petrodata/minerals/PriceCard'
-import { formatCompact } from '@/utilities/formatNumber'
+import { formatCompact, formatDecimal } from '@/utilities/formatNumber'
 import { buildAlternates } from '@/i18n/alternates'
 
 const ProjectLocationMap = nextDynamic(
@@ -292,9 +292,9 @@ export default async function ProjectDetailPage({
               {t('market')}
             </span>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-nd-border">
-              {project.stock && <StockCard stock={project.stock} fallbackName={operator} />}
+              {project.stock && <StockCard stock={project.stock} fallbackName={operator} locale={locale} />}
               {project.commodity_prices.map((q) => (
-                <PriceCard key={q.ticker + q.commodity} quote={q} />
+                <PriceCard key={q.ticker + q.commodity} quote={q} locale={locale} />
               ))}
             </div>
           </section>
@@ -608,7 +608,15 @@ function EntriesTable({
   )
 }
 
-function StockCard({ stock, fallbackName }: { stock: Stock; fallbackName: string | null }) {
+function StockCard({
+  stock,
+  fallbackName,
+  locale,
+}: {
+  stock: Stock
+  fallbackName: string | null
+  locale: string
+}) {
   const price = stock.price as number | null
   const change = stock.change as number | null
   const changePct = stock.change_pct as number | null
@@ -638,7 +646,7 @@ function StockCard({ stock, fallbackName }: { stock: Stock; fallbackName: string
         <span
           className="text-nd-text-display text-2xl tabular-nums leading-none font-mono"
         >
-          {price != null ? price.toFixed(2) : '—'}
+          {price != null ? formatDecimal(price, locale) : '—'}
         </span>
         <span
           className="text-nd-text-disabled text-[10px] uppercase font-mono"
@@ -650,8 +658,8 @@ function StockCard({ stock, fallbackName }: { stock: Stock; fallbackName: string
         className="text-[11px] tabular-nums font-mono"
         style={{ color: trendColor }}
       >
-        {change != null ? `${change > 0 ? '+' : ''}${change.toFixed(2)}` : '—'}{' '}
-        {changePct != null ? `· ${changePct > 0 ? '+' : ''}${changePct.toFixed(2)}%` : ''}
+        {change != null ? `${change > 0 ? '+' : ''}${formatDecimal(change, locale)}` : '—'}{' '}
+        {changePct != null ? `· ${changePct > 0 ? '+' : ''}${formatDecimal(changePct, locale, 2)}%` : ''}
       </span>
     </div>
   )

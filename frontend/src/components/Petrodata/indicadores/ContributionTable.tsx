@@ -7,7 +7,7 @@
 import { useEffect, useRef } from 'react'
 import { useLocale, useTranslations } from 'next-intl'
 import type { ApiSchemas } from '@/api/client'
-import { formatCompact } from '@/utilities/formatNumber'
+import { formatCompact, formatDecimal } from '@/utilities/formatNumber'
 import { animate, prefersReducedMotion, useInView } from './anim'
 
 type Contribution = ApiSchemas['OperatorContributionDto']
@@ -135,9 +135,9 @@ export function ContributionTable({ data }: { data: Contribution }) {
       {/* Methodology */}
       <p className="mt-4 max-w-3xl font-mono text-[11px] leading-relaxed text-nd-text-disabled">
         {t('methodology', {
-          brent: a.brent_avg_usd_bbl != null ? a.brent_avg_usd_bbl.toFixed(1) : '—',
+          brent: a.brent_avg_usd_bbl != null ? formatDecimal(a.brent_avg_usd_bbl, locale, 1) : '—',
           discount: a.oil_discount_usd_bbl,
-          pist: a.gas_pist_avg_usd_mmbtu != null ? a.gas_pist_avg_usd_mmbtu.toFixed(2) : '—',
+          pist: a.gas_pist_avg_usd_mmbtu != null ? formatDecimal(a.gas_pist_avg_usd_mmbtu, locale, 2) : '—',
           royalty: Math.round(a.royalty_rate * 100),
           from: data.window.from.slice(0, 7),
           to: data.window.to.slice(0, 7),

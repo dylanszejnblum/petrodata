@@ -25,8 +25,13 @@ export const formatCompact = (num: number, locale = 'es-AR'): string => {
   return num.toFixed(1).replace(/\.0+$/, '').replace('.', mark)
 }
 
-export const formatPercent = (ratio: number, locale = 'es-AR'): string =>
-  `${(ratio * 100).toFixed(1).replace('.', decimalMark(locale))}%`
+export const formatPercent = (ratio: number, locale = 'es-AR', digits = 1): string =>
+  `${(ratio * 100).toFixed(digits).replace('.', decimalMark(locale))}%`
+
+// Prices and other plain decimal figures. Separate from formatCompact: these are
+// never abbreviated, so "1234.5" stays "1.234,5" rather than becoming "1,2K".
+export const formatDecimal = (num: number, locale = 'es-AR', digits = 2): string =>
+  num.toLocaleString(locale, { minimumFractionDigits: digits, maximumFractionDigits: digits })
 
 export const formatMonth = (iso: string | null | undefined): string => {
   if (!iso) return '—'

@@ -1,12 +1,14 @@
 'use client'
 
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { Cell, Pie, PieChart, ResponsiveContainer } from 'recharts'
 import { AnimatedCounter } from './AnimatedCounter'
 import { useMounted } from '@/hooks/useMounted'
+import { formatPercent } from '@/utilities/formatNumber'
 
 export function VmShareDonut({ shareBoe }: { shareBoe: number }) {
   const t = useTranslations('dashboard.vmDonut')
+  const locale = useLocale()
   const mounted = useMounted()
   const pct = Math.max(0, Math.min(1, shareBoe))
   const conventional = 1 - pct
@@ -63,11 +65,11 @@ export function VmShareDonut({ shareBoe }: { shareBoe: number }) {
       </div>
 
       <div className="mt-5 flex items-center justify-between text-[11px] border-t border-nd-border pt-3">
-        <LegendDot color="var(--nd-success)" label={t('vmLegend')} value={`${(pct * 100).toFixed(1)}%`} />
+        <LegendDot color="var(--nd-success)" label={t('vmLegend')} value={formatPercent(pct, locale)} />
         <LegendDot
           color="var(--nd-surface-raised)"
           label={t('conventionalLegend')}
-          value={`${(conventional * 100).toFixed(1)}%`}
+          value={formatPercent(conventional, locale)}
           ring
         />
       </div>

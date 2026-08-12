@@ -3,7 +3,7 @@
 import { memo } from 'react'
 import { useLocale, useTranslations } from 'next-intl'
 import type { ApiSchemas } from '@/api/client'
-import { formatCompact, formatPercent, formatMonth } from '@/utilities/formatNumber'
+import { formatCompact, formatMonth, formatPercent } from '@/utilities/formatNumber'
 import { useUnits } from '@/providers/Units'
 import { GAS_UNIT_LABEL, formatGas } from '@/utilities/units'
 import { OverlayCard, OverlayLabel } from './OverlayCard'

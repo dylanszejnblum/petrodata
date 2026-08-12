@@ -2,8 +2,10 @@
 
 import { BarChart3, Droplet, FileText, LineChart } from 'lucide-react'
 import { AnimatedCounter } from './AnimatedCounter'
+import { useLocale } from 'next-intl'
 import { useUnits } from '@/providers/Units'
 import { GAS_UNIT_LABEL, gasValue } from '@/utilities/units'
+import { formatPercent } from '@/utilities/formatNumber'
 
 export type StatCardData = {
   label: string
@@ -35,13 +37,14 @@ export function HeroCards({ cards }: { cards: StatCardData[] }) {
 }
 
 function HeroCard({ card }: { card: StatCardData }) {
+  const locale = useLocale()
   const { gasUnit } = useUnits()
   const value = card.gas ? gasValue(card.value, gasUnit) : card.value
   const unit = card.gas ? GAS_UNIT_LABEL[gasUnit] : card.unit
   const Icon = ICONS[card.icon]
   const isUp = (card.mom ?? 0) > 0
   const isDown = (card.mom ?? 0) < 0
-  const momLabel = formatMoM(card.mom)
+  const momLabel = formatMoM(card.mom, locale)
 
   return (
     <div className="flex flex-col gap-4 overflow-hidden rounded-[10px] border border-nd-border bg-nd-surface p-5">
@@ -76,7 +79,7 @@ function HeroCard({ card }: { card: StatCardData }) {
   )
 }
 
-function formatMoM(mom: number | null): string | null {
+function formatMoM(mom: number | null, locale: string): string | null {
   if (mom == null || !Number.isFinite(mom)) return null
-  return `${Math.abs(mom * 100).toFixed(1)}%`
+  return formatPercent(Math.abs(mom), locale)
 }

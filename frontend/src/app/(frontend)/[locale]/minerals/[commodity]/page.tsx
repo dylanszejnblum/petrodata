@@ -257,7 +257,7 @@ export default async function CommodityPage({
                 rows={reserveHeadlines}
                 accent={color}
               />
-              {price && <PriceDetailCard quote={price} />}
+              {price && <PriceDetailCard quote={price} locale={locale} />}
             </div>
           </section>
         )}

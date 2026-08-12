@@ -13,7 +13,7 @@ import { ProvinceProductionChart } from '@/components/Petrodata/entities/Provinc
 import { ProvinceStatCards } from '@/components/Petrodata/entities/ProvinceStatCards'
 import { PROVINCE_META, provincePhoto } from '@/components/Petrodata/entities/provinceMeta'
 import { SectionLabel } from '@/components/Petrodata/SectionLabel'
-import { formatCompact, formatMonth } from '@/utilities/formatNumber'
+import { formatCompact, formatMonth, formatPercent } from '@/utilities/formatNumber'
 import { formatCompactUSD } from '@/utilities/formatCompactUSD'
 
 export const dynamic = 'force-dynamic'
@@ -350,7 +350,7 @@ export default async function ProvinceDetailPage({ params }: { params: Promise<{
                         ${formatCompact(r.value_annual_usd, locale)}
                       </td>
                       <td className="px-5 py-3 text-right text-sm tabular-nums text-nd-text-secondary font-mono">
-                        {((r.value_annual_usd / exportTotal) * 100).toFixed(1)}%
+                        {formatPercent(r.value_annual_usd / exportTotal, locale)}
                       </td>
                     </tr>
                   ))}

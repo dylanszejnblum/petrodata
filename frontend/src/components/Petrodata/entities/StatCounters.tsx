@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react'
 import { useLocale } from 'next-intl'
-import { formatCompact } from '@/utilities/formatNumber'
+import { formatCompact, formatPercent } from '@/utilities/formatNumber'
 import { animateCounter, useInView } from '@/components/Petrodata/uranium/anim'
 import type { StatItem } from './types'
 
@@ -47,7 +47,7 @@ export function StatCounters({
         it.format === 'compact'
           ? (v: number) => formatCompact(v, locale)
           : it.format === 'percent'
-            ? (v: number) => `${(v * 100).toFixed(1)}%`
+            ? (v: number) => formatPercent(v, locale)
             : (v: number) => nf.format(Math.round(v))
       return animateCounter(el, it.value, {
         duration: density === 'compact' ? 1200 : 2000,
@@ -63,7 +63,7 @@ export function StatCounters({
     it.format === 'compact'
       ? formatCompact(it.value, locale)
       : it.format === 'percent'
-        ? `${(it.value * 100).toFixed(1)}%`
+        ? formatPercent(it.value, locale)
         : nf.format(Math.round(it.value))
 
   return (

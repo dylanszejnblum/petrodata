@@ -63,7 +63,33 @@ describe('compact formatters', () => {
         .forEach((line, i) => {
           if (line.includes('function ')) return // the declarations themselves
           const call = formatters.exec(line)
-          if (call && !/,\s*locale\s*$/.test(call[2])) offenders.push(`${file}:${i + 1}`)
+          if (call && !/\blocale\b/.test(call[2])) offenders.push(`${file}:${i + 1}`)
+        })
+    }
+    expect(offenders).toEqual([])
+  })
+
+  // Bare toFixed() always emits a '.', so it is only safe where the output is
+  // machine-read (SVG path data, query params) — never for anything a reader
+  // sees. Everything else must go through the formatters above.
+  it('uses no bare toFixed in user-facing output', async () => {
+    const { readdirSync, readFileSync } = await import('node:fs')
+    // Machine-readable numbers: a comma decimal would be a syntax error here.
+    const allowed = [
+      'uranium/PriceChart.tsx', // SVG path data
+      'entities/StockPriceChart.tsx', // SVG path data
+      'entities/ProvinceProductionChart.tsx', // SVG path data
+      'MapExperience.tsx', // bbox query param, already comma-delimited
+      'projects/[name]/page.tsx', // lat/long, rendered as "lat, lng"
+      'blocks/Chart/Component.client.tsx', // Payload CMS block, own en-US formatter
+    ]
+    const offenders: string[] = []
+    for (const f of readdirSync('src', { recursive: true, encoding: 'utf8' })) {
+      if (!/\.tsx$/.test(f) || allowed.some((a) => f.includes(a))) continue
+      readFileSync(`src/${f}`, 'utf8')
+        .split('\n')
+        .forEach((line, i) => {
+          if (line.includes('.toFixed(')) offenders.push(`src/${f}:${i + 1}`)
         })
     }
     expect(offenders).toEqual([])

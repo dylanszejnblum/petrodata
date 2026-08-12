@@ -189,7 +189,7 @@ export default async function MineralsOverviewPage() {
         </section>
 
         {/* Live prices */}
-        <LivePrices quotes={prices} />
+        <LivePrices quotes={prices} locale={locale} />
 
         {/* KPI strip */}
         <section className="container pb-8">

@@ -1,10 +1,11 @@
 'use client'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { formatMonth } from '@/utilities/formatNumber'
+import { formatDecimal, formatMonth } from '@/utilities/formatNumber'
 import { URANIUM } from './theme'
 import { drawPath, fadeIn, useInView } from './anim'
 import type { PricePoint, PriceExtreme } from './types'
+import { useLocale } from 'next-intl'
 
 const HEIGHT = 360
 const PAD = { top: 24, right: 16, bottom: 28, left: 52 }
@@ -24,6 +25,7 @@ export function PriceChart({
 }) {
   const containerRef = useRef<HTMLDivElement>(null)
   const [width, setWidth] = useState(0)
+  const locale = useLocale()
   const { ref: inViewRef, inView } = useInView<HTMLDivElement>()
   const lineRef = useRef<SVGPathElement>(null)
   const fillRef = useRef<SVGPathElement>(null)
@@ -214,7 +216,7 @@ export function PriceChart({
                 fontSize={10}
                 fill={URANIUM.teal}
               >
-                {`$${model.lowDot.point.price.toFixed(0)}`}
+                {`$${formatDecimal(model.lowDot.point.price, locale, 0)}`}
               </text>
             </g>
           )}
@@ -231,7 +233,7 @@ export function PriceChart({
                 fontSize={10}
                 fill={URANIUM.amber}
               >
-                {`$${model.highDot.point.price.toFixed(0)}`}
+                {`$${formatDecimal(model.highDot.point.price, locale, 0)}`}
               </text>
             </g>
           )}
@@ -267,7 +269,7 @@ export function PriceChart({
             {formatMonth(hover.point.date)}
           </div>
           <div className="text-sm text-nd-text-display" style={{ color: URANIUM.teal }}>
-            {`$${hover.point.price.toFixed(2)}`}
+            {`$${formatDecimal(hover.point.price, locale)}`}
           </div>
         </div>
       )}

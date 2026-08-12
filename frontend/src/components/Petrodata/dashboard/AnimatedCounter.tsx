@@ -1,21 +1,17 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { useLocale } from 'next-intl'
+import { formatCompact, formatDecimal } from '@/utilities/formatNumber'
 
 type Format = 'compact' | 'integer' | 'percent'
 
 const easeOutQuart = (t: number): number => 1 - Math.pow(1 - t, 4)
 
-function format(value: number, kind: Format): string {
-  if (kind === 'percent') return `${value.toFixed(1)}%`
-  if (kind === 'integer') return Math.round(value).toLocaleString('en-US')
-  // compact
-  const abs = Math.abs(value)
-  if (abs >= 1e12) return `${(value / 1e12).toFixed(1)}T`
-  if (abs >= 1e9) return `${(value / 1e9).toFixed(1)}B`
-  if (abs >= 1e6) return `${(value / 1e6).toFixed(1)}M`
-  if (abs >= 1e3) return `${(value / 1e3).toFixed(1)}K`
-  return value.toFixed(0)
+function format(value: number, kind: Format, locale: string): string {
+  if (kind === 'percent') return `${formatDecimal(value, locale, 1)}%`
+  if (kind === 'integer') return Math.round(value).toLocaleString(locale)
+  return formatCompact(value, locale)
 }
 
 export function AnimatedCounter({
@@ -31,6 +27,7 @@ export function AnimatedCounter({
   className?: string
   style?: React.CSSProperties
 }) {
+  const locale = useLocale()
   const ref = useRef<HTMLSpanElement | null>(null)
   const rafRef = useRef<number | null>(null)
   const [value, setValue] = useState(0)
@@ -84,7 +81,7 @@ export function AnimatedCounter({
 
   return (
     <span ref={ref} className={className} style={style}>
-      {format(value, kind)}
+      {format(value, kind, locale)}
     </span>
   )
 }

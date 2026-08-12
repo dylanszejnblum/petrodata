@@ -1,22 +1,30 @@
 import type { ApiSchemas } from '@/api/client'
+import { formatDecimal } from '@/utilities/formatNumber'
 import { commodityColor } from './commodityColors'
 
 type Quote = ApiSchemas['CommodityPriceDto']
 
-function formatPrice(price: number | null | undefined): string {
+function formatPrice(price: number | null | undefined, locale: string): string {
   if (price == null || !Number.isFinite(price)) return '—'
-  if (price >= 1000) return price.toLocaleString('en-US', { maximumFractionDigits: 0 })
-  if (price >= 100) return price.toFixed(1)
-  return price.toFixed(2)
+  if (price >= 1000) return price.toLocaleString(locale, { maximumFractionDigits: 0 })
+  return formatDecimal(price, locale, price >= 100 ? 1 : 2)
 }
 
-function formatChangePct(pct: number | null | undefined): string {
+function formatChangePct(pct: number | null | undefined, locale: string): string {
   if (pct == null || !Number.isFinite(pct)) return '—'
   const sign = pct > 0 ? '+' : ''
-  return `${sign}${pct.toFixed(2)}%`
+  return `${sign}${formatDecimal(pct, locale, 2)}%`
 }
 
-export function PriceCard({ quote, compact = false }: { quote: Quote; compact?: boolean }) {
+export function PriceCard({
+  quote,
+  locale,
+  compact = false,
+}: {
+  quote: Quote
+  locale: string
+  compact?: boolean
+}) {
   const { color } = commodityColor(quote.commodity)
   const price = quote.price as number | null
   const change = quote.change as number | null
@@ -59,7 +67,7 @@ export function PriceCard({ quote, compact = false }: { quote: Quote; compact?: 
         <span
           className={`text-nd-text-display ${compact ? 'text-xl' : 'text-2xl'} tabular-nums leading-none font-mono`}
         >
-          {formatPrice(price)}
+          {formatPrice(price, locale)}
         </span>
         <span
           className="text-nd-text-disabled text-[10px] uppercase font-mono"
@@ -74,7 +82,7 @@ export function PriceCard({ quote, compact = false }: { quote: Quote; compact?: 
           className="text-[11px] tabular-nums font-mono"
           style={{ color: trendColor }}
         >
-          {formatChangePct(changePct)}
+          {formatChangePct(changePct, locale)}
         </span>
       </div>
     </div>
@@ -109,7 +117,7 @@ function TrendArrow({
   )
 }
 
-export function LivePrices({ quotes }: { quotes: Quote[] }) {
+export function LivePrices({ quotes, locale }: { quotes: Quote[]; locale: string }) {
   if (quotes.length === 0) return null
   return (
     <section className="container pb-8">
@@ -132,7 +140,7 @@ export function LivePrices({ quotes }: { quotes: Quote[] }) {
         }`}
       >
         {quotes.map((q) => (
-          <PriceCard key={q.ticker + q.commodity} quote={q} />
+          <PriceCard key={q.ticker + q.commodity} quote={q} locale={locale} />
         ))}
       </div>
     </section>
@@ -141,7 +149,7 @@ export function LivePrices({ quotes }: { quotes: Quote[] }) {
 
 /* ---------- Larger detail card used on per-commodity / project pages ---------- */
 
-export function PriceDetailCard({ quote }: { quote: Quote }) {
+export function PriceDetailCard({ quote, locale }: { quote: Quote; locale: string }) {
   const { color } = commodityColor(quote.commodity)
   const price = quote.price as number | null
   const change = quote.change as number | null
@@ -191,7 +199,7 @@ export function PriceDetailCard({ quote }: { quote: Quote }) {
         <span
           className="text-nd-text-display text-4xl tabular-nums leading-none font-display"
         >
-          {formatPrice(price)}
+          {formatPrice(price, locale)}
         </span>
         <span
           className="text-nd-text-disabled text-[11px] uppercase font-mono"
@@ -206,8 +214,8 @@ export function PriceDetailCard({ quote }: { quote: Quote }) {
           className="text-sm tabular-nums font-mono"
           style={{ color: trendColor }}
         >
-          {change != null ? `${change > 0 ? '+' : ''}${change.toFixed(2)}` : '—'} ·{' '}
-          {formatChangePct(changePct)}
+          {change != null ? `${change > 0 ? '+' : ''}${formatDecimal(change, locale)}` : '—'} ·{' '}
+          {formatChangePct(changePct, locale)}
         </span>
       </div>
 
@@ -215,8 +223,8 @@ export function PriceDetailCard({ quote }: { quote: Quote }) {
         <div className="flex flex-col gap-1.5">
           <div className="flex items-center justify-between text-[10px] uppercase tracking-[0.08em] text-nd-text-disabled font-mono"
           >
-            <span>52w low · {formatPrice(low52)}</span>
-            <span>52w high · {formatPrice(high52)}</span>
+            <span>52w low · {formatPrice(low52, locale)}</span>
+            <span>52w high · {formatPrice(high52, locale)}</span>
           </div>
           <div className="relative h-1 bg-nd-surface-raised">
             <div

@@ -9,6 +9,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { useLocale, useTranslations } from 'next-intl'
 import { api, type ApiSchemas } from '@/api/client'
 import { drawPath, fadeIn, useInView } from '@/components/Petrodata/uranium/anim'
+import { formatDecimal } from '@/utilities/formatNumber'
 
 type History = ApiSchemas['StockHistoryDto']
 
@@ -102,7 +103,7 @@ export function StockPriceChart({
           )}
           {changePct != null && (
             <span className="text-sm tabular-nums font-mono" style={{ color: lineColor }}>
-              {up ? '▲' : '▼'} {Math.abs(changePct).toFixed(2)}%
+              {up ? '▲' : '▼'} {formatDecimal(Math.abs(changePct), locale, 2)}%
             </span>
           )}
         </div>

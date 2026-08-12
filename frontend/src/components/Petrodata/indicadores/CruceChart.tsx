@@ -6,6 +6,7 @@ import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YA
 import { useMounted } from '@/hooks/useMounted'
 import { track } from '@/utilities/analytics'
 import { formatCompactUSD } from '@/utilities/formatCompactUSD'
+import { formatDecimal } from '@/utilities/formatNumber'
 import type { InvCruce } from '@/api/inversiones'
 
 const AGRO_COLOR = '#10b981'
@@ -15,7 +16,7 @@ type Mode = 'usd' | 'gdp'
 
 type Row = { period: string; agro: number | null; energia: number | null }
 
-const fmtPct = (v: number) => `${v.toFixed(1)}%`
+const fmtPct = (v: number, locale: string) => `${formatDecimal(v, locale, 1)}%`
 
 export function CruceChart({ cruce }: { cruce: InvCruce }) {
   const t = useTranslations('indicadores')
@@ -32,7 +33,8 @@ export function CruceChart({ cruce }: { cruce: InvCruce }) {
     energia: active === 'gdp' ? p.energiaPctGdp : p.energiaUsd,
   }))
 
-  const fmtVal = active === 'gdp' ? fmtPct : (v: number) => formatCompactUSD(v, locale)
+  const fmtVal =
+    active === 'gdp' ? (v: number) => fmtPct(v, locale) : (v: number) => formatCompactUSD(v, locale)
 
   if (!rows.length) {
     return (
@@ -167,7 +169,7 @@ function CruceTooltip({
 }) {
   const locale = useLocale()
   if (!active || !payload || !payload.length) return null
-  const fmt = (v: number) => (mode === 'gdp' ? fmtPct(v) : formatCompactUSD(v, locale))
+  const fmt = (v: number) => (mode === 'gdp' ? fmtPct(v, locale) : formatCompactUSD(v, locale))
   return (
     <div className="border border-nd-border bg-nd-surface/95 px-3 py-2 font-mono shadow-[0_8px_24px_-12px_rgba(0,0,0,0.4)] backdrop-blur-md">
       <div className="mb-1 border-b border-nd-border pb-1 text-[10px] uppercase tracking-[0.08em] text-nd-text-disabled">
