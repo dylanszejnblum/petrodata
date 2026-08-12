@@ -1,4 +1,5 @@
-import { getTranslations } from 'next-intl/server'
+import { getLocale, getTranslations } from 'next-intl/server'
+import { formatCompact, formatDecimal } from '@/utilities/formatNumber'
 import type { ApiSchemas } from '@/api/client'
 import { commodityColor } from './commodityColors'
 import { pickGrade, pickResource } from './projectMetrics'
@@ -14,6 +15,7 @@ type Project = ApiSchemas['ProjectListItemDto']
  * report V₂O₅ data even if they didn't tag it explicitly in by_products.
  */
 export async function UraniumSection({ projects }: { projects: Project[] }) {
+  const locale = await getLocale()
   const t = await getTranslations('uraniumPage')
   if (projects.length === 0) return null
 
@@ -128,16 +130,16 @@ export async function UraniumSection({ projects }: { projects: Project[] }) {
                       {strOrDash(p.province)}
                     </td>
                     <td className="px-5 py-3 text-right text-nd-text-secondary tabular-nums">
-                      {fmt(u3o8Grade)}
+                      {fmt(u3o8Grade, locale)}
                     </td>
                     <td className="px-5 py-3 text-right text-nd-text-secondary tabular-nums">
-                      {fmt(u3o8Tonnage)}
+                      {fmt(u3o8Tonnage, locale)}
                     </td>
                     <td className="px-5 py-3 text-right text-nd-text-secondary tabular-nums">
-                      {fmt(v2o5Grade)}
+                      {fmt(v2o5Grade, locale)}
                     </td>
                     <td className="px-5 py-3 text-right text-nd-text-secondary tabular-nums">
-                      {fmt(v2o5Tonnage)}
+                      {fmt(v2o5Tonnage, locale)}
                     </td>
                   </tr>
                 )
@@ -216,17 +218,10 @@ function pickV2O5Resource(
   return { value: candidates[0].value, unit: candidates[0].unit }
 }
 
-function fmt(v: { value: number; unit: string } | null): string {
+function fmt(v: { value: number; unit: string } | null, locale: string): string {
   if (!v) return '—'
-  const num = v.unit === '%' ? v.value.toFixed(2) : compact(v.value)
+  const num = v.unit === '%' ? formatDecimal(v.value, locale, 2) : formatCompact(v.value, locale)
   return `${num} ${v.unit}`.trim()
-}
-
-function compact(n: number): string {
-  if (n >= 1e6) return `${(n / 1e6).toFixed(1)}M`
-  if (n >= 1e3) return `${(n / 1e3).toFixed(1)}K`
-  if (n >= 100) return n.toFixed(0)
-  return n.toFixed(1)
 }
 
 function strOrDash(v: unknown): string {

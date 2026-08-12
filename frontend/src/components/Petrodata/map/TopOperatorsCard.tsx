@@ -1,7 +1,7 @@
 'use client'
 
 import { memo } from 'react'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { track } from '@/utilities/analytics'
 import type { ApiSchemas } from '@/api/client'
 import { formatCompact } from '@/utilities/formatNumber'
@@ -20,6 +20,7 @@ function TopOperatorsCardImpl({
   onSelect: (slug: string | null) => void
 }) {
   const t = useTranslations('mapPage.topOperators')
+  const locale = useLocale()
   const top = operators.slice(0, 5)
   const max = top[0]?.boe || 1
 
@@ -57,7 +58,7 @@ function TopOperatorsCardImpl({
                     <span
                       className="text-nd-text-secondary text-[11px] tabular-nums font-mono"
                     >
-                      {formatCompact(op.boe)}
+                      {formatCompact(op.boe, locale)}
                     </span>
                   </div>
                   <div className="mt-1.5 h-[3px] w-full bg-nd-surface-raised">

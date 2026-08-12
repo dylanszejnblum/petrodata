@@ -1,5 +1,6 @@
 import Image from 'next/image'
-import { getTranslations } from 'next-intl/server'
+import { getLocale, getTranslations } from 'next-intl/server'
+import { formatDecimal } from '@/utilities/formatNumber'
 
 /** Photo tile beside the day-value card: what Vaca Muerta is inside the country. */
 export async function VmHighlightCard({
@@ -12,6 +13,7 @@ export async function VmHighlightCard({
   wells: number | null
 }) {
   const t = await getTranslations('indicadores.vmCard')
+  const locale = await getLocale()
 
   return (
     <div className="relative flex min-h-56 flex-col justify-end overflow-hidden rounded-[10px] border border-nd-border bg-[#16191d]">
@@ -42,10 +44,10 @@ export async function VmHighlightCard({
         <div className="mt-3 flex items-end justify-between gap-3">
           <dl className="flex gap-5">
             {oilSharePct != null && (
-              <Figure value={`${oilSharePct.toFixed(1)}%`} label={t('oilShare')} />
+              <Figure value={`${formatDecimal(oilSharePct, locale, 1)}%`} label={t('oilShare')} />
             )}
             {gasSharePct != null && (
-              <Figure value={`${gasSharePct.toFixed(1)}%`} label={t('gasShare')} accent />
+              <Figure value={`${formatDecimal(gasSharePct, locale, 1)}%`} label={t('gasShare')} accent />
             )}
             {wells != null && (
               <Figure value={wells.toLocaleString('es-AR')} label={t('wells')} />

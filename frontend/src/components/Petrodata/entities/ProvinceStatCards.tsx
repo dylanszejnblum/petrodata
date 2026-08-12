@@ -1,6 +1,7 @@
 'use client'
 
 import { useLocale, useTranslations } from 'next-intl'
+import { formatPercent } from '@/utilities/formatNumber'
 import { useUnits } from '@/providers/Units'
 import { GAS_UNIT_LABEL, formatGas } from '@/utilities/units'
 
@@ -32,6 +33,7 @@ export function ProvinceStatCards({ stats }: { stats: ProvinceStats }) {
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
       <Card
+        locale={locale}
         accent={OIL}
         label={t('oilProduction')}
         value={nf.format(stats.oilBblD)}
@@ -40,14 +42,16 @@ export function ProvinceStatCards({ stats }: { stats: ProvinceStats }) {
         delta={stats.oilYoy}
       />
       <Card
+        locale={locale}
         accent={GAS}
         label={t('gasProduction')}
-        value={formatGas(stats.gasMmcfD, gasUnit)}
+        value={formatGas(stats.gasMmcfD, gasUnit, locale)}
         unit={GAS_UNIT_LABEL[gasUnit]}
         sublabel={stats.asOf}
         delta={stats.gasYoy}
       />
       <Card
+        locale={locale}
         accent={VM}
         label={t('vmShare')}
         value={nf1.format(stats.vmPct * 100)}
@@ -66,6 +70,7 @@ function Card({
   unit,
   sublabel,
   delta,
+  locale,
 }: {
   accent: string
   label: string
@@ -73,6 +78,7 @@ function Card({
   unit: string
   sublabel: string | null
   delta: number | null
+  locale: string
 }) {
   const t = useTranslations('provinces')
   const up = (delta ?? 0) >= 0
@@ -106,7 +112,7 @@ function Card({
               style={{ color: up ? 'var(--nd-success)' : 'var(--nd-accent)' }}
               title={t('yoy')}
             >
-              {up ? '▲' : '▼'} {Math.abs(delta * 100).toFixed(1)}%
+              {up ? '▲' : '▼'} {formatPercent(Math.abs(delta), locale)}
             </span>
           )}
         </div>

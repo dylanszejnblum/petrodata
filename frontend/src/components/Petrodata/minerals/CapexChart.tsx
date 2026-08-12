@@ -1,4 +1,5 @@
-import { getTranslations } from 'next-intl/server'
+import { getLocale, getTranslations } from 'next-intl/server'
+import { formatDecimal } from '@/utilities/formatNumber'
 import type { ApiSchemas } from '@/api/client'
 import { commodityColor } from './commodityColors'
 import { parseCapexUsdM } from './capex'
@@ -17,6 +18,7 @@ export async function CapexChart({
   rows: { name: string; commodity: string; capexText: string | null }[]
 }) {
   const t = await getTranslations('mineralsCharts')
+  const locale = await getLocale()
 
   const parsed = rows
     .map((r) => ({
@@ -68,7 +70,7 @@ export async function CapexChart({
                   <span
                     className="text-nd-text-secondary tabular-nums shrink-0 font-mono"
                   >
-                    {formatCapex(p.capexUsdM)}
+                    {formatCapex(p.capexUsdM, locale)}
                   </span>
                 </div>
                 <div className="h-[3px] bg-nd-surface-raised">
@@ -90,8 +92,8 @@ export async function CapexChart({
   )
 }
 
-function formatCapex(usdM: number): string {
-  if (usdM >= 1000) return `$${(usdM / 1000).toFixed(1)}B`
-  if (usdM >= 100) return `$${Math.round(usdM)}M`
-  return `$${usdM.toFixed(0)}M`
+// Input is already in millions, so this cannot defer to formatCompact directly.
+function formatCapex(usdM: number, locale: string): string {
+  if (usdM >= 1000) return `$${formatDecimal(usdM / 1000, locale, 1)}B`
+  return `$${formatDecimal(usdM, locale, 0)}M`
 }

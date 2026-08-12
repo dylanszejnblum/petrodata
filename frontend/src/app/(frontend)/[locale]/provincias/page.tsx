@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { getTranslations } from 'next-intl/server'
+import { getLocale, getTranslations } from 'next-intl/server'
 import { NothingHeader } from '@/components/Nothing/Header'
 import { NothingFooter } from '@/components/Nothing/Footer'
 import { api } from '@/api/client'
@@ -43,6 +43,7 @@ async function getExportTotals(): Promise<{ bySlug: Record<string, number>; nati
 }
 
 export default async function ProvincesPage() {
+  const locale = await getLocale()
   const [t, provinces, exportTotals] = await Promise.all([
     getTranslations('provinces'),
     getProvinces(),
@@ -83,7 +84,7 @@ export default async function ProvincesPage() {
           <ProvinceList provinces={cards} />
           {exportTotals.national > 0 && (
             <p className="mt-6 text-[11px] leading-relaxed text-nd-text-disabled font-mono">
-              {t('shareNote', { total: `US$ ${formatCompactUSD(exportTotals.national).slice(1)}` })}
+              {t('shareNote', { total: `US$ ${formatCompactUSD(exportTotals.national, locale).slice(1)}` })}
             </p>
           )}
         </section>

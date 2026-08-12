@@ -1,11 +1,12 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { Search } from 'lucide-react'
 import { Link } from '@/i18n/navigation'
 import { api } from '@/api/client'
 import { CompanyLogo } from './CompanyLogo'
+import { formatDecimal, formatPercent } from '@/utilities/formatNumber'
 
 export type CompanyCard = {
   slug: string
@@ -28,6 +29,7 @@ const num = (v: unknown): number | null => (typeof v === 'number' && Number.isFi
 
 export function CompanyList({ companies }: { companies: CompanyCard[] }) {
   const t = useTranslations('companies')
+  const locale = useLocale()
   const [q, setQ] = useState('')
   const [onlyWells, setOnlyWells] = useState(true) // default: only companies with ≥1 well
   const [prices, setPrices] = useState<Record<string, Price>>({})
@@ -134,10 +136,10 @@ export function CompanyList({ companies }: { companies: CompanyCard[] }) {
                   </td>
                   <td className="px-5 py-3 text-nd-text-secondary">{typeLabel(c.type, t)}</td>
                   <td className="px-5 py-3 text-right text-nd-text-secondary tabular-nums">
-                    {c.nationalShareBoe != null ? `${(c.nationalShareBoe * 100).toFixed(1)}%` : '—'}
+                    {c.nationalShareBoe != null ? formatPercent(c.nationalShareBoe, locale) : '—'}
                   </td>
                   <td className="px-5 py-3 text-right text-nd-text-secondary tabular-nums">
-                    {c.valueShare != null ? `${(c.valueShare * 100).toFixed(1)}%` : '—'}
+                    {c.valueShare != null ? formatPercent(c.valueShare, locale) : '—'}
                   </td>
                   <td className="px-5 py-3 text-right text-nd-text-secondary tabular-nums">{c.projectCount}</td>
                 </tr>
@@ -177,6 +179,7 @@ function CompanyBadge({
   price?: Price
 }) {
   const t = useTranslations('companies')
+  const locale = useLocale()
   const badge = 'inline-flex items-center rounded-full border border-nd-border px-2 py-0.5 text-[10px] tabular-nums'
   const ex = price?.exchange ?? exchange
 
@@ -190,11 +193,11 @@ function CompanyBadge({
             {ex}
           </span>
         ) : null}
-        <span className={`${badge} text-nd-text-display`}>${price.price.toFixed(2)}</span>
+        <span className={`${badge} text-nd-text-display`}>${formatDecimal(price.price, locale)}</span>
         {price.changePct != null ? (
           <span className={`${badge} gap-0.5`} style={{ color: up ? 'var(--nd-success)' : 'var(--nd-accent)' }}>
             <span className="text-[7px] leading-none">{up ? '▲' : '▼'}</span>
-            {Math.abs(price.changePct).toFixed(1)}%
+            {formatDecimal(Math.abs(price.changePct), locale, 1)}%
           </span>
         ) : null}
       </div>

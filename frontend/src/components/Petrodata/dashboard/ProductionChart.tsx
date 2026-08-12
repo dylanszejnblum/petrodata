@@ -5,6 +5,7 @@ import { OperatorAvatar } from '@/components/Petrodata/map/OperatorAvatar'
 import { formatCompact, formatMonth } from '@/utilities/formatNumber'
 import { useMounted } from '@/hooks/useMounted'
 import type { ChartRow, OperatorSeriesMeta } from './operatorPalette'
+import { useLocale } from 'next-intl'
 
 export function ProductionChart({
   rows,
@@ -14,6 +15,7 @@ export function ProductionChart({
   operators: OperatorSeriesMeta[]
 }) {
   const mounted = useMounted()
+  const locale = useLocale()
   if (rows.length === 0 || operators.length === 0) {
     return (
       <div
@@ -48,7 +50,7 @@ export function ProductionChart({
               minTickGap={20}
             />
             <YAxis
-              tickFormatter={(v) => formatCompact(v as number)}
+              tickFormatter={(v) => formatCompact(v as number, locale)}
               tick={{ fill: 'var(--nd-text-disabled)', fontSize: 11, fontFamily: 'var(--font-mono)' }}
               tickLine={false}
               axisLine={false}
@@ -117,6 +119,7 @@ function ChartTooltip({
   label?: string | number
   operators: OperatorSeriesMeta[]
 }) {
+  const locale = useLocale()
   if (!active || !payload || payload.length === 0) return null
   const byName = new Map(operators.map((op) => [op.slug, op]))
   // Recharts orders payload by series order; show stacked total at top
@@ -130,7 +133,7 @@ function ChartTooltip({
           {label ? formatMonth(String(label)) : ''}
         </span>
         <span className="text-nd-text-display text-[12px] tabular-nums">
-          {formatCompact(total)} BOE
+          {formatCompact(total, locale)} BOE
         </span>
       </div>
       <ul className="flex flex-col gap-0.5">
@@ -153,7 +156,7 @@ function ChartTooltip({
                   {op?.name ?? row.dataKey}
                 </span>
                 <span className="text-nd-text-display tabular-nums">
-                  {formatCompact(Number(row.value) || 0)}
+                  {formatCompact(Number(row.value) || 0, locale)}
                 </span>
               </li>
             )

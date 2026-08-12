@@ -1,9 +1,9 @@
 'use client'
 
 import { memo } from 'react'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import type { ApiSchemas } from '@/api/client'
-import { formatCompact, formatPercent, formatMonth } from '@/utilities/formatNumber'
+import { formatCompact, formatMonth, formatPercent } from '@/utilities/formatNumber'
 import { useUnits } from '@/providers/Units'
 import { GAS_UNIT_LABEL, formatGas } from '@/utilities/units'
 import { OverlayCard, OverlayLabel } from './OverlayCard'
@@ -25,6 +25,7 @@ function OverviewCardImpl({
   timeSeries: OperatorPoint[]
 }) {
   const t = useTranslations('mapPage.overview')
+  const locale = useLocale()
   const { gasUnit } = useUnits()
   const sparkData: SparkPoint[] = timeSeries.map((p) => ({
     x: p.date_month,
@@ -42,7 +43,7 @@ function OverviewCardImpl({
             className="text-nd-text-display tabular-nums leading-none font-display"
             style={{ fontSize: '2rem' }}
           >
-            {formatCompact(latest.boe)}
+            {formatCompact(latest.boe, locale)}
           </span>
           <abbr
             title={t('boeTooltip')}
@@ -53,11 +54,11 @@ function OverviewCardImpl({
         </div>
         <div className="mt-1 flex items-center gap-3 text-[11px] text-nd-text-secondary">
           <span className="tabular-nums font-mono">
-            {t('oilUnit', { value: formatCompact(latest.oil_bbl_d) })}
+            {t('oilUnit', { value: formatCompact(latest.oil_bbl_d, locale) })}
           </span>
           <span className="text-nd-text-disabled">·</span>
           <span className="tabular-nums font-mono">
-            {t('gasUnit', { value: formatGas(latest.gas_mmcf_d, gasUnit), unit: GAS_UNIT_LABEL[gasUnit] })}
+            {t('gasUnit', { value: formatGas(latest.gas_mmcf_d, gasUnit, locale), unit: GAS_UNIT_LABEL[gasUnit] })}
           </span>
         </div>
         <div className="mt-3 flex items-center gap-2">
@@ -73,7 +74,7 @@ function OverviewCardImpl({
           <span
             className="text-nd-text-secondary text-[11px] tabular-nums font-mono"
           >
-            {t('vmShareOfBoe', { pct: formatPercent(latest.vm_share.boe) })}
+            {t('vmShareOfBoe', { pct: formatPercent(latest.vm_share.boe, locale) })}
           </span>
         </div>
       </div>

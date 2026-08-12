@@ -1,6 +1,6 @@
 'use client'
 
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { Link } from '@/i18n/navigation'
 import { ArrowRight } from 'lucide-react'
 import { OperatorAvatar } from '@/components/Petrodata/map/OperatorAvatar'
@@ -14,6 +14,7 @@ export type TopOperatorRow = {
 
 export function TopOperatorsMini({ rows }: { rows: TopOperatorRow[] }) {
   const t = useTranslations('dashboard.topOperators')
+  const locale = useLocale()
   const max = rows[0]?.boe || 1
   return (
     <div className="flex flex-col overflow-hidden rounded-[10px] border border-nd-border bg-nd-surface p-5">
@@ -58,7 +59,7 @@ export function TopOperatorsMini({ rows }: { rows: TopOperatorRow[] }) {
                 </div>
               </div>
               <span className="text-nd-text-secondary text-[11px] tabular-nums font-mono">
-                {formatCompact(row.boe)}
+                {formatCompact(row.boe, locale)}
               </span>
             </Link>
           </li>

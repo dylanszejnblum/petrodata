@@ -1,4 +1,4 @@
-import { formatCompact } from './formatNumber'
+import { decimalMark, formatCompact } from './formatNumber'
 
 /**
  * Gas unit system.
@@ -28,11 +28,11 @@ export function gasValue(mmcfD: number, system: GasUnitSystem): number {
 }
 
 /** Compact display string for a MMcf/d figure in the selected system. */
-export function formatGas(mmcfD: number, system: GasUnitSystem): string {
+export function formatGas(mmcfD: number, system: GasUnitSystem, locale = 'es-AR'): string {
   const v = gasValue(mmcfD, system)
   const abs = Math.abs(v)
   // Per-well metric values are sub-1 (e.g. 0.0028 MMm³/d) — formatCompact would
   // round them to "0", so keep two significant figures instead.
-  if (abs > 0 && abs < 1) return v.toPrecision(2)
-  return formatCompact(v)
+  if (abs > 0 && abs < 1) return v.toPrecision(2).replace('.', decimalMark(locale))
+  return formatCompact(v, locale)
 }

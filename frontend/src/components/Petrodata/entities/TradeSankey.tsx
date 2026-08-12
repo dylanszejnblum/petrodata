@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import type { ApiSchemas } from '@/api/client'
 import { commodityColor } from '@/components/Petrodata/minerals/commodityColors'
 import { formatCompact } from '@/utilities/formatNumber'
@@ -92,6 +92,7 @@ function ribbonPath(
 
 export function TradeSankey({ flow, topN }: { flow: TradeFlowDto; topN: number }) {
   const t = useTranslations('trade')
+  const locale = useLocale()
   const { ref, width } = useContainerWidth()
   const svgRef = useRef<SVGSVGElement | null>(null)
   const [hover, setHover] = useState<{ label: string; value: number; x: number; y: number } | null>(
@@ -283,7 +284,7 @@ export function TradeSankey({ flow, topN }: { flow: TradeFlowDto; topN: number }
             <span className="truncate text-nd-text-primary" style={{ maxWidth: 120 }}>
               {n.country}
             </span>
-            <span className="tabular-nums text-nd-text-disabled">${formatCompact(n.value)}</span>
+            <span className="tabular-nums text-nd-text-disabled">${formatCompact(n.value, locale)}</span>
           </div>
         ))}
         {exportsN.map((n) => (
@@ -296,7 +297,7 @@ export function TradeSankey({ flow, topN }: { flow: TradeFlowDto; topN: number }
               transform: 'translateY(-50%)',
             }}
           >
-            <span className="tabular-nums text-nd-text-disabled">${formatCompact(n.value)}</span>
+            <span className="tabular-nums text-nd-text-disabled">${formatCompact(n.value, locale)}</span>
             <span className="truncate text-nd-text-primary" style={{ maxWidth: 120 }}>
               {n.country}
             </span>

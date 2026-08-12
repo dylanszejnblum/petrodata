@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { api, type ApiSchemas } from '@/api/client'
 import { formatCompact, formatMonth } from '@/utilities/formatNumber'
 import { useUnits } from '@/providers/Units'
@@ -146,6 +146,7 @@ function MetaRow({ label, value }: { label: string; value: string | null | undef
 
 export function WellPopup({ well }: { well: WellProps }) {
   const t = useTranslations('wellPopup')
+  const locale = useLocale()
   const { gasUnit } = useUnits()
   const { detail, loading } = useWellDetail(well.well_id)
   const isVm =
@@ -206,15 +207,15 @@ export function WellPopup({ well }: { well: WellProps }) {
             <div className="mt-2 grid grid-cols-3 gap-2">
               <ProductionTile
                 label={t('tiles.oil')}
-                value={formatCompact(latest.oil_bbl_d)}
+                value={formatCompact(latest.oil_bbl_d, locale)}
                 unit="bbl/d"
               />
               <ProductionTile
                 label={t('tiles.gas')}
-                value={formatGas(latest.gas_mmcf_d, gasUnit)}
+                value={formatGas(latest.gas_mmcf_d, gasUnit, locale)}
                 unit={GAS_UNIT_LABEL[gasUnit]}
               />
-              <ProductionTile label={t('tiles.boe')} value={formatCompact(latest.boe)} unit="" />
+              <ProductionTile label={t('tiles.boe')} value={formatCompact(latest.boe, locale)} unit="" />
             </div>
           ) : (
             <p className="mt-2 text-nd-text-disabled text-[11px] font-sans">

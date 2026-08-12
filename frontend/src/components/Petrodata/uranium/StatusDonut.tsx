@@ -6,9 +6,10 @@
 // mono labels, Doto display numbers, per-slice accent colours.
 
 import { useEffect, useRef, useState } from 'react'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { prefersReducedMotion, useInView } from './anim'
 import type { StatusSlice } from './types'
+import { formatDecimal } from '@/utilities/formatNumber'
 
 const VIEW = 220
 const CENTER = VIEW / 2
@@ -21,6 +22,7 @@ const GROW_MS = 700
 
 export function StatusDonut({ data }: { data: StatusSlice[] }) {
   const t = useTranslations('uraniumHub.donut')
+  const locale = useLocale()
   const { ref, inView } = useInView<HTMLDivElement>()
   // progress is a single 0→1 value driving every segment; per-segment stagger
   // is applied by clamping each segment's portion of the timeline.
@@ -118,7 +120,7 @@ export function StatusDonut({ data }: { data: StatusSlice[] }) {
               <span className="flex-1 font-mono text-[11px] text-nd-text-secondary">{seg.label}</span>
               <span className="font-mono text-[11px] text-nd-text-primary tabular-nums">{seg.count}</span>
               <span className="w-10 text-right font-mono text-[11px] text-nd-text-disabled tabular-nums">
-                {pct.toFixed(0)}%
+                {formatDecimal(pct, locale, 0)}%
               </span>
             </li>
           )

@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { Link } from '@/i18n/navigation'
 import { formatCompact } from '@/utilities/formatNumber'
 
@@ -31,6 +31,7 @@ export function MapBand({
   liveWells: number
 }) {
   const t = useTranslations('dashboard.mapBand')
+  const locale = useLocale()
   const videoRef = useRef<HTMLVideoElement | null>(null)
 
   useEffect(() => {
@@ -109,8 +110,8 @@ export function MapBand({
         </h2>
         <p className="mt-3.5 text-sm leading-relaxed text-white/60 font-sans">
           {t('desc', {
-            catalog: catalogWells != null ? formatCompact(catalogWells) : '—',
-            live: formatCompact(liveWells),
+            catalog: catalogWells != null ? formatCompact(catalogWells, locale) : '—',
+            live: formatCompact(liveWells, locale),
           })}
         </p>
         <Link

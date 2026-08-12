@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
-import { getTranslations } from 'next-intl/server'
+import { getLocale, getTranslations } from 'next-intl/server'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { Link } from '@/i18n/navigation'
 import { NothingHeader } from '@/components/Nothing/Header'
@@ -13,7 +13,7 @@ import { ProvinceProductionChart } from '@/components/Petrodata/entities/Provinc
 import { ProvinceStatCards } from '@/components/Petrodata/entities/ProvinceStatCards'
 import { PROVINCE_META, provincePhoto } from '@/components/Petrodata/entities/provinceMeta'
 import { SectionLabel } from '@/components/Petrodata/SectionLabel'
-import { formatCompact, formatMonth } from '@/utilities/formatNumber'
+import { formatCompact, formatMonth, formatPercent } from '@/utilities/formatNumber'
 import { formatCompactUSD } from '@/utilities/formatCompactUSD'
 
 export const dynamic = 'force-dynamic'
@@ -98,6 +98,7 @@ export async function generateMetadata({
 
 export default async function ProvinceDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
+  const locale = await getLocale()
   const [t, province, all, production, companySlugs] = await Promise.all([
     getTranslations('provinces'),
     getProvince(slug),
@@ -208,14 +209,14 @@ export default async function ProvinceDetailPage({ params }: { params: Promise<{
                 )}
 
                 <dl className="mt-7 flex flex-wrap gap-x-10 gap-y-5">
-                  <HeroKpi label={t('wells')} value={formatCompact(og?.active_wells ?? 0)} />
+                  <HeroKpi label={t('wells')} value={formatCompact(og?.active_wells ?? 0, locale)} />
                   {latest && (
-                    <HeroKpi label="BOE" value={formatCompact(latest.boe)} unit={t('perMonth')} />
+                    <HeroKpi label="BOE" value={formatCompact(latest.boe, locale)} unit={t('perMonth')} />
                   )}
                   {exportTotal > 0 && (
                     <HeroKpi
                       label={t('exports')}
-                      value={`US$ ${formatCompactUSD(exportTotal).slice(1)}`}
+                      value={`US$ ${formatCompactUSD(exportTotal, locale).slice(1)}`}
                       unit={t('perYear')}
                     />
                   )}
@@ -264,7 +265,7 @@ export default async function ProvinceDetailPage({ params }: { params: Promise<{
                           {name}
                         </span>
                         <span className="shrink-0 text-xs font-semibold tabular-nums text-nd-text-display font-mono">
-                          {formatCompact(op.boe)} BOE
+                          {formatCompact(op.boe, locale)} BOE
                         </span>
                       </span>
                       <span className="block h-[5px] overflow-hidden rounded-full bg-nd-surface-raised">
@@ -321,7 +322,7 @@ export default async function ProvinceDetailPage({ params }: { params: Promise<{
           <section className="container pb-10">
             <SectionLabel
               title={t('exportProfile')}
-              note={`US$ ${formatCompactUSD(exportTotal).slice(1)} ${t('perYear')}`}
+              note={`US$ ${formatCompactUSD(exportTotal, locale).slice(1)} ${t('perYear')}`}
             />
             <div className="overflow-x-auto rounded-[10px] border border-nd-border bg-nd-surface">
               <table className="w-full border-collapse text-left">
@@ -346,10 +347,10 @@ export default async function ProvinceDetailPage({ params }: { params: Promise<{
                         {r.product}
                       </td>
                       <td className="px-5 py-3 text-right text-sm tabular-nums text-nd-text-secondary font-mono">
-                        ${formatCompact(r.value_annual_usd)}
+                        ${formatCompact(r.value_annual_usd, locale)}
                       </td>
                       <td className="px-5 py-3 text-right text-sm tabular-nums text-nd-text-secondary font-mono">
-                        {((r.value_annual_usd / exportTotal) * 100).toFixed(1)}%
+                        {formatPercent(r.value_annual_usd / exportTotal, locale)}
                       </td>
                     </tr>
                   ))}

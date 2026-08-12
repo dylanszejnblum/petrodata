@@ -1,9 +1,15 @@
-export const formatCompactUSD = (num: number): string => {
+import { decimalMark } from './formatNumber'
+
+// Same contract as formatCompact, with a leading '$': the decimal mark follows
+// the locale so these never sit next to an Intl es-AR figure with a different
+// separator.
+export const formatCompactUSD = (num: number, locale = 'es-AR'): string => {
   const abs = Math.abs(num)
+  const mark = decimalMark(locale)
 
   const format = (value: number, suffix: string) => {
     const formatted = value >= 100 ? value.toFixed(0) : value >= 10 ? value.toFixed(1) : value.toFixed(2)
-    return `$${formatted.replace(/\.0$/, '').replace(/(\.\d*[1-9])0$/, '$1')}${suffix}`
+    return `$${formatted.replace(/\.0$/, '').replace(/(\.\d*[1-9])0$/, '$1').replace('.', mark)}${suffix}`
   }
 
   if (abs >= 1_000_000_000_000) return format(num / 1_000_000_000_000, 'T')
@@ -11,5 +17,5 @@ export const formatCompactUSD = (num: number): string => {
   if (abs >= 1_000_000) return format(num / 1_000_000, 'M')
   if (abs >= 1_000) return format(num / 1_000, 'K')
 
-  return `$${num.toFixed(2)}`
+  return `$${num.toFixed(2).replace('.', mark)}`
 }
