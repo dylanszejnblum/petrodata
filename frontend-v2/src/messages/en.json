@@ -1,0 +1,1002 @@
+{
+  "nav": {
+    "dashboard": "DASHBOARD",
+    "dashboardFull": "Dashboard",
+    "oilGas": "OIL & GAS",
+    "oilGasFull": "Oil & Gas Tracker",
+    "minerals": "MINERALS",
+    "mineralsFull": "Minerals Tracker",
+    "uranium": "URANIUM",
+    "uraniumFull": "Uranium",
+    "trade": "TRADE",
+    "tradeFull": "Trade",
+    "companies": "COMPANIES",
+    "companiesFull": "Companies",
+    "provinces": "PROVINCES",
+    "provincesFull": "Provinces",
+    "news": "NEWS",
+    "newsFull": "News",
+    "indicators": "INDICATORS",
+    "indicatorsFull": "Indicators",
+    "comingSoon": "Coming soon",
+    "menu": "Menu",
+    "openMenu": "Open navigation menu",
+    "closeMenu": "Close navigation menu",
+    "switchTheme": "Switch theme",
+    "switchLanguage": "Switch language"
+  },
+  "settings": {
+    "open": "Settings",
+    "title": "Settings",
+    "close": "Close",
+    "gasUnits": "Gas units",
+    "metricLabel": "MMm³/d",
+    "metricNote": "Metric · Argentina",
+    "imperialLabel": "MMcf/d",
+    "imperialNote": "Imperial · US"
+  },
+  "common": {
+    "live": "LIVE",
+    "loading": "loading…",
+    "capped": "CAPPED",
+    "reset": "Reset",
+    "any": "Any",
+    "filters": "Filters",
+    "search": "Search",
+    "viewAll": "View all",
+    "viewMore": "View more",
+    "noData": "No data",
+    "backendOffline": "Backend offline at {url}",
+    "comingSoon": "Coming soon"
+  },
+  "footer": {
+    "tagline": "Oil and gas intelligence in a single place.",
+    "resources": "Resources",
+    "newsletter": "Newsletter",
+    "newsletterBlurb": "New research & stats in your inbox. No spam.",
+    "status": "Status",
+    "allSystemsOperational": "ALL SYSTEMS OPERATIONAL",
+    "contactTagline": "Have a tip on a project or operator?"
+  },
+  "dashboard": {
+    "eyebrow": "VACA MUERTA · {month}",
+    "boeSuffix": "BOE",
+    "tagline": "Real-time intelligence for Argentina's oil & gas, refreshed monthly.",
+    "kpi": {
+      "oilLatest": "BBL/D OIL",
+      "gasLatest": "GAS",
+      "vmShare": "VM SHARE",
+      "activeWells": "ACTIVE WELLS",
+      "momSuffix": "MoM"
+    },
+    "chart": {
+      "eyebrow": "MONTHLY PRODUCTION · BOE",
+      "title": "By operator · last 12 months",
+      "topStacked": "Top {n} · stacked"
+    },
+    "vmDonut": {
+      "title": "Vaca Muerta share of BOE",
+      "vmLegend": "Vaca Muerta",
+      "conventionalLegend": "Conventional",
+      "centerLabel": "VM"
+    },
+    "topOperators": {
+      "title": "Top operators",
+      "boeColumn": "BOE",
+      "fullRanking": "Full ranking"
+    },
+    "mapPreview": {
+      "title": "Activity map",
+      "sampled": "{n} sampled",
+      "wellsInCatalog": "wells in catalog",
+      "openFullMap": "Open full map"
+    },
+    "mapBand": {
+      "label": "THE MAP",
+      "kicker": "INTERACTIVE MAP",
+      "titleLine1": "Basin activity.",
+      "titleLine2": "Well by well.",
+      "desc": "{catalog} wells in the catalog and {live} live on the map: oil and gas colored by type, leading operators and interactive filters to navigate the Neuquén basin.",
+      "cta": "OPEN THE MAP"
+    },
+    "news": {
+      "label": "LATEST NEWS",
+      "all": "All news →"
+    },
+    "freshness": {
+      "dataThrough": "Data through {month}",
+      "source": "datos.energia.gob.ar · CC-BY 4.0"
+    },
+    "minerals": {
+      "eyebrow": "MINERALS",
+      "summary": "{projects} projects · {commodities} commodities · {provinces} provinces",
+      "explore": "Explore minerals"
+    }
+  },
+  "mapPage": {
+    "summary": "Overview",
+    "legend": {
+      "title": "Legend",
+      "producing": "Producing basin",
+      "exploration": "Exploration basin",
+      "wellActive": "Active well",
+      "wellStopped": "Stopped well",
+      "gasWell": "Gas well",
+      "showExploration": "Show exploration basins",
+      "hideExploration": "Show producing basins only"
+    },
+    "filters": {
+      "title": "Filters",
+      "reset": "Reset",
+      "resource": "Resource",
+      "resourceAll": "All",
+      "resourceOil": "Oil",
+      "resourceGas": "Gas",
+      "formation": "Formation",
+      "operator": "Operator",
+      "basin": "Basin",
+      "province": "Province",
+      "status": "Status",
+      "any": "Any",
+      "statusOptions": {
+        "producing": "In effective production",
+        "stopped": "Temporarily stopped",
+        "study": "Under study",
+        "awaitingAbandonment": "Awaiting abandonment",
+        "abandoned": "Permanently abandoned",
+        "injector": "Injector well"
+      },
+      "hideAbandoned": "Hide abandoned wells",
+      "wellsCount": "{count} wells",
+      "capped": "CAPPED",
+      "live": "live",
+      "loading": "loading…"
+    },
+    "overview": {
+      "latestMonth": "Latest month · {month}",
+      "oilUnit": "{value} bbl/d oil",
+      "gasUnit": "{value} {unit} gas",
+      "vmShareOfBoe": "{pct} of BOE",
+      "operatorOilBblD": "{operator} · oil bbl/d",
+      "boeTooltip": "Barrels of Oil Equivalent — energy-equivalent unit combining oil and gas at 6 Mcf gas ≈ 1 bbl oil"
+    },
+    "topOperators": {
+      "title": "Top operators · BOE",
+      "clickToFilter": "Click to filter the map"
+    }
+  },
+  "wellPopup": {
+    "wellPrefix": "Well",
+    "latest": "Latest",
+    "noProduction": "No production reported for this well.",
+    "fetchingProduction": "Fetching last reported production…",
+    "noData": "no data",
+    "loading": "loading",
+    "fields": {
+      "operator": "Operator",
+      "basin": "Basin",
+      "province": "Province",
+      "formation": "Formation",
+      "yacimiento": "Yacimiento",
+      "concession": "Concession",
+      "depth": "Depth"
+    },
+    "source": "Source · Secretaría de Energía",
+    "tiles": {
+      "oil": "Oil",
+      "gas": "Gas",
+      "boe": "BOE"
+    },
+    "status": {
+      "active": "Active",
+      "injector": "Injector",
+      "stopped": "Stopped",
+      "underStudy": "Under study",
+      "abandoned": "Abandoned",
+      "unknown": "Unknown"
+    },
+    "resource": {
+      "oil": "Oil",
+      "gas": "Gas"
+    }
+  },
+  "mineralsCharts": {
+    "common": {
+      "noData": "No data"
+    },
+    "provinces": {
+      "eyebrow": "PROJECTS BY PROVINCE",
+      "title": "Top provinces"
+    },
+    "capex": {
+      "eyebrow": "CAPEX · TOP 10",
+      "title": "Largest announced investments"
+    },
+    "status": {
+      "eyebrow": "PROJECT STAGE",
+      "title": "Portfolio progression",
+      "operating": "Operating",
+      "advanced": "Advanced (Feasibility + Construction)",
+      "early": "Early stage (PEA + Prefeasibility)",
+      "exploration": "Exploration"
+    },
+    "freshness": {
+      "label": "Data from {sources} pipelines · Last updated {date}"
+    }
+  },
+  "mineralsPage": {
+    "eyebrow": "MINERALS · ARGENTINA",
+    "heroTitle": "Mining projects across Argentina",
+    "heroBlurb": "{total} projects across {commodities} commodities, drawn from {sources} pipelines. Browse by commodity or open a focused tracker.",
+    "kpi": {
+      "totalProjects": "TOTAL PROJECTS",
+      "commodities": "COMMODITIES",
+      "inOperation": "IN OPERATION",
+      "dataSources": "DATA SOURCES"
+    },
+    "commoditiesSection": {
+      "eyebrow": "COMMODITIES",
+      "title": "Explore by mineral",
+      "blurb": "Tap a commodity for a dedicated tracker with the full project list and the headline resource numbers."
+    },
+    "mapSection": {
+      "eyebrow": "MAP",
+      "title": "All projects"
+    },
+    "breakdownTopProvinces": "Top provinces",
+    "breakdownByStatus": "By status",
+    "projectsSection": {
+      "eyebrow": "PROJECTS",
+      "title": "Full catalog",
+      "subtitle": "First {n} · sorted A→Z"
+    }
+  },
+  "uraniumPage": {
+    "vanadium": {
+      "eyebrow": "CO-OCCURRENCE · V₂O₅",
+      "headline": "{count} of {total} projects also report Vanadium",
+      "blurb": "Uranium deposits in Argentina frequently carry Vanadium (V₂O₅) as a by-product. The signal matters to investors: a dual value chain (nuclear fuel + steel/batteries) materially improves project economics."
+    },
+    "comparison": {
+      "eyebrow": "COMPARISON TABLE",
+      "title": "Uranium projects side by side",
+      "columns": {
+        "project": "Project",
+        "status": "Status",
+        "province": "Province",
+        "u3o8Grade": "U₃O₈ grade",
+        "u3o8Tonnage": "U₃O₈ tonnage",
+        "v2o5Grade": "V₂O₅ grade",
+        "v2o5Tonnage": "V₂O₅ tonnage"
+      },
+      "vanadiumYes": "Yes",
+      "vanadiumNo": "—"
+    }
+  },
+  "commodityPage": {
+    "breadcrumb": "MINERALS / {commodity}",
+    "blurb": "{projects} projects · {producing} in operation. Headline figures below are summed across the catalog.",
+    "kpi": {
+      "projects": "PROJECTS",
+      "inOperation": "IN OPERATION",
+      "resource": "RESOURCE · {category}",
+      "resourceNa": "RESOURCE",
+      "reserve": "RESERVE · {category}",
+      "reserveNa": "RESERVE"
+    },
+    "totals": {
+      "resource": "Resource totals",
+      "reserve": "Reserve totals",
+      "noTotals": "No totals reported."
+    },
+    "mapSection": {
+      "eyebrow": "{commodity} · MAP",
+      "title": "Project locations",
+      "mapped": "{n} mapped · click for details"
+    },
+    "byProvince": "BY PROVINCE",
+    "projectsSection": {
+      "eyebrow": "PROJECTS",
+      "title": "{commodity} catalog",
+      "subtitle": "{n} projects · sorted A→Z"
+    }
+  },
+  "projectsTable": {
+    "noResults": "No projects match these filters.",
+    "columns": {
+      "project": "Project",
+      "commodity": "Commodity",
+      "status": "Status",
+      "province": "Province",
+      "operator": "Operator",
+      "grade": "Grade",
+      "resource": "Resource"
+    }
+  },
+  "projectDetail": {
+    "kpi": {
+      "since": "Since",
+      "lomYears": "LOM (yrs)",
+      "capex": "CAPEX",
+      "method": "Method"
+    },
+    "meta": {
+      "operator": "Operator",
+      "owner": "Owner",
+      "location": "Location",
+      "area": "Area"
+    },
+    "market": "MARKET",
+    "sections": {
+      "resources": "RESOURCES",
+      "resourcesTitle": "Reported resources",
+      "resourcesYear": "Year · {year}",
+      "reserves": "RESERVES",
+      "reservesTitle": "Reported reserves",
+      "techEcon": "TECHNICAL & ECONOMIC",
+      "techEconTitle": "Operating plan",
+      "geology": "GEOLOGY",
+      "geologyTitle": "Geological context",
+      "location": "LOCATION",
+      "locationTitle": "Where it sits"
+    },
+    "techEconFields": {
+      "productiveCapacity": "Productive capacity",
+      "annualProduction": "Estimated annual production",
+      "product": "Product",
+      "capex": "CAPEX",
+      "miningMethod": "Mining method",
+      "estimatedLom": "Estimated LOM (years)"
+    },
+    "locationFields": {
+      "province": "Province",
+      "country": "Country",
+      "latitude": "Latitude",
+      "longitude": "Longitude"
+    },
+    "tables": {
+      "category": "Category",
+      "noNumeric": "Categories reported but no numeric values attached."
+    },
+    "noCoords": "No coordinates reported",
+    "provenance": {
+      "source": "Source · {pipeline}",
+      "sourceUnknown": "unknown pipeline",
+      "ingested": "Ingested · {date}",
+      "resourcesYear": "Resources year · {year}"
+    }
+  },
+  "uraniumHub": {
+    "eyebrow": "URANIUM · ARGENTINA",
+    "title": "Uranium",
+    "priceUnit": "USD/lb",
+    "historicalRange": "Historical range: {low} ({lowDate}) — {high} ({highDate})",
+    "resourcesLine": "Identified resources: {resources} tU · Historical production: {production} tU",
+    "ctaChart": "See full chart",
+    "ctaCycle": "See the fuel cycle",
+    "stats": {
+      "projects": "Projects",
+      "provinces": "Provinces",
+      "companies": "Companies",
+      "advanced": "Advanced",
+      "resources": "Resources · tU"
+    },
+    "priceChart": {
+      "eyebrow": "URANIUM PRICE · USD/LB",
+      "title": "35 years of price",
+      "subtitle": "Monthly · {n} points · {from}–{to}",
+      "noData": "No price data."
+    },
+    "map": {
+      "eyebrow": "URANIUM PROJECTS MAP",
+      "title": "Uranium projects",
+      "mapped": "{n} projects",
+      "legend": "Legend"
+    },
+    "table": {
+      "eyebrow": "PROJECTS",
+      "title": "Project catalogue",
+      "subtitle": "{n} projects",
+      "noResults": "No project matches this filter.",
+      "filterAll": "All statuses",
+      "columns": {
+        "index": "#",
+        "project": "Project",
+        "province": "Province",
+        "status": "Status",
+        "company": "Company",
+        "origin": "Origin"
+      }
+    },
+    "donut": {
+      "eyebrow": "PROJECT STAGE",
+      "title": "Projects by status"
+    },
+    "trade": {
+      "eyebrow": "FOREIGN TRADE",
+      "title": "Imports vs exports",
+      "imports": "Imports",
+      "exports": "Exports",
+      "noData": "No trade data.",
+      "axisUsd": "USD",
+      "flowTitle": "Flow by country"
+    },
+    "cycle": {
+      "eyebrow": "NUCLEAR FUEL CYCLE",
+      "title": "From deposit to power generation",
+      "intro": "A uranium molecule travels the whole cycle: from deposit to mine, to mill, to conversion, to fuel and to the reactor.",
+      "argentinaIntro": "Argentina produced 2,600 tU between 1952 and 1997. Today the uranium for its nuclear plants (Atucha I, Atucha II, Embalse) is imported, while 33,650 tU remain in identified resources.",
+      "startTour": "Start the tour",
+      "exploreProjects": "Explore projects",
+      "stepLabel": "STEP {n} · {total}",
+      "prev": "Previous",
+      "next": "Next",
+      "keyFact": "KEY FACT",
+      "argentinaNote": "IN ARGENTINA",
+      "diagram": {
+        "eyebrow": "PROCESS DIAGRAM",
+        "title": "The 12 stages",
+        "hint": "Hover a stage · click to jump"
+      }
+    },
+    "context": {
+      "eyebrow": "URANIUM IN ARGENTINA",
+      "title": "Historical milestones",
+      "today": "Today Argentina imports uranium for its three nuclear plants while developing new projects.",
+      "exploreProjects": "See active projects"
+    }
+  },
+  "trade": {
+    "eyebrow": "MINERAL TRADE",
+    "title": "Trade flow",
+    "blurb": "Origins → Argentina → destinations. Trade value by country and year.",
+    "mineral": "Mineral",
+    "year": "Year",
+    "show": "Show",
+    "topN": "Top {n}",
+    "all": "All",
+    "origins": "Origins",
+    "argentina": "Argentina",
+    "destinations": "Destinations",
+    "imports": "Imports",
+    "exports": "Exports",
+    "balance": "Trade balance",
+    "surplus": "Surplus",
+    "deficit": "Deficit",
+    "noData": "No trade data for this selection.",
+    "play": "Play",
+    "pause": "Pause",
+    "valueUsd": "USD"
+  },
+  "companies": {
+    "listEyebrow": "COMPANIES",
+    "listTitle": "Oil & gas companies",
+    "listBlurb": "Project portfolios by company in Argentina.",
+    "search": "Search company…",
+    "withWells": "With wells",
+    "ctaWells": "Have a well or drilling in the area? Reach out to get listed:",
+    "filterCommodity": "Mineral",
+    "filterOrigin": "Origin",
+    "all": "All",
+    "projects": "projects",
+    "noResults": "No company matches the search.",
+    "backToList": "All companies",
+    "summary": "{projects} projects · {provinces} provinces · {commodities}",
+    "stats": {
+      "projects": "Projects",
+      "advanced": "Advanced",
+      "provinces": "Provinces",
+      "commodities": "Minerals"
+    },
+    "portfolio": {
+      "eyebrow": "PORTFOLIO",
+      "title": "Projects map",
+      "mapped": "{n} projects"
+    },
+    "table": {
+      "eyebrow": "PROJECTS",
+      "title": "Project portfolio",
+      "noResults": "No projects.",
+      "columns": {
+        "index": "#",
+        "project": "Project",
+        "province": "Province",
+        "commodity": "Mineral",
+        "status": "Status",
+        "resource": "Resource"
+      }
+    },
+    "timeline": {
+      "eyebrow": "PROGRESSION",
+      "title": "Project stages"
+    },
+    "origin": "Origin",
+    "sector": "Sector",
+    "stock": "Stock",
+    "tradedOn": "Traded on {exchange}",
+    "private": "Private",
+    "website": "Web",
+    "sectorAll": "All",
+    "sectorMining": "Mining",
+    "sectorOil": "Oil & Gas",
+    "typeMining": "Mining",
+    "typeOil": "Oil & Gas",
+    "typeBoth": "Mining + O&G",
+    "wellsSuffix": "active wells",
+    "oilGasSummary": {
+      "eyebrow": "OIL & GAS",
+      "title": "Production",
+      "wells": "Wells",
+      "oil": "Oil · m³",
+      "gas": "Gas · m³",
+      "boe": "BOE",
+      "nationalShare": "% national output"
+    },
+    "priceChart": {
+      "eyebrow": "STOCK PRICE",
+      "high52w": "52w high",
+      "low52w": "52w low",
+      "loading": "Loading price history…",
+      "unavailable": "Price history is unavailable.",
+      "rangeLabel": "Price history range",
+      "chartLabel": "{ticker} stock price history. Use the left and right arrow keys to inspect values."
+    },
+    "nationalShare": "% National",
+    "valueShare": "% Value (US$)",
+    "contribution": {
+      "eyebrow": "ECONOMIC CONTRIBUTION",
+      "title": "Contribution to the country",
+      "window": "{from} – {to}",
+      "grossValue": "Gross production value",
+      "royalties": "Royalties (12%)",
+      "exports": "Attributed energy exports",
+      "shareOfValue": "of the sector's gross value",
+      "shareOfExports": "of energy export dollars",
+      "ofGdp": "% of GDP",
+      "note": "Market-price estimate: oil at Brent minus a quality discount, gas at the PIST price; royalties at the statutory 12%; energy exports (INDEC) attributed by production share. These are not company accounting figures — see methodology on Indicadores."
+    }
+  },
+  "provinces": {
+    "listEyebrow": "PROVINCES",
+    "listTitle": "Argentina provinces",
+    "listBlurb": "Oil & gas activity by province in Argentina.",
+    "all": "All",
+    "filterCommodity": "Mineral",
+    "projects": "projects",
+    "companies": "companies",
+    "noResults": "No province matches.",
+    "backToList": "All provinces",
+    "summary": "{wells} wells · {companies} companies",
+    "stats": {
+      "projects": "Projects",
+      "advanced": "Advanced",
+      "companies": "Companies",
+      "exploration": "Exploration"
+    },
+    "map": {
+      "eyebrow": "MAP",
+      "title": "Province projects",
+      "mapped": "{n} projects"
+    },
+    "breakdown": {
+      "eyebrow": "MINERALS",
+      "title": "Breakdown by mineral"
+    },
+    "table": {
+      "eyebrow": "PROJECTS",
+      "title": "Projects",
+      "noResults": "No projects.",
+      "columns": {
+        "index": "#",
+        "project": "Project",
+        "commodity": "Mineral",
+        "status": "Status",
+        "company": "Company"
+      }
+    },
+    "tradeStats": {
+      "eyebrow": "TRADE",
+      "title": "Top exports",
+      "employment": "Employment"
+    },
+    "operators": {
+      "eyebrow": "COMPANIES",
+      "title": "Operating companies"
+    },
+    "navAll": "See all provinces",
+    "exportValue": "Exports · USD/yr",
+    "wells": "Wells",
+    "oilGas": "Oil & Gas",
+    "tabs": {
+      "oil": "Oil",
+      "gas": "Gas",
+      "mining": "Mining",
+      "exports": "Exports"
+    },
+    "oilProduction": "Oil production",
+    "gasProduction": "Gas production",
+    "vmShare": "Vaca Muerta share",
+    "vmShort": "Vaca Muerta",
+    "conventional": "Conventional",
+    "activeWells": "Active wells",
+    "topOperators": "Top operators",
+    "exportProfile": "Export profile",
+    "exportColumns": {
+      "sector": "Sector",
+      "product": "Product",
+      "value": "Annual value",
+      "share": "%"
+    },
+    "productionHistory": "Production history",
+    "noSectorData": "No data for this sector.",
+    "exports": "Exports",
+    "exportShare": "Export share",
+    "viewProvince": "View province",
+    "shareNote": "Share = the province's oil & gas exports over the country's total exports ({total} per year, mining included).",
+    "basins": {
+      "neuquina": "Neuquén Basin",
+      "golfoSanJorge": "San Jorge Gulf",
+      "cuyana": "Cuyo Basin",
+      "austral": "Austral Basin",
+      "noroeste": "Northwest Basin",
+      "pais": "Country total"
+    },
+    "productionActivity": "Production & activity",
+    "companiesCount": "{n} companies",
+    "operatorsNote": "Monthly output in BOE · {month}",
+    "ofFormation": "of formation total",
+    "yoy": "Year-over-year change",
+    "perMonth": "/month",
+    "perYear": "USD/yr",
+    "descriptions": {
+      "neuquen": "Core province of Vaca Muerta: it concentrates most of the formation's output and the country's largest hydrocarbon export volume.",
+      "chubut": "Heart of the San Jorge Gulf: mature heavy-crude fields around Comodoro Rivadavia, with secondary recovery and a strong conventional oil tradition.",
+      "santa-cruz": "Southern flank of the San Jorge Gulf: mature conventional output, with tertiary recovery projects and blocks under redevelopment.",
+      "mendoza": "Cuyo basin: mature conventional output in the north plus the southern edge of Vaca Muerta, contributing from the province’s south.",
+      "rio-negro": "Eastern flank of the Neuquén basin: it contributes Vaca Muerta output and hosts the new crude export logistics towards Punta Colorada.",
+      "estado-nacional": "Areas under national jurisdiction: offshore blocks in the Argentine Sea and concessions administered directly by the State.",
+      "la-pampa": "Northeastern margin of the Neuquén basin: conventional fields along the Colorado river and a smaller share of Vaca Muerta output.",
+      "tierra-del-fuego": "Austral basin: onshore and offshore gas on the island, with mature output geared to supplying the domestic market.",
+      "salta": "Northwest basin: conventional gas from the sub-Andean ranges, with declining fields and very limited activity.",
+      "formosa": "Eastern end of the Northwest basin: marginal crude output at Palmar Largo and low-activity frontier blocks.",
+      "jujuy": "Northwest basin: marginal conventional activity around Caimancito; the country's smallest hydrocarbon-producing province."
+    }
+  },
+  "exportaciones": {
+    "eyebrow": "EXPORTS",
+    "title": "Exports — Mining, Oil & Gas",
+    "blurb": "Export value by sector and province.",
+    "total": "Total exports",
+    "bySector": "By sector",
+    "byProvince": "By province",
+    "tabs": {
+      "all": "All",
+      "oil": "Oil",
+      "gas": "Gas",
+      "mining": "Mining"
+    },
+    "columns": {
+      "province": "Province",
+      "value": "Annual value",
+      "share": "%"
+    },
+    "noData": "No export data."
+  },
+  "metadata": {
+    "homeTitle": "Vaca Muerta — Argentina oil and gas intelligence",
+    "homeDescription": "Real-time intelligence for Argentina's oil and gas. Production, reserves, operators, and geography in one place."
+  },
+  "indicadores": {
+    "eyebrow": "Investment thesis",
+    "title": "Indicators",
+    "blurb": "The Vaca Muerta opportunity in numbers: every figure is computed from official production and export data, with its source and as-of date. No unsupported projections.",
+    "asOf": "Data as of {month}",
+    "source": "Source",
+    "computedBy": "Computed by vacamuerta.io from {source}",
+    "sourceLatest": "Computed by vacamuerta.io · latest data available {date}",
+    "operatorsTitle": "Leading operators",
+    "contribution": {
+      "title": "Economic contribution by operator",
+      "blurb": "How much each company's operation contributes to the country: gross production value in dollars, provincial royalties, and energy exports attributed by production share.",
+      "grossValue": "Gross production value",
+      "annualizedNote": "annualized",
+      "windowNote": "last {months} months",
+      "ofGdp": "% of GDP ({year})",
+      "royalties": "Royalties (12%)",
+      "exports": "Energy exports",
+      "colOperator": "Operator",
+      "colShare": "BOE share",
+      "colValueShare": "US$ share",
+      "colGross": "Gross value",
+      "colRoyalties": "Royalties",
+      "colExports": "Attrib. exports",
+      "methodology": "Methodology: official volumes (Secretaría de Energía) per operator, {from} to {to} window. Oil valued at Brent (avg US$ {brent}/bbl) minus a US$ {discount}/bbl quality discount; gas at the weighted-average PIST price (US$ {pist}/MMBtu). Royalties at the statutory {royalty}% of wellhead value. Energy exports (INDEC) attributed pro-rata by BOE share: these are estimates, not company accounting figures."
+    },
+    "transportTitle": "Transport infrastructure",
+    "transportBlurb": "The trunk network that evacuates production: gas transport pipelines by operator and oil trunk lines. Official geometry and routes — no flow data in the source.",
+    "transportNetwork": "Trunk network",
+    "transportGas": "Gas pipelines",
+    "transportOil": "Oil pipelines",
+    "transportSegments": "{count} segments",
+    "transportByOperator": "Gas transport pipelines by operator",
+    "kmUnit": "km",
+    "worldTitle": "Argentina on the world stage",
+    "worldBlurb": "Where Argentina stands today among the world's producers, and where Vaca Muerta could take it if the projection plays out. The ranking jump, with EIA data.",
+    "tiers": {
+      "confirmado": "Confirmed",
+      "en_marcha": "Underway",
+      "proyectado": "Projected",
+      "referencia": "Reference"
+    },
+    "charts": {
+      "noProduction": "No production data.",
+      "noActivity": "No activity data.",
+      "noTrade": "No trade data.",
+      "noBrent": "No Brent price history.",
+      "preliminary": "preliminary",
+      "preliminaryPartial": "Preliminary data (partial month)",
+      "wells": "wells",
+      "agro": "Agri",
+      "agroLegend": "Agri (primary + processed)",
+      "energy": "Energy",
+      "pctGdpSuffix": "% of GDP",
+      "breakevenHeadroom": "Headroom over breakeven"
+    },
+    "world": {
+      "unitTbpd": "thousand bbl/d",
+      "unitBcf": "BCF/year",
+      "worldProduction": "{label} · world production",
+      "countriesYear": "{countries} countries · {year}",
+      "today": "Today",
+      "projectedYear": "Projected {year}",
+      "placesJump": "+{jump} places",
+      "computed": "Computed · {source}",
+      "reference": "Reference · {source}",
+      "fastestGrowing": "{label} · fastest-growing producers",
+      "growthBlurb": "Among the major producers, Argentina is one of the fastest-growing{rank} — the pace the projection extends.",
+      "growthRank": " (rank {rank})",
+      "impactKicker": "Impact · if the projection materializes",
+      "assumptions": "Assumptions:",
+      "assumptionPrice": " export price US${price}/bbl ({basis});",
+      "assumptionProd": " production {from} → {to} bbl/d;",
+      "assumptionGdp": " GDP US${gdp} B ({year}).",
+      "illustrative": "Illustrative projection, not a forecast.",
+      "seeChart": "↑ see chart",
+      "rigiCount": "{count} projects · US${total} B",
+      "sectorOil": "oil",
+      "sectorGas": "gas",
+      "policyFallbackTitle": "The policy that turns potential into production",
+      "policyFallbackText": "The resource already exists. What changed is the framework: current measures unlock the investment needed for the projection to materialize — and with it, the jump in the world ranking.",
+      "leverFxTag": "FX",
+      "leverFxTitle": "Exchange-rate normalization and FX access for exporters",
+      "leverExportsTag": "Exports",
+      "leverExportsTitle": "End of export quotas and duties on crude and gas",
+      "leverRigiTag": "RIGI",
+      "leverRigiTitle": "Large Investment Incentive Regime: 30-year fiscal stability",
+      "leverFiscalTag": "Fiscal",
+      "leverFiscalTitle": "Fiscal discipline and deregulation that anchor investment predictability"
+    },
+    "breakevenTitle": "Headroom over breakeven",
+    "actividadTitle": "Activity: new wells per month",
+    "cruceBlurb": "Annual exports in USD. Energy gains ground on agro as Vaca Muerta scales.",
+    "cruceModeLabel": "Unit",
+    "cruceModeUsd": "US$",
+    "cruceModeGdp": "% of GDP",
+    "ctaTitle": "Looking to invest or set up operations?",
+    "ctaBody": "We work with investors and operators seeking exposure to Argentine shale. Get in touch to set up a conversation.",
+    "ctaContact": "Contact",
+    "ctaNewsletter": "Or get updates",
+    "noData": "Investment indicators are unavailable right now.",
+    "thesisLabel": "The thesis in six figures",
+    "dayValue": {
+      "label": "What a day of Vaca Muerta is worth",
+      "perDay": "per day",
+      "perYear": "per year",
+      "ofGdp": "of GDP",
+      "anchorBasis": "Gross production value · last {months} months · oil at Brent less quality + gas at PIST",
+      "sliderLabel": "Scenario: oil price (Brent)",
+      "scenarioLabel": "What-if scenario · oil only, at the selected Brent:",
+      "margin": "Margin over breakeven:",
+      "avgChip": "Period average US$ {price}",
+      "spotChip": "Brent today US$ {price}",
+      "note": "The scenario prices oil only, at Brent less US$ {discount}/bbl for quality, over the period’s volume; it excludes gas and deducts no costs or taxes. Reference breakeven: US$ {breakeven}/bbl (YPF)."
+    },
+    "vmCard": {
+      "label": "Formation",
+      "title": "Vaca Muerta",
+      "oilShare": "of national oil",
+      "gasShare": "of national gas",
+      "wells": "active wells"
+    }
+  },
+  "noticias": {
+    "eyebrow": "BASIN COVERAGE",
+    "title": "Leading sector news",
+    "blurb": "Continuous tracking of news, regulation and disclosures across Vaca Muerta's oil and gas sector. Filter by source, topic, company and region.",
+    "searchPlaceholder": "Search by title…",
+    "filtersButton": "Filters",
+    "sortLabel": "Sort",
+    "sortImportance": "Relevance",
+    "sortRecent": "Recent",
+    "filterFamily": "Source",
+    "filterTopic": "Topic",
+    "filterRegion": "Region",
+    "filterEntity": "Company",
+    "clearFilters": "Clear filters",
+    "resultsCount": "{count, plural, =0 {No results} one {# document} other {# documents}}",
+    "noResults": "No news found with these filters.",
+    "pagination": "Pagination",
+    "prev": "Previous",
+    "next": "Next",
+    "pageOf": "Page {page} of {total}",
+    "backToFeed": "Back to news",
+    "regulatory": "Regulatory",
+    "readAtSource": "Read at {source}",
+    "attachments": "Attachments",
+    "topicsLabel": "Topics",
+    "entitiesLabel": "Entities",
+    "relatedCoverage": "Related coverage",
+    "readingTime": "{minutes} min read",
+    "keyPoint": "Key point",
+    "heading": "News",
+    "featuredLabel": "FEATURED",
+    "latestLabel": "LATEST NEWS",
+    "allTopics": "All",
+    "read": "Read",
+    "publishedLabel": "PUBLISHED",
+    "topicLabels": {
+      "produccion": "Production",
+      "regulacion": "Regulation",
+      "rigi": "RIGI",
+      "midstream": "Infrastructure",
+      "gnl": "LNG",
+      "exportacion": "Exports",
+      "inversion": "Investment",
+      "financiamiento": "Financing",
+      "ambiente": "Environment",
+      "laboral": "Labour",
+      "servicios": "Services",
+      "m_a": "M&A",
+      "medio": "Latest",
+      "regulatoria": "Regulation",
+      "corporativa": "Corporate",
+      "prensa": "Press"
+    },
+    "sponsorsLabel": "Trusted by",
+    "filePhoto": "FILE PHOTO · VACA MUERTA",
+    "allNews": "All news →"
+  },
+  "v2": {
+    "indice": {
+      "secciones": "Sections",
+      "dashboard": "Dashboard",
+      "mapa": "Map",
+      "provincias": "Provinces",
+      "empresas": "Companies",
+      "indicadores": "Indicators",
+      "noticias": "News",
+      "personalidades": "People",
+      "datosTitle": "Public data",
+      "datosDesc": "Secretariat of Energy and operator filings. Monthly cutoff.",
+      "verMapa": "View the map"
+    },
+    "footer": {
+      "nota": "Public data · reference figures"
+    },
+    "notFound": {
+      "titulo": "This page doesn't exist or was moved.",
+      "volver": "Back to home"
+    },
+    "dashboard": {
+      "s01t": "Vaca Muerta",
+      "s01d": "Oil and gas from the formation, and how much of the country's total it carries.",
+      "thFluido": "Fluid",
+      "thVM": "In Vaca Muerta",
+      "thDoce": "Twelve months",
+      "thPais": "Of the country total",
+      "petroleo": "Oil",
+      "gasNatural": "Natural gas",
+      "s02t": "Vaca Muerta production",
+      "s02d": "Twelve months of oil and gas, with the cutoff month at the end.",
+      "s03t": "Leading operators",
+      "s03d": "The month's top five, by BOE and relative weight.",
+      "ranking": "Month ranking",
+      "s04t": "Activity map",
+      "s04d": "Where the wells sit, over the catalog and the series that feed the page.",
+      "rotCatalogo": "Wells in the catalog",
+      "apoActivos": "{n} active",
+      "rotMeses": "Months of series",
+      "rotOperadoras": "Operators tracked",
+      "apoRanking": "of the month's ranking",
+      "s05t": "Latest news",
+      "s05d": "With date, source and category.",
+      "todas": "All news"
+    },
+    "mapa": {
+      "s01t": "Wells in the catalog",
+      "s01d": "Size of the full catalog and of the sample that gets drawn.",
+      "cobertura": "Coverage",
+      "catalogo": "Wells in the catalog",
+      "muestreados": "Sampled on the map",
+      "activosMes": "Active wells this month"
+    },
+    "provincias": {
+      "s01t": "Argentina's provinces",
+      "s01d": "Wells and exports added up, and how they split by basin.",
+      "rotPozos": "Active wells",
+      "rotExpo": "Exports",
+      "rotProvincias": "Provinces",
+      "apoCuencas": "across {n} basins",
+      "apoAnio": "MUSD · rolling year",
+      "apoEstado": "+ National State",
+      "s02t": "By well count",
+      "s02d": "How many each province contributes, against the country total.",
+      "s03t": "By exports",
+      "s03d": "How much each province exports and its share of the country total.",
+      "s04t": "By basin",
+      "s04d": "The five basins with activity and how many provinces each spans."
+    },
+    "empresas": {
+      "s01t": "The top three",
+      "s01d": "Together the three explain more than half of the country's output.",
+      "s02t": "The list",
+      "s02d": "All 52: filter, search and open any one for its card.",
+      "s03t": "How it splits",
+      "s03d": "Three companies explain more than half of the country's output.",
+      "tramo1": "1% or more of the country",
+      "tramo1n": "the ones that move the needle",
+      "tramo2": "Between 0.1% and 0.9%",
+      "tramo2n": "real presence, small weight",
+      "tramo3": "Under 0.1%",
+      "tramo3n": "they show as 0.0% when rounded"
+    },
+    "indicadores": {
+      "s01t": "The thesis in six numbers",
+      "s01d": "Six figures with their year-over-year change and cutoff month.",
+      "s02t": "The value of a day of Vaca Muerta",
+      "s02d": "What a single day produces, against the country's GDP.",
+      "valorBruto": "Gross production value",
+      "s03t": "Oil production in Vaca Muerta",
+      "s03d": "Forty months of oil and gas.",
+      "s04t": "Activity: new wells per month",
+      "s04d": "The drilling pace that sustains the curve above.",
+      "s05t": "Margin over breakeven",
+      "s05d": "Move Brent and the value of production recalculates.",
+      "escenario": "Price scenario",
+      "s06t": "Exports: agro vs energy",
+      "s06d": "Thirty-four years of dollars, on the same scale.",
+      "s07t": "Energy exports",
+      "s07d": "Billions of dollars by sector, and how they split.",
+      "porSector": "By sector",
+      "s08t": "Oil producers",
+      "s08d": "Barrels per day of the country's largest producers.",
+      "s09t": "Economic contribution",
+      "s09d": "Share, gross value, royalties and exports by operator.",
+      "porOperadora": "By operator",
+      "s10t": "Argentina in the world",
+      "s10d": "Where the country stands, and where the projection takes it.",
+      "s11t": "The fastest growers",
+      "s11d": "Another ranking, and it says the opposite of the volume one.",
+      "s12t": "The gas grid",
+      "s12d": "The trunk gas network, pipeline by pipeline.",
+      "s13t": "RIGI projects",
+      "s13d": "Approved under the regime, by committed amount.",
+      "s10bt": "The world podium",
+      "s10bd": "The top twelve of each fluid, and where Argentina lands."
+    },
+    "noticias": {
+      "s01t": "Featured",
+      "s01d": "Everything in the period, filterable by topic.",
+      "s02t": "Latest news"
+    },
+    "personalidades": {
+      "s01t": "The index and your vote",
+      "s01d": "What the ranking measures, and the part you put in.",
+      "indice": "Vaca Muerta Index",
+      "s02t": "Vaca Muerta Index",
+      "s02d": "Scale, performance and premium, one number per person.",
+      "cardIndice": "The Vaca Muerta Index",
+      "cardRanking": "The ranking"
+    }
+  }
+}

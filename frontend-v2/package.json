@@ -1,0 +1,34 @@
+{
+  "name": "frontend-v2",
+  "version": "0.1.0",
+  "private": true,
+  "description": "vacamuerta.io v2 — sistema V2 (beautifului.dev) sobre el data layer real de petrodata",
+  "type": "module",
+  "scripts": {
+    "dev": "next dev --port 3200",
+    "build": "next build",
+    "start": "next start --port 3200",
+    "typecheck": "tsc --noEmit",
+    "api:types": "openapi-typescript ./openapi.json -o ./src/api/types.ts"
+  },
+  "dependencies": {
+    "animejs": "4.5.0",
+    "maplibre-gl": "^5.22.0",
+    "next": "16.2.3",
+    "next-intl": "^4.13.0",
+    "openapi-fetch": "^0.13.0",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "recharts": "^3.8.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.18",
+    "@types/node": "22.19.9",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "openapi-typescript": "^7.4.1",
+    "postcss": "^8.4.38",
+    "tailwindcss": "^4.1.18",
+    "typescript": "5.7.3"
+  }
+}

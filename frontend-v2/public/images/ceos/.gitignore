@@ -1,0 +1,15 @@
+# Las caras de esta carpeta están GENERADAS CON IA — el pipeline de CEOS/ las
+# produce con Higgsfield a partir de una foto real, con el prompt «Recreate
+# this exact person as a professional corporate executive cover portrait».
+#
+# Son fotorrealistas, sin marca de agua, de personas reales con nombre y
+# apellido. Sirven para ver la maqueta en localhost; NO se versionan, porque
+# subirlas al repo es publicarlas, y publicar un retrato sintético de alguien
+# como si fuera su foto corporativa —en una página que después va a pedirle
+# sponsoreo a esa misma persona— es el peor lugar para hacerlo.
+#
+# Para publicar hay que resolver antes de dónde sale la foto: las reales de
+# CEOS/data/photos/ con su licencia, una cedida por la empresa, o el monograma,
+# que la lista ya soporta.
+*
+!.gitignore
