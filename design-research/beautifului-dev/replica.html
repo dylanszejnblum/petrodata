@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="es" class="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Réplica — identidad beautifului.dev</title>
+<!--
+  Reconstrucción de la identidad visual de https://www.beautifului.dev/
+  usando EXCLUSIVAMENTE los tokens medidos en la auditoría del 2026-08-14.
+
+  El contenido es propio: lo que se replica es el sistema visual, no el sitio.
+  Las fuentes se piden por nombre local; si Inter no está instalada cae al
+  stack del sistema y los pesos 550/650 se redondean (ver discrepancia #4).
+-->
+<style>
+/* ═══════════════════════════════════════════════════════════════════════
+   TOKENS — copia exacta de los medidos (ver theme.css)
+   ═══════════════════════════════════════════════════════════════════════ */
+:root {
+  --page:#fafafb; --canvas:#f1f2f3; --surface:#fff; --inset:#f7f8f9;
+  --hover:#f4f5f6; --hover-2:#e7e9eb;
+  --ink:#1f2124; --ink-2:#62656b; --ink-3:#9a9da3;
+  --line:#ecedef; --line-strong:#e0e2e5; --field:#f2f2f3;
+  --stripe:#49494913; --stripe-bg:#f5f5f5;
+  --accent:#0285ff; --accent-ink:#0170dd; --accent-tint:#e9f3ff;
+  --green:#189a4d; --green-tint:#e8f5ed;
+  --orange:#ef720c; --orange-tint:#fdf1e5;
+  --red:#e3474c; --red-tint:#fcecec;
+  --tooltip-bg:#25272b; --tooltip-fg:#f6f7f8; --tooltip-muted:#a5a8ad; --tooltip-border:#3a3c40;
+  --shadow-hairline:0 0 0 1px var(--line);
+  --shadow-btn:0 0 0 1px var(--line-strong),0 1px 2px #1018280d;
+  --shadow-card:0 0 0 1px var(--line),0 1px 2px #1018280a,0 2px 6px #10182808;
+  --shadow-raised:0 0 0 1px var(--line),0 2px 10px #0000000b;
+  --shadow-overlay:0 0 0 1px var(--line),0 8px 28px #0001;
+  --shadow-inset-field:inset 0 1px 2px #0000001f;
+  --radius-chip:6px; --radius-control:8px; --radius-card:10px; --radius-window:14px;
+  --ease-out:cubic-bezier(0,0,.2,1);
+  --ease-in-out:cubic-bezier(.4,0,.2,1);
+  --ease-out-strong:cubic-bezier(.23,1,.32,1);
+  --ease-link:cubic-bezier(.16,1,.3,1);
+  --dur-instant:100ms; --dur-fast:120ms; --dur-base:150ms; --dur-slow:300ms; --dur-slower:400ms;
+  --font-sans:Inter,ui-sans-serif,system-ui,-apple-system,sans-serif;
+  --font-mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,monospace;
+}
+.dark {
+  --page:#17181a; --canvas:#1c1d1f; --surface:#232427; --inset:#1f2022;
+  --hover:#2a2b2e; --hover-2:#313236;
+  --ink:#f2f3f4; --ink-2:#a5a8ad; --ink-3:#6c6f75;
+  --line:#2e3033; --line-strong:#3a3c40; --field:#2b2c2f;
+  --stripe:#ffffff0e; --stripe-bg:#1b1c1e;
+  --accent:#3d9aff; --accent-ink:#7ec0ff; --accent-tint:#3d9aff29;
+  --green:#3dbb72; --green-tint:#3dbb7224;
+  --orange:#f68f3c; --orange-tint:#f68f3c24;
+  --red:#ee5c61; --red-tint:#ee5c6124;
+  --tooltip-bg:#111214; --tooltip-fg:#f2f3f4; --tooltip-muted:#a5a8ad; --tooltip-border:#2e3033;
+  --shadow-btn:0 0 0 1px var(--line-strong),0 1px 2px #0000004d;
+  --shadow-card:0 0 0 1px var(--line),0 1px 2px #0003,0 2px 6px #0003;
+  --shadow-raised:0 0 0 1px var(--line),0 2px 10px #00000038;
+  --shadow-overlay:0 0 0 1px var(--line-strong),0 8px 28px #00000057;
+  --shadow-inset-field:inset 0 1px 2px #0006;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   REGLA 1 — LA TRAMA. −45°, período 8px, fija respecto del scroll.
+   ═══════════════════════════════════════════════════════════════════════ */
+*,::before,::after { box-sizing: border-box; }
+html { -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; text-rendering:optimizeLegibility; }
+body {
+  margin: 0;
+  background-color: var(--stripe-bg);
+  background-image: repeating-linear-gradient(-45deg,
+    transparent 0, transparent 7px, var(--stripe) 7px, var(--stripe) 8px);
+  background-attachment: fixed;
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.5;
+  letter-spacing: -0.01em;   /* REGLA 9 — tracking negativo global */
+}
+
+/* REGLA 12 — un solo anillo de foco, global */
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+input:focus-visible, textarea:focus-visible { outline: none; }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   ESQUELETO — 288 + 672 = 960, topeado. REGLA 18.
+   ═══════════════════════════════════════════════════════════════════════ */
+.shell { display: grid; max-width: 960px; }
+@media (min-width: 1024px) { .shell { grid-template-columns: 288px 672px; } }
+
+/* ── Panel lateral ─────────────────────────────────────────────────── */
+.sidebar {
+  display: flex; flex-direction: column;
+  padding: 64px 28px 28px;
+  border-bottom: 1px dashed var(--line);   /* REGLA 6 — punteado = estructura */
+}
+@media (min-width: 1024px) {
+  .sidebar {
+    position: sticky; top: 0; height: 100vh; overflow: hidden;
+    padding-top: clamp(2.5rem, 8vh, 5rem);
+    border-bottom: 0; border-right: 1px dashed var(--line);
+  }
+}
+.brand { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.mark {
+  display: grid; place-items: center; width: 44px; height: 44px;
+  border-radius: var(--radius-card); background: var(--accent); color: #fff;
+  font-size: 16px; font-weight: 650; letter-spacing: -0.02em;
+}
+.headline {
+  margin: 28px 0 0; font-size: 21px; font-weight: 600; line-height: 1.25;
+  letter-spacing: -0.02em; text-wrap: balance;
+}
+.rule { height: 1px; margin: 28px 0 24px; border-top: 1px dashed var(--line); }
+
+/* nav con desvanecido al pie (discrepancia #2) */
+.nav { position: relative; min-height: 0; flex: 1; overflow: hidden;
+  -webkit-mask-image: linear-gradient(180deg,#000 78%,transparent 100%);
+  mask-image: linear-gradient(180deg,#000 78%,transparent 100%); }
+.nav-label { margin: 0 0 4px; padding-left: 8px; font-size: 12px; color: var(--ink-3); }
+.nav-item {
+  display: flex; align-items: center; padding: 5px 8px; border-radius: 7px;
+  font-size: 12.5px; line-height: 18.75px; color: var(--ink-2); text-decoration: none;
+  transition: color var(--dur-base) var(--ease-in-out), background-color var(--dur-base) var(--ease-in-out);
+}
+.nav-item:hover { color: var(--ink); }
+.nav-item[aria-current] { color: var(--ink); font-weight: 500; background: var(--hover); }
+.autoria { margin-top: 32px; flex-shrink: 0; }
+.autoria b { font-size: 12.5px; font-weight: 500; }
+.autoria p { margin: 2px 0 0; font-size: 12.5px; color: var(--ink-3); line-height: 18.75px; }
+
+/* ── Sección. REGLA 7 — cero margen, línea punteada. ───────────────── */
+.seccion { padding: 40px 32px; border-bottom: 1px dashed var(--line); }
+.sec-head { display: flex; align-items: baseline; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+.sec-num { font-family: var(--font-mono); font-size: 11px; line-height: 16.5px;
+  color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.sec-title { margin: 0; font-size: 13px; font-weight: 600; color: var(--ink); white-space: nowrap; }
+.sec-desc { margin: 0; font-size: 12.5px; line-height: 18.75px; color: var(--ink-3); text-wrap: pretty; }
+.demo {
+  display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap;
+  min-height: 272px; padding: 12px; border-radius: var(--radius-window);
+  background: var(--canvas); box-shadow: var(--shadow-hairline); overflow: hidden;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   COMPONENTES
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* REGLA 4 — la profundidad la hace el anillo de 1px, no el desenfoque */
+.card { width: 320px; border-radius: var(--radius-card); background: var(--surface);
+  box-shadow: var(--shadow-card); overflow: hidden; }
+.card-pad { padding: 12px; }
+.card-head { display: flex; align-items: center; gap: 8px; }
+.card-title { font-size: 13px; font-weight: 500; }
+.card-sub { margin: 6px 0 0; font-size: 12px; line-height: 18px; color: var(--ink-3); }
+
+/* Botones — REGLA 3: ninguno se llena con el acento */
+.btn-pill { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 10px;
+  border: 0; border-radius: 999px; background: var(--field); box-shadow: var(--shadow-btn);
+  color: var(--ink); font: inherit; font-size: 11.5px; font-weight: 500; line-height: 17.25px;
+  cursor: pointer; transition: background-color var(--dur-base), transform var(--dur-base); }
+.btn-pill:hover { background: var(--hover); }
+.btn-pill:active { transform: scale(0.98); }
+
+.btn-icon { display: inline-flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px; border: 0; border-radius: var(--radius-control);
+  background: transparent; color: var(--ink-3); cursor: pointer;
+  transition: background-color var(--dur-instant), color var(--dur-instant); }
+.btn-icon:hover { background: var(--hover); color: var(--ink); }
+.btn-icon--surface { background: var(--surface); box-shadow: var(--shadow-btn); }
+
+.btn-icon-sm { width: 24px; height: 24px; border-radius: var(--radius-chip); }
+
+/* REGLA 11 — el realce sobresale del texto vía margen negativo */
+.btn-row { display: flex; align-items: center; gap: 8px;
+  width: calc(100% + 12px); margin-inline: -6px; padding: 6px;
+  border: 0; border-radius: 7px; background: transparent; color: var(--ink);
+  font: inherit; font-size: 12.5px; text-align: left; cursor: pointer;
+  transition: background-color var(--dur-instant); }
+.btn-row:hover { background: var(--hover-2); }
+
+/* Segmentado con pulgar deslizante */
+.seg { position: relative; display: inline-grid; grid-template-columns: repeat(3, auto);
+  align-items: center; padding: 2px; border-radius: 999px; background: var(--field); }
+.seg-thumb { position: absolute; inset-block: 2px; left: 2px; width: var(--thumb-w, 52px);
+  border-radius: 999px; background: var(--surface); box-shadow: var(--shadow-btn);
+  transition: transform 200ms var(--ease-in-out), width 200ms var(--ease-in-out); }
+.seg-btn { position: relative; z-index: 10; padding: 2px 8px; border: 0; border-radius: 999px;
+  background: transparent; color: var(--ink-3); font: inherit; font-size: 11.5px; font-weight: 500;
+  line-height: 17.25px; cursor: pointer; transition: color var(--dur-base); }
+.seg-btn[aria-selected="true"] { color: var(--ink); }
+
+/* REGLA 13 — el campo es transparente; el contenedor dibuja el estado */
+.field { display: flex; align-items: center; gap: 6px; width: 100%; padding: 5px 8px;
+  border: 1px solid var(--line); border-radius: var(--radius-control); background: var(--surface);
+  transition: border-color var(--dur-base), background-color var(--dur-base); }
+.field:focus-within { border-color: var(--line-strong); background: var(--hover);
+  box-shadow: 0 1px 2px rgba(0,0,0,.025); }
+.field input { flex: 1; min-width: 0; border: 0; background: transparent; outline: none;
+  font: inherit; font-size: 13px; line-height: 19.5px; color: var(--ink); }
+.field input::placeholder { color: var(--ink-3); }
+
+/* Tabla — sólida adentro, REGLA 6 */
+.tabla { width: 100%; table-layout: fixed; border-collapse: collapse; text-align: left; }
+.tabla th, .tabla td { padding: 10px 12px; }
+.tabla th { font-size: 12px; font-weight: 500; color: var(--ink-3); }
+.tabla td { font-size: 13px; font-weight: 500; font-variant-numeric: tabular-nums; }
+.tabla tbody tr { border-bottom: 1px solid var(--line); transition: background-color var(--dur-slower); }
+.tabla tbody tr:last-child { border-bottom: 0; }
+.tabla tbody tr:hover { background: var(--hover); }
+.delta-up { color: var(--green); } .delta-down { color: var(--red); }
+
+/* Código */
+.code { margin: 0; padding: 10px 12px; background: var(--inset);
+  font-family: var(--font-mono); font-size: 11.5px; line-height: 1.7; color: var(--ink);
+  white-space: pre; overflow-x: auto; }
+.lineno { display: inline-block; width: 20px; margin-right: 12px; text-align: right;
+  font-size: 10.5px; color: color-mix(in srgb, var(--ink-3) 60%, transparent); user-select: none; }
+
+/* Chips de estado — el tinte, uno de cada color */
+.chip { display: inline-flex; align-items: center; gap: 5px; height: 22px; padding: 0 8px;
+  border-radius: var(--radius-chip); font-size: 11.5px; font-weight: 500; }
+.chip--ok { background: var(--green-tint); color: var(--green); }
+.chip--warn { background: var(--orange-tint); color: var(--orange); }
+.chip--bad { background: var(--red-tint); color: var(--red); }
+.chip--info { background: var(--accent-tint); color: var(--accent-ink); }
+
+/* Tooltip — declarado desde los tokens, NO verificado contra el original */
+.tip { display: inline-block; padding: 5px 8px; border-radius: var(--radius-chip);
+  background: var(--tooltip-bg); color: var(--tooltip-fg);
+  border: 1px solid var(--tooltip-border); font-size: 11.5px; box-shadow: var(--shadow-overlay); }
+.tip small { color: var(--tooltip-muted); }
+
+/* Shimmer de carga — gradiente animado sobre el texto */
+.shimmer { font-size: 12px; font-weight: 500;
+  background: linear-gradient(90deg, var(--ink-3) 35%, var(--ink) 50%, var(--ink-3) 65%);
+  background-size: 200% 100%; -webkit-background-clip: text; background-clip: text;
+  color: transparent; animation: shimmer-text 1.8s linear infinite; }
+@keyframes shimmer-text { 0% { background-position: 150% } to { background-position: -50% } }
+.eq { display: inline-flex; align-items: flex-end; gap: 2px; height: 12px; }
+.eq i { width: 2px; height: 100%; border-radius: 1px; background: var(--ink-3);
+  animation: eq-bounce 900ms var(--ease-in-out) infinite; }
+.eq i:nth-child(2) { animation-delay: 150ms } .eq i:nth-child(3) { animation-delay: 300ms }
+@keyframes eq-bounce { 0%,to { transform: scaleY(.35) } 50% { transform: scaleY(1) } }
+
+.fila { display: flex; align-items: center; gap: 8px; }
+.stack { display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 380px; }
+.mono-num { font-family: var(--font-mono); font-size: 12px; color: var(--ink-3);
+  font-variant-numeric: tabular-nums; }
+
+/* REGLA 17 — el corte de movimiento es global y total */
+@media (prefers-reduced-motion: reduce) {
+  *,::before,::after { transition-duration: .01ms !important;
+    animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="mark">R</div>
+      <div class="seg" role="tablist" aria-label="Tema" style="--thumb-w:52px">
+        <span class="seg-thumb" aria-hidden="true" id="thumb"></span>
+        <button class="seg-btn" role="tab" aria-selected="false" onclick="tema('light',0,52)">Claro</button>
+        <button class="seg-btn" role="tab" aria-selected="true" onclick="tema('dark',1,60)">Oscuro</button>
+      </div>
+    </div>
+
+    <h1 class="headline">Réplica del sistema visual, sólo con tokens medidos.</h1>
+
+    <div class="rule"></div>
+
+    <nav class="nav">
+      <p class="nav-label">Piezas</p>
+      <a class="nav-item" aria-current="page" href="#s1">Superficies</a>
+      <a class="nav-item" href="#s2">Controles</a>
+      <a class="nav-item" href="#s3">Datos</a>
+      <a class="nav-item" href="#s4">Código</a>
+      <a class="nav-item" href="#s5">Estados</a>
+      <a class="nav-item" href="#s6">Movimiento</a>
+      <a class="nav-item" href="#s7">Tipografía</a>
+    </nav>
+
+    <div class="autoria">
+      <b>Auditoría de identidad</b>
+      <p>Reconstruido por medición directa, sin valores estimados.</p>
+      <p style="margin-top:10px"><button class="btn-pill">Ver el informe <span aria-hidden="true">→</span></button></p>
+    </div>
+  </aside>
+
+  <main>
+    <section class="seccion" id="s1">
+      <div class="sec-head">
+        <span class="sec-num">01</span>
+        <h2 class="sec-title">Superficies</h2>
+        <p class="sec-desc">Card sobre canvas: el plano lo define el anillo de 1px, no la sombra.</p>
+      </div>
+      <div class="demo">
+        <div class="card">
+          <div class="card-pad">
+            <div class="card-head">
+              <span class="card-title">Lote de ejemplo</span>
+              <span class="chip chip--ok" style="margin-left:auto">Al día</span>
+            </div>
+            <p class="card-sub">Tres niveles de tinta y ni uno más. Este renglón es secundario y este color es el que se lee sin esfuerzo.</p>
+          </div>
+          <div style="border-top:1px solid var(--line);background:var(--inset);padding:10px 12px">
+            <span class="mono-num">14 elementos · 2,4 s</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="seccion" id="s2">
+      <div class="sec-head">
+        <span class="sec-num">02</span>
+        <h2 class="sec-title">Controles</h2>
+        <p class="sec-desc">Seis variantes de botón. Ninguna se llena con el acento.</p>
+      </div>
+      <div class="demo">
+        <div class="stack">
+          <div class="fila">
+            <button class="btn-pill">Pill primario <span aria-hidden="true">→</span></button>
+            <button class="btn-icon" aria-label="Editar">✎</button>
+            <button class="btn-icon btn-icon--surface" aria-label="Copiar">⧉</button>
+            <button class="btn-icon btn-icon-sm" aria-label="Cerrar">✕</button>
+          </div>
+          <button class="btn-row">El realce sobresale del texto <span class="mono-num" style="margin-left:auto">⌘K</span></button>
+          <button class="btn-row">Segunda fila, mismo comportamiento</button>
+          <label class="field">
+            <span style="color:var(--ink-3);font-size:13px">⌕</span>
+            <input placeholder="El campo es transparente; el borde es del contenedor">
+          </label>
+        </div>
+      </div>
+    </section>
+
+    <section class="seccion" id="s3">
+      <div class="sec-head">
+        <span class="sec-num">03</span>
+        <h2 class="sec-title">Datos</h2>
+        <p class="sec-desc">Filas sólidas adentro del componente; números tabulares siempre.</p>
+      </div>
+      <div class="demo">
+        <div class="card" style="width:100%;max-width:440px">
+          <table class="tabla">
+            <thead><tr><th>Serie</th><th style="text-align:right">Valor</th><th style="text-align:right">Var.</th></tr></thead>
+            <tbody>
+              <tr><td>Primera</td><td style="text-align:right">128.400</td><td style="text-align:right" class="delta-up">+3,2%</td></tr>
+              <tr><td>Segunda</td><td style="text-align:right">96.150</td><td style="text-align:right" class="delta-down">−0,5%</td></tr>
+              <tr><td>Tercera</td><td style="text-align:right">41.008</td><td style="text-align:right" class="delta-up">+16,8%</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="seccion" id="s4">
+      <div class="sec-head">
+        <span class="sec-num">04</span>
+        <h2 class="sec-title">Código</h2>
+        <p class="sec-desc">Mono a 11,5px con interlineado 1,7 — el único que abre por encima de 1,5.</p>
+      </div>
+      <div class="demo">
+        <div class="card" style="width:100%;max-width:440px">
+<pre class="code"><span class="lineno">1</span>--surface: #232427;
+<span class="lineno">2</span>--line:    #2e3033;
+<span class="lineno">3</span>
+<span class="lineno">4</span>.card {
+<span class="lineno">5</span>  box-shadow: 0 0 0 1px var(--line);
+<span class="lineno">6</span>}</pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="seccion" id="s5">
+      <div class="sec-head">
+        <span class="sec-num">05</span>
+        <h2 class="sec-title">Estados</h2>
+        <p class="sec-desc">Cuatro tintes. En claro son opacos; en oscuro, el color con alfa.</p>
+      </div>
+      <div class="demo">
+        <div class="fila" style="flex-wrap:wrap;justify-content:center">
+          <span class="chip chip--ok">Completo</span>
+          <span class="chip chip--warn">Requiere revisión</span>
+          <span class="chip chip--bad">Rechazado</span>
+          <span class="chip chip--info">En curso</span>
+          <span class="tip">Tooltip <small>· no verificado</small></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="seccion" id="s6">
+      <div class="sec-head">
+        <span class="sec-num">06</span>
+        <h2 class="sec-title">Movimiento</h2>
+        <p class="sec-desc">Todo en CSS. Con «reducir movimiento» se detiene por completo.</p>
+      </div>
+      <div class="demo">
+        <div class="fila">
+          <span class="eq" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span class="shimmer">Procesando</span>
+          <span class="mono-num">2,1 s</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="seccion" id="s7" style="border-bottom:0">
+      <div class="sec-head">
+        <span class="sec-num">07</span>
+        <h2 class="sec-title">Tipografía</h2>
+        <p class="sec-desc">Toda la escala del sistema: de 10 a 21px. La jerarquía la hace el peso.</p>
+      </div>
+      <div class="demo">
+        <div class="stack" style="max-width:100%">
+          <span style="font-size:21px;font-weight:600;line-height:1.25">21 · titular, lo más grande que hay</span>
+          <span style="font-size:14px">14 · cuerpo heredado del body</span>
+          <span style="font-size:13px;font-weight:600">13 · título de sección, peso 600</span>
+          <span style="font-size:12.5px;color:var(--ink-2)">12,5 · descripción, tinta secundaria</span>
+          <span style="font-size:12px;font-weight:500;color:var(--ink-3)">12 · cabecera de tabla, terciaria</span>
+          <span style="font-size:11.5px;font-weight:500">11,5 · chip y código</span>
+          <span style="font-size:11px;font-family:var(--font-mono);color:var(--ink-3)">11 · numeración en mono</span>
+          <span style="font-size:10px;font-weight:650;color:var(--ink-2)">10 · la más chica, peso 650 por compensación óptica</span>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+function tema(t, i, w) {
+  document.documentElement.classList.toggle('dark', t === 'dark')
+  const seg = document.querySelector('.seg')
+  seg.style.setProperty('--thumb-w', w + 'px')
+  document.getElementById('thumb').style.transform = i ? 'translateX(52px)' : 'translateX(0)'
+  seg.querySelectorAll('.seg-btn').forEach((b, j) => b.setAttribute('aria-selected', String(j === i)))
+}
+tema('dark', 1, 60)
+</script>
+</body>
+</html>

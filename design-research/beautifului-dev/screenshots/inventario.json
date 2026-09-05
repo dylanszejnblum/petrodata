@@ -1,0 +1,292 @@
+[
+  {
+    "archivo": "seccion-loading-state-dark.png",
+    "tipo": "seccion",
+    "id": "loading-state",
+    "vp": "1280",
+    "tema": "dark"
+  },
+  {
+    "archivo": "seccion-thinking-state-dark.png",
+    "tipo": "seccion",
+    "id": "thinking-state",
+    "vp": "1280",
+    "tema": "dark"
+  },
+  {
+    "archivo": "seccion-streaming-text-dark.png",
+    "tipo": "seccion",
+    "id": "streaming-text",
+    "vp": "1280",
+    "tema": "dark"
+  },
+  {
+    "archivo": "seccion-approval-card-dark.png",
+    "tipo": "seccion",
+    "id": "approval-card",
+    "vp": "1280",
+    "tema": "dark"
+  },
+  {
+    "archivo": "seccion-tool-chips-dark.png",
+    "tipo": "seccion",
+    "id": "tool-chips",
+    "vp": "1280",
+    "tema": "dark"
+  },
+  {
+    "archivo": "seccion-task-rows-dark.png",
+    "tipo": "seccion",
+    "id": "task-rows",
+    "vp": "1280",
+    "tema": "dark"
+  },
+  {
+    "archivo": "seccion-chat-composer-dark.png",
+    "tipo": "seccion",
+    "id": "chat-composer",
+    "vp": "1280",
+    "tema": "dark"
+  },
+  {
+    "archivo": "seccion-prompt-bar-dark.png",
+    "tipo": "seccion",
+    "id": "prompt-bar",
+    "vp": "1280",
+    "tema": "dark"
+  },
+  {
+    "archivo": "seccion-recommendation-card-dark.png",
+    "tipo": "seccion",
+    "id": "recommendation-card",
+    "vp": "1280",
+    "tema": "dark"
+  },
+  {
+    "archivo": "seccion-context-cards-dark.png",
+    "tipo": "seccion",
+    "id": "context-cards",
+    "vp": "1280",
+    "tema": "dark"
+  },
+  {
+    "archivo": "seccion-diff-table-dark.png",
+    "tipo": "seccion",
+    "id": "diff-table",
+    "vp": "1280",
+    "tema": "dark"
+  },
+  {
+    "archivo": "seccion-records-table-dark.png",
+    "tipo": "seccion",
+    "id": "records-table",
+    "vp": "1280",
+    "tema": "dark"
+  },
+  {
+    "archivo": "seccion-filter-table-dark.png",
+    "tipo": "seccion",
+    "id": "filter-table",
+    "vp": "1280",
+    "tema": "dark"
+  },
+  {
+    "archivo": "seccion-sidebar-nav-dark.png",
+    "tipo": "seccion",
+    "id": "sidebar-nav",
+    "vp": "1280",
+    "tema": "dark"
+  },
+  {
+    "archivo": "seccion-search-dark.png",
+    "tipo": "seccion",
+    "id": "search",
+    "vp": "1280",
+    "tema": "dark"
+  },
+  {
+    "archivo": "seccion-insight-cards-dark.png",
+    "tipo": "seccion",
+    "id": "insight-cards",
+    "vp": "1280",
+    "tema": "dark"
+  },
+  {
+    "archivo": "seccion-code-block-dark.png",
+    "tipo": "seccion",
+    "id": "code-block",
+    "vp": "1280",
+    "tema": "dark"
+  },
+  {
+    "archivo": "seccion-fine-tune-card-dark.png",
+    "tipo": "seccion",
+    "id": "fine-tune-card",
+    "vp": "1280",
+    "tema": "dark"
+  },
+  {
+    "archivo": "seccion-selection-actions-dark.png",
+    "tipo": "seccion",
+    "id": "selection-actions",
+    "vp": "1280",
+    "tema": "dark"
+  },
+  {
+    "archivo": "sidebar-dark.png",
+    "tipo": "chrome",
+    "id": "sidebar",
+    "tema": "dark"
+  },
+  {
+    "archivo": "footer-dark.png",
+    "tipo": "chrome",
+    "id": "footer",
+    "tema": "dark"
+  },
+  {
+    "archivo": "seccion-loading-state-light.png",
+    "tipo": "seccion",
+    "id": "loading-state",
+    "vp": "1280",
+    "tema": "light"
+  },
+  {
+    "archivo": "seccion-thinking-state-light.png",
+    "tipo": "seccion",
+    "id": "thinking-state",
+    "vp": "1280",
+    "tema": "light"
+  },
+  {
+    "archivo": "seccion-streaming-text-light.png",
+    "tipo": "seccion",
+    "id": "streaming-text",
+    "vp": "1280",
+    "tema": "light"
+  },
+  {
+    "archivo": "seccion-approval-card-light.png",
+    "tipo": "seccion",
+    "id": "approval-card",
+    "vp": "1280",
+    "tema": "light"
+  },
+  {
+    "archivo": "seccion-tool-chips-light.png",
+    "tipo": "seccion",
+    "id": "tool-chips",
+    "vp": "1280",
+    "tema": "light"
+  },
+  {
+    "archivo": "seccion-task-rows-light.png",
+    "tipo": "seccion",
+    "id": "task-rows",
+    "vp": "1280",
+    "tema": "light"
+  },
+  {
+    "archivo": "seccion-chat-composer-light.png",
+    "tipo": "seccion",
+    "id": "chat-composer",
+    "vp": "1280",
+    "tema": "light"
+  },
+  {
+    "archivo": "seccion-prompt-bar-light.png",
+    "tipo": "seccion",
+    "id": "prompt-bar",
+    "vp": "1280",
+    "tema": "light"
+  },
+  {
+    "archivo": "seccion-recommendation-card-light.png",
+    "tipo": "seccion",
+    "id": "recommendation-card",
+    "vp": "1280",
+    "tema": "light"
+  },
+  {
+    "archivo": "seccion-context-cards-light.png",
+    "tipo": "seccion",
+    "id": "context-cards",
+    "vp": "1280",
+    "tema": "light"
+  },
+  {
+    "archivo": "seccion-diff-table-light.png",
+    "tipo": "seccion",
+    "id": "diff-table",
+    "vp": "1280",
+    "tema": "light"
+  },
+  {
+    "archivo": "seccion-records-table-light.png",
+    "tipo": "seccion",
+    "id": "records-table",
+    "vp": "1280",
+    "tema": "light"
+  },
+  {
+    "archivo": "seccion-filter-table-light.png",
+    "tipo": "seccion",
+    "id": "filter-table",
+    "vp": "1280",
+    "tema": "light"
+  },
+  {
+    "archivo": "seccion-sidebar-nav-light.png",
+    "tipo": "seccion",
+    "id": "sidebar-nav",
+    "vp": "1280",
+    "tema": "light"
+  },
+  {
+    "archivo": "seccion-search-light.png",
+    "tipo": "seccion",
+    "id": "search",
+    "vp": "1280",
+    "tema": "light"
+  },
+  {
+    "archivo": "seccion-insight-cards-light.png",
+    "tipo": "seccion",
+    "id": "insight-cards",
+    "vp": "1280",
+    "tema": "light"
+  },
+  {
+    "archivo": "seccion-code-block-light.png",
+    "tipo": "seccion",
+    "id": "code-block",
+    "vp": "1280",
+    "tema": "light"
+  },
+  {
+    "archivo": "seccion-fine-tune-card-light.png",
+    "tipo": "seccion",
+    "id": "fine-tune-card",
+    "vp": "1280",
+    "tema": "light"
+  },
+  {
+    "archivo": "seccion-selection-actions-light.png",
+    "tipo": "seccion",
+    "id": "selection-actions",
+    "vp": "1280",
+    "tema": "light"
+  },
+  {
+    "archivo": "sidebar-light.png",
+    "tipo": "chrome",
+    "id": "sidebar",
+    "tema": "light"
+  },
+  {
+    "archivo": "footer-light.png",
+    "tipo": "chrome",
+    "id": "footer",
+    "tema": "light"
+  }
+]

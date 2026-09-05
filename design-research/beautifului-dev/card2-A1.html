@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Card 02 · A1 refinada</title><style>
+/* ═══════════════════════════════════════════════════════════════════════
+   TOKENS — copiados tal cual de apps/ui-prototype/src/app/v2/sistema.css,
+   que a su vez salen de la medición de beautifului.dev.
+   ═══════════════════════════════════════════════════════════════════════ */
+:root {
+  --page:#fafafb; --canvas:#f1f2f3; --surface:#fff; --inset:#f7f8f9;
+  --hover:#f4f5f6; --hover-2:#e7e9eb;
+  --ink:#1f2124; --ink-2:#62656b; --ink-3:#9a9da3;
+  --line:#ecedef; --line-strong:#e0e2e5; --field:#f2f2f3;
+  --accent:#0285ff; --accent-ink:#0170dd; --accent-tint:#e9f3ff;
+  --green:#189a4d; --orange:#ef720c; --red:#e3474c;
+  --shadow-hairline:0 0 0 1px var(--line);
+  --shadow-card:0 0 0 1px var(--line), 0 1px 2px #1018280a, 0 2px 6px #10182808;
+  --radius-chip:6px; --radius-control:8px; --radius-card:10px; --radius-window:14px;
+  --ease-in-out:cubic-bezier(.4,0,.2,1);
+  --dot:#4949491a;
+
+  /* paleta categórica de 8, con --tag-color inyectado por elemento */
+  --c1:#3f78ff; --c2:#f09a2f; --c3:#9a5cff; --c4:#16a6c7; --c5:#25a878;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme=light]) {
+    --page:#17181a; --canvas:#1c1d1f; --surface:#232427; --inset:#1f2022;
+    --hover:#2a2b2e; --hover-2:#313236;
+    --ink:#f2f3f4; --ink-2:#a5a8ad; --ink-3:#6c6f75;
+    --line:#2e3033; --line-strong:#3a3c40; --field:#2b2c2f;
+    --accent:#3d9aff; --accent-ink:#7ec0ff; --accent-tint:#3d9aff29;
+    --green:#3dbb72; --orange:#f68f3c; --red:#ee5c61;
+    --shadow-card:0 0 0 1px var(--line), 0 1px 2px #0003, 0 2px 6px #0003;
+    --dot:#ffffff0f;
+  }
+}
+
+* { box-sizing:border-box; }
+body {
+  margin:0; padding:40px 24px 80px;
+  background:var(--page);
+  background-image:radial-gradient(var(--dot) 1px, transparent 1px);
+  background-size:18px 18px;
+  color:var(--ink);
+  font-family:"Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  font-size:14px; line-height:1.5; letter-spacing:-.01em;
+}
+:focus-visible { outline:2px solid var(--accent); outline-offset:2px; border-radius:4px; }
+
+/* ── Tipografía. Nada pasa de 21, y ninguna CIFRA pasa de 17. ─────────── */
+.titular { font-size:21px; font-weight:600; line-height:1.25; letter-spacing:-.02em; margin:0; }
+.cifra   { font-size:17px; font-weight:600; line-height:1.2; font-variant-numeric:tabular-nums; }
+.titulo  { font-size:13px; font-weight:600; }
+.cuerpo  { font-size:13px; line-height:19.5px; }
+.desc    { font-size:12.5px; line-height:18.75px; color:var(--ink-2); }
+.etq     { font-size:12px;   line-height:18px;    color:var(--ink-2); }
+.micro   { font-size:11.5px; line-height:17.25px; }
+.mono    { font-family:"JetBrains Mono", ui-monospace,"SF Mono",Menlo,monospace; font-variant-numeric:tabular-nums; }
+.num     { font-variant-numeric:tabular-nums; }
+.ink2 { color:var(--ink-2); } .ink3 { color:var(--ink-3); }
+
+/* ── Estructura de página ─────────────────────────────────────────────── */
+.hoja { max-width:760px; margin:0 auto; }
+.intro { margin:0 0 32px; }
+.intro h1 { font-size:21px; font-weight:600; letter-spacing:-.02em; margin:0 0 6px; }
+.intro p  { margin:0; max-width:60ch; }
+
+.propuesta { margin:0 0 12px; }
+.rotulo {
+  display:flex; align-items:baseline; gap:8px; flex-wrap:wrap;
+  padding:0 4px 10px;
+}
+.rotulo .n { font-family:"JetBrains Mono",ui-monospace,monospace; font-size:11px; color:var(--ink-3); }
+.piezas { display:flex; flex-wrap:wrap; gap:4px; padding:0 4px 12px; }
+.pieza {
+  font-family:"JetBrains Mono",ui-monospace,monospace; font-size:10px;
+  padding:2px 6px; border-radius:5px;
+  background:var(--field); color:var(--ink-2);
+}
+.pieza.ext { background:transparent; box-shadow:inset 0 0 0 1px var(--line-strong); color:var(--ink-3); }
+
+.marco {
+  border-radius:var(--radius-window); background:var(--canvas);
+  box-shadow:var(--shadow-hairline); padding:12px; overflow:hidden;
+}
+.corte { border:0; border-top:1px dashed var(--line-strong); margin:28px 0; }
+
+/* ── Card y sus TRES ranuras medidas ──────────────────────────────────── */
+.card { border-radius:var(--radius-card); background:var(--surface); box-shadow:var(--shadow-card); overflow:hidden; }
+.card-bar { display:flex; align-items:center; gap:10px; padding:10px 12px; border-bottom:1px solid var(--line); }
+.card-pad { padding:12px; }
+.card-pie { display:flex; align-items:center; gap:12px; padding:10px 12px; border-top:1px solid var(--line); background:var(--inset); }
+
+/* ── Fila de dato ─────────────────────────────────────────────────────── */
+.fila { display:flex; align-items:center; gap:10px; padding:10px 12px; border-bottom:1px solid var(--line); transition:background-color 400ms var(--ease-in-out); }
+.fila:last-child { border-bottom:0; }
+.fila:hover { background:var(--hover); }
+
+/* ── Medidor de 3 barras (Recommendation Card) ────────────────────────── */
+.medidor { display:flex; align-items:flex-end; gap:2px; height:10px; flex-shrink:0; }
+.medidor i { display:block; width:4px; height:100%; border-radius:999px; background:var(--line-strong); }
+.medidor i.on { background:var(--ink-3); }
+
+/* ── Ecualizador "en vivo": misma caja que el medidor ─────────────────── */
+@keyframes eq { 0%,to{transform:scaleY(.35)} 50%{transform:scaleY(1)} }
+.eq { display:flex; align-items:flex-end; gap:2px; height:10px; }
+.eq i { display:block; width:4px; height:100%; border-radius:999px; background:var(--ink-3);
+  animation:eq 900ms var(--ease-in-out) infinite; transform-origin:bottom; }
+.eq i:nth-child(2){animation-delay:150ms} .eq i:nth-child(3){animation-delay:300ms}
+
+/* ── Chip y tag ───────────────────────────────────────────────────────── */
+.chip { display:inline-flex; align-items:center; gap:5px; height:19px; padding:0 6px;
+  border-radius:5px; font-size:10.5px; font-weight:500; white-space:nowrap;
+  background:var(--field); color:var(--ink-2); }
+.tag { display:inline-flex; align-items:center; gap:4px; height:19px; padding:0 6px;
+  border-radius:5px; font-size:10.5px; font-weight:500; white-space:nowrap;
+  border:1px solid color-mix(in srgb, var(--tag-color) 24%, var(--surface));
+  color:color-mix(in srgb, var(--tag-color) 82%, var(--ink));
+  background:color-mix(in srgb, var(--tag-color) 13%, var(--surface)); }
+.tag b { width:4px; height:4px; border-radius:50%; background:var(--tag-color); }
+
+/* ── Barra de proporción ──────────────────────────────────────────────── */
+.barra { height:4px; border-radius:999px; background:var(--line-strong); overflow:hidden; }
+.barra i { display:block; height:100%; border-radius:999px; background:var(--ink-3); }
+.barra.lider i { background:var(--accent); }
+
+/* ── Pila por categoría ───────────────────────────────────────────────── */
+.pila { display:flex; align-items:center; height:16px; }
+.pila > span { display:flex; align-items:center; height:100%; padding-right:1.5px; min-width:4.5px; }
+.pila > span:last-child { padding-right:0; }
+.pila i { display:block; width:100%; height:8px; border-radius:2px; }
+
+/* ── Serie compacta ───────────────────────────────────────────────────── */
+.serie { display:flex; align-items:stretch; height:16px; flex-shrink:0; }
+.serie > span { display:flex; align-items:flex-end; height:100%; padding-right:2px; }
+.serie > span:last-child { padding-right:0; }
+.serie { --serie-color:var(--accent); }
+/* Toda la serie lleva el color de SU fluido, mezclado al 40% para que el mes
+   de corte —que va pleno— siga saltando sin cambiar de color. Antes el corte
+   iba en acento: el acento es para foco, enlaces y detalles, no para decir de
+   qué fluido es la serie. */
+.serie i { display:block; width:3px; min-height:1px; border-radius:1px;
+  background:color-mix(in srgb, var(--serie-color) 40%, var(--line-strong));
+  transition:background-color 120ms; }
+.serie > span:last-child i { background:var(--serie-color); }
+.serie.ancha > span { flex:1; justify-content:center; padding:0; }
+.serie.ancha i { width:6px; border-radius:3px; }
+.serie.alta { height:64px; }
+.serie.alta i { border-radius:3px; }
+.tabla tr.ult td { background:var(--inset); }
+.tabla td.der { font-variant-numeric:tabular-nums; }
+/* Las barras de la tabla van en su propia columna de ancho fijo: con ancho
+   automático quedaban de 20px y no se leía nada. */
+.tabla td.b { width:88px; padding-left:0; }
+.barra { display:block; }
+
+/* ── Riel de desglose y sus pasos ─────────────────────────────────────── */
+.rama > * { position:relative; }
+.rama > *::before { content:""; position:absolute; left:-7px; top:-4px; bottom:0; width:1px; background:var(--line); }
+.rama > *:first-child::before { top:50%; }
+.rama > *:last-child::before { bottom:auto; height:calc(50% + 4px); }
+.rama > *::after { content:""; position:absolute; left:-7px; top:50%; width:6px; height:1px; background:var(--line); }
+.paso { display:flex; flex-wrap:wrap; align-items:center; gap:2px 8px;
+  width:100%; min-height:28px; padding:2px 6px; border-radius:6px; background:transparent; }
+.paso svg { flex-shrink:0; color:var(--ink-3); }
+
+/* ── Tabla (primitive-table-cell) ─────────────────────────────────────── */
+.tabla { width:100%; border-collapse:collapse; text-align:left; }
+.tabla th { padding:10px 12px; font-size:12px; font-weight:500; color:var(--ink-3);
+  border-bottom:1px solid var(--line); white-space:nowrap; }
+.tabla td { padding:10px 12px; font-size:13px; border-bottom:1px solid var(--line); font-variant-numeric:tabular-nums; }
+.tabla tr:last-child td { border-bottom:0; }
+.tabla tbody tr { transition:background-color 400ms var(--ease-in-out); }
+.tabla tbody tr:hover { background:var(--hover); }
+.der { text-align:right; }
+/* La conclusión es la ÚLTIMA FILA de la tabla y no un pie aparte, pero se
+   sirve con la receta del pie de card: fondo --inset y filete arriba. Así
+   cierra la tabla en vez de flotar debajo. */
+.tabla tr.cierre td { background:var(--inset); border-top:1px solid var(--line); border-bottom:0; padding:10px 12px; }
+.tabla tbody tr.cierre:hover td { background:var(--inset); }
+
+/* ── Bloque hundido (Insight Card) ────────────────────────────────────── */
+.hundido { border-radius:var(--radius-control); background:var(--inset); overflow:hidden; }
+/* La barra del bloque toma --field, un peldaño más marcado que el bloque.
+   Con --hover el escalón era de un solo punto de L* y casi no se veía; con
+   --field son dos, que es lo que se pidió.
+   Y la pista del toggle SE VA. Medido: en tema oscuro --field (L 18) queda a
+   medio punto de --hover (17,5), así que la pista se volvía invisible contra la
+   barra y los badges parecían flotar sueltos. Además la pista es la afordancia
+   de un control de opción única, y estos dos son interruptores independientes:
+   los dos pueden estar encendidos a la vez. Cada botón ya tiene su superficie y
+   su anillo, que es lo que lo hace leerse como accionable. */
+.hundido-bar { display:flex; align-items:center; justify-content:space-between;
+  padding:6px 10px; background:var(--field); border-bottom:1px solid var(--line); }
+
+@media (max-width:639px) { body { padding:24px 16px 60px } .col-3 { flex-direction:column; gap:12px !important } }
+.col-3 { display:flex; align-items:flex-start; gap:16px; }
+.col-3 > div { flex:1; min-width:0; }
+
+/* ── Gráfico de líneas ─────────────────────────────────────────────────
+   MEDIDO en la Insight Card (sección 16 del catálogo). Yo había dicho que la
+   referencia no tiene gráficos: falso. Los tiene, dibujados en un <canvas> de
+   320×166, y por eso mi barrido del DOM buscando SVG no encontró nada.
+
+   Su lenguaje, mirándolo: líneas SUAVES superpuestas en el mismo plano, una
+   por serie, cada una con el color de su categoría; un punto relleno al final
+   de cada línea; una punteada horizontal al nivel de ese último valor; y NADA
+   más: sin ejes, sin grilla, sin números sobre el trazo. Los valores viven
+   arriba del gráfico, no adentro. */
+.gr { display:block; width:100%; height:150px; }
+.gr .linea { fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+.gr .guia { stroke-dasharray:2 4; stroke-width:1; opacity:.45; }
+.gr .fin { r:3.5; }
+.toggle { display:inline-flex; gap:6px; }
+.toggle button { display:inline-flex; align-items:center; gap:4px; border:0; cursor:pointer;
+  padding:3px 8px; border-radius:999px; background:var(--surface); box-shadow:var(--shadow-btn);
+  font-size:11px; font-weight:500; color:var(--ink-2); font-family:inherit; }
+.toggle button i { display:block; width:6px; height:6px; border-radius:50%; }
+/* Tabla estilo Records: separadores VERTICALES entre grupos de columna, que es
+   algo que la referencia usa y nosotros no teníamos. */
+.tabla td.sep, .tabla th.sep { border-left:1px solid var(--line); }
+.tabla tfoot td { background:var(--inset); border-top:1px solid var(--line); font-size:12px; color:var(--ink-2); font-weight:400; }
+.pill { display:inline-flex; align-items:center; height:32px; padding:0 14px; border-radius:999px;
+  background:var(--surface); box-shadow:var(--shadow-btn); font-size:12.5px; font-weight:500; color:var(--ink-2); }
+
+.gr .scrub { stroke:var(--line-strong); stroke-width:1; }
+.gr .pt { r:4; stroke:var(--surface); stroke-width:2; }
+.nav { display:inline-flex; gap:2px; }
+.nav button { width:24px; height:24px; display:grid; place-items:center; border:0; cursor:pointer;
+  border-radius:var(--radius-control); background:transparent; color:var(--ink-3); font-size:13px; }
+.nav button:hover { background:var(--hover); color:var(--ink-2); }
+.paso-punto { display:flex; gap:4px; }
+.paso-punto i { display:block; width:14px; height:3px; border-radius:2px; background:var(--line-strong); }
+.paso-punto i.on { background:var(--ink-3); }
+
+/* Halo del punto terminal: un anillo del color de la serie al 18%, que es lo
+   que hace que el punto se despegue del trazo sin agrandarlo. */
+.gr .halo { r:8; opacity:.16; }
+.gr .rejilla { stroke:var(--line); stroke-width:1; }
+.gr .marca-mes { stroke:var(--line-strong); stroke-width:1; }
+</style></head>
+<body><div class="hoja">
+
+  <div class="intro">
+    <h1>Card 02 · A1 refinada</h1>
+    <p class="desc">
+      Tres cambios sobre A1: el gráfico se recorre con el mouse, la cifra pasa de tres renglones a
+      dos, y entran dos detalles del trazo de la referencia que me había salteado.
+      <strong>Pasá el mouse por el gráfico.</strong>
+    </p>
+  </div>
+
+  <div class="marco">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:0 4px 8px">
+      <span class="titulo">Producción mensual <span class="ink3" style="font-weight:400">3</span></span>
+      <span class="nav"><button>‹</button><button>›</button></span>
+    </div>
+    <p class="desc" style="margin:0 4px 10px">
+      El petróleo subió <code class="mono" style="color:var(--green)">+16,7%</code> en los doce meses;
+      el gas sólo <code class="mono" style="color:var(--green)">+5,4%</code> y con una caída en
+      <span style="color:var(--ink)">septiembre</span>.
+    </p>
+
+    <div class="card">
+      <div class="card-pad">
+        <div class="col-3" style="gap:24px" id="figs">
+          <div>
+                <span class="micro" style="display:flex;align-items:center;gap:6px;color:var(--ink-2)">
+                  <i style="width:8px;height:8px;border-radius:50%;background:var(--c1);display:block"></i>Petróleo</span>
+                <p style="margin:2px 0 0;display:flex;align-items:baseline;gap:5px">
+                  <span class="cifra" data-f="oil">650.190</span>
+                  <span class="ink3" style="font-size:11px">bbl/d</span>
+                </p>
+              </div>
+          <div>
+                <span class="micro" style="display:flex;align-items:center;gap:6px;color:var(--ink-2)">
+                  <i style="width:8px;height:8px;border-radius:50%;background:var(--c4);display:block"></i>Gas natural</span>
+                <p style="margin:2px 0 0;display:flex;align-items:baseline;gap:5px">
+                  <span class="cifra" data-f="gas">75,5</span>
+                  <span class="ink3" style="font-size:11px">MMm³/d</span>
+                </p>
+              </div>
+        </div>
+
+        <div class="hundido" style="margin-top:10px">
+          <!-- Los badges suben a la barra del bloque y "Doce meses" se va: el
+               rango ya está en el chip de la derecha y en los rótulos de abajo
+               del gráfico, así que el rótulo lo decía por tercera vez. La barra
+               queda con lo accionable a la izquierda y el contexto a la
+               derecha, que es como la referencia arma esa ranura. -->
+          <div class="hundido-bar">
+            <span class="toggle">
+              <button><i style="background:var(--c1)"></i>Petróleo</button>
+              <button><i style="background:var(--c4)"></i>Gas</button>
+            </span>
+            <span class="chip" id="rango">jun 2025 – may 2026</span>
+          </div>
+          <div style="padding:12px 10px 8px">
+            <svg class="gr" id="gr" viewBox="0 0 628 158" preserveAspectRatio="none">
+              <line class="guia" x1="16" y1="16.0" x2="612" y2="16.0" stroke="var(--c1)"/>
+              <line class="guia" x1="16" y1="16.0" x2="612" y2="16.0" stroke="var(--c4)"/>
+              <path class="linea" d="M 16.0 142.0 C 25.0 140.2, 52.1 134.8, 70.2 131.0 C 88.2 127.1, 106.3 123.0, 124.4 118.8 C 142.4 114.6, 160.5 110.2, 178.5 105.7 C 196.6 101.3, 214.7 96.7, 232.7 92.1 C 250.8 87.5, 268.8 82.8, 286.9 78.3 C 305.0 73.7, 323.0 69.1, 341.1 64.7 C 359.2 60.4, 377.2 56.0, 395.3 51.9 C 413.3 47.8, 431.4 43.9, 449.5 40.1 C 467.5 36.4, 485.6 32.9, 503.6 29.5 C 521.7 26.2, 539.8 22.3, 557.8 20.0 C 575.9 17.8, 603.0 16.7, 612.0 16.0" stroke="var(--c1)"/>
+              <path class="linea" d="M 16.0 83.3 C 25.0 81.3, 52.1 75.3, 70.2 71.2 C 88.2 67.2, 106.3 47.4, 124.4 59.2 C 142.4 70.9, 160.5 130.2, 178.5 142.0 C 196.6 153.8, 214.7 134.2, 232.7 129.9 C 250.8 125.6, 268.8 120.4, 286.9 116.1 C 305.0 111.8, 323.0 108.1, 341.1 104.0 C 359.2 100.0, 377.2 96.0, 395.3 91.9 C 413.3 87.9, 431.4 84.2, 449.5 79.9 C 467.5 75.5, 485.6 70.4, 503.6 66.1 C 521.7 61.7, 539.8 62.3, 557.8 54.0 C 575.9 45.6, 603.0 22.3, 612.0 16.0" stroke="var(--c4)"/>
+              <g id="ptsMes"></g>
+              <circle class="halo" cx="612.0" cy="16.0" fill="var(--c1)"/>
+              <g id="ptsMes"></g>
+              <circle class="halo" cx="612.0" cy="16.0" fill="var(--c4)"/>
+              <circle class="fin" cx="612.0" cy="16.0" fill="var(--c1)"/>
+              <circle class="fin" cx="612.0" cy="16.0" fill="var(--c4)"/>
+            </svg>
+            <div style="display:flex;justify-content:space-between;margin-top:2px">
+              <span class="mono ink3" style="font-size:10.5px">jun 2025</span>
+              <span class="mono ink3" style="font-size:10.5px">may 2026</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:10px;padding:0 4px"><span class="pill">¿Por qué cayó el gas en septiembre?</span></div>
+  </div>
+
+  <hr class="corte">
+
+  <p class="desc" style="padding:0 4px">
+    <strong>1 · El gráfico se recorre.</strong> La guía vertical sigue al cursor, aparece un punto
+    sobre cada línea y las dos cifras de arriba cambian al mes señalado. El chip de la barra
+    —que en reposo dice el rango— pasa a decir ese mes, que es exactamente cómo la referencia usa
+    ese lugar.
+    <br><br>
+    <strong>2 · La cifra en dos renglones.</strong> La unidad sube a la línea de base de la cifra en
+    vez de colgar debajo: «650.190 bbl/d» se lee como una cosa sola, y el bloque baja de tres
+    renglones a dos. Es además lo que ya hacen las filas de dato del resto de v2.
+    <br><br>
+    <strong>3 · Un punto por mes.</strong> La referencia no los tiene: su trazo es continuo y sólo
+    marca el final. Pero acá los meses son doce y discretos, no una señal continua: cada punto ES
+    una medición, y verlos hace que el trazo deje de parecer una interpolación libre entre dos
+    extremos. Van chicos, del color de su serie y con borde de <code class="mono">--surface</code>,
+    así el trazo pasa por detrás sin ensuciarlos. El del último mes se queda grande y con su halo
+    —un anillo del color de la serie al 16%— que lo despega sin agrandarlo.
+    <br><br>
+    <strong>4 · Los badges suben a la barra del bloque</strong> y «Doce meses» se va: el rango ya
+    está en el chip de la derecha y en los rótulos de abajo del gráfico, así que el rótulo lo decía
+    por tercera vez. La barra queda con lo que se puede accionar a la izquierda y el contexto a la
+    derecha, que es como la referencia arma esa ranura.
+    <br><br>
+    <strong>Y fuera el degradado de entrada.</strong> Estaba copiado de la referencia, donde el
+    trazo se desvanece hacia la izquierda, pero acá la serie arranca en un mes concreto: si el
+    principio se ve más flojo que el resto, la primera medición parece menos cierta que las otras.
+  </p>
+
+</div>
+<script>
+const MES=['jun 2025', 'jul 2025', 'ago 2025', 'sept 2025', 'oct 2025', 'nov 2025', 'dic 2025', 'ene 2026', 'feb 2026', 'mar 2026', 'abr 2026', 'may 2026'], OIL=[557149, 565283, 574257, 583917, 594009, 604213, 614196, 623655, 632366, 640211, 647201, 650190], GAS=[71.6, 72.3, 73, 68.2, 68.9, 69.7, 70.4, 71.1, 71.8, 72.6, 73.3, 75.5];
+const PO=[[16.0, 142.0], [70.2, 131.0], [124.4, 118.8], [178.5, 105.7], [232.7, 92.1], [286.9, 78.3], [341.1, 64.7], [395.3, 51.9], [449.5, 40.1], [503.6, 29.5], [557.8, 20.0], [612.0, 16.0]], PG=[[16.0, 83.3], [70.2, 71.2], [124.4, 59.2], [178.5, 142.0], [232.7, 129.9], [286.9, 116.1], [341.1, 104.0], [395.3, 91.9], [449.5, 79.9], [503.6, 66.1], [557.8, 54.0], [612.0, 16.0]];
+const milS=n=>n.toLocaleString("es-AR"), decS=(n,d=1)=>n.toFixed(d).replace(".",",");
+(()=>{
+  const svg=document.getElementById("gr"), NS="http://www.w3.org/2000/svg";
+  /* Un punto por mes sobre cada línea. La referencia no los tiene —su trazo es
+     continuo y sólo marca el final— pero acá los meses son doce y discretos, no
+     una señal continua: cada punto ES una medición, y verlos hace que el trazo
+     deje de parecer una interpolación libre. Van chicos, del color de la serie
+     y con borde de --surface para que el trazo pase por detrás sin ensuciarlos. */
+  const cont=document.getElementById("ptsMes");
+  [[PO,"var(--c1)"],[PG,"var(--c4)"]].forEach(([P,c])=>P.forEach(([x,y],i)=>{
+    if(i===P.length-1) return;            // el último ya tiene su punto grande
+    const o=document.createElementNS(NS,"circle");
+    o.setAttribute("cx",x); o.setAttribute("cy",y); o.setAttribute("r",2.5);
+    o.setAttribute("fill",c); o.setAttribute("stroke","var(--surface)"); o.setAttribute("stroke-width","1.5");
+    cont.appendChild(o);
+  }));
+  const g=document.createElementNS(NS,"line"); g.setAttribute("class","scrub"); g.style.display="none"; svg.appendChild(g);
+  const p1=document.createElementNS(NS,"circle"); p1.setAttribute("class","pt"); p1.setAttribute("fill","var(--c1)"); p1.style.display="none"; svg.appendChild(p1);
+  const p2=document.createElementNS(NS,"circle"); p2.setAttribute("class","pt"); p2.setAttribute("fill","var(--c4)"); p2.style.display="none"; svg.appendChild(p2);
+  const co=document.querySelector("[data-f=oil]"), cg=document.querySelector("[data-f=gas]"), rango=document.getElementById("rango");
+  svg.addEventListener("mousemove",e=>{
+    const r=svg.getBoundingClientRect();
+    const i=Math.max(0,Math.min(11,Math.round((e.clientX-r.left)/r.width*11)));
+    const x=PO[i][0];
+    g.setAttribute("x1",x); g.setAttribute("x2",x); g.setAttribute("y1",6); g.setAttribute("y2",158-6);
+    p1.setAttribute("cx",x); p1.setAttribute("cy",PO[i][1]);
+    p2.setAttribute("cx",x); p2.setAttribute("cy",PG[i][1]);
+    g.style.display=p1.style.display=p2.style.display="";
+    co.textContent=milS(OIL[i]); cg.textContent=decS(GAS[i]); rango.textContent=MES[i];
+  });
+  svg.addEventListener("mouseleave",()=>{
+    g.style.display=p1.style.display=p2.style.display="none";
+    co.textContent=milS(OIL[11]); cg.textContent=decS(GAS[11]); rango.textContent="jun 2025 – may 2026";
+  });
+})();
+</script>
+</body></html>

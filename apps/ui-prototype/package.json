@@ -1,0 +1,30 @@
+{
+  "name": "estrato-prototype",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Gemelo visual de vacamuerta.io — design system Estrato (no productivo)",
+  "type": "module",
+  "scripts": {
+    "dev": "next dev --port 3100",
+    "build": "next build",
+    "start": "next start --port 3100",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "animejs": "4.5.0",
+    "maplibre-gl": "^5.22.0",
+    "next": "16.2.3",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "recharts": "^3.8.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.18",
+    "@types/node": "22.19.9",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "postcss": "^8.4.38",
+    "tailwindcss": "^4.1.18",
+    "typescript": "5.7.3"
+  }
+}

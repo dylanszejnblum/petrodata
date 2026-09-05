@@ -1,0 +1,3241 @@
+{
+  "dark": [
+    {
+      "fg": "#a5a8ad",
+      "bg": "#232427",
+      "size": "12px",
+      "weight": "400",
+      "n": 44,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "text-[12px] text-ink-2",
+          "txt": "Matched tax and contact IDs"
+        },
+        {
+          "tag": "span",
+          "clase": "text-[12px] text-ink-2",
+          "txt": "Flagged stale records"
+        }
+      ]
+    },
+    {
+      "fg": "#f2f3f4",
+      "bg": "#232427",
+      "size": "12.5px",
+      "weight": "500",
+      "n": 36,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "shrink-0 text-[12.5px] font-medium text-ink",
+          "txt": "Add photos & files"
+        },
+        {
+          "tag": "span",
+          "clase": "shrink-0 text-[12.5px] font-medium text-ink",
+          "txt": "Scoop Data"
+        }
+      ]
+    },
+    {
+      "fg": "#f2f3f4",
+      "bg": "#232427",
+      "size": "12px",
+      "weight": "400",
+      "n": 31,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "text-ink",
+          "txt": "for 4s"
+        },
+        {
+          "tag": "span",
+          "clase": "text-ink",
+          "txt": "for 2s"
+        }
+      ]
+    },
+    {
+      "fg": "#f2f3f4",
+      "bg": "#1c1d1f",
+      "size": "13px",
+      "weight": "400",
+      "n": 28,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "inline [will-change:filter,opacity]",
+          "txt": "Pistachio"
+        },
+        {
+          "tag": "span",
+          "clase": "inline [will-change:filter,opacity]",
+          "txt": "is"
+        }
+      ]
+    },
+    {
+      "fg": "#a5a8ad",
+      "bg": "#2b2c2f",
+      "size": "10px",
+      "weight": "650",
+      "n": 26,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "records-company-mark",
+          "txt": "A"
+        },
+        {
+          "tag": "span",
+          "clase": "records-company-mark",
+          "txt": "A"
+        }
+      ]
+    },
+    {
+      "fg": "#6c6f75",
+      "bg": "#232427",
+      "size": "12px",
+      "weight": "400",
+      "n": 20,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "min-w-0 flex-1 truncate text-[12px] text-ink-3",
+          "txt": "Upload from your computer"
+        },
+        {
+          "tag": "span",
+          "clase": "min-w-0 flex-1 truncate text-[12px] text-ink-3",
+          "txt": "Sales & churn metrics"
+        }
+      ]
+    },
+    {
+      "fg": "#6c6f75",
+      "bg": "#17181a",
+      "size": "11px",
+      "weight": "400",
+      "n": 19,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "mt-0.5 font-mono text-[11px] text-ink-3 tabular-nums sm:mt-0",
+          "txt": "01"
+        },
+        {
+          "tag": "span",
+          "clase": "mt-0.5 font-mono text-[11px] text-ink-3 tabular-nums sm:mt-0",
+          "txt": "02"
+        }
+      ]
+    },
+    {
+      "fg": "#f2f3f4",
+      "bg": "#17181a",
+      "size": "13px",
+      "weight": "600",
+      "n": 19,
+      "ejemplos": [
+        {
+          "tag": "h3",
+          "clase": "whitespace-nowrap text-[13px] font-semibold text-ink",
+          "txt": "Loading State"
+        },
+        {
+          "tag": "h3",
+          "clase": "whitespace-nowrap text-[13px] font-semibold text-ink",
+          "txt": "Thinking"
+        }
+      ]
+    },
+    {
+      "fg": "#6c6f75",
+      "bg": "#17181a",
+      "size": "12.5px",
+      "weight": "400",
+      "n": 19,
+      "ejemplos": [
+        {
+          "tag": "p",
+          "clase": "mt-0.5 text-[12.5px] text-ink-3 text-pretty sm:mt-0 sm:truncate",
+          "txt": "Pixel-grid loader with shimmer and"
+        },
+        {
+          "tag": "p",
+          "clase": "mt-0.5 text-[12.5px] text-ink-3 text-pretty sm:mt-0 sm:truncate",
+          "txt": "Expandable traces — steps, reasoni"
+        }
+      ]
+    },
+    {
+      "fg": "#7ec0ff",
+      "bg": "#232427",
+      "size": "12px",
+      "weight": "400",
+      "n": 19,
+      "ejemplos": [
+        {
+          "tag": "a",
+          "clase": "records-link",
+          "txt": "aurora-scoops.example.com"
+        },
+        {
+          "tag": "a",
+          "clase": "records-link",
+          "txt": "blue-fig.example.com"
+        }
+      ]
+    },
+    {
+      "fg": "#a5a8ad",
+      "bg": "#17181a",
+      "size": "12.5px",
+      "weight": "400",
+      "n": 18,
+      "ejemplos": [
+        {
+          "tag": "a",
+          "clase": "relative z-10 flex items-center rounded-[7px] px-2 py-[5px]\n                text",
+          "txt": "Thinking"
+        },
+        {
+          "tag": "a",
+          "clase": "relative z-10 flex items-center rounded-[7px] px-2 py-[5px]\n                text",
+          "txt": "Streaming Text"
+        }
+      ]
+    },
+    {
+      "fg": "#f2f3f4",
+      "bg": "#232427",
+      "size": "13px",
+      "weight": "500",
+      "n": 10,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "text-[13px] font-medium text-ink",
+          "txt": "How many flavors should we launch?"
+        },
+        {
+          "tag": "span",
+          "clase": "min-w-0 flex-1 truncate text-[13px] font-medium text-ink",
+          "txt": "Verified vendor records"
+        }
+      ]
+    },
+    {
+      "fg": "#f2f3f4",
+      "bg": "#1c1d1f",
+      "size": "12.5px",
+      "weight": "500",
+      "n": 9,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "min-w-0 truncate text-[12.5px] font-medium text-ink ",
+          "txt": "Reading flavor briefs"
+        },
+        {
+          "tag": "span",
+          "clase": "min-w-0 truncate text-[12.5px] font-medium text-ink ",
+          "txt": "Scanning supplier lists"
+        }
+      ]
+    },
+    {
+      "fg": "#f2f3f4",
+      "bg": "#232427",
+      "size": "13px",
+      "weight": "400",
+      "n": 9,
+      "ejemplos": [
+        {
+          "tag": "button",
+          "clase": "rounded-[6px] px-2 py-[3px] text-[13px] text-ink transition-[background-color,op",
+          "txt": "Suppliers"
+        },
+        {
+          "tag": "p",
+          "clase": "text-[13px] leading-normal text-ink",
+          "txt": "Pulled 3 summers of mint chip sale"
+        }
+      ]
+    },
+    {
+      "fg": "#f2f3f4",
+      "bg": "#232427",
+      "size": "12px",
+      "weight": "500",
+      "n": 9,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "font-medium text-ink",
+          "txt": "Sales History"
+        },
+        {
+          "tag": "span",
+          "clase": "font-medium text-ink",
+          "txt": "Comparison"
+        }
+      ]
+    },
+    {
+      "fg": "#6c6f75",
+      "bg": "#1f2022",
+      "size": "11.5px",
+      "weight": "400",
+      "n": 9,
+      "ejemplos": [
+        {
+          "tag": "button",
+          "clase": "records-add-calculation",
+          "txt": "Add calculation"
+        },
+        {
+          "tag": "span",
+          "clase": "records-muted",
+          "txt": "19 links"
+        }
+      ]
+    },
+    {
+      "fg": "#a5a8ad",
+      "bg": "#232427",
+      "size": "13px",
+      "weight": "400",
+      "n": 8,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "text-[13px] transition-colors duration-200 text-ink-2",
+          "txt": "Three (core line)"
+        },
+        {
+          "tag": "span",
+          "clase": "text-[13px] transition-colors duration-200 text-ink-2",
+          "txt": "Five (full case)"
+        }
+      ]
+    },
+    {
+      "fg": "#6c6f75",
+      "bg": "#2b2c2f",
+      "size": "11.5px",
+      "weight": "500",
+      "n": 7,
+      "ejemplos": [
+        {
+          "tag": "button",
+          "clase": "rounded-full px-2 py-0.5 text-[11.5px] font-medium transition-[background-color,",
+          "txt": "Dots"
+        },
+        {
+          "tag": "button",
+          "clase": "rounded-full px-2 py-0.5 text-[11.5px] font-medium transition-[background-color,",
+          "txt": "Orbit"
+        }
+      ]
+    },
+    {
+      "fg": "#6c6f75",
+      "bg": "#232427",
+      "size": "11.5px",
+      "weight": "400",
+      "n": 7,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "font-mono text-[11.5px] text-ink-3 tabular-nums",
+          "txt": "12/12"
+        },
+        {
+          "tag": "span",
+          "clase": "font-mono text-[11.5px] text-ink-3 tabular-nums",
+          "txt": "0"
+        }
+      ]
+    },
+    {
+      "fg": "#a5a8ad",
+      "bg": "#1f2022",
+      "size": "11.5px",
+      "weight": "400",
+      "n": 7,
+      "ejemplos": [
+        {
+          "tag": "td",
+          "clase": "records-cell records-muted",
+          "txt": "—"
+        },
+        {
+          "tag": "span",
+          "clase": "records-average",
+          "txt": "44% average"
+        }
+      ]
+    },
+    {
+      "fg": "#7ec0ff",
+      "bg": "#1f2022",
+      "size": "11.5px",
+      "weight": "400",
+      "n": 7,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "",
+          "txt": "export async function"
+        },
+        {
+          "tag": "span",
+          "clase": "",
+          "txt": "const"
+        }
+      ]
+    },
+    {
+      "fg": "#a5a8ad",
+      "bg": "#1c1d1f",
+      "size": "11.5px",
+      "weight": "400",
+      "n": 6,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "truncate text-[11.5px] leading-[1.6]  text-ink-2",
+          "txt": "Weekend demand carries pistachio, "
+        },
+        {
+          "tag": "span",
+          "clase": "truncate text-[11.5px] leading-[1.6]  text-ink-2",
+          "txt": "Batch capacity leaves two evening "
+        }
+      ]
+    },
+    {
+      "fg": "#a5a8ad",
+      "bg": "#232427",
+      "size": "12.5px",
+      "weight": "400",
+      "n": 6,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "text-[12.5px] text-ink-2 tabular-nums",
+          "txt": "12 suppliers"
+        },
+        {
+          "tag": "span",
+          "clase": "text-[12.5px] text-ink-2 tabular-nums",
+          "txt": "7 SKUs"
+        }
+      ]
+    },
+    {
+      "fg": "#a5a8ad",
+      "bg": "#232427",
+      "size": "12px",
+      "weight": "600",
+      "n": 5,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "",
+          "txt": "Company"
+        },
+        {
+          "tag": "span",
+          "clase": "truncate",
+          "txt": "Categories"
+        }
+      ]
+    },
+    {
+      "fg": "#6c6f75",
+      "bg": "#232427",
+      "size": "11.5px",
+      "weight": "500",
+      "n": 5,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "",
+          "txt": "Task name"
+        },
+        {
+          "tag": "span",
+          "clase": "",
+          "txt": "Date"
+        }
+      ]
+    },
+    {
+      "fg": "#f2f3f4",
+      "bg": "#232427",
+      "size": "11.5px",
+      "weight": "500",
+      "n": 4,
+      "ejemplos": [
+        {
+          "tag": "button",
+          "clase": "rounded-full px-2 py-0.5 text-[11.5px] font-medium transition-[background-color,",
+          "txt": "Drive"
+        },
+        {
+          "tag": "button",
+          "clase": "rounded-full px-2 py-0.5 text-[11.5px] font-medium transition-[background-color,",
+          "txt": "Steps"
+        }
+      ]
+    },
+    {
+      "fg": "#a5a8ad",
+      "bg": "#1c1d1f",
+      "size": "12px",
+      "weight": "500",
+      "n": 4,
+      "ejemplos": [
+        {
+          "tag": "p",
+          "clase": "text-[12px] font-medium text-ink-2",
+          "txt": "Follow-ups"
+        },
+        {
+          "tag": "button",
+          "clase": "flex h-6.5 shrink-0 items-center gap-1.5 rounded-full px-2.5 text-[12px]\n       ",
+          "txt": "To do2"
+        }
+      ]
+    },
+    {
+      "fg": "#a5a8ad",
+      "bg": "#2b2c2f",
+      "size": "11.5px",
+      "weight": "400",
+      "n": 4,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "inline-flex h-5.5 min-w-0 flex-1 cursor-pointer items-center truncate rounded-ch",
+          "txt": "Planning the churn schedule…"
+        },
+        {
+          "tag": "span",
+          "clase": "inline-flex h-5.5 min-w-0 flex-1 cursor-pointer items-center truncate rounded-ch",
+          "txt": "ChurnSchedule.tsx"
+        }
+      ]
+    },
+    {
+      "fg": "#a5a8ad",
+      "bg": "#1f2022",
+      "size": "11.5px",
+      "weight": "500",
+      "n": 4,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "inline-flex h-5 items-center rounded-md bg-inset px-1.5 text-[11.5px] font-mediu",
+          "txt": "32"
+        },
+        {
+          "tag": "span",
+          "clase": "text-ink-2",
+          "txt": "Classic"
+        }
+      ]
+    },
+    {
+      "fg": "#f2f3f4",
+      "bg": "#1f2022",
+      "size": "11.5px",
+      "weight": "400",
+      "n": 4,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "",
+          "txt": "churnBatch"
+        },
+        {
+          "tag": "span",
+          "clase": "",
+          "txt": "getFlavor"
+        }
+      ]
+    },
+    {
+      "fg": "#6c6f75",
+      "bg": "#2b2c2f",
+      "size": "12px",
+      "weight": "400",
+      "n": 4,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "flex h-full shrink-0 cursor-ew-resize touch-none items-center rounded-[4px] px-0",
+          "txt": "W"
+        },
+        {
+          "tag": "span",
+          "clase": "flex h-full shrink-0 cursor-ew-resize touch-none items-center rounded-[4px] px-0",
+          "txt": "H"
+        }
+      ]
+    },
+    {
+      "fg": "#a5a8ad",
+      "bg": "#1f2022",
+      "size": "12px",
+      "weight": "400",
+      "n": 3,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "animated-underline",
+          "txt": "Scoop Data"
+        },
+        {
+          "tag": "span",
+          "clase": "animated-underline",
+          "txt": "Trends Index"
+        }
+      ]
+    },
+    {
+      "fg": "#6c6f75",
+      "bg": "#1f2022",
+      "size": "10.5px",
+      "weight": "400",
+      "n": 3,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "ml-auto font-mono text-[10.5px] text-ink-3",
+          "txt": "scoopdata.io"
+        },
+        {
+          "tag": "span",
+          "clase": "ml-auto font-mono text-[10.5px] text-ink-3",
+          "txt": "trends.google.com"
+        }
+      ]
+    },
+    {
+      "fg": "#6c6f75",
+      "bg": "#1f2022",
+      "size": "11px",
+      "weight": "400",
+      "n": 3,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "shrink-0 text-[11px] text-ink-3",
+          "txt": "Needs review"
+        },
+        {
+          "tag": "span",
+          "clase": "shrink-0 text-[11px] text-ink-3",
+          "txt": "No signal"
+        }
+      ]
+    },
+    {
+      "fg": "#6c6f75",
+      "bg": "#232427",
+      "size": "12px",
+      "weight": "500",
+      "n": 3,
+      "ejemplos": [
+        {
+          "tag": "th",
+          "clase": "primitive-table-cell text-[12px] font-medium text-ink-3",
+          "txt": "Flavor"
+        },
+        {
+          "tag": "th",
+          "clase": "primitive-table-cell text-[12px] font-medium text-ink-3",
+          "txt": "Category"
+        }
+      ]
+    },
+    {
+      "fg": "#6c6f75",
+      "bg": "#1c1d1f",
+      "size": "10.5px",
+      "weight": "500",
+      "n": 3,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "rounded-[4px] px-1 text-[10.5px] tabular-nums\n                  text-ink-3",
+          "txt": "2"
+        },
+        {
+          "tag": "span",
+          "clase": "rounded-[4px] px-1 text-[10.5px] tabular-nums\n                  text-ink-3",
+          "txt": "2"
+        }
+      ]
+    },
+    {
+      "fg": "#f2f3f4",
+      "bg": "#17181a",
+      "size": "12.5px",
+      "weight": "500",
+      "n": 2,
+      "ejemplos": [
+        {
+          "tag": "a",
+          "clase": "relative z-10 flex items-center rounded-[7px] px-2 py-[5px]\n                text",
+          "txt": "Loading State"
+        },
+        {
+          "tag": "span",
+          "clase": "block truncate text-[12.5px] font-medium leading-tight text-ink",
+          "txt": "Built by Turbo"
+        }
+      ]
+    },
+    {
+      "fg": "#a5a8ad",
+      "bg": "#17181a",
+      "size": "12px",
+      "weight": "400",
+      "n": 2,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "block truncate text-[12px] leading-tight text-ink-2",
+          "txt": "Product design studio"
+        },
+        {
+          "tag": "span",
+          "clase": "mt-1.5 block text-[12px] leading-relaxed text-ink-2 text-pretty",
+          "txt": "Get expert product design for your"
+        }
+      ]
+    },
+    {
+      "fg": "#f2f3f4",
+      "bg": "#1c1d1f",
+      "size": "12.5px",
+      "weight": "400",
+      "n": 2,
+      "ejemplos": [
+        {
+          "tag": "button",
+          "clase": "-mx-1.5 flex items-center gap-2 rounded-[7px] border-b border-line px-1.5 py-1.5",
+          "txt": "Which flavors sell best in winter"
+        },
+        {
+          "tag": "button",
+          "clase": "-mx-1.5 flex items-center gap-2 rounded-[7px] border-b border-line px-1.5 py-1.5",
+          "txt": "Compare gelato and soft serve marg"
+        }
+      ]
+    },
+    {
+      "fg": "#a5a8ad",
+      "bg": "#1c1d1f",
+      "size": "12.5px",
+      "weight": "400",
+      "n": 2,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "tabular-nums",
+          "txt": "4 tool calls, 2 messages"
+        },
+        {
+          "tag": "p",
+          "clase": "mt-1.5 text-[12.5px] leading-relaxed text-ink-2",
+          "txt": "The worst performer in your @Cream"
+        }
+      ]
+    },
+    {
+      "fg": "#3dbb72",
+      "bg": "#1c1d1f",
+      "size": "11.5px",
+      "weight": "400",
+      "n": 2,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "truncate text-[11.5px] leading-[1.6] font-mono text-green",
+          "txt": "+ const windows = slots.filter((s)"
+        },
+        {
+          "tag": "span",
+          "clase": "truncate text-[11.5px] leading-[1.6] font-mono text-green",
+          "txt": "+ return schedule(windows, { hero:"
+        }
+      ]
+    },
+    {
+      "fg": "#f2f3f4",
+      "bg": "#232427",
+      "size": "10.5px",
+      "weight": "600",
+      "n": 2,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "relative text-[10.5px] font-semibold tabular-nums text-ink",
+          "txt": "2"
+        },
+        {
+          "tag": "span",
+          "clase": "relative text-[10.5px] font-semibold tabular-nums text-ink",
+          "txt": "3"
+        }
+      ]
+    },
+    {
+      "fg": "#f2f3f4",
+      "bg": "#2b2c2f",
+      "size": "13px",
+      "weight": "400",
+      "n": 2,
+      "ejemplos": [
+        {
+          "tag": "button",
+          "clase": "rounded-[6px] px-2 py-[3px] text-[13px] text-ink transition-[background-color,op",
+          "txt": "Flavors"
+        },
+        {
+          "tag": "div",
+          "clase": "rounded-xl bg-field px-3 py-1.5 text-[13px] leading-[1.4] text-ink transition-[o",
+          "txt": "Compare mint chip to last summer"
+        }
+      ]
+    },
+    {
+      "fg": "#6c6f75",
+      "bg": "#232427",
+      "size": "11px",
+      "weight": "400",
+      "n": 2,
+      "ejemplos": [
+        {
+          "tag": "div",
+          "clase": "mt-1 border-t border-line px-2 pt-1.5 pb-1 text-[11px] text-ink-3",
+          "txt": "Type to search sources & files"
+        },
+        {
+          "tag": "span",
+          "clase": "block truncate text-[11px] leading-tight text-ink-3",
+          "txt": "Production Workspace"
+        }
+      ]
+    },
+    {
+      "fg": "#7ec0ff",
+      "bg": "#27374a",
+      "size": "12px",
+      "weight": "400",
+      "n": 2,
+      "ejemplos": [
+        {
+          "tag": "code",
+          "clase": "rounded-md bg-accent-tint px-1.5 py-0.5 font-mono text-[12px] text-accent-ink",
+          "txt": "cone_king"
+        },
+        {
+          "tag": "code",
+          "clase": "rounded-md bg-accent-tint px-1.5 py-0.5 font-mono text-[12px] text-accent-ink",
+          "txt": "7_days"
+        }
+      ]
+    },
+    {
+      "fg": "#f2f3f4",
+      "bg": "#1f2022",
+      "size": "12.5px",
+      "weight": "400",
+      "n": 2,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "min-w-0 flex-1 truncate text-[12.5px] text-ink",
+          "txt": "Switch to vanilla_madagascar"
+        },
+        {
+          "tag": "span",
+          "clase": "min-w-0 flex-1 truncate text-[12.5px] text-ink",
+          "txt": "Full restock across every SKU"
+        }
+      ]
+    },
+    {
+      "fg": "#f2f3f4",
+      "bg": "#1c1d1f",
+      "size": "13px",
+      "weight": "600",
+      "n": 2,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "text-[13px] font-semibold text-ink",
+          "txt": "All chunks"
+        },
+        {
+          "tag": "span",
+          "clase": "text-[13px] font-semibold text-ink",
+          "txt": "Insights"
+        }
+      ]
+    },
+    {
+      "fg": "#a5a8ad",
+      "bg": "#1f2022",
+      "size": "12px",
+      "weight": "500",
+      "n": 2,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "inline-flex h-6 items-center gap-1.5 rounded-full bg-inset px-2 text-[12px] font",
+          "txt": "PDFDairy Onboarding SOP.pdf"
+        },
+        {
+          "tag": "span",
+          "clase": "inline-flex h-6 items-center gap-1.5 rounded-full bg-inset px-2 text-[12px] font",
+          "txt": "CSVSales Velocity Export.csv"
+        }
+      ]
+    },
+    {
+      "fg": "#ee5c61",
+      "bg": "#3f2c2f",
+      "size": "13px",
+      "weight": "500",
+      "n": 2,
+      "ejemplos": [
+        {
+          "tag": "td",
+          "clase": "primitive-table-cell text-[13px] font-medium tabular-nums transition-colors dura",
+          "txt": "Rocky Road"
+        },
+        {
+          "tag": "td",
+          "clase": "primitive-table-cell text-[13px] font-medium tabular-nums transition-colors dura",
+          "txt": "Bubblegum"
+        }
+      ]
+    },
+    {
+      "fg": "#ee5c61",
+      "bg": "#3f2c2f",
+      "size": "12.5px",
+      "weight": "400",
+      "n": 2,
+      "ejemplos": [
+        {
+          "tag": "td",
+          "clase": "primitive-table-cell text-[12.5px] whitespace-nowrap transition-colors duration-",
+          "txt": "aurora-scoops"
+        },
+        {
+          "tag": "td",
+          "clase": "primitive-table-cell text-[12.5px] whitespace-nowrap transition-colors duration-",
+          "txt": "kumo-creamery"
+        }
+      ]
+    },
+    {
+      "fg": "#a5a8ad",
+      "bg": "#2b2c2f",
+      "size": "10.5px",
+      "weight": "500",
+      "n": 2,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "rounded-[4px] px-1 text-[10.5px] tabular-nums\n                  bg-field text-in",
+          "txt": "5"
+        },
+        {
+          "tag": "span",
+          "clase": "rounded-full bg-field px-2 py-0.5 text-[10.5px] font-medium text-ink-2",
+          "txt": "Snapshot"
+        }
+      ]
+    },
+    {
+      "fg": "#6c6f75",
+      "bg": "#232427",
+      "size": "10.5px",
+      "weight": "500",
+      "n": 2,
+      "ejemplos": [
+        {
+          "tag": "div",
+          "clase": "px-2 pb-1 pt-1 text-[10.5px] font-medium uppercase tracking-[0.08em] text-ink-3",
+          "txt": "Workspace"
+        },
+        {
+          "tag": "div",
+          "clase": "px-2 pb-1 pt-1 text-[10.5px] font-medium uppercase tracking-[0.08em] text-ink-3",
+          "txt": "Objects"
+        }
+      ]
+    },
+    {
+      "fg": "#ee5c61",
+      "bg": "#1c1d1f",
+      "size": "11.5px",
+      "weight": "400",
+      "n": 2,
+      "ejemplos": [
+        {
+          "tag": "code",
+          "clase": "font-mono text-[11.5px] text-red",
+          "txt": "-6%"
+        },
+        {
+          "tag": "code",
+          "clase": "font-mono text-[11.5px] text-red",
+          "txt": "-$2,453.44"
+        }
+      ]
+    },
+    {
+      "fg": "#a5a8ad",
+      "bg": "#232427",
+      "size": "11.5px",
+      "weight": "400",
+      "n": 2,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "flex items-center gap-1.5 text-[11.5px] text-ink-2",
+          "txt": "Mint Chip"
+        },
+        {
+          "tag": "span",
+          "clase": "flex items-center gap-1.5 text-[11.5px] text-ink-2",
+          "txt": "Pistachio"
+        }
+      ]
+    },
+    {
+      "fg": "#3dbb72",
+      "bg": "#1f2022",
+      "size": "11.5px",
+      "weight": "400",
+      "n": 2,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "",
+          "txt": "\"pistachio\""
+        },
+        {
+          "tag": "span",
+          "clase": "",
+          "txt": "\"-14C\""
+        }
+      ]
+    },
+    {
+      "fg": "#6c6f75",
+      "bg": "#17181a",
+      "size": "12px",
+      "weight": "400",
+      "n": 2,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "text-[12px] text-ink-3",
+          "txt": "© 2026 Beautiful UI"
+        },
+        {
+          "tag": "a",
+          "clase": "text-[12px] text-ink-3 transition-colors duration-150 hover:text-ink",
+          "txt": "MIT License"
+        }
+      ]
+    },
+    {
+      "fg": "#f2f3f4",
+      "bg": "#17181a",
+      "size": "21px",
+      "weight": "600",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "h1",
+          "clase": "mt-12 text-[21px] leading-snug font-semibold tracking-[-0.02em] text-ink text-ba",
+          "txt": "Beautiful UI for AI-native interfa"
+        }
+      ]
+    },
+    {
+      "fg": "#6c6f75",
+      "bg": "#17181a",
+      "size": "11.5px",
+      "weight": "400",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "p",
+          "clase": "mb-2 text-[11.5px] text-ink-3",
+          "txt": "Components"
+        }
+      ]
+    },
+    {
+      "fg": "#f2f3f4",
+      "bg": "#2b2c2f",
+      "size": "11.5px",
+      "weight": "500",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "a",
+          "clase": "mt-2.5 inline-flex h-7 items-center gap-1.5 rounded-full bg-field px-2.5 text-[1",
+          "txt": "Book a call"
+        }
+      ]
+    },
+    {
+      "fg": "#1c1d1f",
+      "bg": "#1c1d1f",
+      "size": "13px",
+      "weight": "500",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "bg-clip-text text-[13px] font-medium text-transparent",
+          "txt": "Churning"
+        }
+      ]
+    },
+    {
+      "fg": "#6c6f75",
+      "bg": "#1c1d1f",
+      "size": "12px",
+      "weight": "400",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "font-mono text-[12px] text-ink-3 tabular-nums",
+          "txt": "3.2s"
+        }
+      ]
+    },
+    {
+      "fg": "#a5a8ad",
+      "bg": "#1c1d1f",
+      "size": "13px",
+      "weight": "500",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "text-[13px] font-medium whitespace-nowrap text-ink-2",
+          "txt": "Thought for 4 seconds"
+        }
+      ]
+    },
+    {
+      "fg": "#6c6f75",
+      "bg": "#1c1d1f",
+      "size": "11.5px",
+      "weight": "400",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "shrink-0 text-[11.5px] text-ink-3 ",
+          "txt": "6 flavors"
+        }
+      ]
+    },
+    {
+      "fg": "#a5a8ad",
+      "bg": "#1f2022",
+      "size": "10.5px",
+      "weight": "400",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "",
+          "txt": "scoopdata.io"
+        }
+      ]
+    },
+    {
+      "fg": "#a5a8ad",
+      "bg": "#1c1d1f",
+      "size": "12px",
+      "weight": "400",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "text-[12px] text-ink-2",
+          "txt": "10 sources"
+        }
+      ]
+    },
+    {
+      "fg": "#3dbb72",
+      "bg": "#273932",
+      "size": "11.5px",
+      "weight": "500",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "inline-flex h-5.5 items-center rounded-full bg-green-tint px-2 text-[11.5px] fon",
+          "txt": "Completed"
+        }
+      ]
+    },
+    {
+      "fg": "#7ec0ff",
+      "bg": "#232427",
+      "size": "12px",
+      "weight": "500",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "shrink-0 text-[12px] font-medium transition-colors duration-100 text-accent-ink ",
+          "txt": "Connect"
+        }
+      ]
+    },
+    {
+      "fg": "#a5a8ad",
+      "bg": "#232427",
+      "size": "12px",
+      "weight": "500",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "button",
+          "clase": "flex h-7 shrink-0 items-center gap-1 px-1.5 text-[12px] font-medium text-ink-2 t",
+          "txt": "Vanilla 1"
+        }
+      ]
+    },
+    {
+      "fg": "#f2f3f4",
+      "bg": "#232427",
+      "size": "13px",
+      "weight": "600",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "text-[13px] font-semibold text-ink",
+          "txt": "Want me to place this restock orde"
+        }
+      ]
+    },
+    {
+      "fg": "#6c6f75",
+      "bg": "#1f2022",
+      "size": "11px",
+      "weight": "500",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "p",
+          "clase": "px-1.5 pb-1 text-[11px] font-medium text-ink-3",
+          "txt": "Other options"
+        }
+      ]
+    },
+    {
+      "fg": "#a5a8ad",
+      "bg": "#1f2022",
+      "size": "12.5px",
+      "weight": "500",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "text-[12.5px] font-medium text-ink-2",
+          "txt": "High confidence"
+        }
+      ]
+    },
+    {
+      "fg": "#ffffff",
+      "bg": "#3d9aff",
+      "size": "12.5px",
+      "weight": "500",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "button",
+          "clase": "h-7 rounded-control px-3 text-[12.5px] font-medium\n              shadow-[inset_0",
+          "txt": "Accept"
+        }
+      ]
+    },
+    {
+      "fg": "#ffffff",
+      "bg": "#ee5c61",
+      "size": "7px",
+      "weight": "700",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "flex size-3.5 items-center justify-center rounded-[4px] bg-red text-[7px] font-b",
+          "txt": "PDF"
+        }
+      ]
+    },
+    {
+      "fg": "#ffffff",
+      "bg": "#3dbb72",
+      "size": "7px",
+      "weight": "700",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "flex size-3.5 items-center justify-center rounded-[4px] bg-green text-[7px] font",
+          "txt": "CSV"
+        }
+      ]
+    },
+    {
+      "fg": "#3dbb72",
+      "bg": "#273932",
+      "size": "13px",
+      "weight": "500",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "primitive-table-cell text-[13px] font-medium text-green tabular-nums",
+          "txt": "Pistachio"
+        }
+      ]
+    },
+    {
+      "fg": "#a5a8ad",
+      "bg": "#232427",
+      "size": "11.5px",
+      "weight": "500",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "text-ink-2",
+          "txt": "Seasonal"
+        }
+      ]
+    },
+    {
+      "fg": "#3dbb72",
+      "bg": "#273932",
+      "size": "13px",
+      "weight": "400",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "primitive-table-cell text-[13px] text-green",
+          "txt": "maple-orbit"
+        }
+      ]
+    },
+    {
+      "fg": "#a5a8ad",
+      "bg": "#1f2022",
+      "size": "11.5px",
+      "weight": "550",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "td",
+          "clase": "records-cell records-sticky-cell records-calculation-label",
+          "txt": "26 count"
+        }
+      ]
+    },
+    {
+      "fg": "#f2f3f4",
+      "bg": "#1f2022",
+      "size": "11.5px",
+      "weight": "550",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "records-calculation-number",
+          "txt": "26"
+        }
+      ]
+    },
+    {
+      "fg": "#232427",
+      "bg": "#f2f3f4",
+      "size": "13px",
+      "weight": "600",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "flex size-8 shrink-0 items-center justify-center rounded-[8px] bg-ink text-[13px",
+          "txt": "C"
+        }
+      ]
+    },
+    {
+      "fg": "#6c6f75",
+      "bg": "#232427",
+      "size": "10px",
+      "weight": "400",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "kbd",
+          "clase": "flex size-4.5 items-center justify-center rounded-[5px] bg-surface text-[10px] t",
+          "txt": "/"
+        }
+      ]
+    },
+    {
+      "fg": "#3d9aff",
+      "bg": "#232427",
+      "size": "13px",
+      "weight": "500",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "min-w-0 flex-1 truncate text-left",
+          "txt": "New task"
+        }
+      ]
+    },
+    {
+      "fg": "#a5a8ad",
+      "bg": "#232427",
+      "size": "10.5px",
+      "weight": "600",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "flex h-4.5 min-w-4.5 items-center justify-center rounded-full px-1 text-[10.5px]",
+          "txt": "4"
+        }
+      ]
+    },
+    {
+      "fg": "#6c6f75",
+      "bg": "#1c1d1f",
+      "size": "13px",
+      "weight": "400",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "text-[13px] text-ink-3 tabular-nums",
+          "txt": "3"
+        }
+      ]
+    },
+    {
+      "fg": "#ee5c61",
+      "bg": "#232427",
+      "size": "17px",
+      "weight": "600",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "block text-[17px] font-semibold tracking-[-0.01em] tabular-nums text-red",
+          "txt": "-4.41%"
+        }
+      ]
+    },
+    {
+      "fg": "#ee5c61",
+      "bg": "#232427",
+      "size": "11.5px",
+      "weight": "400",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "code",
+          "clase": "font-mono text-[11.5px] text-red",
+          "txt": "-$2,377.66"
+        }
+      ]
+    },
+    {
+      "fg": "#3dbb72",
+      "bg": "#232427",
+      "size": "17px",
+      "weight": "600",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "block text-[17px] font-semibold tracking-[-0.01em] tabular-nums text-green",
+          "txt": "+1.15%"
+        }
+      ]
+    },
+    {
+      "fg": "#3dbb72",
+      "bg": "#232427",
+      "size": "11.5px",
+      "weight": "400",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "code",
+          "clase": "font-mono text-[11.5px] text-green",
+          "txt": "+$617.22"
+        }
+      ]
+    },
+    {
+      "fg": "#232427",
+      "bg": "#232427",
+      "size": "12px",
+      "weight": "500",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "bg-clip-text text-[12px] font-medium text-transparent",
+          "txt": "Adjust"
+        }
+      ]
+    },
+    {
+      "fg": "#6c6f75",
+      "bg": "#2b2c2f",
+      "size": "11.5px",
+      "weight": "400",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "shrink-0 pr-0.5 text-[11.5px] text-ink-3",
+          "txt": "%"
+        }
+      ]
+    },
+    {
+      "fg": "#6c6f75",
+      "bg": "#1f2022",
+      "size": "12px",
+      "weight": "400",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "text-[12px] text-ink-3",
+          "txt": "Select type"
+        }
+      ]
+    },
+    {
+      "fg": "#f2f3f4",
+      "bg": "#213143",
+      "size": "13px",
+      "weight": "400",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "box-decoration-clone rounded-[3px] bg-[color-mix(in_srgb,var(--accent)_14%,var(-",
+          "txt": "Churn it first thing Saturday so t"
+        }
+      ]
+    },
+    {
+      "fg": "#f2f3f4",
+      "bg": "#17181a",
+      "size": "19px",
+      "weight": "600",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "h2",
+          "clase": "max-w-md text-[19px] leading-snug font-semibold tracking-[-0.02em] text-ink text",
+          "txt": "New components, in your inbox."
+        }
+      ]
+    },
+    {
+      "fg": "#a5a8ad",
+      "bg": "#17181a",
+      "size": "13px",
+      "weight": "400",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "p",
+          "clase": "mt-2 max-w-md text-[13px] leading-relaxed text-ink-2 text-pretty",
+          "txt": "Get new primitives and updates as "
+        }
+      ]
+    },
+    {
+      "fg": "#1c1d1f",
+      "bg": "#f2f3f4",
+      "size": "12.5px",
+      "weight": "500",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "button",
+          "clase": "flex h-9 shrink-0 items-center gap-1.5 rounded-control bg-ink px-3.5 text-[12.5p",
+          "txt": "Notify me"
+        }
+      ]
+    }
+  ],
+  "light": [
+    {
+      "fg": "#62656b",
+      "bg": "#ffffff",
+      "size": "12px",
+      "weight": "400",
+      "n": 44,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "text-[12px] text-ink-2",
+          "txt": "Matched tax and contact IDs"
+        },
+        {
+          "tag": "span",
+          "clase": "text-[12px] text-ink-2",
+          "txt": "Flagged stale records"
+        }
+      ]
+    },
+    {
+      "fg": "#1f2124",
+      "bg": "#ffffff",
+      "size": "12.5px",
+      "weight": "500",
+      "n": 36,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "shrink-0 text-[12.5px] font-medium text-ink",
+          "txt": "Add photos & files"
+        },
+        {
+          "tag": "span",
+          "clase": "shrink-0 text-[12.5px] font-medium text-ink",
+          "txt": "Scoop Data"
+        }
+      ]
+    },
+    {
+      "fg": "#1f2124",
+      "bg": "#ffffff",
+      "size": "12px",
+      "weight": "400",
+      "n": 31,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "text-ink",
+          "txt": "for 4s"
+        },
+        {
+          "tag": "span",
+          "clase": "text-ink",
+          "txt": "for 2s"
+        }
+      ]
+    },
+    {
+      "fg": "#1f2124",
+      "bg": "#f1f2f3",
+      "size": "13px",
+      "weight": "400",
+      "n": 29,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "inline [will-change:filter,opacity]",
+          "txt": "Pistachio"
+        },
+        {
+          "tag": "span",
+          "clase": "inline [will-change:filter,opacity]",
+          "txt": "is"
+        }
+      ]
+    },
+    {
+      "fg": "#62656b",
+      "bg": "#f2f2f3",
+      "size": "10px",
+      "weight": "650",
+      "n": 26,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "records-company-mark",
+          "txt": "A"
+        },
+        {
+          "tag": "span",
+          "clase": "records-company-mark",
+          "txt": "A"
+        }
+      ]
+    },
+    {
+      "fg": "#9a9da3",
+      "bg": "#ffffff",
+      "size": "12px",
+      "weight": "400",
+      "n": 20,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "min-w-0 flex-1 truncate text-[12px] text-ink-3",
+          "txt": "Upload from your computer"
+        },
+        {
+          "tag": "span",
+          "clase": "min-w-0 flex-1 truncate text-[12px] text-ink-3",
+          "txt": "Sales & churn metrics"
+        }
+      ]
+    },
+    {
+      "fg": "#9a9da3",
+      "bg": "#fafafb",
+      "size": "11px",
+      "weight": "400",
+      "n": 19,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "mt-0.5 font-mono text-[11px] text-ink-3 tabular-nums sm:mt-0",
+          "txt": "01"
+        },
+        {
+          "tag": "span",
+          "clase": "mt-0.5 font-mono text-[11px] text-ink-3 tabular-nums sm:mt-0",
+          "txt": "02"
+        }
+      ]
+    },
+    {
+      "fg": "#1f2124",
+      "bg": "#fafafb",
+      "size": "13px",
+      "weight": "600",
+      "n": 19,
+      "ejemplos": [
+        {
+          "tag": "h3",
+          "clase": "whitespace-nowrap text-[13px] font-semibold text-ink",
+          "txt": "Loading State"
+        },
+        {
+          "tag": "h3",
+          "clase": "whitespace-nowrap text-[13px] font-semibold text-ink",
+          "txt": "Thinking"
+        }
+      ]
+    },
+    {
+      "fg": "#9a9da3",
+      "bg": "#fafafb",
+      "size": "12.5px",
+      "weight": "400",
+      "n": 19,
+      "ejemplos": [
+        {
+          "tag": "p",
+          "clase": "mt-0.5 text-[12.5px] text-ink-3 text-pretty sm:mt-0 sm:truncate",
+          "txt": "Pixel-grid loader with shimmer and"
+        },
+        {
+          "tag": "p",
+          "clase": "mt-0.5 text-[12.5px] text-ink-3 text-pretty sm:mt-0 sm:truncate",
+          "txt": "Expandable traces — steps, reasoni"
+        }
+      ]
+    },
+    {
+      "fg": "#0170dd",
+      "bg": "#ffffff",
+      "size": "12px",
+      "weight": "400",
+      "n": 19,
+      "ejemplos": [
+        {
+          "tag": "a",
+          "clase": "records-link",
+          "txt": "aurora-scoops.example.com"
+        },
+        {
+          "tag": "a",
+          "clase": "records-link",
+          "txt": "blue-fig.example.com"
+        }
+      ]
+    },
+    {
+      "fg": "#62656b",
+      "bg": "#fafafb",
+      "size": "12.5px",
+      "weight": "400",
+      "n": 18,
+      "ejemplos": [
+        {
+          "tag": "a",
+          "clase": "relative z-10 flex items-center rounded-[7px] px-2 py-[5px]\n                text",
+          "txt": "Thinking"
+        },
+        {
+          "tag": "a",
+          "clase": "relative z-10 flex items-center rounded-[7px] px-2 py-[5px]\n                text",
+          "txt": "Streaming Text"
+        }
+      ]
+    },
+    {
+      "fg": "#1f2124",
+      "bg": "#ffffff",
+      "size": "13px",
+      "weight": "500",
+      "n": 10,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "text-[13px] font-medium text-ink",
+          "txt": "How many flavors should we launch?"
+        },
+        {
+          "tag": "span",
+          "clase": "min-w-0 flex-1 truncate text-[13px] font-medium text-ink",
+          "txt": "Verified vendor records"
+        }
+      ]
+    },
+    {
+      "fg": "#1f2124",
+      "bg": "#f1f2f3",
+      "size": "12.5px",
+      "weight": "500",
+      "n": 9,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "min-w-0 truncate text-[12.5px] font-medium text-ink ",
+          "txt": "Reading flavor briefs"
+        },
+        {
+          "tag": "span",
+          "clase": "min-w-0 truncate text-[12.5px] font-medium text-ink ",
+          "txt": "Scanning supplier lists"
+        }
+      ]
+    },
+    {
+      "fg": "#1f2124",
+      "bg": "#ffffff",
+      "size": "13px",
+      "weight": "400",
+      "n": 9,
+      "ejemplos": [
+        {
+          "tag": "button",
+          "clase": "rounded-[6px] px-2 py-[3px] text-[13px] text-ink transition-[background-color,op",
+          "txt": "Suppliers"
+        },
+        {
+          "tag": "p",
+          "clase": "text-[13px] leading-normal text-ink",
+          "txt": "Pulled 3 summers of mint chip sale"
+        }
+      ]
+    },
+    {
+      "fg": "#1f2124",
+      "bg": "#ffffff",
+      "size": "12px",
+      "weight": "500",
+      "n": 9,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "font-medium text-ink",
+          "txt": "Sales History"
+        },
+        {
+          "tag": "span",
+          "clase": "font-medium text-ink",
+          "txt": "Comparison"
+        }
+      ]
+    },
+    {
+      "fg": "#9a9da3",
+      "bg": "#f7f8f9",
+      "size": "11.5px",
+      "weight": "400",
+      "n": 9,
+      "ejemplos": [
+        {
+          "tag": "button",
+          "clase": "records-add-calculation",
+          "txt": "Add calculation"
+        },
+        {
+          "tag": "span",
+          "clase": "records-muted",
+          "txt": "19 links"
+        }
+      ]
+    },
+    {
+      "fg": "#62656b",
+      "bg": "#ffffff",
+      "size": "13px",
+      "weight": "400",
+      "n": 8,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "text-[13px] transition-colors duration-200 text-ink-2",
+          "txt": "Three (core line)"
+        },
+        {
+          "tag": "span",
+          "clase": "text-[13px] transition-colors duration-200 text-ink-2",
+          "txt": "Five (full case)"
+        }
+      ]
+    },
+    {
+      "fg": "#9a9da3",
+      "bg": "#f2f2f3",
+      "size": "11.5px",
+      "weight": "500",
+      "n": 7,
+      "ejemplos": [
+        {
+          "tag": "button",
+          "clase": "rounded-full px-2 py-0.5 text-[11.5px] font-medium transition-[background-color,",
+          "txt": "Dots"
+        },
+        {
+          "tag": "button",
+          "clase": "rounded-full px-2 py-0.5 text-[11.5px] font-medium transition-[background-color,",
+          "txt": "Orbit"
+        }
+      ]
+    },
+    {
+      "fg": "#9a9da3",
+      "bg": "#ffffff",
+      "size": "11.5px",
+      "weight": "400",
+      "n": 7,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "font-mono text-[11.5px] text-ink-3 tabular-nums",
+          "txt": "12/12"
+        },
+        {
+          "tag": "span",
+          "clase": "font-mono text-[11.5px] text-ink-3 tabular-nums",
+          "txt": "0"
+        }
+      ]
+    },
+    {
+      "fg": "#62656b",
+      "bg": "#f7f8f9",
+      "size": "11.5px",
+      "weight": "400",
+      "n": 7,
+      "ejemplos": [
+        {
+          "tag": "td",
+          "clase": "records-cell records-muted",
+          "txt": "—"
+        },
+        {
+          "tag": "span",
+          "clase": "records-average",
+          "txt": "44% average"
+        }
+      ]
+    },
+    {
+      "fg": "#0170dd",
+      "bg": "#f7f8f9",
+      "size": "11.5px",
+      "weight": "400",
+      "n": 7,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "",
+          "txt": "export async function"
+        },
+        {
+          "tag": "span",
+          "clase": "",
+          "txt": "const"
+        }
+      ]
+    },
+    {
+      "fg": "#62656b",
+      "bg": "#f1f2f3",
+      "size": "11.5px",
+      "weight": "400",
+      "n": 6,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "truncate text-[11.5px] leading-[1.6]  text-ink-2",
+          "txt": "Weekend demand carries pistachio, "
+        },
+        {
+          "tag": "span",
+          "clase": "truncate text-[11.5px] leading-[1.6]  text-ink-2",
+          "txt": "Batch capacity leaves two evening "
+        }
+      ]
+    },
+    {
+      "fg": "#62656b",
+      "bg": "#ffffff",
+      "size": "12.5px",
+      "weight": "400",
+      "n": 6,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "text-[12.5px] text-ink-2 tabular-nums",
+          "txt": "12 suppliers"
+        },
+        {
+          "tag": "span",
+          "clase": "text-[12.5px] text-ink-2 tabular-nums",
+          "txt": "7 SKUs"
+        }
+      ]
+    },
+    {
+      "fg": "#62656b",
+      "bg": "#ffffff",
+      "size": "12px",
+      "weight": "600",
+      "n": 5,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "",
+          "txt": "Company"
+        },
+        {
+          "tag": "span",
+          "clase": "truncate",
+          "txt": "Categories"
+        }
+      ]
+    },
+    {
+      "fg": "#9a9da3",
+      "bg": "#ffffff",
+      "size": "11.5px",
+      "weight": "500",
+      "n": 5,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "",
+          "txt": "Task name"
+        },
+        {
+          "tag": "span",
+          "clase": "",
+          "txt": "Date"
+        }
+      ]
+    },
+    {
+      "fg": "#1f2124",
+      "bg": "#ffffff",
+      "size": "11.5px",
+      "weight": "500",
+      "n": 4,
+      "ejemplos": [
+        {
+          "tag": "button",
+          "clase": "rounded-full px-2 py-0.5 text-[11.5px] font-medium transition-[background-color,",
+          "txt": "Drive"
+        },
+        {
+          "tag": "button",
+          "clase": "rounded-full px-2 py-0.5 text-[11.5px] font-medium transition-[background-color,",
+          "txt": "Steps"
+        }
+      ]
+    },
+    {
+      "fg": "#62656b",
+      "bg": "#f1f2f3",
+      "size": "12px",
+      "weight": "500",
+      "n": 4,
+      "ejemplos": [
+        {
+          "tag": "p",
+          "clase": "text-[12px] font-medium text-ink-2",
+          "txt": "Follow-ups"
+        },
+        {
+          "tag": "button",
+          "clase": "flex h-6.5 shrink-0 items-center gap-1.5 rounded-full px-2.5 text-[12px]\n       ",
+          "txt": "To do2"
+        }
+      ]
+    },
+    {
+      "fg": "#43464c",
+      "bg": "#e7e9eb",
+      "size": "11.5px",
+      "weight": "400",
+      "n": 4,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "inline-flex h-5.5 min-w-0 flex-1 cursor-pointer items-center truncate rounded-ch",
+          "txt": "Planning the churn schedule…"
+        },
+        {
+          "tag": "span",
+          "clase": "inline-flex h-5.5 min-w-0 flex-1 cursor-pointer items-center truncate rounded-ch",
+          "txt": "ChurnSchedule.tsx"
+        }
+      ]
+    },
+    {
+      "fg": "#189a4d",
+      "bg": "#ffffff",
+      "size": "11.5px",
+      "weight": "400",
+      "n": 4,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "shrink-0 text-green tabular-nums",
+          "txt": "+13"
+        },
+        {
+          "tag": "span",
+          "clase": "shrink-0 text-green tabular-nums",
+          "txt": "+74"
+        }
+      ]
+    },
+    {
+      "fg": "#62656b",
+      "bg": "#f7f8f9",
+      "size": "11.5px",
+      "weight": "500",
+      "n": 4,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "inline-flex h-5 items-center rounded-md bg-inset px-1.5 text-[11.5px] font-mediu",
+          "txt": "32"
+        },
+        {
+          "tag": "span",
+          "clase": "text-ink-2",
+          "txt": "Classic"
+        }
+      ]
+    },
+    {
+      "fg": "#1f2124",
+      "bg": "#f7f8f9",
+      "size": "11.5px",
+      "weight": "400",
+      "n": 4,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "",
+          "txt": "churnBatch"
+        },
+        {
+          "tag": "span",
+          "clase": "",
+          "txt": "getFlavor"
+        }
+      ]
+    },
+    {
+      "fg": "#9a9da3",
+      "bg": "#f2f2f3",
+      "size": "12px",
+      "weight": "400",
+      "n": 4,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "flex h-full shrink-0 cursor-ew-resize touch-none items-center rounded-[4px] px-0",
+          "txt": "W"
+        },
+        {
+          "tag": "span",
+          "clase": "flex h-full shrink-0 cursor-ew-resize touch-none items-center rounded-[4px] px-0",
+          "txt": "H"
+        }
+      ]
+    },
+    {
+      "fg": "#62656b",
+      "bg": "#f7f8f9",
+      "size": "12px",
+      "weight": "400",
+      "n": 3,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "animated-underline",
+          "txt": "Scoop Data"
+        },
+        {
+          "tag": "span",
+          "clase": "animated-underline",
+          "txt": "Trends Index"
+        }
+      ]
+    },
+    {
+      "fg": "#9a9da3",
+      "bg": "#f7f8f9",
+      "size": "10.5px",
+      "weight": "400",
+      "n": 3,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "ml-auto font-mono text-[10.5px] text-ink-3",
+          "txt": "scoopdata.io"
+        },
+        {
+          "tag": "span",
+          "clase": "ml-auto font-mono text-[10.5px] text-ink-3",
+          "txt": "trends.google.com"
+        }
+      ]
+    },
+    {
+      "fg": "#1f2124",
+      "bg": "#ffffff",
+      "size": "11.5px",
+      "weight": "400",
+      "n": 3,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "min-w-0 truncate",
+          "txt": "flavors.css"
+        },
+        {
+          "tag": "span",
+          "clase": "min-w-0 truncate",
+          "txt": "ChurnSchedule.tsx"
+        }
+      ]
+    },
+    {
+      "fg": "#e3474c",
+      "bg": "#ffffff",
+      "size": "11.5px",
+      "weight": "400",
+      "n": 3,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "shrink-0 text-red tabular-nums",
+          "txt": "−41"
+        },
+        {
+          "tag": "span",
+          "clase": "shrink-0 text-red tabular-nums",
+          "txt": "−2"
+        }
+      ]
+    },
+    {
+      "fg": "#9a9da3",
+      "bg": "#f7f8f9",
+      "size": "11px",
+      "weight": "400",
+      "n": 3,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "shrink-0 text-[11px] text-ink-3",
+          "txt": "Needs review"
+        },
+        {
+          "tag": "span",
+          "clase": "shrink-0 text-[11px] text-ink-3",
+          "txt": "No signal"
+        }
+      ]
+    },
+    {
+      "fg": "#9a9da3",
+      "bg": "#ffffff",
+      "size": "12px",
+      "weight": "500",
+      "n": 3,
+      "ejemplos": [
+        {
+          "tag": "th",
+          "clase": "primitive-table-cell text-[12px] font-medium text-ink-3",
+          "txt": "Flavor"
+        },
+        {
+          "tag": "th",
+          "clase": "primitive-table-cell text-[12px] font-medium text-ink-3",
+          "txt": "Category"
+        }
+      ]
+    },
+    {
+      "fg": "#9a9da3",
+      "bg": "#f1f2f3",
+      "size": "10.5px",
+      "weight": "500",
+      "n": 3,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "rounded-[4px] px-1 text-[10.5px] tabular-nums\n                  text-ink-3",
+          "txt": "2"
+        },
+        {
+          "tag": "span",
+          "clase": "rounded-[4px] px-1 text-[10.5px] tabular-nums\n                  text-ink-3",
+          "txt": "2"
+        }
+      ]
+    },
+    {
+      "fg": "#1f2124",
+      "bg": "#fafafb",
+      "size": "12.5px",
+      "weight": "500",
+      "n": 2,
+      "ejemplos": [
+        {
+          "tag": "a",
+          "clase": "relative z-10 flex items-center rounded-[7px] px-2 py-[5px]\n                text",
+          "txt": "Loading State"
+        },
+        {
+          "tag": "span",
+          "clase": "block truncate text-[12.5px] font-medium leading-tight text-ink",
+          "txt": "Built by Turbo"
+        }
+      ]
+    },
+    {
+      "fg": "#62656b",
+      "bg": "#fafafb",
+      "size": "12px",
+      "weight": "400",
+      "n": 2,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "block truncate text-[12px] leading-tight text-ink-2",
+          "txt": "Product design studio"
+        },
+        {
+          "tag": "span",
+          "clase": "mt-1.5 block text-[12px] leading-relaxed text-ink-2 text-pretty",
+          "txt": "Get expert product design for your"
+        }
+      ]
+    },
+    {
+      "fg": "#1f2124",
+      "bg": "#f1f2f3",
+      "size": "12.5px",
+      "weight": "400",
+      "n": 2,
+      "ejemplos": [
+        {
+          "tag": "button",
+          "clase": "-mx-1.5 flex items-center gap-2 rounded-[7px] border-b border-line px-1.5 py-1.5",
+          "txt": "Which flavors sell best in winter"
+        },
+        {
+          "tag": "button",
+          "clase": "-mx-1.5 flex items-center gap-2 rounded-[7px] border-b border-line px-1.5 py-1.5",
+          "txt": "Compare gelato and soft serve marg"
+        }
+      ]
+    },
+    {
+      "fg": "#62656b",
+      "bg": "#f1f2f3",
+      "size": "12.5px",
+      "weight": "400",
+      "n": 2,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "tabular-nums",
+          "txt": "4 tool calls, 2 messages"
+        },
+        {
+          "tag": "p",
+          "clase": "mt-1.5 text-[12.5px] leading-relaxed text-ink-2",
+          "txt": "The worst performer in your @Cream"
+        }
+      ]
+    },
+    {
+      "fg": "#189a4d",
+      "bg": "#f1f2f3",
+      "size": "11.5px",
+      "weight": "400",
+      "n": 2,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "truncate text-[11.5px] leading-[1.6] font-mono text-green",
+          "txt": "+ const windows = slots.filter((s)"
+        },
+        {
+          "tag": "span",
+          "clase": "truncate text-[11.5px] leading-[1.6] font-mono text-green",
+          "txt": "+ return schedule(windows, { hero:"
+        }
+      ]
+    },
+    {
+      "fg": "#1f2124",
+      "bg": "#ffffff",
+      "size": "10.5px",
+      "weight": "600",
+      "n": 2,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "relative text-[10.5px] font-semibold tabular-nums text-ink",
+          "txt": "2"
+        },
+        {
+          "tag": "span",
+          "clase": "relative text-[10.5px] font-semibold tabular-nums text-ink",
+          "txt": "3"
+        }
+      ]
+    },
+    {
+      "fg": "#1f2124",
+      "bg": "#f2f2f3",
+      "size": "13px",
+      "weight": "400",
+      "n": 2,
+      "ejemplos": [
+        {
+          "tag": "button",
+          "clase": "rounded-[6px] px-2 py-[3px] text-[13px] text-ink transition-[background-color,op",
+          "txt": "Flavors"
+        },
+        {
+          "tag": "div",
+          "clase": "rounded-xl bg-field px-3 py-1.5 text-[13px] leading-[1.4] text-ink transition-[o",
+          "txt": "Compare mint chip to last summer"
+        }
+      ]
+    },
+    {
+      "fg": "#9a9da3",
+      "bg": "#ffffff",
+      "size": "11px",
+      "weight": "400",
+      "n": 2,
+      "ejemplos": [
+        {
+          "tag": "div",
+          "clase": "mt-1 border-t border-line px-2 pt-1.5 pb-1 text-[11px] text-ink-3",
+          "txt": "Type to search sources & files"
+        },
+        {
+          "tag": "span",
+          "clase": "block truncate text-[11px] leading-tight text-ink-3",
+          "txt": "Production Workspace"
+        }
+      ]
+    },
+    {
+      "fg": "#0170dd",
+      "bg": "#e9f3ff",
+      "size": "12px",
+      "weight": "400",
+      "n": 2,
+      "ejemplos": [
+        {
+          "tag": "code",
+          "clase": "rounded-md bg-accent-tint px-1.5 py-0.5 font-mono text-[12px] text-accent-ink",
+          "txt": "cone_king"
+        },
+        {
+          "tag": "code",
+          "clase": "rounded-md bg-accent-tint px-1.5 py-0.5 font-mono text-[12px] text-accent-ink",
+          "txt": "7_days"
+        }
+      ]
+    },
+    {
+      "fg": "#1f2124",
+      "bg": "#f7f8f9",
+      "size": "12.5px",
+      "weight": "400",
+      "n": 2,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "min-w-0 flex-1 truncate text-[12.5px] text-ink",
+          "txt": "Switch to vanilla_madagascar"
+        },
+        {
+          "tag": "span",
+          "clase": "min-w-0 flex-1 truncate text-[12.5px] text-ink",
+          "txt": "Full restock across every SKU"
+        }
+      ]
+    },
+    {
+      "fg": "#1f2124",
+      "bg": "#f1f2f3",
+      "size": "13px",
+      "weight": "600",
+      "n": 2,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "text-[13px] font-semibold text-ink",
+          "txt": "All chunks"
+        },
+        {
+          "tag": "span",
+          "clase": "text-[13px] font-semibold text-ink",
+          "txt": "Insights"
+        }
+      ]
+    },
+    {
+      "fg": "#62656b",
+      "bg": "#f7f8f9",
+      "size": "12px",
+      "weight": "500",
+      "n": 2,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "inline-flex h-6 items-center gap-1.5 rounded-full bg-inset px-2 text-[12px] font",
+          "txt": "PDFDairy Onboarding SOP.pdf"
+        },
+        {
+          "tag": "span",
+          "clase": "inline-flex h-6 items-center gap-1.5 rounded-full bg-inset px-2 text-[12px] font",
+          "txt": "CSVSales Velocity Export.csv"
+        }
+      ]
+    },
+    {
+      "fg": "#e3474c",
+      "bg": "#fcecec",
+      "size": "13px",
+      "weight": "500",
+      "n": 2,
+      "ejemplos": [
+        {
+          "tag": "td",
+          "clase": "primitive-table-cell text-[13px] font-medium tabular-nums transition-colors dura",
+          "txt": "Rocky Road"
+        },
+        {
+          "tag": "td",
+          "clase": "primitive-table-cell text-[13px] font-medium tabular-nums transition-colors dura",
+          "txt": "Bubblegum"
+        }
+      ]
+    },
+    {
+      "fg": "#e3474c",
+      "bg": "#fcecec",
+      "size": "12.5px",
+      "weight": "400",
+      "n": 2,
+      "ejemplos": [
+        {
+          "tag": "td",
+          "clase": "primitive-table-cell text-[12.5px] whitespace-nowrap transition-colors duration-",
+          "txt": "aurora-scoops"
+        },
+        {
+          "tag": "td",
+          "clase": "primitive-table-cell text-[12.5px] whitespace-nowrap transition-colors duration-",
+          "txt": "kumo-creamery"
+        }
+      ]
+    },
+    {
+      "fg": "#62656b",
+      "bg": "#f2f2f3",
+      "size": "10.5px",
+      "weight": "500",
+      "n": 2,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "rounded-[4px] px-1 text-[10.5px] tabular-nums\n                  bg-field text-in",
+          "txt": "5"
+        },
+        {
+          "tag": "span",
+          "clase": "rounded-full bg-field px-2 py-0.5 text-[10.5px] font-medium text-ink-2",
+          "txt": "Snapshot"
+        }
+      ]
+    },
+    {
+      "fg": "#9a9da3",
+      "bg": "#ffffff",
+      "size": "10.5px",
+      "weight": "500",
+      "n": 2,
+      "ejemplos": [
+        {
+          "tag": "div",
+          "clase": "px-2 pb-1 pt-1 text-[10.5px] font-medium uppercase tracking-[0.08em] text-ink-3",
+          "txt": "Workspace"
+        },
+        {
+          "tag": "div",
+          "clase": "px-2 pb-1 pt-1 text-[10.5px] font-medium uppercase tracking-[0.08em] text-ink-3",
+          "txt": "Objects"
+        }
+      ]
+    },
+    {
+      "fg": "#e3474c",
+      "bg": "#f1f2f3",
+      "size": "11.5px",
+      "weight": "400",
+      "n": 2,
+      "ejemplos": [
+        {
+          "tag": "code",
+          "clase": "font-mono text-[11.5px] text-red",
+          "txt": "-6%"
+        },
+        {
+          "tag": "code",
+          "clase": "font-mono text-[11.5px] text-red",
+          "txt": "-$2,453.44"
+        }
+      ]
+    },
+    {
+      "fg": "#62656b",
+      "bg": "#ffffff",
+      "size": "11.5px",
+      "weight": "400",
+      "n": 2,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "flex items-center gap-1.5 text-[11.5px] text-ink-2",
+          "txt": "Mint Chip"
+        },
+        {
+          "tag": "span",
+          "clase": "flex items-center gap-1.5 text-[11.5px] text-ink-2",
+          "txt": "Pistachio"
+        }
+      ]
+    },
+    {
+      "fg": "#189a4d",
+      "bg": "#f7f8f9",
+      "size": "11.5px",
+      "weight": "400",
+      "n": 2,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "",
+          "txt": "\"pistachio\""
+        },
+        {
+          "tag": "span",
+          "clase": "",
+          "txt": "\"-14C\""
+        }
+      ]
+    },
+    {
+      "fg": "#9a9da3",
+      "bg": "#fafafb",
+      "size": "12px",
+      "weight": "400",
+      "n": 2,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "text-[12px] text-ink-3",
+          "txt": "© 2026 Beautiful UI"
+        },
+        {
+          "tag": "a",
+          "clase": "text-[12px] text-ink-3 transition-colors duration-150 hover:text-ink",
+          "txt": "MIT License"
+        }
+      ]
+    },
+    {
+      "fg": "#1f2124",
+      "bg": "#fafafb",
+      "size": "21px",
+      "weight": "600",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "h1",
+          "clase": "mt-12 text-[21px] leading-snug font-semibold tracking-[-0.02em] text-ink text-ba",
+          "txt": "Beautiful UI for AI-native interfa"
+        }
+      ]
+    },
+    {
+      "fg": "#9a9da3",
+      "bg": "#fafafb",
+      "size": "11.5px",
+      "weight": "400",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "p",
+          "clase": "mb-2 text-[11.5px] text-ink-3",
+          "txt": "Components"
+        }
+      ]
+    },
+    {
+      "fg": "#1f2124",
+      "bg": "#f2f2f3",
+      "size": "11.5px",
+      "weight": "500",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "a",
+          "clase": "mt-2.5 inline-flex h-7 items-center gap-1.5 rounded-full bg-field px-2.5 text-[1",
+          "txt": "Book a call"
+        }
+      ]
+    },
+    {
+      "fg": "#f1f2f3",
+      "bg": "#f1f2f3",
+      "size": "13px",
+      "weight": "500",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "bg-clip-text text-[13px] font-medium text-transparent",
+          "txt": "Churning"
+        }
+      ]
+    },
+    {
+      "fg": "#9a9da3",
+      "bg": "#f1f2f3",
+      "size": "12px",
+      "weight": "400",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "font-mono text-[12px] text-ink-3 tabular-nums",
+          "txt": "3.7s"
+        }
+      ]
+    },
+    {
+      "fg": "#62656b",
+      "bg": "#f1f2f3",
+      "size": "13px",
+      "weight": "500",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "text-[13px] font-medium whitespace-nowrap text-ink-2",
+          "txt": "Thought for 4 seconds"
+        }
+      ]
+    },
+    {
+      "fg": "#9a9da3",
+      "bg": "#f1f2f3",
+      "size": "11.5px",
+      "weight": "400",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "shrink-0 text-[11.5px] text-ink-3 ",
+          "txt": "6 flavors"
+        }
+      ]
+    },
+    {
+      "fg": "#62656b",
+      "bg": "#f7f8f9",
+      "size": "10.5px",
+      "weight": "400",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "",
+          "txt": "scoopdata.io"
+        }
+      ]
+    },
+    {
+      "fg": "#62656b",
+      "bg": "#f1f2f3",
+      "size": "12px",
+      "weight": "400",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "text-[12px] text-ink-2",
+          "txt": "10 sources"
+        }
+      ]
+    },
+    {
+      "fg": "#189a4d",
+      "bg": "#e8f5ed",
+      "size": "11.5px",
+      "weight": "500",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "inline-flex h-5.5 items-center rounded-full bg-green-tint px-2 text-[11.5px] fon",
+          "txt": "Completed"
+        }
+      ]
+    },
+    {
+      "fg": "#0170dd",
+      "bg": "#ffffff",
+      "size": "12px",
+      "weight": "500",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "shrink-0 text-[12px] font-medium transition-colors duration-100 text-accent-ink ",
+          "txt": "Connect"
+        }
+      ]
+    },
+    {
+      "fg": "#62656b",
+      "bg": "#ffffff",
+      "size": "12px",
+      "weight": "500",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "button",
+          "clase": "flex h-7 shrink-0 items-center gap-1 px-1.5 text-[12px] font-medium text-ink-2 t",
+          "txt": "Vanilla 1"
+        }
+      ]
+    },
+    {
+      "fg": "#1f2124",
+      "bg": "#ffffff",
+      "size": "13px",
+      "weight": "600",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "text-[13px] font-semibold text-ink",
+          "txt": "Want me to place this restock orde"
+        }
+      ]
+    },
+    {
+      "fg": "#9a9da3",
+      "bg": "#f7f8f9",
+      "size": "11px",
+      "weight": "500",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "p",
+          "clase": "px-1.5 pb-1 text-[11px] font-medium text-ink-3",
+          "txt": "Other options"
+        }
+      ]
+    },
+    {
+      "fg": "#62656b",
+      "bg": "#f7f8f9",
+      "size": "12.5px",
+      "weight": "500",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "text-[12.5px] font-medium text-ink-2",
+          "txt": "High confidence"
+        }
+      ]
+    },
+    {
+      "fg": "#ffffff",
+      "bg": "#0285ff",
+      "size": "12.5px",
+      "weight": "500",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "button",
+          "clase": "h-7 rounded-control px-3 text-[12.5px] font-medium\n              shadow-[inset_0",
+          "txt": "Accept"
+        }
+      ]
+    },
+    {
+      "fg": "#ffffff",
+      "bg": "#e3474c",
+      "size": "7px",
+      "weight": "700",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "flex size-3.5 items-center justify-center rounded-[4px] bg-red text-[7px] font-b",
+          "txt": "PDF"
+        }
+      ]
+    },
+    {
+      "fg": "#ffffff",
+      "bg": "#189a4d",
+      "size": "7px",
+      "weight": "700",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "flex size-3.5 items-center justify-center rounded-[4px] bg-green text-[7px] font",
+          "txt": "CSV"
+        }
+      ]
+    },
+    {
+      "fg": "#189a4d",
+      "bg": "#e8f5ed",
+      "size": "13px",
+      "weight": "500",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "primitive-table-cell text-[13px] font-medium text-green tabular-nums",
+          "txt": "Pistachio"
+        }
+      ]
+    },
+    {
+      "fg": "#62656b",
+      "bg": "#ffffff",
+      "size": "11.5px",
+      "weight": "500",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "text-ink-2",
+          "txt": "Seasonal"
+        }
+      ]
+    },
+    {
+      "fg": "#189a4d",
+      "bg": "#e8f5ed",
+      "size": "13px",
+      "weight": "400",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "primitive-table-cell text-[13px] text-green",
+          "txt": "maple-orbit"
+        }
+      ]
+    },
+    {
+      "fg": "#62656b",
+      "bg": "#f7f8f9",
+      "size": "11.5px",
+      "weight": "550",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "td",
+          "clase": "records-cell records-sticky-cell records-calculation-label",
+          "txt": "26 count"
+        }
+      ]
+    },
+    {
+      "fg": "#1f2124",
+      "bg": "#f7f8f9",
+      "size": "11.5px",
+      "weight": "550",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "records-calculation-number",
+          "txt": "26"
+        }
+      ]
+    },
+    {
+      "fg": "#ffffff",
+      "bg": "#1f2124",
+      "size": "13px",
+      "weight": "600",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "flex size-8 shrink-0 items-center justify-center rounded-[8px] bg-ink text-[13px",
+          "txt": "C"
+        }
+      ]
+    },
+    {
+      "fg": "#9a9da3",
+      "bg": "#ffffff",
+      "size": "10px",
+      "weight": "400",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "kbd",
+          "clase": "flex size-4.5 items-center justify-center rounded-[5px] bg-surface text-[10px] t",
+          "txt": "/"
+        }
+      ]
+    },
+    {
+      "fg": "#0285ff",
+      "bg": "#ffffff",
+      "size": "13px",
+      "weight": "500",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "min-w-0 flex-1 truncate text-left",
+          "txt": "New task"
+        }
+      ]
+    },
+    {
+      "fg": "#62656b",
+      "bg": "#ffffff",
+      "size": "10.5px",
+      "weight": "600",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "flex h-4.5 min-w-4.5 items-center justify-center rounded-full px-1 text-[10.5px]",
+          "txt": "4"
+        }
+      ]
+    },
+    {
+      "fg": "#9a9da3",
+      "bg": "#f1f2f3",
+      "size": "13px",
+      "weight": "400",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "text-[13px] text-ink-3 tabular-nums",
+          "txt": "3"
+        }
+      ]
+    },
+    {
+      "fg": "#e3474c",
+      "bg": "#ffffff",
+      "size": "17px",
+      "weight": "600",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "block text-[17px] font-semibold tracking-[-0.01em] tabular-nums text-red",
+          "txt": "-4.41%"
+        }
+      ]
+    },
+    {
+      "fg": "#189a4d",
+      "bg": "#ffffff",
+      "size": "17px",
+      "weight": "600",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "block text-[17px] font-semibold tracking-[-0.01em] tabular-nums text-green",
+          "txt": "+1.15%"
+        }
+      ]
+    },
+    {
+      "fg": "#ffffff",
+      "bg": "#ffffff",
+      "size": "12px",
+      "weight": "500",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "bg-clip-text text-[12px] font-medium text-transparent",
+          "txt": "Adjust"
+        }
+      ]
+    },
+    {
+      "fg": "#9a9da3",
+      "bg": "#f2f2f3",
+      "size": "11.5px",
+      "weight": "400",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "shrink-0 pr-0.5 text-[11.5px] text-ink-3",
+          "txt": "%"
+        }
+      ]
+    },
+    {
+      "fg": "#9a9da3",
+      "bg": "#f7f8f9",
+      "size": "12px",
+      "weight": "400",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "span",
+          "clase": "text-[12px] text-ink-3",
+          "txt": "Select type"
+        }
+      ]
+    },
+    {
+      "fg": "#1f2124",
+      "bg": "#fafafb",
+      "size": "19px",
+      "weight": "600",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "h2",
+          "clase": "max-w-md text-[19px] leading-snug font-semibold tracking-[-0.02em] text-ink text",
+          "txt": "New components, in your inbox."
+        }
+      ]
+    },
+    {
+      "fg": "#62656b",
+      "bg": "#fafafb",
+      "size": "13px",
+      "weight": "400",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "p",
+          "clase": "mt-2 max-w-md text-[13px] leading-relaxed text-ink-2 text-pretty",
+          "txt": "Get new primitives and updates as "
+        }
+      ]
+    },
+    {
+      "fg": "#f1f2f3",
+      "bg": "#1f2124",
+      "size": "12.5px",
+      "weight": "500",
+      "n": 1,
+      "ejemplos": [
+        {
+          "tag": "button",
+          "clase": "flex h-9 shrink-0 items-center gap-1.5 rounded-control bg-ink px-3.5 text-[12.5p",
+          "txt": "Notify me"
+        }
+      ]
+    }
+  ]
+}

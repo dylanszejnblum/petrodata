@@ -1,0 +1,226 @@
+{
+  "dark": {
+    "body_bg": "rgb(27, 28, 30)",
+    "body_trama": "repeating-linear-gradient(-45deg, rgba(0, 0, 0, 0) 0px, rgba(0, 0, 0, 0) 7px, rgba(255, 255, 255, 0.055) 7px, rgba(255, ",
+    "body_attachment": "fixed",
+    "body_size": "14px",
+    "body_lh": "21px",
+    "body_ls": "-0.14px",
+    "seccion_pad": "40px 32px",
+    "seccion_borde": "1px dashed rgb(46, 48, 51)",
+    "gaps_secciones": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "sidebar_w": "288×900",
+    "sidebar_pos": "sticky",
+    "sidebar_borde": "1px dashed",
+    "shell_w": "960×2692",
+    "demo_radio": "14px",
+    "demo_bg": "rgb(28, 29, 31)",
+    "demo_sombra": "rgb(46, 48, 51) 0px 0px 0px 1px",
+    "demo_minh": "272px",
+    "demo_pad": "12px",
+    "card_radio": "10px",
+    "card_bg": "rgb(35, 36, 39)",
+    "card_sombra": "rgb(46, 48, 51) 0px 0px 0px 1px, rgba(0, 0, 0, 0.2) 0px 1px 2px 0px, rgba(0, 0, 0, 0.2) 0px 2px 6px 0px",
+    "cardpad": "12px",
+    "navitem": {
+      "pad": "5px 8px",
+      "radio": "7px",
+      "size": "12.5px",
+      "color": "rgb(242, 243, 244)",
+      "caja": "231×29"
+    },
+    "navactivo": {
+      "color": "rgb(242, 243, 244)",
+      "peso": "500",
+      "bg": "rgb(42, 43, 46)"
+    },
+    "secnum": {
+      "fam": "\"JetBrains Mono\"",
+      "size": "11px",
+      "color": "rgb(108, 111, 117)",
+      "num": "tabular-nums"
+    },
+    "sectitle": {
+      "size": "13px",
+      "peso": "600",
+      "color": "rgb(242, 243, 244)"
+    },
+    "secdesc": {
+      "size": "12.5px",
+      "lh": "18.75px",
+      "color": "rgb(108, 111, 117)",
+      "wrap": "pretty"
+    },
+    "pill": {
+      "caja": "114×28",
+      "pad": "0px 10px",
+      "radio": "999px",
+      "bg": "rgb(43, 44, 47)",
+      "size": "11.5px",
+      "peso": "500",
+      "sombra": "rgb(58, 60, 64) 0px 0px 0px 1px, rgba(0, 0, 0, 0.3) 0px 1px 2px 0px"
+    },
+    "icono": {
+      "caja": "28×28",
+      "radio": "8px",
+      "color": "rgb(108, 111, 117)"
+    },
+    "iconosm": {
+      "caja": "24×24",
+      "radio": "6px"
+    },
+    "th": {
+      "pad": "10px 12px",
+      "size": "12px",
+      "peso": "500",
+      "color": "rgb(108, 111, 117)"
+    },
+    "td": {
+      "pad": "10px 12px",
+      "size": "13px",
+      "peso": "500",
+      "num": "tabular-nums"
+    },
+    "tr_borde": "1px solid",
+    "code": {
+      "fam": "\"JetBrains Mono\"",
+      "size": "11.5px",
+      "lh": "19.55px",
+      "bg": "rgb(31, 32, 34)",
+      "pad": "10px 12px"
+    },
+    "campo": {
+      "pad": "5px 8px",
+      "radio": "8px",
+      "borde": "rgb(46, 48, 51)"
+    },
+    "input": {
+      "size": "13px",
+      "bg": "rgba(0, 0, 0, 0)"
+    },
+    "zmax": 10,
+    "backdrop": 0,
+    "tracking_pct": 86
+  },
+  "light": {
+    "body_bg": "rgb(245, 245, 245)",
+    "body_trama": "repeating-linear-gradient(-45deg, rgba(0, 0, 0, 0) 0px, rgba(0, 0, 0, 0) 7px, rgba(73, 73, 73, 0.075) 7px, rgba(73, 73, ",
+    "body_attachment": "fixed",
+    "body_size": "14px",
+    "body_lh": "21px",
+    "body_ls": "-0.14px",
+    "seccion_pad": "40px 32px",
+    "seccion_borde": "1px dashed rgb(236, 237, 239)",
+    "gaps_secciones": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "sidebar_w": "288×900",
+    "sidebar_pos": "sticky",
+    "sidebar_borde": "1px dashed",
+    "shell_w": "960×2692",
+    "demo_radio": "14px",
+    "demo_bg": "rgb(241, 242, 243)",
+    "demo_sombra": "rgb(236, 237, 239) 0px 0px 0px 1px",
+    "demo_minh": "272px",
+    "demo_pad": "12px",
+    "card_radio": "10px",
+    "card_bg": "rgb(255, 255, 255)",
+    "card_sombra": "rgb(236, 237, 239) 0px 0px 0px 1px, rgba(16, 24, 40, 0.04) 0px 1px 2px 0px, rgba(16, 24, 40, 0.03) 0px 2px 6px 0px",
+    "cardpad": "12px",
+    "navitem": {
+      "pad": "5px 8px",
+      "radio": "7px",
+      "size": "12.5px",
+      "color": "rgb(31, 33, 36)",
+      "caja": "231×29"
+    },
+    "navactivo": {
+      "color": "rgb(31, 33, 36)",
+      "peso": "500",
+      "bg": "rgb(244, 245, 246)"
+    },
+    "secnum": {
+      "fam": "\"JetBrains Mono\"",
+      "size": "11px",
+      "color": "rgb(154, 157, 163)",
+      "num": "tabular-nums"
+    },
+    "sectitle": {
+      "size": "13px",
+      "peso": "600",
+      "color": "rgb(31, 33, 36)"
+    },
+    "secdesc": {
+      "size": "12.5px",
+      "lh": "18.75px",
+      "color": "rgb(154, 157, 163)",
+      "wrap": "pretty"
+    },
+    "pill": {
+      "caja": "114×28",
+      "pad": "0px 10px",
+      "radio": "999px",
+      "bg": "rgb(242, 242, 243)",
+      "size": "11.5px",
+      "peso": "500",
+      "sombra": "rgb(224, 226, 229) 0px 0px 0px 1px, rgba(16, 24, 40, 0.05) 0px 1px 2px 0px"
+    },
+    "icono": {
+      "caja": "28×28",
+      "radio": "8px",
+      "color": "rgb(154, 157, 163)"
+    },
+    "iconosm": {
+      "caja": "24×24",
+      "radio": "6px"
+    },
+    "th": {
+      "pad": "10px 12px",
+      "size": "12px",
+      "peso": "500",
+      "color": "rgb(154, 157, 163)"
+    },
+    "td": {
+      "pad": "10px 12px",
+      "size": "13px",
+      "peso": "500",
+      "num": "tabular-nums"
+    },
+    "tr_borde": "1px solid",
+    "code": {
+      "fam": "\"JetBrains Mono\"",
+      "size": "11.5px",
+      "lh": "19.55px",
+      "bg": "rgb(247, 248, 249)",
+      "pad": "10px 12px"
+    },
+    "campo": {
+      "pad": "5px 8px",
+      "radio": "8px",
+      "borde": "rgb(236, 237, 239)"
+    },
+    "input": {
+      "size": "13px",
+      "bg": "rgba(0, 0, 0, 0)"
+    },
+    "zmax": 10,
+    "backdrop": 0,
+    "tracking_pct": 86
+  },
+  "movil": {
+    "shell": "375×3597",
+    "sidebar_pos": "static"
+  }
+}

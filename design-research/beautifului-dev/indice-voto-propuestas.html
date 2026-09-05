@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>El índice y tu voto · cinco diseños</title>
+<style>
+/* TOKENS — copiados tal cual de apps/ui-prototype/src/app/v2/sistema.css. */
+:root {
+  --page:#fafafb; --canvas:#f1f2f3; --surface:#fff; --inset:#f7f8f9;
+  --hover:#f4f5f6; --hover-2:#e7e9eb;
+  --ink:#1f2124; --ink-2:#62656b; --ink-3:#9a9da3;
+  --line:#ecedef; --line-strong:#e0e2e5; --field:#f2f2f3;
+  --accent:#0285ff; --accent-ink:#0170dd; --accent-tint:#e9f3ff;
+  --green:#189a4d; --green-tint:#e8f5ed;
+  --orange:#ef720c; --orange-tint:#fdf1e5;
+  --red:#e3474c; --red-tint:#fcecec;
+  --shadow-hairline:0 0 0 1px var(--line);
+  --shadow-btn:0 0 0 1px var(--line-strong), 0 1px 2px #1018280d;
+  --shadow-card:0 0 0 1px var(--line), 0 1px 2px #1018280a, 0 2px 6px #10182808;
+  --radius-chip:6px; --radius-control:8px; --radius-card:10px; --radius-window:14px;
+  --ease-in-out:cubic-bezier(.4,0,.2,1); --ease-out:cubic-bezier(.16,1,.3,1);
+  --ease-out-strong:cubic-bezier(.23,1,.32,1);
+  --dur-base:140ms; --dur-slower:220ms;
+  --dot:#4949491a;
+  --oil:#3f78ff; --gas:#16a6c7; --mix:#9a5cff;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme=light]) {
+    --page:#17181a; --canvas:#1c1d1f; --surface:#232427; --inset:#1f2022;
+    --hover:#2a2b2e; --hover-2:#313236;
+    --ink:#f2f3f4; --ink-2:#a5a8ad; --ink-3:#6c6f75;
+    --line:#2e3033; --line-strong:#3a3c40; --field:#2b2c2f;
+    --accent:#3d9aff; --accent-ink:#7ec0ff; --accent-tint:#3d9aff29;
+    --green:#3dbb72; --green-tint:#3dbb7224;
+    --orange:#f68f3c; --orange-tint:#f68f3c24;
+    --red:#ee5c61; --red-tint:#ee5c6124;
+    --shadow-btn:0 0 0 1px var(--line-strong), 0 1px 2px #0000004d;
+    --shadow-card:0 0 0 1px var(--line), 0 1px 2px #0003, 0 2px 6px #0003;
+    --dot:#ffffff0f;
+  }
+}
+* { box-sizing:border-box; }
+body {
+  margin:0; padding:40px 24px 80px;
+  background:var(--page);
+  background-image:radial-gradient(circle at 1px 1px, var(--dot) 1px, transparent 0);
+  background-size:12px 12px; background-attachment:fixed;
+  color:var(--ink);
+  font-family:"Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  font-size:14px; line-height:1.5; letter-spacing:-.01em;
+}
+
+/* Tipografía del sistema. Toda la escala va de 10 a 21px: para destacar algo
+   hay exactamente dos palancas, el peso y la tinta. */
+.cifra   { font-size:17px; font-weight:600; line-height:1.2; letter-spacing:-.01em; font-variant-numeric:tabular-nums; }
+.cifra-sm{ font-size:13px; font-weight:600; line-height:1.3; font-variant-numeric:tabular-nums; }
+.titulo  { font-size:13px; font-weight:600; line-height:1.3; font-variant-numeric:tabular-nums; }
+.cuerpo  { font-size:13px; line-height:19.5px; }
+.etq     { font-size:12.5px; color:var(--ink-2); }
+.micro   { font-size:11.5px; line-height:17.25px; }
+.mono    { font-family:"JetBrains Mono", ui-monospace,"SF Mono",Menlo,monospace; font-variant-numeric:tabular-nums; }
+.num     { font-variant-numeric:tabular-nums; }
+.i2 { color:var(--ink-2); } .i3 { color:var(--ink-3); }
+
+/* Andamio del archivo — no es parte del sistema. */
+.hoja { max-width:760px; margin:0 auto; }
+.hoja > h1 { font-size:21px; font-weight:600; letter-spacing:-.02em; margin:0 0 6px; }
+.hoja > p.lede { color:var(--ink-2); font-size:12.5px; line-height:18.75px; margin:0 0 14px; max-width:66ch; }
+.hoja > p.lede b { color:var(--ink); font-weight:600; }
+.nota-dato { margin:0 0 30px; padding:10px 12px; border-radius:var(--radius-control);
+  background:var(--orange-tint); color:color-mix(in srgb, var(--orange) 55%, var(--ink));
+  font-size:11.5px; line-height:17.25px; max-width:72ch; }
+.nota-dato b { font-weight:600; }
+.op { margin:0 0 14px; padding-top:32px; border-top:1px dashed var(--line-strong); }
+.op:first-of-type { border-top:0; padding-top:0; }
+.op h2 { display:flex; align-items:baseline; gap:8px; flex-wrap:wrap; margin:0 0 6px; }
+.op h2 .letra { font-family:"JetBrains Mono",ui-monospace,monospace; font-size:11px; color:var(--ink-2); font-weight:400; }
+.op h2 .nom { font-size:13px; font-weight:600; }
+.op h2 .sub { font-size:12.5px; font-weight:400; color:var(--ink-2); }
+.op > p.tesis { font-size:12.5px; line-height:18.75px; color:var(--ink-2); margin:0 0 14px; max-width:72ch; }
+.op > p.tesis b { font-weight:600; color:var(--ink); }
+.marco { border-radius:var(--radius-window); background:var(--canvas); box-shadow:var(--shadow-hairline); padding:12px; }
+.pie-op { font-size:11.5px; line-height:17.25px; color:var(--ink-2); margin:10px 2px 0; max-width:72ch; }
+
+/* ═══════════════ PIEZAS DEL SISTEMA ═══════════════ */
+.card { overflow:hidden; border-radius:var(--radius-card); background:var(--surface); box-shadow:var(--shadow-card); }
+.card-bar { display:flex; align-items:baseline; justify-content:space-between; gap:12px;
+  padding:10px 12px; border-bottom:1px solid var(--line); }
+.card-pie { display:flex; align-items:center; flex-wrap:wrap; gap:8px; padding:10px 12px;
+  border-top:1px solid var(--line); background:var(--inset); }
+.fila { display:flex; align-items:center; gap:8px; padding:10px 12px; border-bottom:1px solid var(--line); }
+.fila:last-child { border-bottom:0; }
+.fila:hover { background:var(--hover); }
+.chip { display:inline-flex; align-items:center; gap:5px; height:22px; padding:0 8px;
+  border-radius:var(--radius-chip); font-size:11.5px; font-weight:500; white-space:nowrap;
+  background:var(--field); color:var(--ink-2); }
+.chip--mini { height:19px; padding:0 6px; border-radius:5px; font-size:10.5px; }
+/* El texto mezclado con la tinta al 55%: el token pleno sobre su propio tinte
+   no llega a AA a 10,5px. Es la misma receta que ya usaba --info. */
+.chip--ok   { background:var(--green-tint);  color:color-mix(in srgb, var(--green) 55%, var(--ink)); }
+.chip--info { background:var(--accent-tint); color:color-mix(in srgb, var(--accent-ink) 55%, var(--ink)); }
+/* display:block: como <span> suelto colapsa a inline y la barra no se dibuja.
+   En el sistema real siempre llega con `block` de Tailwind o como hijo flex. */
+.barra { display:block; height:4px; border-radius:999px; background:var(--line-strong); overflow:hidden; }
+.barra > i { display:block; height:100%; border-radius:999px; background:var(--barra-color, var(--ink-3)); }
+.hundido { border-radius:var(--radius-control); background:var(--inset); overflow:hidden; }
+.hundido-bar { display:flex; align-items:center; justify-content:space-between; gap:10px;
+  padding:6px 10px; background:var(--field); border-bottom:1px solid var(--line); }
+.panel { border-radius:var(--radius-control); background:var(--surface); box-shadow:var(--shadow-hairline); overflow:hidden; }
+.panel-bar { display:flex; align-items:center; justify-content:space-between; gap:8px;
+  height:30px; padding:0 10px; border-bottom:1px solid var(--line); }
+.panel-bar .rot { font-size:10.5px; font-weight:500; color:var(--ink-2); }
+.panel-cuerpo { padding:10px; }
+
+/* ── 1 · LA CADENA ────────────────────────────────────────────────────────
+   El operador entre cifra y cifra. No es decoración: es lo que convierte tres
+   cajas sueltas en una sola cuenta. Va en --field con la tinta secundaria,
+   como cualquier anotación del sistema, y NUNCA pesa más que las cifras. */
+.cadena { display:flex; align-items:center; flex-wrap:wrap; gap:0; padding:14px 12px; }
+.cadena > .paso { display:flex; flex-direction:column; gap:2px; min-width:0; }
+.cadena > .op-mat { display:flex; flex-direction:column; align-items:center; gap:3px;
+  flex-shrink:0; padding:0 14px; }
+.cadena > .op-mat > .signo { font-family:"JetBrains Mono",ui-monospace,monospace;
+  font-size:12px; font-weight:500; color:var(--ink-2); }
+.cadena > .op-mat > .flecha { font-size:11px; color:var(--ink-3); line-height:1; }
+.cadena .val { display:flex; align-items:baseline; gap:5px; }
+
+/* ── 2 · LA ESCALERA ──────────────────────────────────────────────────────
+   Cuatro escalas de tiempo, y entre una y otra el MULTIPLICADOR.
+
+   Primero le puse una barra por fila y estaba mal: entre el segundo y el día
+   hay un factor de 86.400, así que lineal las tres primeras filas quedan en
+   cero y logarítmica la barra no se puede leer como proporción —o sea, es
+   decoración con forma de dato—. El «×60» es exacto, no necesita escala, y
+   convierte la lista en una escalera de verdad. */
+.escalon { display:flex; align-items:center; gap:10px; padding:9px 12px; border-bottom:1px solid var(--line); }
+.escalon:last-child { border-bottom:0; }
+.escalon:hover { background:var(--hover); }
+.escalon > .u { flex:1; min-width:0; white-space:nowrap; font-size:11.5px; color:var(--ink-2); }
+.escalon > .x { flex-shrink:0; width:44px; text-align:right;
+  font-family:"JetBrains Mono",ui-monospace,monospace; font-size:10.5px; color:var(--ink-3); }
+.escalon > .v { display:flex; align-items:baseline; justify-content:flex-end; gap:5px;
+  width:120px; flex-shrink:0; }
+.escalon.destaca { background:var(--accent-tint); }
+
+/* ── 3 · LA DERIVACIÓN ────────────────────────────────────────────────────
+   Los insumos que la sección hoy esconde. La regla del sistema que aplica: un
+   número publicado sin sus entradas no se puede auditar, y esta sección es la
+   única de la página cuyo valor es 100% calculado. */
+.deriv { display:grid; grid-template-columns:1fr 1fr; gap:8px; padding:10px; }
+@media (max-width:640px) { .deriv { grid-template-columns:1fr; } }
+.ins { display:flex; align-items:baseline; justify-content:space-between; gap:8px;
+  padding:7px 10px; border-bottom:1px solid var(--line); }
+.ins:last-child { border-bottom:0; }
+.pbi-riel { position:relative; height:22px; border-radius:5px; background:var(--field); overflow:hidden; }
+.pbi-riel > i { display:block; height:100%; background:var(--accent); }
+.pbi-marca { display:flex; justify-content:space-between; margin-top:5px; }
+
+
+/* ═══════════ PIEZAS ═══════════ */
+.card-bar { display:flex; align-items:baseline; justify-content:space-between; gap:12px;
+  padding:10px 12px; border-bottom:1px solid var(--line); }
+.clave { display:flex; align-items:flex-start; gap:10px; padding:10px 12px; border-bottom:1px solid var(--line); }
+.clave:last-child { border-bottom:0; }
+.clave > i { display:block; flex-shrink:0; width:8px; height:8px; border-radius:50%; margin-top:6px; }
+
+/* Los créditos: un punto por voto. Se cuentan de un vistazo; un «3 de 5» hay
+   que leerlo. */
+.cred { display:inline-flex; align-items:center; gap:4px; }
+.cred > i { display:block; width:8px; height:8px; border-radius:50%; background:var(--line-strong); }
+.cred > i.usado { background:var(--ink-2); }
+.cred--g > i { width:11px; height:11px; }
+
+/* Riel de participación: el riel es el total posible y el relleno, lo usado.
+   Mismo criterio que .s-riel de indicadores — el riel ES el universo. */
+.riel { display:block; position:relative; height:22px; border-radius:5px; background:var(--field);
+  box-shadow:inset 0 0 0 1px var(--line); overflow:hidden; }
+.riel > i { display:block; height:100%; background:var(--accent); }
+.riel-ejes { display:flex; justify-content:space-between; margin-top:5px; }
+
+.grid2 { display:grid; grid-template-columns:1fr 1fr; }
+.grid2 > * { padding:10px 12px; }
+.grid2 > *:nth-child(2) { border-left:1px solid var(--line); }
+.hundido { border-radius:var(--radius-control); background:var(--inset); overflow:hidden; }
+.hundido-bar { display:flex; align-items:center; justify-content:space-between; gap:10px;
+  padding:6px 10px; background:var(--field); border-bottom:1px solid var(--line); }
+.pie-card { display:flex; align-items:center; flex-wrap:wrap; gap:8px; padding:10px 12px;
+  border-top:1px solid var(--line); background:var(--inset); }
+.cifra-g { font-size:21px; font-weight:600; line-height:1.2; letter-spacing:-0.02em; font-variant-numeric:tabular-nums; }
+
+@media (prefers-reduced-motion: reduce) { *,*::before,*::after { transition-duration:.01ms !important; } }
+</style>
+</head>
+<body>
+<div class="hoja">
+
+<h1>El índice y tu voto · cinco diseños</h1>
+<p class="lede">
+  La misma card con el énfasis corrido a <b>los votos y la actividad</b>. Lo que cambia entre
+  las cinco es cuánto peso se lleva la explicación y cuánto el voto — y en dos de ellas, qué
+  significa el número de actividad, porque un «1.284 votos» suelto no dice si es mucho o poco.
+</p>
+<p class="lede" style="margin-bottom:30px">
+  El presupuesto es dato REAL —sale de tu navegador—; los votos y los votantes de la semana
+  sólo puede darlos el servidor y van rotulados como simulados en las cinco.
+</p>
+
+<section class="op">
+  <h2><span class="letra">1</span> <span class="nom">El voto primero</span>
+    <span class="sub">énfasis por posición</span></h2>
+  <p class="tesis">
+    Se da vuelta el orden: el voto abre la card y la explicación queda debajo. Es el cambio más
+    chico que mueve el énfasis, y el más honesto sobre para qué está la card — si querés que la
+    gente vote, lo primero que ve tiene que ser su voto.
+  </p>
+  <div class="marco"><div class="card">
+    <div class="grid2">
+      <div><span class="etq" style="display:block">Tus votos de esta semana</span>
+        <span style="display:flex;align-items:center;gap:8px;margin-top:6px"><span class="cred" aria-hidden><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i></span>
+          <span class="micro i2">5 de 5 disponibles</span></span></div>
+      <div><span class="etq" style="display:block">Actividad de la semana</span>
+        <span style="display:flex;align-items:baseline;gap:12px;margin-top:6px;flex-wrap:wrap">
+          <span style="display:flex;align-items:baseline;gap:5px"><b class="cifra-sm">1.284</b><span class="micro i2">votos</span></span>
+          <span style="display:flex;align-items:baseline;gap:5px"><b class="cifra-sm">377</b><span class="micro i2">personas</span></span>
+          <span class="chip">simulado</span></span></div>
+    </div>
+      <div class="clave"><i style="background:var(--oil)"></i><span class="cuerpo"><b>Ordena a quienes están al frente</b> de las empresas que producen el país: 48 personas cuyas compañías suman el 97,6% del valor de la producción nacional.</span></div>
+      <div class="clave"><i style="background:var(--gas)"></i><span class="cuerpo"><b>El algoritmo es propio.</b> Combina escala, rendimiento por pozo y prima de valor. Los insumos son públicos; la ponderación, nuestra.</span></div>
+      <div class="clave"><i style="background:#9a5cff"></i><span class="cuerpo"><b>La votación semanal pesa.</b> Cada lunes el conteo vuelve a cero y lo que vota la gente entra en el índice de esa semana.</span></div>
+  </div></div>
+  <p class="pie-op">Lo que pierde: el que llega sin contexto ve un control antes de saber qué está votando.</p>
+</section>
+
+<section class="op">
+  <h2><span class="letra">2</span> <span class="nom">Los créditos como titular</span>
+    <span class="sub">énfasis por tamaño</span></h2>
+  <p class="tesis">
+    El presupuesto pasa a ser <b>la cifra de la card</b>, con la receta de la Insight Card
+    (§16): punto de color, cifra grande y apoyo debajo. La explicación se comprime a una línea
+    en el pie. Es la versión que más grita «votá».
+  </p>
+  <div class="marco"><div class="card">
+    <div class="card-bar"><span class="etq">El Índice Vaca Muerta</span><span class="micro i2">48 personas</span></div>
+    <div style="display:flex;align-items:flex-start;gap:24px;padding:14px 12px;flex-wrap:wrap">
+      <div>
+        <span class="micro i2" style="display:flex;align-items:center;gap:6px">
+          <i style="display:block;width:8px;height:8px;border-radius:50%;background:#9a5cff"></i>Te quedan</span>
+        <span style="display:flex;align-items:baseline;gap:6px;margin-top:3px">
+          <b class="cifra-g">5</b><span class="micro i3">votos esta semana</span></span>
+        <span style="display:block;margin-top:7px"><span class="cred cred--g" aria-hidden><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i></span></span>
+      </div>
+      <div style="border-left:1px solid var(--line);padding-left:24px">
+        <span class="micro i2" style="display:flex;align-items:center;gap:6px">Van esta semana <span class="chip">simulado</span></span>
+        <span style="display:flex;align-items:baseline;gap:6px;margin-top:3px">
+          <b class="cifra-g">1.284</b><span class="micro i3">votos</span></span>
+        <span class="micro i2" style="display:block;margin-top:7px">de 377 personas</span>
+      </div>
+    </div>
+    <div class="pie-card"><span class="micro i2">Ordena a quienes dirigen las empresas que producen el país, con un algoritmo propio de escala, rendimiento y prima de valor. Tu voto entra en el índice de esta semana.</span></div>
+  </div></div>
+  <p class="pie-op">
+    El 21px es el titular de página del sistema y hay uno por página; acá se usa dos veces en una
+    card. Es la más fuerte de las cinco y también la que más se aparta.
+  </p>
+</section>
+
+<section class="op">
+  <h2><span class="letra">3</span> <span class="nom">La participación</span>
+    <span class="sub">el número con una escala</span></h2>
+  <p class="tesis">
+    «1.284 votos» solo no dice si es mucho o poco. Acá el riel es <b>el total posible</b> —377
+    personas × 5 votos = 1.885— y el relleno, lo que se usó: 68%. Es el mismo criterio
+    que el riel del PBI en indicadores, donde el riel ES el universo. Convierte una cifra suelta
+    en una lectura.
+  </p>
+  <div class="marco"><div class="card">
+    <div class="card-bar"><span class="etq">Actividad de la semana</span><span class="micro i2"><span class="chip">simulado</span></span></div>
+    <div style="padding:12px">
+      <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:10px">
+        <b class="cifra">1.284</b><span class="micro i3">votos emitidos</span>
+        <span class="chip" style="margin-left:auto">377 personas</span></div>
+      <span class="riel"><i style="width:68.1%"></i></span>
+      <div class="riel-ejes"><span class="micro i2">68% del cupo usado</span>
+        <span class="micro i2">1.885 posibles</span></div>
+    </div>
+    <div class="grid2" style="border-top:1px solid var(--line)">
+      <div><span class="etq" style="display:block">Tus votos</span>
+        <span style="display:flex;align-items:center;gap:8px;margin-top:6px"><span class="cred" aria-hidden><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i></span>
+          <span class="micro i2">5 disponibles</span></span></div>
+      <div><span class="etq" style="display:block">El índice</span>
+        <span class="micro i2" style="display:block;margin-top:6px">Escala, rendimiento y prima. Algoritmo propio.</span></div>
+    </div>
+  </div></div>
+  <p class="pie-op">
+    Es la única que hace que el número de actividad signifique algo. El costo: el cupo total sale
+    de multiplicar votantes por tope, así que si alguien vota y se va, el denominador se mueve.
+  </p>
+</section>
+
+<section class="op">
+  <h2><span class="letra">4</span> <span class="nom">El bloque hundido</span>
+    <span class="sub">énfasis por superficie</span></h2>
+  <p class="tesis">
+    La explicación se queda arriba y el voto baja a un <b>bloque hundido</b> —la ranura medida de
+    la §16, con su barra de cabecera un peldaño más clara—. Es como el sistema marca «acá se
+    opera», y separa sin gritar: la card sigue explicando, pero el control tiene su propia
+    superficie.
+  </p>
+  <div class="marco"><div class="card">
+    <div class="card-bar"><span class="etq">El Índice Vaca Muerta</span><span class="micro i2">48 personas</span></div>
+      <div class="clave"><i style="background:var(--oil)"></i><span class="cuerpo"><b>Ordena a quienes están al frente</b> de las empresas que producen el país: 48 personas cuyas compañías suman el 97,6% del valor de la producción nacional.</span></div>
+      <div class="clave"><i style="background:var(--gas)"></i><span class="cuerpo"><b>El algoritmo es propio.</b> Combina escala, rendimiento por pozo y prima de valor. Los insumos son públicos; la ponderación, nuestra.</span></div>
+    <div style="padding:10px 12px">
+      <div class="hundido">
+        <div class="hundido-bar"><span class="micro i2">Tu voto de esta semana</span>
+          <span class="micro i2">vuelve a cero el lunes</span></div>
+        <div class="grid2">
+          <div><span style="display:flex;align-items:center;gap:8px"><span class="cred" aria-hidden><i class="usado"></i><i class="usado"></i><i class=""></i><i class=""></i><i class=""></i></span>
+            <span class="micro i2">3 de 5</span></span></div>
+          <div><span style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap">
+            <span class="micro i2"><b class="cifra-sm">1.284</b> votos</span>
+            <span class="micro i2"><b class="cifra-sm">377</b> personas</span><span class="chip">simulado</span></span></div>
+        </div>
+      </div>
+    </div>
+  </div></div>
+  <p class="pie-op">Es la más contenida: el énfasis lo da la superficie, no el tamaño ni la posición.</p>
+</section>
+
+<section class="op">
+  <h2><span class="letra">5</span> <span class="nom">Dos cards</span>
+    <span class="sub">el voto se independiza</span></h2>
+  <p class="tesis">
+    El índice y el voto dejan de compartir card. La primera explica en tres líneas; la segunda
+    <b>es</b> el voto, con su propia cabecera, los créditos grandes y la actividad al pie. Dos
+    objetos separados por el mismo aire que separa cualquier par de cards del sitio.
+  </p>
+  <div class="marco">
+    <div class="card">
+      <div class="card-bar"><span class="etq">El Índice Vaca Muerta</span><span class="micro i2">48 personas</span></div>
+      <div class="clave"><i style="background:var(--oil)"></i><span class="cuerpo"><b>Ordena a quienes están al frente</b> de las empresas que producen el país: 48 personas cuyas compañías suman el 97,6% del valor de la producción nacional.</span></div>
+      <div class="clave"><i style="background:var(--gas)"></i><span class="cuerpo"><b>El algoritmo es propio.</b> Combina escala, rendimiento por pozo y prima de valor. Los insumos son públicos; la ponderación, nuestra.</span></div>
+    </div>
+    <div class="card" style="margin-top:8px">
+      <div class="card-bar"><span class="etq">Tu voto de esta semana</span><span class="micro i2">vuelve a cero el lunes</span></div>
+      <div style="display:flex;align-items:center;gap:12px;padding:14px 12px">
+        <span class="cred cred--g" aria-hidden><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i></span>
+        <span><span style="display:flex;align-items:baseline;gap:6px"><b class="cifra">5</b>
+          <span class="micro i3">votos disponibles</span></span>
+        <span class="micro i2" style="display:block;margin-top:2px">alcanzan para elegir, no para empujar</span></span>
+      </div>
+      <div class="pie-card"><span class="micro i2">Esta semana van <b style="color:var(--ink);font-weight:600">1.284</b> votos de <b style="color:var(--ink);font-weight:600">377</b> personas</span><span class="chip">simulado</span></div>
+    </div>
+  </div>
+  <p class="pie-op">
+    La que más énfasis da sin agrandar nada: una card entera para el voto pesa más que cualquier
+    cifra grande adentro de otra.
+  </p>
+</section>
+
+</div>
+</body>
+</html>

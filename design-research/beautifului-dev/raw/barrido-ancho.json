@@ -1,0 +1,33 @@
+[
+  {
+    "ancho": 640,
+    "difs": [
+      "secbox0.display: block → flex",
+      "secbox1.display: block → flex",
+      "secbox2.display: block → flex",
+      "secbox3.display: block → flex",
+      "secbox4.display: block → flex",
+      "secbox5.display: block → flex",
+      "secbox6.display: block → flex",
+      "secbox7.display: block → flex",
+      "secbox8.display: block → flex",
+      "secbox9.display: block → flex",
+      "secbox10.display: block → flex",
+      "secbox11.display: block → flex",
+      "secbox12.display: block → flex",
+      "secbox13.display: block → flex",
+      "secbox14.display: block → flex",
+      "secbox15.display: block → flex",
+      "secbox16.display: block → flex",
+      "secbox17.display: block → flex",
+      "secbox18.display: block → flex"
+    ]
+  },
+  {
+    "ancho": 1024,
+    "difs": [
+      "aside.padding: 64px 28px 28px → 72px 28px 28px",
+      "aside.position: static → sticky"
+    ]
+  }
+]

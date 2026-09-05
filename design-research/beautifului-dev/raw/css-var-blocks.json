@@ -1,0 +1,596 @@
+[
+  {
+    "sel": "*,::backdrop,:after,:before",
+    "n": 57,
+    "props": [
+      "--tw-translate-x:0",
+      "--tw-translate-y:0",
+      "--tw-translate-z:0",
+      "--tw-rotate-x:initial",
+      "--tw-rotate-y:initial",
+      "--tw-rotate-z:initial",
+      "--tw-skew-x:initial",
+      "--tw-skew-y:initial",
+      "--tw-space-x-reverse:0",
+      "--tw-divide-y-reverse:0",
+      "--tw-border-style:solid",
+      "--tw-leading:initial",
+      "--tw-font-weight:initial",
+      "--tw-tracking:initial",
+      "--tw-ordinal:initial",
+      "--tw-slashed-zero:initial",
+      "--tw-numeric-figure:initial",
+      "--tw-numeric-spacing:initial",
+      "--tw-numeric-fraction:initial",
+      "--tw-shadow:0 0 #0000",
+      "--tw-shadow-color:initial",
+      "--tw-shadow-alpha:100%",
+      "--tw-inset-shadow:0 0 #0000",
+      "--tw-inset-shadow-color:initial",
+      "--tw-inset-shadow-alpha:100%",
+      "--tw-ring-color:initial",
+      "--tw-ring-shadow:0 0 #0000",
+      "--tw-inset-ring-color:initial",
+      "--tw-inset-ring-shadow:0 0 #0000",
+      "--tw-ring-inset:initial",
+      "--tw-ring-offset-width:0px",
+      "--tw-ring-offset-color:#fff",
+      "--tw-ring-offset-shadow:0 0 #0000",
+      "--tw-blur:initial",
+      "--tw-brightness:initial",
+      "--tw-contrast:initial",
+      "--tw-grayscale:initial",
+      "--tw-hue-rotate:initial",
+      "--tw-invert:initial",
+      "--tw-opacity:initial",
+      "--tw-saturate:initial",
+      "--tw-sepia:initial",
+      "--tw-drop-shadow:initial",
+      "--tw-drop-shadow-color:initial",
+      "--tw-drop-shadow-alpha:100%",
+      "--tw-drop-shadow-size:initial",
+      "--tw-backdrop-blur:initial",
+      "--tw-backdrop-brightness:initial",
+      "--tw-backdrop-contrast:initial",
+      "--tw-backdrop-grayscale:initial",
+      "--tw-backdrop-hue-rotate:initial",
+      "--tw-backdrop-invert:initial",
+      "--tw-backdrop-opacity:initial",
+      "--tw-backdrop-saturate:initial",
+      "--tw-backdrop-sepia:initial",
+      "--tw-duration:initial",
+      "--tw-ease:initial"
+    ]
+  },
+  {
+    "sel": ":host,:root",
+    "n": 41,
+    "props": [
+      "--color-black:#000",
+      "--color-white:#fff",
+      "--spacing:.25rem",
+      "--container-md:28rem",
+      "--container-3xl:48rem",
+      "--container-6xl:72rem",
+      "--text-xs:.75rem",
+      "--text-xs--line-height:calc(1 / .75)",
+      "--text-sm:.875rem",
+      "--text-sm--line-height:calc(1.25 / .875)",
+      "--text-2xl:1.5rem",
+      "--text-2xl--line-height:calc(2 / 1.5)",
+      "--font-weight-normal:400",
+      "--font-weight-medium:500",
+      "--font-weight-semibold:600",
+      "--font-weight-bold:700",
+      "--leading-tight:1.25",
+      "--leading-snug:1.375",
+      "--leading-normal:1.5",
+      "--leading-relaxed:1.625",
+      "--radius-sm:.25rem",
+      "--radius-md:.375rem",
+      "--radius-lg:.5rem",
+      "--radius-xl:.75rem",
+      "--ease-out:cubic-bezier(0,0,.2,1)",
+      "--ease-in-out:cubic-bezier(.4,0,.2,1)",
+      "--default-transition-duration:.15s",
+      "--default-transition-timing-function:cubic-bezier(.4,0,.2,1)",
+      "--default-font-family:var(--font-inter),ui-sans-serif,system-ui,sans-serif",
+      "--default-mono-font-family:var(--font-mono-face),ui-monospace,\"SF Mono\",monospace",
+      "--shadow-hairline:var(--shadow-hairline)",
+      "--shadow-btn:var(--shadow-btn)",
+      "--shadow-inset-field:var(--shadow-inset-field)",
+      "--shadow-card:var(--shadow-card)",
+      "--shadow-raised:var(--shadow-raised)",
+      "--shadow-overlay:var(--shadow-overlay)",
+      "--radius-chip:6px",
+      "--radius-control:8px",
+      "--radius-card:10px",
+      "--ease-out-strong:cubic-bezier(.23,1,.32,1)",
+      "--ease-link:cubic-bezier(.16,1,.3,1)"
+    ]
+  },
+  {
+    "sel": ":root",
+    "n": 33,
+    "props": [
+      "--page:#fafafb",
+      "--canvas:#f1f2f3",
+      "--surface:#fff",
+      "--inset:#f7f8f9",
+      "--hover:#f4f5f6",
+      "--hover-2:#e7e9eb",
+      "--ink:#1f2124",
+      "--ink-2:#62656b",
+      "--ink-3:#9a9da3",
+      "--line:#ecedef",
+      "--line-strong:#e0e2e5",
+      "--field:#f2f2f3",
+      "--stripe:#49494913",
+      "--stripe-bg:#f5f5f5",
+      "--accent:#0285ff",
+      "--accent-ink:#0170dd",
+      "--accent-tint:#e9f3ff",
+      "--green:#189a4d",
+      "--green-tint:#e8f5ed",
+      "--orange:#ef720c",
+      "--orange-tint:#fdf1e5",
+      "--red:#e3474c",
+      "--red-tint:#fcecec",
+      "--tooltip-bg:#25272b",
+      "--tooltip-fg:#f6f7f8",
+      "--tooltip-muted:#a5a8ad",
+      "--tooltip-border:#3a3c40",
+      "--shadow-hairline:0 0 0 1px var(--line)",
+      "--shadow-btn:0 0 0 1px var(--line-strong),0 1px 2px #1018280d",
+      "--shadow-card:0 0 0 1px var(--line),0 1px 2px #1018280a,0 2px 6px #10182808",
+      "--shadow-raised:0 0 0 1px var(--line),0 2px 10px #0000000b",
+      "--shadow-overlay:0 0 0 1px var(--line),0 8px 28px #0001",
+      "--shadow-inset-field:inset 0 1px 2px #0000001f"
+    ]
+  },
+  {
+    "sel": ".dark",
+    "n": 33,
+    "props": [
+      "--page:#17181a",
+      "--canvas:#1c1d1f",
+      "--surface:#232427",
+      "--inset:#1f2022",
+      "--hover:#2a2b2e",
+      "--hover-2:#313236",
+      "--ink:#f2f3f4",
+      "--ink-2:#a5a8ad",
+      "--ink-3:#6c6f75",
+      "--line:#2e3033",
+      "--line-strong:#3a3c40",
+      "--field:#2b2c2f",
+      "--stripe:#ffffff0e",
+      "--stripe-bg:#1b1c1e",
+      "--accent:#3d9aff",
+      "--accent-ink:#7ec0ff",
+      "--accent-tint:#3d9aff29",
+      "--green:#3dbb72",
+      "--green-tint:#3dbb7224",
+      "--orange:#f68f3c",
+      "--orange-tint:#f68f3c24",
+      "--red:#ee5c61",
+      "--red-tint:#ee5c6124",
+      "--tooltip-bg:#111214",
+      "--tooltip-fg:#f2f3f4",
+      "--tooltip-muted:#a5a8ad",
+      "--tooltip-border:#2e3033",
+      "--shadow-hairline:0 0 0 1px var(--line)",
+      "--shadow-btn:0 0 0 1px var(--line-strong),0 1px 2px #0000004d",
+      "--shadow-card:0 0 0 1px var(--line),0 1px 2px #0003,0 2px 6px #0003",
+      "--shadow-raised:0 0 0 1px var(--line),0 2px 10px #00000038",
+      "--shadow-overlay:0 0 0 1px var(--line-strong),0 8px 28px #00000057",
+      "--shadow-inset-field:inset 0 1px 2px #0006"
+    ]
+  },
+  {
+    "sel": ".__variable_f367f3",
+    "n": 1,
+    "props": [
+      "--font-inter:\"Inter\",\"Inter Fallback\""
+    ]
+  },
+  {
+    "sel": ".__variable_3c557b",
+    "n": 1,
+    "props": [
+      "--font-mono-face:\"JetBrains Mono\",\"JetBrains Mono Fallback\""
+    ]
+  },
+  {
+    "sel": ".-translate-x-1\\/2",
+    "n": 1,
+    "props": [
+      "--tw-translate-x:calc(calc(1 / 2 * 100%) * -1)"
+    ]
+  },
+  {
+    "sel": ".-translate-y-\\[46\\%\\]",
+    "n": 1,
+    "props": [
+      "--tw-translate-y:calc(46% * -1)"
+    ]
+  },
+  {
+    "sel": ".translate-y-0\\.5",
+    "n": 1,
+    "props": [
+      "--tw-translate-y:calc(var(--spacing) * .5)"
+    ]
+  },
+  {
+    "sel": ".translate-y-\\[-1px\\]",
+    "n": 1,
+    "props": [
+      "--tw-translate-y:-1px"
+    ]
+  },
+  {
+    "sel": ":where(.-space-x-1>:not(:last-child))",
+    "n": 1,
+    "props": [
+      "--tw-space-x-reverse:0"
+    ]
+  },
+  {
+    "sel": ":where(.divide-y>:not(:last-child))",
+    "n": 1,
+    "props": [
+      "--tw-divide-y-reverse:0"
+    ]
+  },
+  {
+    "sel": ".border-dashed",
+    "n": 1,
+    "props": [
+      "--tw-border-style:dashed"
+    ]
+  },
+  {
+    "sel": ".leading-\\[1\\.3\\]",
+    "n": 1,
+    "props": [
+      "--tw-leading:1.3"
+    ]
+  },
+  {
+    "sel": ".leading-\\[1\\.4\\]",
+    "n": 1,
+    "props": [
+      "--tw-leading:1.4"
+    ]
+  },
+  {
+    "sel": ".leading-\\[1\\.6\\]",
+    "n": 1,
+    "props": [
+      "--tw-leading:1.6"
+    ]
+  },
+  {
+    "sel": ".leading-\\[1\\.7\\]",
+    "n": 1,
+    "props": [
+      "--tw-leading:1.7"
+    ]
+  },
+  {
+    "sel": ".leading-\\[1\\.65\\]",
+    "n": 1,
+    "props": [
+      "--tw-leading:1.65"
+    ]
+  },
+  {
+    "sel": ".leading-\\[1\\.86\\]",
+    "n": 1,
+    "props": [
+      "--tw-leading:1.86"
+    ]
+  },
+  {
+    "sel": ".leading-\\[18px\\]",
+    "n": 1,
+    "props": [
+      "--tw-leading:18px"
+    ]
+  },
+  {
+    "sel": ".leading-none",
+    "n": 1,
+    "props": [
+      "--tw-leading:1"
+    ]
+  },
+  {
+    "sel": ".leading-normal",
+    "n": 1,
+    "props": [
+      "--tw-leading:var(--leading-normal)"
+    ]
+  },
+  {
+    "sel": ".leading-relaxed",
+    "n": 1,
+    "props": [
+      "--tw-leading:var(--leading-relaxed)"
+    ]
+  },
+  {
+    "sel": ".leading-snug",
+    "n": 1,
+    "props": [
+      "--tw-leading:var(--leading-snug)"
+    ]
+  },
+  {
+    "sel": ".leading-tight",
+    "n": 1,
+    "props": [
+      "--tw-leading:var(--leading-tight)"
+    ]
+  },
+  {
+    "sel": ".font-bold",
+    "n": 1,
+    "props": [
+      "--tw-font-weight:var(--font-weight-bold)"
+    ]
+  },
+  {
+    "sel": ".font-medium",
+    "n": 1,
+    "props": [
+      "--tw-font-weight:var(--font-weight-medium)"
+    ]
+  },
+  {
+    "sel": ".font-normal",
+    "n": 1,
+    "props": [
+      "--tw-font-weight:var(--font-weight-normal)"
+    ]
+  },
+  {
+    "sel": ".font-semibold",
+    "n": 1,
+    "props": [
+      "--tw-font-weight:var(--font-weight-semibold)"
+    ]
+  },
+  {
+    "sel": ".tracking-\\[-0\\.01em\\]",
+    "n": 1,
+    "props": [
+      "--tw-tracking:-.01em"
+    ]
+  },
+  {
+    "sel": ".tracking-\\[-0\\.02em\\]",
+    "n": 1,
+    "props": [
+      "--tw-tracking:-.02em"
+    ]
+  },
+  {
+    "sel": ".tracking-\\[0\\.1em\\]",
+    "n": 1,
+    "props": [
+      "--tw-tracking:.1em"
+    ]
+  },
+  {
+    "sel": ".tracking-\\[0\\.08em\\]",
+    "n": 1,
+    "props": [
+      "--tw-tracking:.08em"
+    ]
+  },
+  {
+    "sel": ".tracking-\\[0\\.09em\\]",
+    "n": 1,
+    "props": [
+      "--tw-tracking:.09em"
+    ]
+  },
+  {
+    "sel": ".tabular-nums",
+    "n": 1,
+    "props": [
+      "--tw-numeric-spacing:tabular-nums"
+    ]
+  },
+  {
+    "sel": ".shadow-\\[0_0_0_1\\.5px_var\\(--canvas\\)\\]",
+    "n": 1,
+    "props": [
+      "--tw-shadow:0 0 0 1.5px var(--tw-shadow-color,var(--canvas))"
+    ]
+  },
+  {
+    "sel": ".shadow-\\[0_0_0_1px_var\\(--line\\)\\]",
+    "n": 1,
+    "props": [
+      "--tw-shadow:0 0 0 1px var(--tw-shadow-color,var(--line))"
+    ]
+  },
+  {
+    "sel": ".shadow-\\[0_1px_2px_rgba\\(0\\,0\\,0\\,0\\.2\\)\\]",
+    "n": 1,
+    "props": [
+      "--tw-shadow:0 1px 2px var(--tw-shadow-color,#0003)"
+    ]
+  },
+  {
+    "sel": ".shadow-\\[0_1px_2px_rgba\\(0\\,0\\,0\\,0\\.035\\)\\]",
+    "n": 1,
+    "props": [
+      "--tw-shadow:0 1px 2px var(--tw-shadow-color,#00000009)"
+    ]
+  },
+  {
+    "sel": ".shadow-\\[inset_0_0_0_1\\.5px_var\\(--line-strong\\)\\]",
+    "n": 1,
+    "props": [
+      "--tw-shadow:inset 0 0 0 1.5px var(--tw-shadow-color,var(--line-strong))"
+    ]
+  },
+  {
+    "sel": ".shadow-\\[inset_0_1px_0_rgba\\(255\\,255\\,255\\,0\\.14\\)\\,0_0_0_1px_rgba\\(16\\,24\\,40\\,0\\.12\\)\\,0_1px_2px_rgba\\(16\\,24\\,40\\,0\\.1\\)\\]",
+    "n": 1,
+    "props": [
+      "--tw-shadow:inset 0 1px 0 var(--tw-shadow-color,#ffffff24),0 0 0 1px var(--tw-shadow-color,#1018281f),0 1px 2px var(--tw-shadow-color,#1018281a)"
+    ]
+  },
+  {
+    "sel": ".shadow-\\[inset_0_1px_0_rgba\\(255\\,255\\,255\\,0\\.14\\)\\,0_1px_2px_rgba\\(16\\,24\\,40\\,0\\.1\\)\\]",
+    "n": 1,
+    "props": [
+      "--tw-shadow:inset 0 1px 0 var(--tw-shadow-color,#ffffff24),0 1px 2px var(--tw-shadow-color,#1018281a)"
+    ]
+  },
+  {
+    "sel": ".shadow-btn",
+    "n": 1,
+    "props": [
+      "--tw-shadow:var(--shadow-btn)"
+    ]
+  },
+  {
+    "sel": ".shadow-card",
+    "n": 1,
+    "props": [
+      "--tw-shadow:var(--shadow-card)"
+    ]
+  },
+  {
+    "sel": ".shadow-hairline",
+    "n": 1,
+    "props": [
+      "--tw-shadow:var(--shadow-hairline)"
+    ]
+  },
+  {
+    "sel": ".shadow-overlay",
+    "n": 1,
+    "props": [
+      "--tw-shadow:var(--shadow-overlay)"
+    ]
+  },
+  {
+    "sel": ".shadow-raised",
+    "n": 1,
+    "props": [
+      "--tw-shadow:var(--shadow-raised)"
+    ]
+  },
+  {
+    "sel": ".ring",
+    "n": 1,
+    "props": [
+      "--tw-ring-shadow:var(--tw-ring-inset,) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color,currentcolor)"
+    ]
+  },
+  {
+    "sel": ".blur",
+    "n": 1,
+    "props": [
+      "--tw-blur:blur(8px)"
+    ]
+  },
+  {
+    "sel": ".backdrop-blur-\\[2px\\]",
+    "n": 1,
+    "props": [
+      "--tw-backdrop-blur:blur(2px)"
+    ]
+  },
+  {
+    "sel": ".duration-100",
+    "n": 1,
+    "props": [
+      "--tw-duration:.1s"
+    ]
+  },
+  {
+    "sel": ".duration-150",
+    "n": 1,
+    "props": [
+      "--tw-duration:.15s"
+    ]
+  },
+  {
+    "sel": ".duration-200",
+    "n": 1,
+    "props": [
+      "--tw-duration:.2s"
+    ]
+  },
+  {
+    "sel": ".duration-250",
+    "n": 1,
+    "props": [
+      "--tw-duration:.25s"
+    ]
+  },
+  {
+    "sel": ".duration-300",
+    "n": 1,
+    "props": [
+      "--tw-duration:.3s"
+    ]
+  },
+  {
+    "sel": ".duration-400",
+    "n": 1,
+    "props": [
+      "--tw-duration:.4s"
+    ]
+  },
+  {
+    "sel": ".duration-500",
+    "n": 1,
+    "props": [
+      "--tw-duration:.5s"
+    ]
+  },
+  {
+    "sel": ".ease-in-out",
+    "n": 1,
+    "props": [
+      "--tw-ease:var(--ease-in-out)"
+    ]
+  },
+  {
+    "sel": ".ease-out",
+    "n": 1,
+    "props": [
+      "--tw-ease:var(--ease-out)"
+    ]
+  },
+  {
+    "sel": ".outline-none",
+    "n": 1,
+    "props": [
+      "--tw-outline-style:none"
+    ]
+  },
+  {
+    "sel": ".focus-within\\:shadow-\\[0_1px_2px_rgba\\(0\\,0\\,0\\,0\\.025\\)\\]:focus-within",
+    "n": 1,
+    "props": [
+      "--tw-shadow:0 1px 2px var(--tw-shadow-color,#00000006)"
+    ]
+  },
+  {
+    "sel": ".focus-visible\\:outline-none:focus-visible",
+    "n": 1,
+    "props": [
+      "--tw-outline-style:none"
+    ]
+  }
+]

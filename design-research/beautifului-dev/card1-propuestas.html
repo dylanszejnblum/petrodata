@@ -1,0 +1,481 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Card 01 · tres propuestas</title>
+<style>
+/* ═══════════════════════════════════════════════════════════════════════
+   TOKENS — copiados tal cual de apps/ui-prototype/src/app/v2/sistema.css,
+   que a su vez salen de la medición de beautifului.dev.
+   ═══════════════════════════════════════════════════════════════════════ */
+:root {
+  --page:#fafafb; --canvas:#f1f2f3; --surface:#fff; --inset:#f7f8f9;
+  --hover:#f4f5f6; --hover-2:#e7e9eb;
+  --ink:#1f2124; --ink-2:#62656b; --ink-3:#9a9da3;
+  --line:#ecedef; --line-strong:#e0e2e5; --field:#f2f2f3;
+  --accent:#0285ff; --accent-ink:#0170dd; --accent-tint:#e9f3ff;
+  --green:#189a4d; --orange:#ef720c; --red:#e3474c;
+  --shadow-hairline:0 0 0 1px var(--line);
+  --shadow-card:0 0 0 1px var(--line), 0 1px 2px #1018280a, 0 2px 6px #10182808;
+  --radius-chip:6px; --radius-control:8px; --radius-card:10px; --radius-window:14px;
+  --ease-in-out:cubic-bezier(.4,0,.2,1);
+  --dot:#4949491a;
+
+  /* paleta categórica de 8, con --tag-color inyectado por elemento */
+  --c1:#3f78ff; --c2:#f09a2f; --c3:#9a5cff; --c4:#16a6c7; --c5:#25a878;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme=light]) {
+    --page:#17181a; --canvas:#1c1d1f; --surface:#232427; --inset:#1f2022;
+    --hover:#2a2b2e; --hover-2:#313236;
+    --ink:#f2f3f4; --ink-2:#a5a8ad; --ink-3:#6c6f75;
+    --line:#2e3033; --line-strong:#3a3c40; --field:#2b2c2f;
+    --accent:#3d9aff; --accent-ink:#7ec0ff; --accent-tint:#3d9aff29;
+    --green:#3dbb72; --orange:#f68f3c; --red:#ee5c61;
+    --shadow-card:0 0 0 1px var(--line), 0 1px 2px #0003, 0 2px 6px #0003;
+    --dot:#ffffff0f;
+  }
+}
+
+* { box-sizing:border-box; }
+body {
+  margin:0; padding:40px 24px 80px;
+  background:var(--page);
+  background-image:radial-gradient(var(--dot) 1px, transparent 1px);
+  background-size:18px 18px;
+  color:var(--ink);
+  font-family:"Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  font-size:14px; line-height:1.5; letter-spacing:-.01em;
+}
+:focus-visible { outline:2px solid var(--accent); outline-offset:2px; border-radius:4px; }
+
+/* ── Tipografía. Nada pasa de 21, y ninguna CIFRA pasa de 17. ─────────── */
+.titular { font-size:21px; font-weight:600; line-height:1.25; letter-spacing:-.02em; margin:0; }
+.cifra   { font-size:17px; font-weight:600; line-height:1.2; font-variant-numeric:tabular-nums; }
+.titulo  { font-size:13px; font-weight:600; }
+.cuerpo  { font-size:13px; line-height:19.5px; }
+.desc    { font-size:12.5px; line-height:18.75px; color:var(--ink-2); }
+.etq     { font-size:12px;   line-height:18px;    color:var(--ink-2); }
+.micro   { font-size:11.5px; line-height:17.25px; }
+.mono    { font-family:"JetBrains Mono", ui-monospace,"SF Mono",Menlo,monospace; font-variant-numeric:tabular-nums; }
+.num     { font-variant-numeric:tabular-nums; }
+.ink2 { color:var(--ink-2); } .ink3 { color:var(--ink-3); }
+
+/* ── Estructura de página ─────────────────────────────────────────────── */
+.hoja { max-width:760px; margin:0 auto; }
+.intro { margin:0 0 32px; }
+.intro h1 { font-size:21px; font-weight:600; letter-spacing:-.02em; margin:0 0 6px; }
+.intro p  { margin:0; max-width:60ch; }
+
+.propuesta { margin:0 0 12px; }
+.rotulo {
+  display:flex; align-items:baseline; gap:8px; flex-wrap:wrap;
+  padding:0 4px 10px;
+}
+.rotulo .n { font-family:"JetBrains Mono",ui-monospace,monospace; font-size:11px; color:var(--ink-3); }
+.piezas { display:flex; flex-wrap:wrap; gap:4px; padding:0 4px 12px; }
+.pieza {
+  font-family:"JetBrains Mono",ui-monospace,monospace; font-size:10px;
+  padding:2px 6px; border-radius:5px;
+  background:var(--field); color:var(--ink-2);
+}
+.pieza.ext { background:transparent; box-shadow:inset 0 0 0 1px var(--line-strong); color:var(--ink-3); }
+
+.marco {
+  border-radius:var(--radius-window); background:var(--canvas);
+  box-shadow:var(--shadow-hairline); padding:12px; overflow:hidden;
+}
+.corte { border:0; border-top:1px dashed var(--line-strong); margin:28px 0; }
+
+/* ── Card y sus TRES ranuras medidas ──────────────────────────────────── */
+.card { border-radius:var(--radius-card); background:var(--surface); box-shadow:var(--shadow-card); overflow:hidden; }
+.card-bar { display:flex; align-items:center; gap:10px; padding:10px 12px; border-bottom:1px solid var(--line); }
+.card-pad { padding:12px; }
+.card-pie { display:flex; align-items:center; gap:12px; padding:10px 12px; border-top:1px solid var(--line); background:var(--inset); }
+
+/* ── Fila de dato ─────────────────────────────────────────────────────── */
+.fila { display:flex; align-items:center; gap:10px; padding:10px 12px; border-bottom:1px solid var(--line); transition:background-color 400ms var(--ease-in-out); }
+.fila:last-child { border-bottom:0; }
+.fila:hover { background:var(--hover); }
+
+/* ── Medidor de 3 barras (Recommendation Card) ────────────────────────── */
+.medidor { display:flex; align-items:flex-end; gap:2px; height:10px; flex-shrink:0; }
+.medidor i { display:block; width:4px; height:100%; border-radius:999px; background:var(--line-strong); }
+.medidor i.on { background:var(--ink-3); }
+
+/* ── Ecualizador "en vivo": misma caja que el medidor ─────────────────── */
+@keyframes eq { 0%,to{transform:scaleY(.35)} 50%{transform:scaleY(1)} }
+.eq { display:flex; align-items:flex-end; gap:2px; height:10px; }
+.eq i { display:block; width:4px; height:100%; border-radius:999px; background:var(--ink-3);
+  animation:eq 900ms var(--ease-in-out) infinite; transform-origin:bottom; }
+.eq i:nth-child(2){animation-delay:150ms} .eq i:nth-child(3){animation-delay:300ms}
+
+/* ── Chip y tag ───────────────────────────────────────────────────────── */
+.chip { display:inline-flex; align-items:center; gap:5px; height:19px; padding:0 6px;
+  border-radius:5px; font-size:10.5px; font-weight:500; white-space:nowrap;
+  background:var(--field); color:var(--ink-2); }
+.tag { display:inline-flex; align-items:center; gap:4px; height:19px; padding:0 6px;
+  border-radius:5px; font-size:10.5px; font-weight:500; white-space:nowrap;
+  border:1px solid color-mix(in srgb, var(--tag-color) 24%, var(--surface));
+  color:color-mix(in srgb, var(--tag-color) 82%, var(--ink));
+  background:color-mix(in srgb, var(--tag-color) 13%, var(--surface)); }
+.tag b { width:4px; height:4px; border-radius:50%; background:var(--tag-color); }
+
+/* ── Barra de proporción ──────────────────────────────────────────────── */
+.barra { height:4px; border-radius:999px; background:var(--line-strong); overflow:hidden; }
+.barra i { display:block; height:100%; border-radius:999px; background:var(--ink-3); }
+.barra.lider i { background:var(--accent); }
+
+/* ── Pila por categoría ───────────────────────────────────────────────── */
+.pila { display:flex; align-items:center; height:16px; }
+.pila > span { display:flex; align-items:center; height:100%; padding-right:1.5px; min-width:4.5px; }
+.pila > span:last-child { padding-right:0; }
+.pila i { display:block; width:100%; height:8px; border-radius:2px; }
+
+/* ── Serie compacta ───────────────────────────────────────────────────── */
+.serie { display:flex; align-items:stretch; height:16px; flex-shrink:0; }
+.serie > span { display:flex; align-items:flex-end; height:100%; padding-right:2px; }
+.serie > span:last-child { padding-right:0; }
+.serie i { display:block; width:3px; min-height:1px; border-radius:1px; background:var(--line-strong); transition:background-color 120ms; }
+.serie > span:last-child i { background:var(--accent); }
+.serie.ancha > span { flex:1; justify-content:center; padding:0; }
+.serie.ancha i { width:6px; border-radius:3px; }
+
+/* ── Riel de desglose y sus pasos ─────────────────────────────────────── */
+.rama > * { position:relative; }
+.rama > *::before { content:""; position:absolute; left:-7px; top:-4px; bottom:0; width:1px; background:var(--line); }
+.rama > *:first-child::before { top:50%; }
+.rama > *:last-child::before { bottom:auto; height:calc(50% + 4px); }
+.rama > *::after { content:""; position:absolute; left:-7px; top:50%; width:6px; height:1px; background:var(--line); }
+.paso { display:flex; flex-wrap:wrap; align-items:center; gap:2px 8px;
+  width:100%; min-height:28px; padding:2px 6px; border-radius:6px; background:transparent; }
+.paso svg { flex-shrink:0; color:var(--ink-3); }
+
+/* ── Tabla (primitive-table-cell) ─────────────────────────────────────── */
+.tabla { width:100%; border-collapse:collapse; text-align:left; }
+.tabla th { padding:10px 12px; font-size:12px; font-weight:500; color:var(--ink-3);
+  border-bottom:1px solid var(--line); white-space:nowrap; }
+.tabla td { padding:10px 12px; font-size:13px; border-bottom:1px solid var(--line); font-variant-numeric:tabular-nums; }
+.tabla tr:last-child td { border-bottom:0; }
+.tabla tbody tr { transition:background-color 400ms var(--ease-in-out); }
+.tabla tbody tr:hover { background:var(--hover); }
+.der { text-align:right; }
+/* La conclusión es la ÚLTIMA FILA de la tabla y no un pie aparte, pero se
+   sirve con la receta del pie de card: fondo --inset y filete arriba. Así
+   cierra la tabla en vez de flotar debajo. */
+.tabla tr.cierre td { background:var(--inset); border-top:1px solid var(--line); border-bottom:0; padding:10px 12px; }
+.tabla tbody tr.cierre:hover td { background:var(--inset); }
+
+/* ── Bloque hundido (Insight Card) ────────────────────────────────────── */
+.hundido { border-radius:var(--radius-control); background:var(--inset); overflow:hidden; }
+.hundido-bar { display:flex; align-items:center; justify-content:space-between;
+  padding:6px 10px; border-bottom:1px solid var(--line); }
+
+@media (max-width:639px) { body { padding:24px 16px 60px } .col-3 { flex-direction:column; gap:12px !important } }
+.col-3 { display:flex; align-items:flex-start; gap:16px; }
+.col-3 > div { flex:1; min-width:0; }
+</style>
+</head>
+<body>
+<div class="hoja">
+
+  <div class="intro">
+    <h1>Card 01 · tres propuestas</h1>
+    <p class="desc">
+      Los mismos cinco datos de «Vaca Muerta», compuestos de tres maneras. Cada una se apoya en
+      un grupo distinto de piezas del sistema. Las etiquetas grises con relleno son piezas
+      <strong>medidas</strong> en beautifului.dev; las de contorno son extensiones nuestras,
+      derivadas de sus reglas pero que allá no existen.
+    </p>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       A · TRAZA
+       ══════════════════════════════════════════════════════════════════ -->
+  <div class="propuesta">
+    <div class="rotulo">
+      <span class="n">A</span>
+      <span class="titulo">Traza</span>
+      <span class="desc">El desglose cuelga de un riel, como la traza expandible del agente.</span>
+    </div>
+    <div class="piezas">
+      <span class="pieza">card-bar</span>
+      <span class="pieza">card-pad</span>
+      <span class="pieza">card-footer</span>
+      <span class="pieza">riel Thinking</span>
+      <span class="pieza">medidor</span>
+      <span class="pieza">chip</span>
+      <span class="pieza ext">paso</span>
+      <span class="pieza ext">serie</span>
+    </div>
+
+    <div class="marco">
+      <div class="card">
+        <div class="card-bar">
+          <span class="etq" style="flex:1;min-width:0">Barriles equivalentes · may 2026</span>
+          <span class="eq" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span class="micro ink3">en vivo</span>
+        </div>
+
+        <div class="card-pad">
+          <p style="margin:0;display:flex;align-items:baseline;gap:6px">
+            <span class="cifra">28.176.497</span>
+            <span style="font-size:11px" class="ink3">BOE</span>
+          </p>
+
+          <div class="rama" style="display:flex;flex-direction:column;gap:4px;margin:12px 0 0 0;padding-left:59px">
+            <div class="paso">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5.5-5.5 3.5 3.5L21 6"/><path d="M15 6h6v6"/></svg>
+              <span style="font-size:12.5px" class="ink2">Petróleo</span>
+              <span class="num" style="font-size:12.5px;font-weight:500">650.190</span>
+              <span style="font-size:11.5px" class="ink3">bbl/d</span>
+              <span class="serie" aria-hidden="true"><span><i style="height:15%"></i></span><span><i style="height:22.4%"></i></span><span><i style="height:30.6%"></i></span><span><i style="height:39.4%"></i></span><span><i style="height:48.6%"></i></span><span><i style="height:57.9%"></i></span><span><i style="height:67.1%"></i></span><span><i style="height:75.7%"></i></span><span><i style="height:83.7%"></i></span><span><i style="height:90.8%"></i></span><span><i style="height:97.2%"></i></span><span><i style="height:100%"></i></span></span>
+              <span class="chip">12 meses</span>
+            </div>
+            <div class="paso">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16"/><path d="M7 16V9"/><path d="M12 16V5"/><path d="M17 16v-4"/></svg>
+              <span style="font-size:12.5px" class="ink2">Gas natural</span>
+              <span class="num" style="font-size:12.5px;font-weight:500">75,5</span>
+              <span style="font-size:11.5px" class="ink3">MMm³/d</span>
+              <span class="chip">67,5% del gas del país</span>
+            </div>
+            <div class="paso">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V8"/><path d="M7 21h10"/><path d="m8 8 4-5 4 5"/></svg>
+              <span style="font-size:12.5px" class="ink2">Pozos activos</span>
+              <span class="num" style="font-size:12.5px;font-weight:500">14.441</span>
+              <span class="chip">de 85.593 en el catálogo</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-pie">
+          <span class="medidor" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i></span>
+          <span class="micro ink2" style="flex:1;min-width:0">Del BOE nacional de hidrocarburos</span>
+          <span class="num" style="font-size:13px;font-weight:500">77,9%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="corte">
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       B · INSIGHT
+       ══════════════════════════════════════════════════════════════════ -->
+  <div class="propuesta">
+    <div class="rotulo">
+      <span class="n">B</span>
+      <span class="titulo">Insight</span>
+      <span class="desc">Tres cifras en fila y la serie en un bloque hundido, como la Insight Card.</span>
+    </div>
+    <div class="piezas">
+      <span class="pieza">card-pad</span>
+      <span class="pieza">card-footer</span>
+      <span class="pieza">bloque --inset</span>
+      <span class="pieza">cifra 17/600</span>
+      <span class="pieza">chip pastilla</span>
+      <span class="pieza">medidor</span>
+      <span class="pieza ext">serie ancha</span>
+      <span class="pieza ext">pila</span>
+    </div>
+
+    <div class="marco">
+      <div class="card">
+        <div class="card-pad">
+          <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:12px">
+            <span class="etq">Barriles equivalentes · may 2026</span>
+            <span style="display:flex;align-items:center;gap:6px">
+              <span class="eq" aria-hidden="true"><i></i><i></i><i></i></span>
+              <span class="micro ink3">en vivo</span>
+            </span>
+          </div>
+
+          <div class="col-3">
+            <div>
+              <span class="micro ink2" style="display:block">BOE del mes</span>
+              <span class="cifra" style="display:block;margin-top:2px">28.176.497</span>
+              <span class="pila" style="margin-top:6px" aria-hidden="true">
+                <span style="flex:62"><i style="background:var(--c1)"></i></span>
+                <span style="flex:38"><i style="background:var(--c4)"></i></span>
+              </span>
+              <span class="mono ink3" style="display:block;font-size:11.5px;margin-top:2px">petróleo · gas</span>
+            </div>
+            <div>
+              <span class="micro ink2" style="display:block">Petróleo</span>
+              <span class="cifra" style="display:block;margin-top:2px">650.190</span>
+              <span class="pila" style="margin-top:6px" aria-hidden="true">
+                <span style="flex:693"><i style="background:var(--c1)"></i></span>
+                <span style="flex:307"><i style="background:var(--line-strong)"></i></span>
+              </span>
+              <span class="mono ink3" style="display:block;font-size:11.5px;margin-top:2px">bbl/d · 69,3% del país</span>
+            </div>
+            <div>
+              <span class="micro ink2" style="display:block">Gas natural</span>
+              <span class="cifra" style="display:block;margin-top:2px">75,5</span>
+              <span class="pila" style="margin-top:6px" aria-hidden="true">
+                <span style="flex:675"><i style="background:var(--c4)"></i></span>
+                <span style="flex:325"><i style="background:var(--line-strong)"></i></span>
+              </span>
+              <span class="mono ink3" style="display:block;font-size:11.5px;margin-top:2px">MMm³/d · 67,5% del país</span>
+            </div>
+          </div>
+
+          <div class="hundido" style="margin-top:12px">
+            <div class="hundido-bar">
+              <span class="micro ink3">Petróleo · doce meses</span>
+              <span class="chip">557.149 – 650.190</span>
+            </div>
+            <div style="padding:12px 10px">
+              <span class="serie ancha" style="height:44px;width:100%;display:flex" aria-hidden="true"><span style="flex:1"><i style="height:15%"></i></span><span style="flex:1"><i style="height:22.4%"></i></span><span style="flex:1"><i style="height:30.6%"></i></span><span style="flex:1"><i style="height:39.4%"></i></span><span style="flex:1"><i style="height:48.6%"></i></span><span style="flex:1"><i style="height:57.9%"></i></span><span style="flex:1"><i style="height:67.1%"></i></span><span style="flex:1"><i style="height:75.7%"></i></span><span style="flex:1"><i style="height:83.7%"></i></span><span style="flex:1"><i style="height:90.8%"></i></span><span style="flex:1"><i style="height:97.2%"></i></span><span style="flex:1"><i style="height:100%"></i></span></span>
+              <div style="display:flex;justify-content:space-between;margin-top:6px">
+                <span class="mono ink3" style="font-size:10.5px">jun 2025</span>
+                <span class="mono ink3" style="font-size:10.5px">may 2026</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-pie">
+          <span class="medidor" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i></span>
+          <span class="micro ink2" style="flex:1;min-width:0">Del BOE nacional · 14.441 pozos activos</span>
+          <span class="num" style="font-size:13px;font-weight:500">77,9%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="corte">
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       C · TABLA
+       ══════════════════════════════════════════════════════════════════ -->
+  <div class="propuesta">
+    <div class="rotulo">
+      <span class="n">C</span>
+      <span class="titulo">Tabla</span>
+      <span class="desc">El desglose como tabla real, con su cabecera y su columna de peso.</span>
+    </div>
+    <div class="piezas">
+      <span class="pieza">card-bar</span>
+      <span class="pieza">card-footer</span>
+      <span class="pieza">table-cell</span>
+      <span class="pieza">chip</span>
+      <span class="pieza">cabecera 12/500 ink-3</span>
+      <span class="pieza">tag categórico</span>
+      <span class="pieza">medidor</span>
+      <span class="pieza ext">barra de proporción</span>
+      <span class="pieza ext">serie</span>
+    </div>
+
+    <p class="desc" style="padding:0 4px 12px;margin:0">
+      <strong>Las dos escalas quedan separadas por columna, y ahora la cabecera lo dice.</strong>
+      «En Vaca Muerta» es siempre la cifra de la formación; «Del total del país», siempre su
+      peso sobre el total nacional. Era el problema de fondo de esta card: bajo un título que
+      dice «Vaca Muerta» convivían cifras de la formación con una del país sin avisar.
+      <br><br>
+      Los 14.441 pozos que mostraba el dashboard son NACIONALES —es la suma exacta de las once
+      provincias, Jujuy y Formosa incluidas—. Los de Vaca Muerta son 3.996. La celda del medio
+      muestra la fracción entera porque sin el denominador «27,7%» al lado de un rótulo que
+      dice «activos» se lee como «el 27,7% de los pozos de Vaca Muerta está activo», que es
+      otra cosa y no se puede calcular: el total de pozos de Vaca Muerta no existe en ningún
+      fixture.
+      <br><br>
+      <strong>Qué explica la fila de pozos.</strong> Sola, nada. Lo que explica es el
+      contraste con las dos de arriba: 27,7% de los pozos contra 69,3% del petróleo. Un cuarto
+      de los pozos y dos tercios de la producción. En crudo, con el corte de abril: un pozo de
+      Vaca Muerta da 155 bbl/d y uno del resto del país 26 —5,9 veces—. Eso es lo que ahora
+      dice el pie, en vez de dejar la división al lector. El 77,9% subió a la barra de arriba,
+      que es a lo que califica: al BOE del titular.
+      <br><br>
+      <strong>Queda una cosa sin confirmar:</strong> el BOE del titular. El fixture lo llama
+      «el titular del dashboard real» sin decir la escala. Acá va rotulado como de Vaca Muerta
+      porque es lo coherente con el petróleo y el gas —650.190 contra los 620.249 de VM en
+      abril da +4,8% mensual, mientras que como cifra nacional no cierra: si VM produce 620.249
+      y es el 69,3% del país, el país produce 895.000—. Falta confirmarlo contra el sitio.
+    </p>
+
+    <div class="marco">
+      <div class="card">
+        <div class="card-bar">
+          <span class="titulo">28.176.497 <span class="ink3" style="font-size:11px;font-weight:400">BOE</span></span>
+          <span class="chip">77,9% del BOE nacional</span>
+          <span style="flex:1"></span>
+          <span class="micro ink3">Vaca Muerta · may 2026</span>
+        </div>
+
+        <table class="tabla">
+          <thead>
+            <tr>
+              <th>Fluido</th>
+              <th class="der">En Vaca Muerta</th>
+              <th class="der">Doce meses</th>
+              <th class="der">Del total del país</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="tag" style="--tag-color:var(--c1)"><b></b>Petróleo</span></td>
+              <td class="der"><span style="font-weight:500">650.190</span> <span class="ink3" style="font-size:11px">bbl/d</span></td>
+              <td class="der">
+                <span class="serie" style="display:inline-flex;vertical-align:middle" aria-hidden="true"><span><i style="height:15%"></i></span><span><i style="height:22.4%"></i></span><span><i style="height:30.6%"></i></span><span><i style="height:39.4%"></i></span><span><i style="height:48.6%"></i></span><span><i style="height:57.9%"></i></span><span><i style="height:67.1%"></i></span><span><i style="height:75.7%"></i></span><span><i style="height:83.7%"></i></span><span><i style="height:90.8%"></i></span><span><i style="height:97.2%"></i></span><span><i style="height:100%"></i></span></span>
+              </td>
+              <td class="der">
+                <span style="display:inline-flex;align-items:center;gap:8px">
+                  <span class="barra lider" style="width:52px"><i style="width:69.3%"></i></span>
+                  <span style="font-weight:500;width:44px;display:inline-block">69,3%</span>
+                </span>
+              </td>
+            </tr>
+            <tr>
+              <td><span class="tag" style="--tag-color:var(--c4)"><b></b>Gas natural</span></td>
+              <td class="der"><span style="font-weight:500">75,5</span> <span class="ink3" style="font-size:11px">MMm³/d</span></td>
+              <td class="der">
+                <span class="serie" style="display:inline-flex;vertical-align:middle" aria-hidden="true"><span><i style="height:54.6%"></i></span><span><i style="height:62.7%"></i></span><span><i style="height:70.9%"></i></span><span><i style="height:15.0%"></i></span><span><i style="height:23.2%"></i></span><span><i style="height:32.5%"></i></span><span><i style="height:40.6%"></i></span><span><i style="height:48.8%"></i></span><span><i style="height:56.9%"></i></span><span><i style="height:66.2%"></i></span><span><i style="height:74.4%"></i></span><span><i style="height:100.0%"></i></span></span>
+              </td>
+              <td class="der">
+                <span style="display:inline-flex;align-items:center;gap:8px">
+                  <span class="barra" style="width:52px"><i style="width:67.5%"></i></span>
+                  <span style="font-weight:500;width:44px;display:inline-block">67,5%</span>
+                </span>
+              </td>
+            </tr>
+            <tr class="cierre">
+              <td colspan="4">
+                <span style="display:flex;align-items:center;gap:12px">
+                  <span class="medidor" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i></span>
+                  <span class="micro ink2">
+                    Con el <strong style="font-weight:600">27,7%</strong> de los pozos del país
+                    —3.996 de 14.441— aporta el <strong style="font-weight:600">69,3%</strong> del
+                    petróleo: un pozo de Vaca Muerta rinde
+                    <strong style="font-weight:600">5,9×</strong> uno del resto.
+                  </span>
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+  </div>
+
+  <hr class="corte">
+
+  <p class="desc" style="padding:0 4px">
+    <strong>Qué mirar en cada una.</strong>
+    <br>· <strong>A</strong> es la más compacta y la única que reusa el riel: sirve si la card tiene que
+    convivir con más secciones arriba del pliegue.
+    <br>· <strong>B</strong> es la que más aire pide y la única que muestra la serie con altura suficiente
+    para leer la forma; el bloque hundido es una ranura medida que hoy no usamos en ningún lado.
+    <br>· <strong>C</strong> es la única que pone las tres lecturas en columnas comparables y la única que
+    usa la tabla del sistema. Es también la que más se aleja del dashboard actual.
+    <br><br>
+    Las tres bajan la cifra a 17px y ninguna usa 21, que en la referencia aparece una sola vez y es el
+    título de la página. Las tres cierran con el pie sobre <code class="mono">--inset</code>, porque la
+    participación mide la card entera contra un total mayor y no es una fila más del desglose.
+  </p>
+
+</div>
+</body>
+</html>
