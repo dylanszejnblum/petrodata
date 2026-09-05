@@ -18,6 +18,7 @@ import { ProvincesModule } from './modules/provinces/provinces.module';
 import { NewsModule } from './modules/news/news.module';
 import { InversionesModule } from './modules/inversiones/inversiones.module';
 import { NewsletterModule } from './modules/newsletter/newsletter.module';
+import { DirectivosModule } from './modules/directivos/directivos.module';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { NewsletterModule } from './modules/newsletter/newsletter.module';
     NewsModule,
     InversionesModule,
     NewsletterModule,
+    DirectivosModule,
   ],
   controllers: [AppController],
   providers: [

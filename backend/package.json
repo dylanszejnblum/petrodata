@@ -31,7 +31,10 @@
     "db:seed:macro": "ts-node --transpile-only prisma/seed-macro-ar.ts",
     "db:seed:rigi": "ts-node --transpile-only prisma/seed-rigi.ts",
     "openapi:export": "ts-node --transpile-only scripts/export-openapi.ts",
-    "apikey:create": "ts-node --transpile-only prisma/create-api-key.ts"
+    "apikey:create": "ts-node --transpile-only prisma/create-api-key.ts",
+    "db:seed:executives": "ts-node --transpile-only prisma/seed-company-executives.ts",
+    "db:photos": "ts-node --transpile-only prisma/set-executive-photos.ts",
+    "assets:upload": "ts-node --transpile-only scripts/upload-assets.ts"
   },
   "prisma": {
     "seed": "ts-node --transpile-only prisma/seed.ts"
