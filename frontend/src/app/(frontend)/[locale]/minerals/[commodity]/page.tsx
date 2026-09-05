@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { Link } from '@/i18n/navigation'
 import nextDynamic from 'next/dynamic'
 import { notFound } from 'next/navigation'
-import { getTranslations } from 'next-intl/server'
+import { getLocale, getTranslations } from 'next-intl/server'
 import { NothingHeader } from '@/components/Nothing/Header'
 import { NothingFooter } from '@/components/Nothing/Footer'
 import { StatCard } from '@/components/Nothing/StatCard'
@@ -137,6 +137,7 @@ export default async function CommodityPage({
   params: Promise<{ commodity: string }>
 }) {
   const { commodity } = await params
+  const locale = await getLocale()
   const label = commodityLabel(commodity)
   const { color } = commodityColor(label)
 
@@ -214,7 +215,7 @@ export default async function CommodityPage({
             {headlines[0] ? (
               <StatCard
                 label={t('kpi.resource', { category: headlines[0].label.toUpperCase() })}
-                value={formatCompact(headlines[0].value)}
+                value={formatCompact(headlines[0].value, locale)}
                 unit={headlines[0].unit}
                 statusColor="neutral"
               />
@@ -224,7 +225,7 @@ export default async function CommodityPage({
             {reserveHeadlines[0] ? (
               <StatCard
                 label={t('kpi.reserve', { category: reserveHeadlines[0].label.toUpperCase() })}
-                value={formatCompact(reserveHeadlines[0].value)}
+                value={formatCompact(reserveHeadlines[0].value, locale)}
                 unit={reserveHeadlines[0].unit}
                 statusColor="neutral"
               />
@@ -243,18 +244,20 @@ export default async function CommodityPage({
               }`}
             >
               <TotalsCard
+                locale={locale}
                 title={t('totals.resource')}
                 emptyMessage={t('totals.noTotals')}
                 rows={headlines}
                 accent={color}
               />
               <TotalsCard
+                locale={locale}
                 title={t('totals.reserve')}
                 emptyMessage={t('totals.noTotals')}
                 rows={reserveHeadlines}
                 accent={color}
               />
-              {price && <PriceDetailCard quote={price} />}
+              {price && <PriceDetailCard quote={price} locale={locale} />}
             </div>
           </section>
         )}
@@ -351,11 +354,13 @@ function TotalsCard({
   rows,
   accent,
   emptyMessage,
+  locale,
 }: {
   title: string
   rows: { label: string; value: number; unit: string }[]
   accent: string
   emptyMessage: string
+  locale: string
 }) {
   if (rows.length === 0) {
     return (
@@ -396,7 +401,7 @@ function TotalsCard({
               <span
                 className="text-nd-text-display text-2xl tabular-nums leading-none font-display"
               >
-                {formatCompact(r.value)}
+                {formatCompact(r.value, locale)}
               </span>
               {r.unit && (
                 <span

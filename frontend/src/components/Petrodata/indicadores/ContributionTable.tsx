@@ -5,19 +5,20 @@
 // leaderboard) and a methodology footnote built from the API's assumptions.
 
 import { useEffect, useRef } from 'react'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import type { ApiSchemas } from '@/api/client'
-import { formatCompact } from '@/utilities/formatNumber'
+import { formatCompact, formatDecimal } from '@/utilities/formatNumber'
 import { animate, prefersReducedMotion, useInView } from './anim'
 
 type Contribution = ApiSchemas['OperatorContributionDto']
 
-const usd = (v: number) => `US$ ${formatCompact(v)}`
-const pct = (ratio: number, digits = 1) =>
-  `${(ratio * 100).toLocaleString('es-AR', { maximumFractionDigits: digits, minimumFractionDigits: digits })}%`
-
 export function ContributionTable({ data }: { data: Contribution }) {
   const t = useTranslations('indicadores.contribution')
+  const locale = useLocale()
+  const usd = (v: number) => `US$ ${formatCompact(v, locale)}`
+  const pct = (ratio: number, digits = 1) =>
+    `${(ratio * 100).toLocaleString(locale, { maximumFractionDigits: digits, minimumFractionDigits: digits })}%`
+
   const top = data.operators.slice(0, 8)
   const maxGross = Math.max(...top.map((o) => o.gross_value_usd), 1)
 
@@ -134,9 +135,9 @@ export function ContributionTable({ data }: { data: Contribution }) {
       {/* Methodology */}
       <p className="mt-4 max-w-3xl font-mono text-[11px] leading-relaxed text-nd-text-disabled">
         {t('methodology', {
-          brent: a.brent_avg_usd_bbl != null ? a.brent_avg_usd_bbl.toFixed(1) : '—',
+          brent: a.brent_avg_usd_bbl != null ? formatDecimal(a.brent_avg_usd_bbl, locale, 1) : '—',
           discount: a.oil_discount_usd_bbl,
-          pist: a.gas_pist_avg_usd_mmbtu != null ? a.gas_pist_avg_usd_mmbtu.toFixed(2) : '—',
+          pist: a.gas_pist_avg_usd_mmbtu != null ? formatDecimal(a.gas_pist_avg_usd_mmbtu, locale, 2) : '—',
           royalty: Math.round(a.royalty_rate * 100),
           from: data.window.from.slice(0, 7),
           to: data.window.to.slice(0, 7),

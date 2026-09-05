@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import {
   animate,
   animateCounter,
@@ -46,6 +46,7 @@ export function ExportSummaryView({
   provinces: { slug: string; name: string; total: number; bySector: Record<string, number> }[]
 }) {
   const t = useTranslations('exportaciones')
+  const locale = useLocale()
   const [selectedSector, setSelectedSector] = useState<SelectedSector>('all')
 
   const tabs: { id: SelectedSector; label: string }[] = [
@@ -85,7 +86,7 @@ export function ExportSummaryView({
     if (!el) return
     const a = animateCounter(el, currentTotal, {
       duration: 2000,
-      format: (v) => `$${formatCompact(v)}`,
+      format: (v) => `$${formatCompact(v, locale)}`,
     })
     return () => {
       a?.pause?.()
@@ -191,7 +192,7 @@ export function ExportSummaryView({
             ref={counterRef}
             className="font-display text-nd-text-display tabular-nums text-4xl md:text-5xl leading-none"
           >
-            {`$${formatCompact(currentTotal)}`}
+            {`$${formatCompact(currentTotal, locale)}`}
           </span>
         </div>
       </div>
@@ -241,10 +242,10 @@ export function ExportSummaryView({
                     {sectorDisplayName(s.sector)}
                   </span>
                   <span className="font-mono text-sm text-nd-text-display tabular-nums">
-                    ${formatCompact(s.value)}
+                    ${formatCompact(s.value, locale)}
                   </span>
                   <span className="font-mono text-[10px] uppercase tracking-[0.08em] text-nd-text-disabled tabular-nums">
-                    {formatPercent(sharePct)}
+                    {formatPercent(sharePct, locale)}
                   </span>
                 </li>
               )
@@ -289,10 +290,10 @@ export function ExportSummaryView({
                     </Link>
                     <div className="flex items-baseline gap-6">
                       <span className="font-mono text-sm text-nd-text-display tabular-nums">
-                        ${formatCompact(p.value)}
+                        ${formatCompact(p.value, locale)}
                       </span>
                       <span className="font-mono text-[10px] uppercase tracking-[0.08em] text-nd-text-disabled tabular-nums w-12 text-right">
-                        {formatPercent(sharePct)}
+                        {formatPercent(sharePct, locale)}
                       </span>
                     </div>
                   </div>

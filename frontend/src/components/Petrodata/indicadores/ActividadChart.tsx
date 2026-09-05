@@ -1,6 +1,6 @@
 'use client'
 
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { useMounted } from '@/hooks/useMounted'
 import { formatCompact } from '@/utilities/formatNumber'
@@ -18,6 +18,7 @@ function fmtPeriod(period: string): string {
 
 export function ActividadChart({ actividad }: { actividad: InvActividad }) {
   const t = useTranslations('indicadores')
+  const locale = useLocale()
   const mounted = useMounted()
   const rows: Row[] = actividad.points.map((p) => ({
     period: p.period,
@@ -48,7 +49,7 @@ export function ActividadChart({ actividad }: { actividad: InvActividad }) {
               minTickGap={24}
             />
             <YAxis
-              tickFormatter={(v) => formatCompact(v as number)}
+              tickFormatter={(v) => formatCompact(v as number, locale)}
               tick={{ fill: 'var(--nd-text-disabled)', fontSize: 11, fontFamily: 'var(--font-mono)' }}
               tickLine={false}
               axisLine={false}

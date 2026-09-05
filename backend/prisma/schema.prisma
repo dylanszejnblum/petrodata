@@ -200,11 +200,11 @@ model FactRigCount {
 }
 
 model FactEnergyBalance {
-  id             Int     @id @default(autoincrement())
+  id             Int    @id @default(autoincrement())
   ano            Int
-  formaDeEnergia String  @map("forma_de_energia")
+  formaDeEnergia String @map("forma_de_energia")
   concepto       String
-  ktepRedond     Float   @map("ktep_redond")
+  ktepRedond     Float  @map("ktep_redond")
 
   @@unique([ano, formaDeEnergia, concepto])
   @@index([formaDeEnergia, ano])
@@ -358,6 +358,68 @@ model Company {
   @@index([type])
   @@index([isPublic])
   @@map("company")
+}
+
+/// Quien dirige cada empresa del ranking — dato EDITORIAL, verificado a mano
+/// contra una fuente citable. Una fila por empresa: `company_slug` es la clave
+/// del cruce contra `company` y también la PK, porque el dato es «el directivo
+/// de esta empresa» y no «los directivos de esta empresa». Si algún día hay que
+/// listar más de uno, esto necesita id propio + índice por slug.
+///
+/// NO lleva ninguna métrica de la persona, y es a propósito: el pipeline trae
+/// nombre, cargo y fuente, nada más. El índice que publica /api/v2/directivos
+/// es de la EMPRESA, atribuido a quien la dirige, y se calcula en el servicio
+/// con cifras que ya viven en esta base.
+///
+/// `confirmed` distingue el cargo verificado contra más de una fuente (45/48)
+/// del que una sola fuente sugiere. `source_date` es cuándo se VERIFICÓ, no
+/// cuándo asumió: para eso está `in_role_since`, que acepta año, año-mes o
+/// fecha completa según lo que diga la fuente.
+model CompanyExecutive {
+  companySlug String    @id @map("company_slug")
+  name        String
+  role        String
+  confirmed   Boolean   @default(false)
+  sourceUrl   String?   @map("source_url")
+  sourceDate  DateTime? @map("source_date") @db.Date
+  inRoleSince String?   @map("in_role_since")
+  bio         String?
+  photoUrl    String?   @map("photo_url")
+  ingestedAt  DateTime  @default(now()) @map("ingested_at")
+
+  @@index([confirmed])
+  @@map("company_executive")
+}
+
+/// Un voto al directivo de una empresa. La unidad es (votante, empresa, semana):
+/// no se puede votar dos veces a la misma persona en la misma semana, y el
+/// presupuesto semanal se cuenta sobre estas filas.
+///
+/// `voter_hash` es HMAC(ip, VOTE_SALT) — la IP cruda nunca toca la base. Y una
+/// IP no es una persona: una oficina o una operadora móvil son miles detrás de
+/// una sola, y cualquiera con VPN vota lo que quiera. Es la aproximación que se
+/// eligió publicar y está dicho al pie de la página; no la trates como identidad.
+///
+/// EL VOTO NO SE EDITA (decisión de producto): una vez emitido no se saca ni se
+/// da vuelta hasta el lunes. Por eso no hay UPDATE ni DELETE, sólo INSERT.
+///
+/// `vote_day` existe aparte de `created_at` porque el orden se recalcula UNA VEZ
+/// POR DÍA: los votos de hoy no entran en el ranking de hoy. Con sólo el
+/// timestamp habría que hacer la aritmética de zona horaria en cada consulta.
+model ExecutiveVote {
+  id          Int      @id @default(autoincrement())
+  voterHash   String   @map("voter_hash")
+  companySlug String   @map("company_slug")
+  value       Int // 1 | -1
+  weekStart   DateTime @map("week_start") @db.Date
+  voteDay     DateTime @map("vote_day") @db.Date
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@unique([voterHash, companySlug, weekStart], name: "executive_vote_voter_company_week")
+  @@index([weekStart])
+  @@index([voteDay])
+  @@index([companySlug])
+  @@map("executive_vote")
 }
 
 model ProvinceExport {

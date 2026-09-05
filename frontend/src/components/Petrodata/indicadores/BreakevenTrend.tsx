@@ -8,7 +8,7 @@
 // final state at once. All figures are also stated in the legend.
 
 import { useEffect, useRef } from 'react'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import {
   Area,
   AreaChart,
@@ -25,8 +25,13 @@ import { animateCounter, prefersReducedMotion, useInView } from './anim'
 import type { InvBreakeven } from '@/api/inversiones'
 import { SourceChip } from './SourceChip'
 
-const nf0 = new Intl.NumberFormat('es-AR', { maximumFractionDigits: 0 })
-const nf1 = new Intl.NumberFormat('es-AR', { maximumFractionDigits: 1 })
+// Axis ticks and the breakeven reference round to whole dollars; every Brent
+// price and every headroom/margin figure keeps one decimal, matching how the
+// day-value card prints the same numbers (and the slider's 0.5 step).
+const numberFormats = (locale: string) => ({
+  nf0: new Intl.NumberFormat(locale, { maximumFractionDigits: 0 }),
+  nf1: new Intl.NumberFormat(locale, { minimumFractionDigits: 1, maximumFractionDigits: 1 }),
+})
 
 function fmtDate(iso: string): string {
   // "2026-04-21" → "abr '26"
@@ -40,6 +45,8 @@ const clamp01 = (n: number) => Math.min(1, Math.max(0, n))
 
 export function BreakevenTrend({ breakeven }: { breakeven: InvBreakeven }) {
   const t = useTranslations('indicadores')
+  const locale = useLocale()
+  const { nf0, nf1 } = numberFormats(locale)
   const mounted = useMounted()
   const { brentUsd, referenceUsd, headroomUsd } = breakeven
   const rows = (breakeven.series ?? []).map((p) => ({ date: p.date, value: p.value }))
@@ -50,13 +57,13 @@ export function BreakevenTrend({ breakeven }: { breakeven: InvBreakeven }) {
   useEffect(() => {
     if (!inView || !headRef.current) return
     if (prefersReducedMotion()) {
-      headRef.current.textContent = nf0.format(Math.round(headroomUsd))
+      headRef.current.textContent = nf1.format(headroomUsd)
       return
     }
-    const a = animateCounter(headRef.current, Math.round(headroomUsd), {
+    const a = animateCounter(headRef.current, headroomUsd, {
       duration: 1500,
       delay: 250,
-      format: (v) => nf0.format(Math.round(v)),
+      format: (v) => nf1.format(v),
     })
     return () => {
       a?.pause?.()
@@ -83,7 +90,7 @@ export function BreakevenTrend({ breakeven }: { breakeven: InvBreakeven }) {
             {t('charts.breakevenHeadroom')}
           </span>
           <span className="mt-1 block text-3xl tabular-nums text-nd-text-display md:text-4xl font-display">
-            US$<span ref={headRef}>{nf0.format(Math.round(headroomUsd))}</span>
+            US$<span ref={headRef}>{nf1.format(headroomUsd)}</span>
             <span className="ml-1 text-base text-nd-text-secondary">/bbl</span>
           </span>
         </div>
@@ -179,7 +186,7 @@ export function BreakevenTrend({ breakeven }: { breakeven: InvBreakeven }) {
       <div className="flex flex-wrap items-center justify-between gap-3 font-mono text-[11px]">
         <span className="text-nd-text-secondary">
           <span className="mr-1 inline-block size-2 rounded-full align-middle" style={{ background: stateColor }} />{' '}
-          Brent · {breakeven.source.asOf} · US${nf0.format(Math.round(brentUsd))}
+          Brent · {breakeven.source.asOf} · US${nf1.format(brentUsd)}
         </span>
         <span className="text-nd-text-disabled">
           Ref. US${nf0.format(referenceUsd)} — {breakeven.referenceSource.label}
@@ -202,6 +209,7 @@ function BeTooltip({
   payload?: TooltipPayload[]
   referenceUsd: number
 }) {
+  const { nf1 } = numberFormats(useLocale())
   if (!active || !payload || !payload.length) return null
   const row = payload[0]?.payload
   if (!row) return null

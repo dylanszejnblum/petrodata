@@ -3101,6 +3101,185 @@
           "newsletter"
         ]
       }
+    },
+    "/api/v2/directivos": {
+      "get": {
+        "description": "Los directivos de las empresas del ranking, ordenados por un índice 0–100. El índice es de la EMPRESA —escala de producción, rendimiento por pozo y prima de valor, recalculados sobre la última ventana de doce meses— atribuido a quien la dirige: el dato no trae ninguna métrica de la persona. La ponderación no se publica. Los votos de la semana suman hasta ±6 puntos, repartidos por posición relativa, y entran al corte del día siguiente al que se emitieron.",
+        "operationId": "DirectivosController_list_v2",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/DirectivosResponseDto"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/MetaDto"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "summary": "Quién dirige la cuenca",
+        "tags": [
+          "directivos"
+        ]
+      }
+    },
+    "/api/v2/directivos/voto": {
+      "get": {
+        "description": "Votos usados y emitidos esta semana por el que hace el pedido, identificado por IP. Respuesta por cliente: no la cachees.",
+        "operationId": "DirectivosController_estado_v2",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/VotoEstadoDto"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/MetaDto"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "summary": "El presupuesto de quien pregunta",
+        "tags": [
+          "directivos"
+        ]
+      }
+    },
+    "/api/v2/directivos/{slug}/foto": {
+      "get": {
+        "description": "Devuelve el retrato desde el bucket privado. 404 si esa empresa no tiene foto cargada — son 32 de 48 y la lista cae al monograma sola. Cachea un año: el nombre del objeto lleva el slug, así que si cambia la cara hay que purgar.",
+        "operationId": "DirectivosController_foto_v2",
+        "parameters": [
+          {
+            "name": "slug",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "example": "ypf",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Esa empresa no tiene foto.",
+            "content": {
+              "image/jpeg": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "La foto del directivo",
+        "tags": [
+          "directivos"
+        ]
+      }
+    },
+    "/api/v2/directivos/{slug}/voto": {
+      "post": {
+        "description": "Un voto por persona y por semana, cinco por semana en total. El voto NO se edita: una vez emitido no se saca ni se da vuelta hasta el lunes. El votante se identifica por IP — que no es una persona: una oficina o una operadora móvil son miles detrás de una sola, y cualquiera con VPN vota lo que quiera. Devuelve el presupuesto actualizado.",
+        "operationId": "DirectivosController_votar_v2",
+        "parameters": [
+          {
+            "name": "slug",
+            "required": true,
+            "in": "path",
+            "description": "Slug de la EMPRESA.",
+            "schema": {
+              "example": "ypf",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VotarDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/VotoEstadoDto"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/MetaDto"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No hay directivo cargado para esa empresa.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Ya votó a esa persona esta semana, o se quedó sin votos.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Votar a un directivo",
+        "tags": [
+          "directivos"
+        ]
+      }
     }
   },
   "info": {
@@ -6919,6 +7098,224 @@
         },
         "required": [
           "email"
+        ]
+      },
+      "DirectivoDto": {
+        "type": "object",
+        "properties": {
+          "company_slug": {
+            "type": "string",
+            "example": "ypf",
+            "description": "Slug de la EMPRESA — la clave del cruce, no del directivo."
+          },
+          "company_name": {
+            "type": "string",
+            "example": "YPF S.A."
+          },
+          "name": {
+            "type": "string",
+            "example": "Horacio Daniel Marín"
+          },
+          "role": {
+            "type": "string",
+            "example": "Presidente & CEO"
+          },
+          "in_role_since": {
+            "type": "object",
+            "example": "2023-12",
+            "nullable": true,
+            "description": "Desde cuándo ocupa el cargo. Año, año-mes o fecha completa, según lo que diga la fuente. NO es la fecha de verificación."
+          },
+          "bio": {
+            "type": "object",
+            "example": "Ingeniero químico de la UNLP…",
+            "nullable": true
+          },
+          "photo_url": {
+            "type": "object",
+            "example": "https://cdn.example.com/directivos/ypf.jpg",
+            "nullable": true
+          },
+          "index": {
+            "type": "number",
+            "example": 96.5,
+            "description": "Índice de la EMPRESA, atribuido a quien la dirige. La parte de producción —escala, rendimiento por pozo y prima de valor, con pesos que no se publican— va de 0 a 100. Los votos de la semana suman hasta ±6 encima de eso, así que el total puede pasar de 100: no se recorta, porque recortarlo empataría a los de arriba justo cuando el voto los separa."
+          },
+          "rank": {
+            "type": "number",
+            "example": 1
+          }
+        },
+        "required": [
+          "company_slug",
+          "company_name",
+          "name",
+          "role",
+          "in_role_since",
+          "bio",
+          "photo_url",
+          "index",
+          "rank"
+        ]
+      },
+      "VotacionResumenDto": {
+        "type": "object",
+        "properties": {
+          "week_start": {
+            "type": "string",
+            "example": "2026-08-31",
+            "description": "Lunes de la semana en curso."
+          },
+          "votes": {
+            "type": "number",
+            "example": 1284,
+            "description": "Votos emitidos esta semana. Es un COUNT, no una estimación."
+          },
+          "voters": {
+            "type": "number",
+            "example": 377,
+            "description": "Votantes distintos esta semana (IPs distintas — una IP no es una persona)."
+          },
+          "weekly_limit": {
+            "type": "number",
+            "example": 5
+          }
+        },
+        "required": [
+          "week_start",
+          "votes",
+          "voters",
+          "weekly_limit"
+        ]
+      },
+      "DirectivosSourceDto": {
+        "type": "object",
+        "properties": {
+          "window_from": {
+            "type": "string",
+            "example": "2025-06-01"
+          },
+          "window_to": {
+            "type": "string",
+            "example": "2026-05-01"
+          },
+          "inputs": {
+            "example": [
+              "Escala de producción",
+              "Rendimiento por pozo",
+              "Prima de valor"
+            ],
+            "description": "Los insumos del índice, por su nombre. La ponderación no se publica.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "window_from",
+          "window_to",
+          "inputs"
+        ]
+      },
+      "DirectivosResponseDto": {
+        "type": "object",
+        "properties": {
+          "directivos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DirectivoDto"
+            }
+          },
+          "votacion": {
+            "$ref": "#/components/schemas/VotacionResumenDto"
+          },
+          "source": {
+            "$ref": "#/components/schemas/DirectivosSourceDto"
+          }
+        },
+        "required": [
+          "directivos",
+          "votacion",
+          "source"
+        ]
+      },
+      "VotoEmitidoDto": {
+        "type": "object",
+        "properties": {
+          "company_slug": {
+            "type": "string",
+            "example": "ypf"
+          },
+          "value": {
+            "type": "number",
+            "example": 1,
+            "enum": [
+              1,
+              -1
+            ]
+          },
+          "counted": {
+            "type": "boolean",
+            "example": false,
+            "description": "false = se emitió hoy y entra en el corte de mañana. El orden se recalcula una vez por día."
+          }
+        },
+        "required": [
+          "company_slug",
+          "value",
+          "counted"
+        ]
+      },
+      "VotoEstadoDto": {
+        "type": "object",
+        "properties": {
+          "week_start": {
+            "type": "string",
+            "example": "2026-08-31"
+          },
+          "weekly_limit": {
+            "type": "number",
+            "example": 5
+          },
+          "used": {
+            "type": "number",
+            "example": 2
+          },
+          "remaining": {
+            "type": "number",
+            "example": 3
+          },
+          "votes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VotoEmitidoDto"
+            }
+          }
+        },
+        "required": [
+          "week_start",
+          "weekly_limit",
+          "used",
+          "remaining",
+          "votes"
+        ]
+      },
+      "VotarDto": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "number",
+            "enum": [
+              1,
+              -1
+            ],
+            "example": 1,
+            "description": "+1 sube, -1 baja. No hay otro valor."
+          }
+        },
+        "required": [
+          "value"
         ]
       }
     }

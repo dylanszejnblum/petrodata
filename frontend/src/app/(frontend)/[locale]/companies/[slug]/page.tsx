@@ -1,14 +1,14 @@
 import type { Metadata } from 'next'
 import nextDynamic from 'next/dynamic'
 import { notFound } from 'next/navigation'
-import { getTranslations } from 'next-intl/server'
+import { getLocale, getTranslations } from 'next-intl/server'
 import { ArrowLeft, ExternalLink } from 'lucide-react'
 import { Link } from '@/i18n/navigation'
 import { NothingHeader } from '@/components/Nothing/Header'
 import { NothingFooter } from '@/components/Nothing/Footer'
 import { api, type ApiSchemas } from '@/api/client'
 import { buildAlternates } from '@/i18n/alternates'
-import { formatCompact } from '@/utilities/formatNumber'
+import { formatCompact, formatPercent } from '@/utilities/formatNumber'
 import { commodityColor } from '@/components/Petrodata/minerals/commodityColors'
 import { CompanyLogo } from '@/components/Petrodata/entities/CompanyLogo'
 import { StatCounters } from '@/components/Petrodata/entities/StatCounters'
@@ -91,8 +91,11 @@ async function getContribution(slug: string): Promise<{
   }
 }
 
-const pctOf = (part: number | null | undefined, total: number | null | undefined): string | null =>
-  part != null && total ? `${((part / total) * 100).toFixed(1)}%` : null
+const pctOf = (
+  part: number | null | undefined,
+  total: number | null | undefined,
+  locale: string,
+): string | null => (part != null && total ? formatPercent(part / total, locale) : null)
 
 export async function generateMetadata({
   params,
@@ -106,6 +109,7 @@ export async function generateMetadata({
 
 export default async function CompanyDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
+  const locale = await getLocale()
   const [t, company, contribution] = await Promise.all([
     getTranslations('companies'),
     getCompany(slug),
@@ -223,7 +227,7 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
         status: { sort: str(p.status), node: str(p.status) || '—' },
         resource: {
           sort: headline?.value ?? 0,
-          node: headline ? `${formatCompact(headline.value)} ${headline.unit}` : '—',
+          node: headline ? `${formatCompact(headline.value, locale)} ${headline.unit}` : '—',
         },
       },
     }
@@ -233,22 +237,23 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
     ? [
         {
           label: t('contribution.grossValue'),
-          value: `US$ ${formatCompact(contribution.item.gross_value_usd)}`,
-          share: pctOf(contribution.item.gross_value_usd, contribution.totals.gross_value_usd),
+          value: `US$ ${formatCompact(contribution.item.gross_value_usd, locale)}`,
+          share: pctOf(contribution.item.gross_value_usd, contribution.totals.gross_value_usd, locale),
           shareNote: t('contribution.shareOfValue'),
         },
         {
           label: t('contribution.royalties'),
-          value: `US$ ${formatCompact(contribution.item.royalties_usd)}`,
+          value: `US$ ${formatCompact(contribution.item.royalties_usd, locale)}`,
         },
         ...(contribution.item.attributed_exports_usd != null
           ? [
               {
                 label: t('contribution.exports'),
-                value: `US$ ${formatCompact(contribution.item.attributed_exports_usd)}`,
+                value: `US$ ${formatCompact(contribution.item.attributed_exports_usd, locale)}`,
                 share: pctOf(
                   contribution.item.attributed_exports_usd,
                   contribution.totals.energy_exports_usd,
+                  locale,
                 ),
                 shareNote: t('contribution.shareOfExports'),
               },
@@ -258,7 +263,7 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
           ? [
               {
                 label: t('contribution.ofGdp'),
-                value: `${(contribution.item.value_share_of_gdp * 100).toFixed(2)}%`,
+                value: formatPercent(contribution.item.value_share_of_gdp, locale, 2),
               },
             ]
           : []),

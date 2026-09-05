@@ -5,7 +5,7 @@ import { commodityColor, commoditySlug } from './commodityColors'
 
 type Rollup = ApiSchemas['CommodityRollupDto']
 
-export function CommodityRollupCard({ rollup }: { rollup: Rollup }) {
+export function CommodityRollupCard({ rollup, locale }: { rollup: Rollup; locale: string }) {
   const { color } = commodityColor(rollup.commodity)
   const slug = commoditySlug(rollup.commodity)
 
@@ -53,7 +53,7 @@ export function CommodityRollupCard({ rollup }: { rollup: Rollup }) {
           <span
             className="mt-1 text-nd-text-display text-2xl tabular-nums leading-none block font-display"
           >
-            {formatCompact(topResource.value)}{' '}
+            {formatCompact(topResource.value, locale)}{' '}
             <span
               className="text-nd-text-disabled text-[10px] uppercase font-mono"
             >

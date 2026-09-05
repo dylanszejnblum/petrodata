@@ -3,7 +3,7 @@
 // { Silver: { measured_kOz: 76684, grade_g_t: 80 }, Gold: { ... } }
 // We pick the primary commodity's most informative grade + tonnage when present.
 
-import { formatCompact } from '@/utilities/formatNumber'
+import { decimalMark, formatCompact } from '@/utilities/formatNumber'
 
 type Highlights = Record<string, unknown>
 
@@ -147,13 +147,13 @@ function extractUnitFromKey(key: string): string {
   return tail.replace(/_/g, ' ')
 }
 
-export function formatGrade(g: { value: number; unit: string } | null): string {
+export function formatGrade(g: { value: number; unit: string } | null, locale = 'es-AR'): string {
   if (!g) return '—'
   const v = g.unit === '%' ? g.value.toFixed(2) : g.value.toFixed(1)
-  return `${v} ${g.unit}`.trim()
+  return `${v.replace('.', decimalMark(locale))} ${g.unit}`.trim()
 }
 
-export function formatResource(r: { value: number; unit: string } | null): string {
+export function formatResource(r: { value: number; unit: string } | null, locale = 'es-AR'): string {
   if (!r) return '—'
-  return `${formatCompact(r.value)} ${r.unit}`.trim()
+  return `${formatCompact(r.value, locale)} ${r.unit}`.trim()
 }

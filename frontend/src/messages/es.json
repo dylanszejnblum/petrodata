@@ -795,7 +795,7 @@
       "ofGdp": "del PBI",
       "anchorBasis": "Valor bruto de producción · últimos {months} meses · petróleo a Brent menos calidad + gas a PIST",
       "sliderLabel": "Escenario: precio del petróleo (Brent)",
-      "scenarioLabel": "A ese precio, sólo el petróleo:",
+      "scenarioLabel": "Escenario hipotético · sólo petróleo, al Brent elegido:",
       "margin": "Margen sobre el breakeven:",
       "avgChip": "Promedio del período US$ {price}",
       "spotChip": "Brent hoy US$ {price}",

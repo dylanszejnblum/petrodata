@@ -6,6 +6,7 @@ import { ArrowRight, TrendingDown, TrendingUp } from 'lucide-react'
 import { URANIUM } from './theme'
 import { animateCounter } from './anim'
 import type { HeroData } from './types'
+import { formatDecimal } from '@/utilities/formatNumber'
 
 export function UraniumHero({ data }: { data: HeroData }) {
   const t = useTranslations('uraniumHub')
@@ -18,7 +19,7 @@ export function UraniumHero({ data }: { data: HeroData }) {
     if (!el || price == null) return
     const anim = animateCounter(el, price, {
       duration: 2000,
-      format: (v) => `$${v.toFixed(2)}`,
+      format: (v) => `$${formatDecimal(v, locale)}`,
     })
     return () => {
       anim?.pause?.()
@@ -67,7 +68,7 @@ export function UraniumHero({ data }: { data: HeroData }) {
           className="text-4xl md:text-5xl leading-none tabular-nums font-display"
           style={{ color: URANIUM.teal }}
         >
-          {price == null ? '—' : `$${price.toFixed(2)}`}
+          {price == null ? '—' : `$${formatDecimal(price, locale)}`}
         </span>
         <span className="text-nd-text-disabled text-sm font-mono">{data.unit}</span>
         {data.changePct != null && (
@@ -77,7 +78,7 @@ export function UraniumHero({ data }: { data: HeroData }) {
           >
             {up ? <TrendingUp size={14} /> : down ? <TrendingDown size={14} /> : null}
             {up ? '+' : ''}
-            {data.changePct.toFixed(2)}%
+            {formatDecimal(data.changePct, locale, 2)}%
             {data.date && <span className="text-nd-text-disabled"> · {fmtMonth(data.date)}</span>}
           </span>
         )}
@@ -89,9 +90,9 @@ export function UraniumHero({ data }: { data: HeroData }) {
         {data.low && data.high && (
           <span>
             {t('historicalRange', {
-              low: `$${data.low.value.toFixed(2)}`,
+              low: `$${formatDecimal(data.low.value, locale)}`,
               lowDate: fmtMonth(data.low.date),
-              high: `$${data.high.value.toFixed(2)}`,
+              high: `$${formatDecimal(data.high.value, locale)}`,
               highDate: fmtMonth(data.high.date),
             })}
           </span>

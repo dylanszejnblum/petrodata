@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { useLocale, useTranslations } from 'next-intl'
 import { formatCompactUSD } from '@/utilities/formatCompactUSD'
 import { PROVINCE_META, provincePhoto } from './provinceMeta'
+import { formatDecimal } from '@/utilities/formatNumber'
 
 export type ProvinceCard = {
   slug: string
@@ -86,7 +87,7 @@ export function ProvinceList({ provinces }: { provinces: ProvinceCard[] }) {
                   {p.exportUsd != null && p.exportUsd > 0 && (
                     <div>
                       <div className="text-base font-semibold leading-none tabular-nums text-white font-display">
-                        {formatCompactUSD(p.exportUsd)}
+                        {formatCompactUSD(p.exportUsd, locale)}
                       </div>
                       <div className="mt-1 text-[9px] font-medium uppercase tracking-[0.1em] text-white/70 font-mono">
                         {t('exports')}
@@ -106,7 +107,7 @@ export function ProvinceList({ provinces }: { provinces: ProvinceCard[] }) {
                       {t('exportShare')}
                     </span>
                     <span className="text-[10px] font-semibold tabular-nums text-white/85 font-mono">
-                      {sharePct.toFixed(1)}%
+                      {formatDecimal(sharePct, locale, 1)}%
                     </span>
                   </div>
                   <div className="mt-1.5 h-[3px] overflow-hidden rounded-full bg-white/15">

@@ -4,9 +4,11 @@ import { useEffect, useRef } from 'react'
 import { animate, prefersReducedMotion, stagger, useInView, utils } from '@/components/Petrodata/uranium/anim'
 import { formatCompact, formatPercent } from '@/utilities/formatNumber'
 import type { BreakdownItem } from './types'
+import { useLocale } from 'next-intl'
 
 export function CommodityBreakdownBars({ items }: { items: BreakdownItem[] }) {
   const { ref, inView } = useInView<HTMLDivElement>()
+  const locale = useLocale()
 
   const sorted = [...items].sort((a, b) => b.count - a.count)
   const max = sorted.length ? sorted[0].count : 0
@@ -49,7 +51,7 @@ export function CommodityBreakdownBars({ items }: { items: BreakdownItem[] }) {
                 {item.name}
               </span>
               <span className="font-mono text-sm text-nd-text-display tabular-nums">
-                {formatCompact(item.count)}
+                {formatCompact(item.count, locale)}
               </span>
             </div>
             <div className="relative h-2 w-full bg-nd-surface-raised">
@@ -65,7 +67,7 @@ export function CommodityBreakdownBars({ items }: { items: BreakdownItem[] }) {
               />
             </div>
             <span className="font-mono text-[10px] uppercase tracking-[0.08em] text-nd-text-disabled tabular-nums">
-              {formatPercent(sharePct)} of total
+              {formatPercent(sharePct, locale)} of total
             </span>
           </div>
         )

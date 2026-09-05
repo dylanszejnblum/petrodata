@@ -1,4 +1,4 @@
-import { getTranslations } from 'next-intl/server'
+import { getLocale, getTranslations } from 'next-intl/server'
 import { Link } from '@/i18n/navigation'
 import type { ApiSchemas } from '@/api/client'
 import { commodityColor } from './commodityColors'
@@ -7,6 +7,7 @@ import { formatGrade, formatResource, pickGrade, pickResource } from './projectM
 type Project = ApiSchemas['ProjectListItemDto']
 
 export async function ProjectsTable({ projects }: { projects: Project[] }) {
+  const locale = await getLocale()
   const t = await getTranslations('projectsTable')
 
   if (projects.length === 0) {
@@ -44,7 +45,7 @@ export async function ProjectsTable({ projects }: { projects: Project[] }) {
       </div>
       <ul className="divide-y divide-nd-border">
         {projects.map((p) => (
-          <ProjectRow key={p.project_name} project={p} labels={columns} />
+          <ProjectRow key={p.project_name} project={p} labels={columns} locale={locale} />
         ))}
       </ul>
     </div>
@@ -61,7 +62,15 @@ type ColumnLabels = {
   resource: string
 }
 
-function ProjectRow({ project, labels }: { project: Project; labels: ColumnLabels }) {
+function ProjectRow({
+  project,
+  labels,
+  locale,
+}: {
+  project: Project
+  labels: ColumnLabels
+  locale: string
+}) {
   const { color } = commodityColor(project.primary_commodity)
   const highlights = project.commodity_highlights as Record<string, unknown> | null | undefined
   const grade = pickGrade(highlights, project.primary_commodity)
@@ -99,8 +108,8 @@ function ProjectRow({ project, labels }: { project: Project; labels: ColumnLabel
         <Cell label={labels.status}>{nullable(project.status)}</Cell>
         <Cell label={labels.province}>{nullable(project.province)}</Cell>
         <Cell label={labels.operator}>{nullable(project.operator)}</Cell>
-        <Cell label={labels.grade}>{formatGrade(grade)}</Cell>
-        <Cell label={labels.resource}>{formatResource(resource)}</Cell>
+        <Cell label={labels.grade}>{formatGrade(grade, locale)}</Cell>
+        <Cell label={labels.resource}>{formatResource(resource, locale)}</Cell>
       </Link>
     </li>
   )
