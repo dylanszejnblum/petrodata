@@ -56,6 +56,67 @@ GDP (current US$) from the World Bank — seeded into `fact_price` (`series=gdp_
 pnpm db:seed:gdp        # fetches World Bank NY.GDP.MKTP.CD for ARG; idempotent upsert
 ```
 
+### Directivos (quién dirige cada empresa)
+
+`/api/v2/directivos` cruza `company_executive` —dato editorial, una fila por
+empresa, con su fuente citable— contra la contribución por operadora, y ordena
+por un índice 0–100 de la EMPRESA atribuido a quien la dirige. El dato NO trae
+ninguna métrica de la persona.
+
+```bash
+pnpm db:seed:executives   # upsert desde prisma/data/company_executives.csv
+```
+
+**La ponderación del índice vive en `directivos.service.ts` y no se publica.**
+La respuesta manda los tres insumos por su nombre y el índice ya calculado; los
+componentes y los pesos se quedan del lado del servidor. Ése es el motivo por el
+que el cálculo está acá y no en el frontend, donde las constantes quedaban en un
+repo público a dos archivos de la prosa que decía que eran secretas.
+
+Las fotos van al bucket, no al repo:
+
+```bash
+pnpm assets:upload ../frontend-v2/public/images/ceos directivos   # sube lo que cambió
+pnpm db:photos                                                    # marca quién tiene cara
+```
+
+`assets:upload` firma SigV4 con `crypto` (ver `src/common/s3.ts`) en vez de traer
+el SDK de AWS, y salta los archivos cuyo MD5 ya coincide con el ETag remoto.
+`db:photos` sólo escribe `photo_url`, que guarda la **clave del objeto** y no una
+URL; la semilla nunca lo pisa, así que el orden entre las dos no importa.
+
+**El bucket es privado y las fotos salen por la API**, en
+`GET /api/v2/directivos/:slug/foto` (un año de cache, `immutable`, con ETag).
+Garage sólo publica por `Host` y el proxy de este server no tiene ruta ni
+certificado para `<bucket>.web-….sslip.io` —contesta 503—, y un wildcard de Let's
+Encrypt sobre sslip.io no se puede emitir porque no hay DNS-01. Pasar 32 jpg de
+30 KB por Nest no se nota y el bucket se queda privado, que es mejor igual. Si
+algún día hay un dominio propio con certificado, la ruta se puede cambiar por un
+redirect al bucket sin tocar la base: `photo_url` ya es una clave, no una URL.
+
+### Votos
+
+`POST /api/v2/directivos/:slug/voto` con `{ "value": 1 | -1 }`. Cinco votos por
+semana y uno por persona; el voto **no se edita** hasta el lunes. El votante se
+identifica por IP —que no es una persona: una oficina o una operadora móvil son
+miles detrás de una sola— y la IP **no se guarda**: la tabla lleva
+`HMAC(ip, VOTE_SALT)`. Sin `VOTE_SALT` el endpoint devuelve 503 en vez de
+arrancar con un secreto vacío; rotarlo resetea los presupuestos de la semana.
+
+`GET /api/v2/directivos/voto` devuelve el presupuesto de quien pregunta — es por
+IP, no se cachea.
+
+Dos cosas que el diseño resuelve a propósito:
+
+- **El corte es diario.** Los votos de hoy no entran en el ranking de hoy
+  (`vote_day < CURRENT_DATE`). Es una decisión de producto: reordenando en vivo,
+  el que vota ve su propio clic mover la tabla y el ranking se lee como un
+  juguete.
+- **El voto vale puntos relativos, no puntos fijos.** El más votado de la semana
+  se lleva ±6 puntos y el resto en proporción a él, así que diez votantes y diez
+  mil dan el mismo rango. Con una constante de puntos por voto —lo que había en
+  el frontend— la mezcla entre producción y opinión cambiaba sola con el tráfico.
+
 ## Run
 
 ```bash
