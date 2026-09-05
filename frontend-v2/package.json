@@ -2,14 +2,15 @@
   "name": "frontend-v2",
   "version": "0.1.0",
   "private": true,
-  "description": "vacamuerta.io v2 — sistema V2 (beautifului.dev) sobre el data layer real de petrodata",
+  "description": "vacamuerta.io v2 \u2014 sistema V2 (beautifului.dev) sobre el data layer real de petrodata",
   "type": "module",
   "scripts": {
     "dev": "next dev --port 3200",
     "build": "next build",
     "start": "next start --port 3200",
     "typecheck": "tsc --noEmit",
-    "api:types": "openapi-typescript ./openapi.json -o ./src/api/types.ts"
+    "api:types": "openapi-typescript ./openapi.json -o ./src/api/types.ts",
+    "check:datos": "node --experimental-strip-types scripts/check-clasificadores.ts"
   },
   "dependencies": {
     "animejs": "4.5.0",

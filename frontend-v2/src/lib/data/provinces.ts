@@ -6,6 +6,7 @@ import { api } from '@/api/client'
 import type { Province } from '@/fixtures/provinces'
 import { PROVINCES as FIXTURE_PROVINCES } from '@/fixtures/provinces'
 import { withFallback } from './fallback'
+import { nombreOperadora } from './clasificar'
 
 export async function loadProvinces(): Promise<Province[]> {
   return withFallback(
@@ -115,7 +116,7 @@ export async function loadProvinceDetail(slug: string): Promise<ProvinceDetailLi
       vmPct: d.oil_gas?.vm_pct ?? 0,
       topOperators: (d.oil_gas?.top_operators ?? []).map((o) => ({
         slug: o.operator_slug,
-        name: o.operator_name,
+        name: nombreOperadora(o.operator_slug, o.operator_name),
         boe: o.boe,
       })),
       production: points.map((p) => ({

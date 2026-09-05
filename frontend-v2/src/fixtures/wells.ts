@@ -24,6 +24,11 @@ function sortea(r: number) {
 
 export type WellStatus = 'activo' | 'perforacion' | 'abandonado'
 
+/* El recurso del pozo es un campo del dato (`well_type` de la Secretaría:
+   Petrolífero / Gasífero / Otro tipo / Sumidero / Inyección de Agua), no algo
+   que se deduzca de la producción. Ver mapWellType() en lib/data/wells.ts. */
+export type WellResource = 'petroleo' | 'gas' | 'otro'
+
 export type WellFeature = {
   type: 'Feature'
   geometry: { type: 'Point'; coordinates: [number, number] }
@@ -33,8 +38,7 @@ export type WellFeature = {
     operator: string
     operatorName: string
     status: WellStatus
-    oil: number
-    gas: number
+    recurso: WellResource
   }
 }
 
@@ -68,8 +72,7 @@ export const WELLS: WellFeature[] = Array.from({ length: 220 }, (_, i) => {
       operator: op.slug,
       operatorName: op.name,
       status,
-      oil: status === 'activo' ? Math.round(rnd() * 240) : 0,
-      gas: status === 'activo' ? Math.round(rnd() * 42 * 10) / 10 : 0,
+      recurso: rnd() < 0.66 ? 'petroleo' : rnd() < 0.75 ? 'gas' : 'otro',
     },
   }
 })

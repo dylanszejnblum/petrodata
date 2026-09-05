@@ -2,6 +2,7 @@
 
 import { useId, useMemo, useState } from 'react'
 import { Icono, PATH } from './iconos'
+import { DetalleEmpresa } from './DetalleEmpresa'
 
 /* LISTA FILTRABLE — la Filter Table (§13) con el buscador de la §15 y un
    desglose por fila.
@@ -243,7 +244,7 @@ export function ListaEmpresas({
 
                   <div id={id} className="s-colapsa" data-abierto={esta ? 'si' : 'no'}>
                     <div>
-                      <Ficha f={f} />
+                      <Ficha f={f} abierta={esta} />
                     </div>
                   </div>
                 </div>
@@ -293,7 +294,7 @@ export function ListaEmpresas({
    celda, debajo del nombre— y el contenido en 27. Lo que se conserva es la
    RELACIÓN: 7px entre el riel y la caja del paso, y con los 6 de padding del
    paso, 13 entre el riel y el ícono. Los mismos que en provincias. */
-function Ficha({ f }: { f: FilaEmpresa }) {
+function Ficha({ f, abierta }: { f: FilaEmpresa; abierta: boolean }) {
   return (
     <div
       style={{
@@ -356,6 +357,15 @@ function Ficha({ f }: { f: FilaEmpresa }) {
             delta={f.bolsa.delta}
           />
         )}
+        {/* Lo que el listado no trae: la historia del papel y el resumen de
+            operación del país (los dos pedidos de la página de empresa de la
+            v1). Va SÓLO en la fila abierta: la ficha está montada para las 52
+            desde que se carga la página —el despliegue es CSS, no mount— y
+            sin la guarda cada fila pedía su detalle al backend apenas entrar
+            a la sección: más de cien pedidos de una, y el rate-limit del
+            remoto cortando la mitad. El cache de módulo hace que reabrir una
+            ficha ya vista sea inmediato. */}
+        {abierta && <DetalleEmpresa slug={f.slug} ticker={f.bolsa?.ticker} />}
       </div>
     </div>
   )

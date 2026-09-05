@@ -2,6 +2,7 @@
 
 import { Link, usePathname } from '@/i18n/navigation'
 import { useTranslations } from 'next-intl'
+import { CapturaNewsletter } from './CapturaNewsletter'
 import { CardCuenca } from './CardCuenca'
 import { formatMonth } from '@/lib/format'
 
@@ -42,7 +43,7 @@ const SECCIONES = [
   { href: '/empresas', n: '04', label: 'empresas' },
   { href: '/indicadores', n: '05', label: 'indicadores' },
   { href: '/noticias', n: '06', label: 'noticias' },
-  { href: '/personalidades', n: '07', label: 'personalidades' },
+  { href: '/directivos', n: '07', label: 'directivos' },
 ]
 
 export function Indice({ periodo }: { periodo: string }) {
@@ -133,6 +134,12 @@ export function Indice({ periodo }: { periodo: string }) {
           {t('datosDesc')}
         </p>
       </div>
+
+      {/* La captura de newsletter (POST /v1/newsletter, como el pie de la v1)
+          cierra la columna: es el único pedido que ESCRIBE, así que va último
+          — después del bloque que explica de qué son los datos que uno acaba
+          de leer. */}
+      <CapturaNewsletter />
     </aside>
   )
 }

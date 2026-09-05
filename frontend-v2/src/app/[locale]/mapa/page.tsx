@@ -2,7 +2,7 @@ import { Suspense } from 'react'
 import { getTranslations } from 'next-intl/server'
 import { Seccion, Card, CardHead, FilaDato, Pie } from '../_ui/kit'
 import { MapaV2 } from './MapaV2'
-import { loadHeadline } from '@/lib/data/production'
+import { loadHeadline, loadOperators } from '@/lib/data/production'
 import { loadWells } from '@/lib/data/wells'
 import { formatInteger } from '@/lib/format'
 
@@ -34,7 +34,11 @@ export default async function V2Mapa({
 }) {
   const { locale } = await params
   const t = await getTranslations({ locale, namespace: 'v2.mapa' })
-  const [HEADLINE, WELLS] = await Promise.all([loadHeadline(), loadWells()])
+  const [HEADLINE, WELLS, OPERADORES] = await Promise.all([
+    loadHeadline(),
+    loadWells(),
+    loadOperators(),
+  ])
 
   return (
     <>
@@ -46,7 +50,7 @@ export default async function V2Mapa({
             correcto evita que el contenido de abajo salte cuando el mapa
             aparece. */}
         <Suspense fallback={<div className="h-full w-full" style={{ background: 'var(--canvas)' }} />}>
-          <MapaV2 wells={WELLS} />
+          <MapaV2 wells={WELLS} operadores={OPERADORES} />
         </Suspense>
       </div>
 

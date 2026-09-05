@@ -2,14 +2,26 @@
 # produce con Higgsfield a partir de una foto real, con el prompt «Recreate
 # this exact person as a professional corporate executive cover portrait».
 #
-# Son fotorrealistas, sin marca de agua, de personas reales con nombre y
-# apellido. Sirven para ver la maqueta en localhost; NO se versionan, porque
-# subirlas al repo es publicarlas, y publicar un retrato sintético de alguien
-# como si fuera su foto corporativa —en una página que después va a pedirle
-# sponsoreo a esa misma persona— es el peor lugar para hacerlo.
+# SE VERSIONAN desde el 2026-09-01 (decisión de Mariano). Antes no, y el motivo
+# por el que no conviene olvidarlo: son retratos sintéticos, fotorrealistas y
+# sin marca de agua, de personas reales con nombre y apellido, en una página
+# que después va a pedirle sponsoreo a esa misma gente. El repo es público, así
+# que subirlas es publicarlas y el historial de git las conserva.
 #
-# Para publicar hay que resolver antes de dónde sale la foto: las reales de
-# CEOS/data/photos/ con su licencia, una cedida por la empresa, o el monograma,
-# que la lista ya soporta.
+# LO QUE SÍ SE REVISÓ, y es la condición para que estén acá: cada una tiene una
+# foto base que es una foto real DE ESA PERSONA. Se retiraron 18 de 48; dos se
+# recuperaron después con una base verificada —Hugo Eurnekian, de su ficha de
+# orador en as-coa.org, y Leandro Carbone, de la página de management de
+# interoil.no— así que hoy son 32 caras y 16 monogramas. Las retiradas eran doce
+# generadas desde un ícono de avatar genérico (caras inventadas enteras), una
+# hecha con la foto de otra persona real (Eduardo Eurnekian para el retrato de
+# Hugo Eurnekian), dos desde imágenes que no eran de nadie —un paisaje aéreo y
+# un avatar ilustrado— y tres desde bases tan pobres —un frame de video, una
+# foto de atril, una captura de videollamada— que la cara resultante no se
+# parecía a la base. Esas filas caen al monograma, que la lista ya soporta.
+#
+# Antes de agregar una cara nueva: mirá la foto base. Si no es un retrato de la
+# persona, no entra.
 *
 !.gitignore
+!*.jpg

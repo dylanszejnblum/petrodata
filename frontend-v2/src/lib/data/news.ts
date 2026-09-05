@@ -2,9 +2,9 @@
    Mapea NewsCard (API) → NewsItem (fixture): topic principal → categoría,
    sourceName → source, deck → summary. */
 
-import { fetchNews, fetchNewsDoc, type NewsCard } from '@/api/news'
+import { fetchNews, fetchNewsDoc, fetchNewsFacets, type NewsCard } from '@/api/news'
 import type { NewsItem } from '@/fixtures/news'
-import { NEWS as FIXTURE_NEWS } from '@/fixtures/news'
+import { CATEGORY_LABEL, FILTER_CATEGORIES, NEWS as FIXTURE_NEWS } from '@/fixtures/news'
 import { withFallback } from './fallback'
 
 /** topic del backend → categoría editorial del fixture */
@@ -95,3 +95,33 @@ export async function loadNewsDoc(
 }
 
 export { FIXTURE_NEWS }
+
+/* ── Las píldoras de filtro, del corpus real ─────────────────────────────
+   GET /api/v1/news/facets — los temas con su conteo. La portada armaba las
+   píldoras con FILTER_CATEGORIES del fixture (seis fijas); la v1 filtra por
+   los topics vivos. Acá se traduce cada topic a la categoría editorial de
+   siempre (TOPIC_TO_CATEGORY) y se ordena por cuántas notas tiene cada una:
+   el filtro más útil es el primero.
+
+   Sólo entran los topics con categoría conocida —CATEGORY_LABEL es la paleta
+   de colores y el rótulo— y si la API no responde caen las seis del fixture,
+   que es lo que había. */
+
+export async function loadNewsPills(): Promise<{ id: NewsItem['category']; rot: string }[]> {
+  try {
+    const facets = await fetchNewsFacets()
+    const conteo = new Map<NewsItem['category'], number>()
+    for (const f of facets.topics) {
+      const cat = TOPIC_TO_CATEGORY[f.value.toLowerCase()]
+      if (!cat) continue
+      conteo.set(cat, (conteo.get(cat) ?? 0) + f.count)
+    }
+    const vivas = [...conteo.entries()]
+      .sort((a, b) => b[1] - a[1])
+      .map(([id]) => ({ id, rot: CATEGORY_LABEL[id] }))
+    if (vivas.length) return vivas
+  } catch {
+    /* sin facets: el fixture */
+  }
+  return FILTER_CATEGORIES.map((c) => ({ id: c, rot: CATEGORY_LABEL[c] }))
+}

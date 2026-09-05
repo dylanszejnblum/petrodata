@@ -15,6 +15,7 @@ export async function withFallback<T>(
   try {
     const value = await live()
     if (value == null || (Array.isArray(value) && value.length === 0)) {
+      console.warn(`[data] ${label}: la API no devolvió datos, usando fixture`)
       return fallback()
     }
     return value

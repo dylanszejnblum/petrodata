@@ -18,6 +18,9 @@ import { VM as FIXTURE_VM } from '@/fixtures/indicadores'
 import { TOP_OPERATORS as FIXTURE_OPERATORS, OIL_PRODUCERS as FIXTURE_OIL_PRODUCERS } from '@/fixtures/operators'
 import type { Operator } from '@/fixtures/operators'
 import { num, withFallback } from './fallback'
+import { nombreOperadora } from './clasificar'
+
+export { nombreOperadora }
 
 export type Headline = typeof FIXTURE_HEADLINE
 
@@ -41,7 +44,7 @@ export async function operatorNames(): Promise<Map<string, string>> {
     })
     const m = new Map<string, string>()
     if (error || !data?.data) return m
-    for (const o of data.data) m.set(o.operator_slug, o.operator_name)
+    for (const o of data.data) m.set(o.operator_slug, nombreOperadora(o.operator_slug, o.operator_name))
     return m
   } catch {
     return new Map()
@@ -62,30 +65,34 @@ export async function monthlyByOperator(
   to: string,
   opts: { vm?: boolean } = {},
 ): Promise<Map<string, Map<string, OpRow>>> {
+  /* limit=500 es el máximo del endpoint, y la paginación viene en
+     `pagination: {page, limit, total}` — NO en `meta`. Leerla del lado
+     equivocado devolvía una sola página en silencio: la serie nacional de 24
+     meses (1.365 filas) se quedaba con un mes y caía al fixture. */
   const query: Record<string, string> = {
     group_by: 'operator',
     from,
     to,
-    limit: '100',
+    limit: '500',
   }
   if (opts.vm) query.formation = 'vaca_muerta'
-  const { data, error } = await api.GET('/api/v1/production/monthly', {
-    params: { query: query as never },
-    next: { revalidate: 300 },
-  })
+  const pedir = (page?: number) =>
+    api.GET('/api/v1/production/monthly', {
+      params: { query: (page ? { ...query, page } : query) as never },
+      next: { revalidate: 300 },
+    })
+
   const out = new Map<string, Map<string, OpRow>>()
+  const { data, error } = await pedir()
   if (error || !data?.data) return out
   const rows = (data.data as Record<string, unknown>[]).slice()
-  const meta = (data as { meta?: { totalPages?: number } }).meta
-  if (meta?.totalPages && meta.totalPages > 1) {
-    for (let p = 2; p <= Math.min(meta.totalPages, 20); p++) {
-      const next = await api.GET('/api/v1/production/monthly', {
-        params: { query: { ...query, page: p } as never },
-        next: { revalidate: 300 },
-      })
-      if (next.error || !next.data?.data) break
-      rows.push(...(next.data.data as Record<string, unknown>[]))
-    }
+  const pag = (data as { pagination?: { limit?: number; total?: number } }).pagination
+  const totalPages =
+    pag?.total && pag.limit ? Math.ceil(pag.total / pag.limit) : 1
+  for (let p = 2; p <= Math.min(totalPages, 20); p++) {
+    const next = await pedir(p)
+    if (next.error || !next.data?.data) break
+    rows.push(...(next.data.data as Record<string, unknown>[]))
   }
   for (const r of rows) {
     const period = String(r.date_month ?? r.period ?? '').slice(0, 7)
@@ -197,8 +204,15 @@ export async function loadNationalSeries(): Promise<MonthPoint[]> {
   return withFallback(
     'nationalSeries',
     async () => {
-      const to = FIXTURE_SERIES[FIXTURE_SERIES.length - 1].period
-      const from = FIXTURE_SERIES[0].period
+      /* La ventana sale del ÚLTIMO MES REAL del backend, no del fixture: si
+         entra un mes nuevo la serie lo muestra sola. 24 meses, como el fixture. */
+      const meta = await latestMeta()
+      const to = meta?.period ?? FIXTURE_SERIES[FIXTURE_SERIES.length - 1].period
+      const from = (() => {
+        const [y, m] = to.split('-').map(Number)
+        const d = new Date(y, m - 24, 1)
+        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
+      })()
       const monthly = await monthlyByOperator(from, to)
       if (monthly.size < 6) return null
       return [...monthly.entries()]
@@ -247,7 +261,10 @@ export async function loadTopOperators(limit = 5): Promise<Operator[]> {
       const days = daysInMonth(meta.period)
       return filas.map((r, i) => ({
         slug: r.operator,
-        name: nombres.get(r.operator) ?? FIXTURE_OPERATORS.find((f) => f.slug === r.operator)?.name ?? r.operator,
+        name:
+          nombres.get(r.operator) ??
+          FIXTURE_OPERATORS.find((f) => f.slug === r.operator)?.name ??
+          nombreOperadora(r.operator),
         boeMonth: Math.round(r.boe),
         boeDay: Math.round(r.boe / days),
         color: operatorColor(r.operator, i),
@@ -278,7 +295,7 @@ export async function loadOilProducers(
       if (!filas.length) return null
       const total = filas.reduce((s, r) => s + r.oil, 0)
       return filas.map((r) => ({
-        name: nombres.get(r.operator) ?? r.operator,
+        name: nombres.get(r.operator) ?? nombreOperadora(r.operator),
         bbld: Math.round(r.oil),
         sharePct: Math.round((r.oil / total) * 1000) / 10,
       }))
@@ -288,8 +305,9 @@ export async function loadOilProducers(
 }
 
 /* ── VM (la formación dentro del total nacional) ──
-   Shares y pozos en vivo desde /latest + /monthly VM; YoY backfill del
-   fixture (no hay endpoint de año atrás armado). */
+   Shares, pozos y YoY en vivo desde /latest + /monthly VM. El YoY sale del
+   MISMO mes del año anterior, que llega en la misma consulta: pedir la
+   ventana de trece meses cuesta lo mismo que pedir uno. */
 export type VmStats = {
   oilSharePct: number
   gasSharePct: number
@@ -306,16 +324,19 @@ export async function loadVM(): Promise<VmStats> {
     async () => {
       const meta = await latestMeta()
       if (!meta) return null
-      const mensual = await monthlyByOperator(meta.period, meta.period, { vm: true })
+      const [y, m] = meta.period.split('-').map(Number)
+      const anioAtras = `${y - 1}-${String(m).padStart(2, '0')}`
+      const mensual = await monthlyByOperator(anioAtras, meta.period, { vm: true })
       const vm = sumMes(mensual.get(meta.period))
       if (vm.oil <= 0) return null
+      const previo = sumMes(mensual.get(anioAtras))
       return {
         oilSharePct: Math.round(meta.vmShare.oil * 1000) / 10,
         gasSharePct: Math.round(meta.vmShare.gas * 1000) / 10,
         wells: vm.wells,
         oilBbld: Math.round(vm.oil),
-        oilYoY: FIXTURE_VM.oilYoY,
-        wellsYoY: FIXTURE_VM.wellsYoY,
+        oilYoY: previo.oil > 0 ? vm.oil / previo.oil - 1 : FIXTURE_VM.oilYoY,
+        wellsYoY: previo.wells > 0 ? vm.wells / previo.wells - 1 : FIXTURE_VM.wellsYoY,
         dataDate: meta.period,
       }
     },
@@ -324,3 +345,58 @@ export async function loadVM(): Promise<VmStats> {
 }
 
 export { FIXTURE_HEADLINE, FIXTURE_SERIES }
+
+/* ── Operadoras del país ──────────────────────────────────────────────────
+   GET /api/v1/operators?sort=boe — el mismo listado que usa el mapa de la v1:
+   ranking nacional por BOE del último mes, con pozos activos. El panel del
+   mapa de v2 ordenaba por los pozos de la muestra (1.000), que es una foto
+   parcial: con este ranking el orden y el número grande son los del país. */
+
+export type OperadorPais = {
+  slug: string
+  nombre: string
+  /** BOE del último mes (nacional, no sólo VM) */
+  boe: number
+  /** BOE/d del último mes */
+  boeDia: number
+  pozos: number
+  mes: string
+}
+
+export async function loadOperators(limit = 20): Promise<OperadorPais[]> {
+  return withFallback(
+    'operators',
+    async () => {
+      const { data, error } = await api.GET('/api/v1/operators', {
+        params: { query: { sort: 'boe', order: 'desc' } },
+        next: { revalidate: 3600 },
+      })
+      const rows = data?.data
+      if (error || !rows?.length) return null
+      const dias = (m: string) => {
+        const [y, mm] = m.split('-').map(Number)
+        return new Date(y, mm, 0).getDate()
+      }
+      return rows.slice(0, limit).map((o) => {
+        const mes = String(o.latest_month ?? '').slice(0, 7)
+        return {
+          slug: o.operator_slug,
+          nombre: nombreOperadora(o.operator_slug, o.operator_name),
+          boe: o.boe,
+          boeDia: Math.round(o.boe / (dias(mes) || 30)),
+          pozos: o.active_wells,
+          mes,
+        }
+      })
+    },
+    () =>
+      FIXTURE_OPERATORS.map((o) => ({
+        slug: o.slug,
+        nombre: o.name,
+        boe: o.boeMonth,
+        boeDia: o.boeDay,
+        pozos: 0,
+        mes: '',
+      })),
+  )
+}

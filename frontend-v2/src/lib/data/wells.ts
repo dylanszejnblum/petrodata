@@ -1,18 +1,56 @@
 /* Pozos — GET /api/v1/geo/wells (GeoJSON crudo).
-   Mapea GeoWellFeatureDto → WellFeature del fixture (id/name/operator/status/oil/gas).
-   El GeoJSON no trae producción por pozo: el popup del mapa muestra los
-   metadatos y omite la grilla de producción cuando no hay datos. */
+   Mapea GeoWellFeatureDto → WellFeature del fixture
+   (id/name/operator/status/recurso). El GeoJSON NO trae producción por pozo:
+   por eso el recurso sale de `well_type` y no de comparar bbl/d contra MMm³/d,
+   y el popup del mapa pide /v1/wells/{id} para la grilla de producción. */
 
-import { api } from '@/api/client'
-import type { WellFeature, WellStatus } from '@/fixtures/wells'
+import { api, type ApiSchemas } from '@/api/client'
+import type { WellFeature } from '@/fixtures/wells'
 import { WELLS as FIXTURE_WELLS } from '@/fixtures/wells'
 import { withFallback } from './fallback'
+import { mapStatus, mapWellType, nombreOperadora } from './clasificar'
 
-function mapStatus(statusCode: string | null | undefined): WellStatus {
-  const s = (statusCode ?? '').toLowerCase()
-  if (s.includes('producción') || s.includes('produccion')) return 'activo'
-  if (s.includes('perforación') || s.includes('perforacion')) return 'perforacion'
-  return 'abandonado'
+/** GeoJSON crudo de la API → WellFeature. Se usa del lado del servidor
+    (loadWells) y también del cliente, cuando el mapa pide los pozos de UNA
+    operadora al seleccionarla en el panel. */
+export function toWellFeatures(
+  features: ApiSchemas['GeoWellFeatureDto'][],
+): WellFeature[] {
+  return features
+    .filter((f) => f.geometry?.coordinates?.length === 2)
+    .map((f) => {
+      const p = f.properties
+      return {
+        type: 'Feature' as const,
+        geometry: {
+          type: 'Point' as const,
+          coordinates: [f.geometry.coordinates[0], f.geometry.coordinates[1]],
+        },
+        properties: {
+          id: p.well_id,
+          name: p.sigla,
+          operator: p.operator_slug,
+          operatorName: nombreOperadora(p.operator_slug, p.operator_name),
+          status: mapStatus(p.status_code),
+          recurso: mapWellType(p.well_type),
+        },
+      }
+    })
+}
+
+/** Pozos de una operadora, ya filtrados por la API (formation + operator).
+ *  Del lado del cliente: el mapa llama acá al seleccionar una operadora, como
+ *  hace la v1 al refetchear con ?operator=. */
+export async function fetchWellsByOperator(operator: string, limit = 1000): Promise<WellFeature[] | null> {
+  try {
+    const { data, error } = await api.GET('/api/v1/geo/wells', {
+      params: { query: { formation: 'vaca_muerta', operator, limit } },
+    })
+    if (error || !data?.features?.length) return null
+    return toWellFeatures(data.features)
+  } catch {
+    return null
+  }
 }
 
 export async function loadWells(limit = 1000): Promise<WellFeature[]> {
@@ -24,27 +62,7 @@ export async function loadWells(limit = 1000): Promise<WellFeature[]> {
         next: { revalidate: 300 },
       })
       if (error || !data?.features?.length) return null
-      return data.features
-        .filter((f) => f.geometry?.coordinates?.length === 2)
-        .map((f) => {
-          const p = f.properties
-          return {
-            type: 'Feature' as const,
-            geometry: {
-              type: 'Point' as const,
-              coordinates: [f.geometry.coordinates[0], f.geometry.coordinates[1]],
-            },
-            properties: {
-              id: p.well_id,
-              name: p.sigla,
-              operator: p.operator_slug,
-              operatorName: p.operator_name,
-              status: mapStatus(p.status_code),
-              oil: 0,
-              gas: 0,
-            },
-          }
-        })
+      return toWellFeatures(data.features)
     },
     () => FIXTURE_WELLS,
   )

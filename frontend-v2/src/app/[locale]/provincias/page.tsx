@@ -193,9 +193,10 @@ export default async function V2Provincias({
             Una advertencia va donde está lo que advierte. Al pie sólo queda lo
             que no tiene dónde vivir en la pantalla: la procedencia. */}
         <Pie>
-          Pozos y exportaciones salen del sitio. La producción mensual no: no se publica
-          por provincia y esta serie es ilustrativa. Las operadoras son las destacadas,
-          no todas las que operan.
+          Pozos y exportaciones salen del sitio. La producción mensual —BOE/d,
+          doce meses— se busca por provincia al desplegar la fila; la que aún no
+          llega entra como serie ilustrativa en bbl/d. Las operadoras son las
+          destacadas, no todas las que operan.
         </Pie>
       </Seccion>
 

@@ -1,8 +1,8 @@
 import { Link } from '@/i18n/navigation'
 import { Card, FilaNoticia, Pie, Seccion, Tag, colorCategoria, recorte } from '../_ui/kit'
 import { ListaNoticias, type FilaNota } from '../_ui/ListaNoticias'
-import { CATEGORY_LABEL, FILTER_CATEGORIES } from '@/fixtures/news'
-import { loadNews, loadNewsTotal } from '@/lib/data/news'
+import { CATEGORY_LABEL } from '@/fixtures/news'
+import { loadNews, loadNewsPills, loadNewsTotal } from '@/lib/data/news'
 import { formatInteger } from '@/lib/format'
 import { getTranslations } from 'next-intl/server'
 
@@ -40,7 +40,7 @@ export default async function V2Noticias({
 }) {
   const { locale } = await params
   const t = await getTranslations({ locale, namespace: 'v2.noticias' })
-  const [NEWS, TOTAL_DOCS] = await Promise.all([loadNews(), loadNewsTotal()])
+  const [NEWS, TOTAL_DOCS, PILLS] = await Promise.all([loadNews(), loadNewsTotal(), loadNewsPills()])
   const orden = NEWS.slice().sort((a, b) => b.date.localeCompare(a.date))
   const destacada = orden.find((n) => n.featured) ?? orden[0]
   /* Las cuatro que acompañan a la destacada, y después TODAS en la lista de
@@ -59,7 +59,7 @@ export default async function V2Noticias({
     minutos: n.readingMin,
     imagen: n.image,
   }))
-  const pills = FILTER_CATEGORIES.map((c) => ({ id: c, rot: CATEGORY_LABEL[c] }))
+  const pills = PILLS
 
   const desde = orden[orden.length - 1].date
   const hasta = orden[0].date
@@ -180,10 +180,10 @@ export default async function V2Noticias({
         <ListaNoticias notas={filas} pills={pills} />
         <Pie>
           Esta portada son {orden.length} notas entre el {desde} y el {hasta}; el corpus completo
-          del sitio son {formatInteger(TOTAL_DOCS)} documentos. Las píldoras salen de las seis
-          categorías que el fixture declara filtrables — actualidad, laboral y ambiente se
-          alcanzan por el buscador. Sin orden por relevancia: no hay ninguna señal de relevancia
-          en el dato y un puntaje inventado no es un orden.
+          del sitio son {formatInteger(TOTAL_DOCS)} documentos. Las píldoras salen de los temas
+          del corpus, ordenados por cuántas notas tiene cada uno — actualidad, laboral y
+          ambiente se alcanzan por el buscador. Sin orden por relevancia: no hay ninguna señal
+          de relevancia en el dato y un puntaje inventado no es un orden.
         </Pie>
       </Seccion>
     </>

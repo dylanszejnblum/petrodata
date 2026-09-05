@@ -875,10 +875,19 @@
       "empresas": "Empresas",
       "indicadores": "Indicadores",
       "noticias": "Noticias",
-      "personalidades": "Personalidades",
+      "directivos": "Directivos",
       "datosTitle": "Datos públicos",
       "datosDesc": "Secretaría de Energía y balances de las operadoras. Corte mensual.",
-      "verMapa": "Ver el mapa"
+      "verMapa": "Ver el mapa",
+      "newsletter": {
+        "titulo": "El informe, cada lunes",
+        "bajada": "La producción de la semana en el correo.",
+        "placeholder": "tu@correo.com",
+        "accion": "Suscribirme",
+        "enviando": "…",
+        "ok": "Listo: quedó anotado.",
+        "error": "No se pudo anotar. Probá de nuevo."
+      }
     },
     "footer": {
       "nota": "Datos públicos · cifras de referencia"
@@ -989,13 +998,9 @@
       "s01d": "Todas las del período, filtrables por tema.",
       "s02t": "Últimas noticias"
     },
-    "personalidades": {
-      "s01t": "El índice y tu voto",
-      "s01d": "Qué mide el ranking, y qué parte ponés vos.",
-      "indice": "Índice Vaca Muerta",
-      "s02t": "Índice Vaca Muerta",
-      "s02d": "Escala, rendimiento y prima, en un número por persona.",
-      "cardIndice": "El Índice Vaca Muerta",
+    "directivos": {
+      "s01t": "Directivos",
+      "s01d": "Las 48 personas que hacen crecer la producción de energía del país.",
       "cardRanking": "El ranking"
     }
   }

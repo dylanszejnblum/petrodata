@@ -2,6 +2,8 @@
 
 import { useCallback, useSyncExternalStore } from 'react'
 
+import { dia, LIMITE } from './voto-reglas'
+
 /* EL VOTO — un store chico, compartido por la lista y el panel de la sección 01.
 
    Las dos piezas viven en secciones distintas de la página y tienen que ver lo
@@ -18,19 +20,29 @@ import { useCallback, useSyncExternalStore } from 'react'
    storage y volver a empezar. Lo que la maqueta prueba es la mecánica y la
    composición, no el control. */
 
-const CLAVE = 'v2-personalidades-votos'
+/* La clave cambió con el nombre de la sección. Se pierden los votos que
+   hubiera guardados, que son de una maqueta. */
+const CLAVE = 'v2-directivos-votos'
 
-/** Cuántos votos tiene cada uno por semana.
+/* El límite vive en voto-reglas.ts y no acá: un valor exportado desde un
+   módulo 'use client' no sobrevive a un template literal del lado del servidor.
+   Se re-exporta para que quien ya lo importaba de acá siga andando.
 
-    Cinco sobre 48 personas, y el número importa: con votos ilimitados el
-    ranking lo gana el que más aguante tiene apretando, y el voto deja de
-    decir «esta persona me parece la mejor» para decir «alguien insistió».
-    Escaso, cada voto es una elección —hay que dejar a 43 afuera— y de paso
-    encarece muchísimo inflarlo desde una sola mano. */
-export const LIMITE = 5
+   Cinco sobre 48 personas, y el número importa: con votos ilimitados el ranking
+   lo gana el que más aguante tiene apretando, y el voto deja de decir «esta
+   persona me parece la mejor» para decir «alguien insistió». Escaso, cada voto
+   es una elección —hay que dejar a 43 afuera— y de paso encarece muchísimo
+   inflarlo desde una sola mano. */
+export { LIMITE } from './voto-reglas'
 
 export type Voto = 1 | -1
-export type Estado = { semana: string; votos: Record<string, Voto> }
+
+/* Cada voto guarda su dirección y el DÍA en que se emitió. El día es lo que
+   permite el corte: la lista se ordena sólo con los votos de días anteriores y
+   los de hoy quedan pendientes hasta medianoche. Antes se guardaba nada más que
+   la dirección, así que no había forma de saber cuáles ya estaban adentro. */
+export type Emitido = { v: Voto; d: string }
+export type Estado = { semana: string; votos: Record<string, Emitido> }
 
 /** Lunes de la semana en curso, en ISO. Es la clave con la que caducan los
     votos: al cambiar de lunes el objeto guardado deja de coincidir y se
@@ -61,7 +73,13 @@ function leer(): Estado {
     crudo = s
     try {
       const d = JSON.parse(s || '{}') as Estado
-      cache = d.semana === semana() ? { semana: d.semana, votos: d.votos || {} } : VACIO
+      /* Se descarta lo guardado con la forma vieja —el valor era el número del
+         voto y no un objeto—: sin el día no se puede saber si el voto ya entró
+         en el corte, y adivinarlo sería peor que perder cinco votos de una
+         maqueta. */
+      const sano =
+        d.votos && Object.values(d.votos).every((x) => x && typeof x === 'object' && 'd' in x)
+      cache = d.semana === semana() && sano ? { semana: d.semana, votos: d.votos } : VACIO
     } catch {
       cache = VACIO
     }
@@ -115,7 +133,7 @@ export function useVotos() {
     if (act.votos[slug]) return
     const sig = { ...act.votos }
     if (Object.keys(sig).length >= LIMITE) return
-    sig[slug] = v
+    sig[slug] = { v, d: dia() }
     try {
       localStorage.setItem(CLAVE, JSON.stringify({ semana: semana(), votos: sig }))
     } catch {

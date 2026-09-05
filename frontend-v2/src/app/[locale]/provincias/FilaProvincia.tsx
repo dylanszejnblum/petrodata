@@ -1,9 +1,15 @@
 'use client'
 
-import { useId, useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useId } from 'react'
+import { api } from '@/api/client'
 import { Marca, Tag } from '../_ui/kit'
-import { formatDecimal, formatInteger } from '@/lib/format'
+import { formatDecimal, formatInteger, formatMonth } from '@/lib/format'
 import type { Province } from '@/fixtures/provinces'
+
+/* Cache de las series reales ya pedidas (ver el efecto de la fila). */
+const cacheSerie = new Map<string, { boe: number[]; meses: string[] }>()
+const pedidas = new Set<string>()
 
 /* Fila de provincia que se despliega en el lugar, en vez de navegar a una
    página dedicada.
@@ -90,17 +96,75 @@ export function FilaProvincia({
       Es la vara contra la que se compara la intensidad de cada provincia. */
   promedioPorPozo: number
   /** puestos en cada ranking. Sin valor en el Estado Nacional, que aparece en
-      las listas pero no es una provincia y no tiene puesto. */
+      las listas pero no es provincia y no tiene puesto. */
   puestoPozos?: number
   puestoExpo?: number
   totalProvincias: number
-  /** doce meses de producción de petróleo, bbl/d. Ver serieProvincia(). */
+  /** doce meses de producción, SINTÉTICA (ver serieProvincia()): la nacional
+      escalada por los pozos de la provincia. La real —BOE/d de
+      /v2/provinces/{slug}/production— se busca al desplegar la fila y la
+      reemplaza en cuanto llega. */
   serie: number[]
   /** rótulo de cada uno de esos doce meses, ya formateado */
   meses: string[]
 }) {
   const [abierta, setAbierta] = useState(false)
   const id = useId()
+
+  /* ── La producción real, al desplegar ──────────────────────────────────
+     GET /v2/provinces/{slug}/production — la serie que la ficha de provincia
+     de la v1 pide para su gráfico. La fila arranca con la SINTÉTICA
+     (serieProvincia(), la nacional escalada por sus pozos) para que el
+     despliegue nunca esté vacío, y en cuanto llega la real la reemplaza: la
+     unidad cambia de bbl/d a boe/d, que es la marca visible del dato medido.
+
+     Va AL ABRIR y no en el render de la página: son catorce provincias y el
+     fan-out de catorce pedidos por render tumbaba el límite del backend
+     remoto —medido: la mitad llegaba vacía y quedaba una hora sin serie por
+     el cache del revalidate—. Pedir la que se mira es un pedido por fila y
+     cero código de servidor.
+
+     Cache de módulo, como el popup del pozo y la ficha de empresa: cerrar y
+     reabrir la fila no vuelve a golpear la API. */
+  const [real, setReal] = useState<{ boe: number[]; meses: string[] } | null>(() =>
+    cacheSerie.get(p.slug) ?? null,
+  )
+  useEffect(() => {
+    if (!abierta || real || pedidas.has(p.slug)) return
+    pedidas.add(p.slug)
+    let vivo = true
+    ;(async () => {
+      try {
+        const { data, error } = await api.GET('/api/v2/provinces/{slug}/production', {
+          params: { path: { slug: p.slug } },
+        })
+        if (vivo && !error && data?.data?.length) {
+          const puntos = data.data.slice(-12)
+          /* `boe` llega como total del mes: se reparte en los días de cada
+             mes para leerlo como tasa diaria, igual que el ranking de
+             operadoras. */
+          const dias = (m: string) => {
+            const [y, mm] = m.split('-').map(Number)
+            return new Date(y, mm, 0).getDate()
+          }
+          const res = {
+            boe: puntos.map((q) => Math.round(q.boe / (dias(q.date_month.slice(0, 7)) || 30))),
+            meses: puntos.map((q) => formatMonth(q.date_month.slice(0, 7))),
+          }
+          cacheSerie.set(p.slug, res)
+          setReal(res)
+        }
+      } catch {
+        pedidas.delete(p.slug) /* sin serie: queda la sintética */
+      }
+    })()
+    return () => {
+      vivo = false
+    }
+  }, [abierta, real, p.slug])
+  const serieFinal = real?.boe ?? serie
+  const mesesFinal = real?.meses ?? meses
+
   /* Las dos listas mostraban prácticamente el mismo desglose y sólo cambiaba
      el orden. Ahora cada una lee la provincia desde su métrica y no comparten
      ninguna lectura salvo las operadoras:
@@ -336,26 +400,31 @@ export function FilaProvincia({
                   />
                 ) : (
                   /* La historia de producción. Va pegada a pozos porque es su
-                     otra cara —cuántos hay y cuánto sacan— y porque de ahí
-                     sale: la serie se deriva escalando la nacional por los
-                     pozos de la provincia.
+                     otra cara —cuántos hay y cuánto sacan—.
 
-                     Doce meses y no veinticuatro: la serie nacional tiene 24,
-                     pero a 3px por barra son 118px de ancho contra 58, y
-                     adentro de un renglón de 28 la diferencia decide si el paso
-                     envuelve o no. Doce es además la ventana del dashboard.
+                     La serie sale de /v2/provinces/{slug}/production (BOE/d,
+                     doce meses). Si la provincia no llegó del backend cae a la
+                     SINTÉTICA —la nacional escalada por sus pozos— y en ese
+                     caso la unidad dice bbl/d, no boe/d: es la única marca
+                     visible de que no es el dato real, y el pie de la sección
+                     lo declara.
 
-                     El badge dice la ventana y NO la variación del período: con
-                     la serie inventada daba de −11,4% a +80,0% según la
+                     Doce meses y no veinticuatro: a 3px por barra son 118px de
+                     ancho contra 58, y adentro de un renglón de 28 la
+                     diferencia decide si el paso envuelve o no. Doce es además
+                     la ventana del dashboard.
+
+                     El badge dice la ventana y NO la variación del período:
+                     con la serie inventada daba de −11,4% a +80,0% según la
                      provincia, y un "+80,0%" en un badge se lee como un
                      hallazgo. */
                   <Paso
                     key="prod"
                     icono="produccion"
                     rotulo="Producción"
-                    unidad="bbl/d"
-                    serie={serie}
-                    meses={meses}
+                    unidad={real ? 'boe/d' : 'bbl/d'}
+                    serie={serieFinal}
+                    meses={mesesFinal}
                     badges={[]}
                   />
                 ),

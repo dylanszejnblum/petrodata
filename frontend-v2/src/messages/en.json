@@ -875,10 +875,19 @@
       "empresas": "Companies",
       "indicadores": "Indicators",
       "noticias": "News",
-      "personalidades": "People",
+      "directivos": "Executives",
       "datosTitle": "Public data",
       "datosDesc": "Secretariat of Energy and operator filings. Monthly cutoff.",
-      "verMapa": "View the map"
+      "verMapa": "View the map",
+      "newsletter": {
+        "titulo": "The Monday brief",
+        "bajada": "The week's production, in your inbox.",
+        "placeholder": "you@email.com",
+        "accion": "Subscribe",
+        "enviando": "…",
+        "ok": "Done: you're in.",
+        "error": "Couldn't subscribe. Try again."
+      }
     },
     "footer": {
       "nota": "Public data · reference figures"
@@ -989,13 +998,9 @@
       "s01d": "Everything in the period, filterable by topic.",
       "s02t": "Latest news"
     },
-    "personalidades": {
-      "s01t": "The index and your vote",
-      "s01d": "What the ranking measures, and the part you put in.",
-      "indice": "Vaca Muerta Index",
-      "s02t": "Vaca Muerta Index",
-      "s02d": "Scale, performance and premium, one number per person.",
-      "cardIndice": "The Vaca Muerta Index",
+    "directivos": {
+      "s01t": "Executives",
+      "s01d": "The 48 people growing the country's energy production.",
       "cardRanking": "The ranking"
     }
   }

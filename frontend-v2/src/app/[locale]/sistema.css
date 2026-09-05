@@ -1142,7 +1142,7 @@
   outline: none;
 }
 
-/* ── Personalidades ────────────────────────────────────────────────────
+/* ── Directivos ────────────────────────────────────────────────────────
    La fila y su cabecera comparten UNA grilla, que es como el sistema resuelve
    una tabla en la §13: .s-gcab y .s-gfila declaran el mismo
    grid-template-columns y por eso caen a plomo. Acá estaban como dos flex que
@@ -1150,10 +1150,11 @@
    100px para el voto y el voto medía 98, así que las dos columnas de la
    derecha salían corridas dos píxeles.
 
-   Las cinco columnas: puesto 28, foto 60, persona 1fr, puntos 64 y votación
-   semanal 100. En esa última columna la pieza más ancha es el ENCABEZADO y no
-   el control: «Votación semanal» mide unos 100 a 11,5px y el par de chevrones,
-   48. Por eso el control va centrado y no pegado al borde.
+   Las cinco columnas: puesto 28, foto 60, persona 1fr, puntos 64 y voto
+   semanal 100. Los 100 los fijaba el ENCABEZADO cuando decía «Votación
+   semanal»; con «Voto semanal» —unos 75 a 11,5px— los fija el badge «En
+   contra», que mide 83. El par de chevrones mide 48, así que el control va
+   centrado y no pegado al borde.
 
    La fila es la más alta de v2 —76— y es la excepción que hay que justificar:
    acá la persona ES el contenido y en 32 no se distingue una cara de otra. */
@@ -1169,6 +1170,331 @@
 .s-persona { transition: background-color var(--dur-slower) var(--ease-in-out); }
 .s-persona:last-child { border-bottom: 0; }
 .s-persona:hover { background: var(--hover); }
+/* LA FILA QUE VOTASTE. Sólo el tinte de estado: el filete lateral de 2px
+   está sacado (no gustó, 2026-09-01). El tinte solo alcanza porque el badge
+   de la celda del voto ya nombra el estado; el filete repetía en el canto lo
+   que la fila dice dos veces adentro.
+
+   El hover se repite con la misma especificidad porque .s-persona:hover le
+   gana a una sola clase. Sin esto, pasar el mouse por encima borra el tinte y
+   parece que se despintó. */
+.s-persona--favor { background: var(--green-tint); }
+.s-persona--contra { background: var(--red-tint); }
+.s-persona--favor:hover { background: var(--green-tint); }
+.s-persona--contra:hover { background: var(--red-tint); }
+
+/* LA FILA SE ABRE. El cursor es lo único que se agrega: el fondo del hover ya
+   estaba y es la señal de que la fila responde. Un chevrón de «ver más» al
+   lado de los dos del voto se lee como un tercer control de lo mismo.
+
+   Abierta, la fila se queda con el fondo del hover y PIERDE su filete de
+   abajo: la fila y su ficha pasan a ser un solo bloque, que es lo que son. */
+.s-persona--abre { cursor: pointer; }
+.s-persona--abre:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+.s-persona--abierta { border-bottom-color: transparent; }
+.s-persona--abierta:not(.s-persona--favor):not(.s-persona--contra) { background: var(--hover); }
+
+/* LA FICHA que se abre bajo la fila. Fondo --inset y filete abajo: es la
+   receta del pie de card de la §6, que es exactamente lo que esto es —un
+   bloque que cierra lo de arriba—.
+
+   LA COMPOSICIÓN sale de .s-placa--grande: ahí la imagen iguala el alto de la
+   columna que acompaña «para que el logo y los datos terminen a ras». Acá el
+   alto no se puede clavar —la bio cambia de largo y veintiséis fichas no
+   tienen— así que se invierte: manda la FOTO, que mide 200 fijo, y la columna
+   se estira a esa altura con los datos empujados al pie. El bloque cierra
+   parejo tenga bio o no. */
+.s-ficha {
+  display: flex;
+  align-items: stretch;
+  gap: 16px;
+  padding: 14px 12px;
+  background: var(--inset);
+  border-bottom: 1px solid var(--line);
+}
+.s-ficha:last-child { border-bottom: 0; }
+
+/* La columna de la derecha, estirada al alto de la foto. `min-width: 0` para
+   que el nombre largo de una empresa trunque en vez de empujar la caja. */
+.s-ficha-col {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+}
+
+/* La bio. 62ch es el renglón cómodo a 13px: más largo y el ojo se pierde al
+   volver. El margen de arriba es 10 y el de abajo 12, los dos de la escala de
+   bloques de la §6.1. */
+.s-ficha-bio {
+  margin: 10px 0 12px;
+  max-width: 62ch;
+  text-wrap: pretty;
+}
+
+/* Los datos, al pie. `margin-top: auto` es lo que los empuja contra el borde
+   de abajo de la foto: con bio quedan justo debajo, sin bio caen igual al pie
+   y la ficha no se ve a medio llenar. */
+.s-ficha-datos {
+  margin-top: auto;
+  font-size: 11.5px;
+  line-height: 17.25px;
+}
+/* EL VALOR DE CADA RENGLÓN va en la medida del renglón —11,5, la que fija
+   .s-ficha-datos— con el peso y la tinta subidos. Estaba en .s-cifra-sm, que
+   es 13/600: el mismo tamaño y el mismo peso que el NOMBRE que encabeza la
+   ficha, así que «20 años» pesaba igual que «Marcelo Mindlin». La jerarquía se
+   hace con peso y tinta y NUNCA con tamaño (§2): a igual medida que su rótulo,
+   el 600 y la tinta plena ya lo separan.
+
+   tabular-nums porque son cifras y se comparan de un renglón al otro. */
+.s-ficha-valor {
+  font-weight: 600;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.s-ficha-datos a { text-decoration: none; }
+.s-ficha-datos a:hover { background: var(--hover-2); }
+
+/* LA CARA GRANDE va a 161×200, que es el tamaño nativo de los archivos:
+   ampliar una imagen de 161 a más deja el borrón que .s-placa evita con
+   --placa-tope. Y 161 ya es medida del sistema —el lado de .s-placa--grande—,
+   así que el número no se inventa acá.
+
+   `object-fit: cover` VA, aunque la caja mida lo mismo que el archivo. Se
+   había sacado con el argumento de que a tamaño nativo no hay nada que
+   recortar, y el argumento estaba mal: daba por sentado que los treinta
+   archivos miden igual. Cuatro no —dos de 200×200 y dos de 149×200— y sin
+   cover se estiraban dentro de la caja: la de 200 cuadrada perdía un 24% de
+   ancho y la cara salía angosta.
+
+   Los cuatro archivos se normalizaron, así que hoy no recorta nada. Queda
+   igual, porque la próxima cara que alguien agregue no va a venir medida. */
+.s-cara-gr {
+  display: block;
+  flex-shrink: 0;
+  width: 161px;
+  height: 200px;
+  border-radius: var(--radius-control);
+  object-fit: cover;
+  background: var(--field);
+  box-shadow: var(--shadow-hairline);
+}
+.s-cara-gr.s-cara--mono { font-size: 40px; }
+
+@media (max-width: 639px) {
+  /* A 375 la card mide 287 por dentro: la foto de 161 le dejaría 110 al texto.
+     Se apila, y la columna deja de estirarse porque ya no acompaña a nada. */
+  .s-ficha { flex-direction: column; gap: 12px; }
+  .s-ficha-datos { margin-top: 0; }
+}
+
+/* ── Acción en línea ────────────────────────────────────────────────────
+   El control que dispara algo sin navegar: abrir un diálogo, enviar un
+   formulario. NO es .s-pill. En v2 el pill se usa tres veces y las tres son
+   navegación —«Ver todas las noticias», «Volver»—, y la §6.3 lo declara «el
+   llamado a la acción más fuerte del sistema»: ni reportar un dato ni confirmar
+   un formulario chico lo son.
+
+   Es la gramática que el sitio ya usa para actuar en línea: 11,5 en peso 500
+   sobre --accent-ink, como «Leer →» en noticias y «Ver el mapa →» en el pie del
+   minimapa. Sin flecha, que ahí significa «vas a otra pantalla». El acento es
+   para enlaces y detalles, §3.
+
+   APAGADO BAJA A ink-2, NO A OPACIDAD. Con opacity 0.4 la tinta plena caía a
+   2,41 de contraste: ilegible. Perdiendo el acento ya se lee como inactivo, y a
+   ink-2 mide 5,5. */
+.s-accion {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--accent-ink);
+  font-size: 11.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color var(--dur-instant);
+}
+.s-accion:hover { color: var(--accent); }
+.s-accion:disabled { color: var(--ink-2); cursor: default; }
+.s-accion:disabled:hover { color: var(--ink-2); }
+
+/* ── Botón de acción ────────────────────────────────────────────────────
+   El control que CONFIRMA. Tiene cuerpo, a diferencia de .s-accion: fondo
+   --field y el anillo de --shadow-btn, que es como el sistema dibuja un botón
+   (§1.1: el borde de 1px reemplaza a la sombra).
+
+   NO ES EL PILL, y la diferencia es el radio. El pill va a 999 y la §6.3 lo
+   reserva para el llamado a la acción más fuerte del sitio —navegar—. Acá la
+   caja mide 28 de alto y le corresponde radio 8, que es la escala de la §1.3:
+   el radio sale del tamaño de la caja, no del gusto.
+
+   POR QUÉ TIENE QUE TENER CUERPO. Como texto suelto, el que envía y el que
+   cancela medían los dos 5,5 de contraste: misma presencia, ninguna jerarquía,
+   y ninguno se leía como un control. Con --field y anillo, el texto en tinta
+   plena mide 14,42 y la caja lo separa del pie.
+
+   APAGADO pierde el anillo y baja a ink-2 —5,5—: se lee inactivo sin
+   desaparecer, que es lo que pasaba con opacidad (2,41). */
+.s-boton {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: var(--radius-control);
+  background: var(--field);
+  box-shadow: var(--shadow-btn);
+  color: var(--ink);
+  font-size: 11.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color var(--dur-base), color var(--dur-base);
+}
+.s-boton:hover { background: var(--hover-2); }
+.s-boton:active { transform: scale(0.98); }
+.s-boton:disabled {
+  color: var(--ink-2);
+  box-shadow: none;
+  cursor: default;
+  transform: none;
+}
+.s-boton:disabled:hover { background: var(--field); }
+
+/* ── Campo en fila ──────────────────────────────────────────────────────
+   El sitio NO usa campos en caja. Su campo real es .s-busca: una FILA de 40 de
+   alto con padding 0 12 y filete abajo, sin borde ni recuadro. Es la §1.1 en un
+   formulario —la línea de 1px reemplaza a la caja— y la §1.4 —divisoria sólida
+   adentro de un componente—.
+
+   Estos campos copian esa fila y le agregan el rótulo a la izquierda, que es la
+   misma gramática de .s-ficha-fila: etiqueta izquierda, valor derecha, un
+   renglón por dato. Así el formulario se lee como la ficha desde la que se
+   abre, y no como un formulario pegado encima.
+
+   El foco se marca en la FILA, no en el input: quien dibuja el control es el
+   contenedor (§6.5). */
+.s-fcampo {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  min-height: 40px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+  transition: background-color var(--dur-instant) var(--ease-out);
+}
+.s-fcampo:focus-within { background: var(--hover); }
+.s-fcampo > .rot {
+  flex-shrink: 0;
+  width: 68px;
+  font-size: 11.5px;
+  color: var(--ink-2);
+}
+.s-fcampo input,
+.s-fcampo textarea {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  outline: none;
+  font: inherit;
+  font-size: 13px;
+  line-height: 19.5px;
+  color: var(--ink);
+}
+/* El interlineado del campo baja a 1,385 (§1.3): a 13px son 18, y es lo que
+   hace que un renglón de texto entre en la fila sin estirarla. */
+.s-fcampo input { line-height: 18px; }
+.s-fcampo textarea { resize: none; }
+.s-fcampo input::placeholder,
+.s-fcampo textarea::placeholder { color: var(--ink-3); }
+
+/* ── El modal ───────────────────────────────────────────────────────────
+   Es un <dialog> nativo con la receta de card: superficie, radio de card,
+   sombra y overflow oculto. No hay componente de modal en el sistema y éste es
+   el primero, así que se compone con lo que ya existe en vez de inventar una
+   caja nueva —barra de card arriba, pie de card abajo—.
+
+   El ancho es fijo en 420 y no un porcentaje: a 13px de cuerpo, 420 menos el
+   padding deja un renglón cómodo, y un modal que cambia de ancho con la
+   ventana obliga a releer dónde empieza cada cosa.
+
+   El ::backdrop va en la tinta al 45% y SIN blur: la §9 prohíbe el
+   backdrop-filter en todo el sistema. */
+.s-modal {
+  /* `margin: auto` es lo que centra un <dialog> abierto con showModal(): lo
+     pone la hoja del navegador y el preflight de Tailwind lo pisa con
+     `margin: 0`, así que el modal salía pegado arriba a la izquierda. Hay que
+     reponerlo a mano. */
+  margin: auto;
+  width: min(420px, calc(100vw - 32px));
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-card);
+  background: var(--surface);
+  box-shadow: var(--shadow-card);
+  color: var(--ink);
+  overflow: hidden;
+}
+/* El velo va con alfa EN EL COLOR y no con `opacity`: sobre ::backdrop la
+   opacidad se comporta distinto entre navegadores y el velo salía lavado.
+   Sin blur, que la §9 prohíbe el backdrop-filter en todo el sistema. */
+.s-modal::backdrop { background: rgb(31 33 36 / 45%); }
+.s-modal .s-barra-card { justify-content: space-between; }
+
+/* El botón de cerrar: el de ícono chico de la §6.3 —24×24 con radio 6—. */
+.s-modal-x {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--ink-3);
+  cursor: pointer;
+  transition: background-color var(--dur-instant), color var(--dur-instant);
+}
+.s-modal-x:hover { background: var(--hover); color: var(--ink); }
+
+/* La descripción, con el padding de celda del sistema (10×12) y su filete: es
+   una fila más, no un bloque suelto con aire alrededor. */
+.s-modal-desc { padding: 10px 12px; border-bottom: 1px solid var(--line); }
+
+/* El pie alinea a la derecha y el cancelar queda a la izquierda del envío,
+   que es el orden de lectura: primero la salida, después la acción. */
+.s-modal-pie { justify-content: space-between; }
+/* Cancelar es la salida, no una acción: va en ink-2 —5,5 de contraste sobre el
+   pie— y sin acento, que se lo queda el envío. */
+.s-modal-cancel {
+  border: 0;
+  background: transparent;
+  color: var(--ink-2);
+  font-size: 11.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color var(--dur-instant);
+}
+.s-modal-cancel:hover { color: var(--ink); }
+
+/* LA PASTILLA DE PUNTOS SOBRE LA FILA TEÑIDA. --field y el tinte tienen la
+   misma luminancia —1,003 contra el verde y 1,023 contra el rojo—: la
+   pastilla no se ve poco, DESAPARECE, y lo que queda es una mancha sucia
+   alrededor de la cifra.
+
+   Pasa a --surface, que es el papel de la card. Se despega del tinte en los
+   dos temas (1,12 en claro, 1,27 en oscuro) —más que el escalón surface/inset
+   que el sistema ya usa para separar superficies— y la cifra sube de 14,42 a
+   16,14 de contraste. */
+.s-persona--favor .s-idx,
+.s-persona--contra .s-idx { background: var(--surface); }
 /* La cabecera es .s-gcab de la §13: 11,5/500 en ink-2 sobre el escalón de
    fondo. Sin ella el badge podía leerse como un precio y los chevrones no se
    sabía qué movían. */
@@ -1222,7 +1548,15 @@
   border-radius: var(--radius-chip);
   background: var(--field);
   color: var(--ink);
-  font-size: 13px;
+  /* 11,5 Y NO 13. A 13 con peso 600 era el texto más pesado de la fila: el
+     nombre va a 13 en peso 500, o sea que el puntaje le ganaba a la persona en
+     una lista de personas. La jerarquía es peso y tinta y nunca tamaño (§2), y
+     acá el número ya tiene DOS marcas propias que el nombre no tiene —el 600 y
+     la pastilla— así que no necesita además ser el más grande.
+
+     La pastilla se queda en 22, que es la altura de chip del sistema: lo que
+     baja es el texto de adentro, no la caja. */
+  font-size: 11.5px;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
@@ -1239,8 +1573,7 @@
    tonos de estado del sistema. */
 /* CENTRADO en su columna y no pegado a la derecha. Con el conteo al lado, el
    control medía 86 sobre una columna de 100 y alinearlo a la derecha era lo
-   correcto. Sin el conteo mide 48, y ahí el rótulo «Votación semanal» —que es
-   la pieza que fija el ancho de la columna, 100— quedaba flotando sobre
+   correcto. Sin el conteo mide 48, y ahí el rótulo quedaba flotando sobre
    cincuenta píxeles de nada. Centrado, el rótulo y el control comparten eje.
 
    Es la excepción entre las columnas de la derecha, y se justifica sola: las
@@ -1272,10 +1605,8 @@
   color: color-mix(in srgb, var(--red) 55%, var(--ink));
   box-shadow: inset 1px 0 0 var(--line-strong);
 }
-.s-voto button.arriba:hover,
-.s-voto button.arriba[aria-pressed='true'] { background: var(--green-tint); }
-.s-voto button.abajo:hover,
-.s-voto button.abajo[aria-pressed='true'] { background: var(--red-tint); }
+.s-voto button.arriba:hover { background: var(--green-tint); }
+.s-voto button.abajo:hover { background: var(--red-tint); }
 
 /* A 375 la card mide 287 por dentro: entre la foto de 60, el índice y el voto
    al nombre le quedaban 45px y sólo se veía el chip de «sin confirmar». Abajo
@@ -1338,9 +1669,6 @@
    apagada, porque no se entiende qué pasó. */
 .s-voto button:disabled { cursor: default; opacity: 0.35; }
 .s-voto button:disabled:hover { background: transparent; }
-/* El elegido queda apagado pero a plena tinta y con su fondo: es la única
-   marca de qué votaste, así que no puede desvanecerse con los demás. */
-.s-voto button:disabled[aria-pressed='true'] { opacity: 1; }
 
 /* ── Puntos clave ──────────────────────────────────────────────────────
    La receta de las Context Cards (§11): el rótulo y su contador AFUERA de la
@@ -1942,3 +2270,40 @@
 }
 .s-ayuda-caja:hover .s-globo--ayuda,
 .s-ayuda:focus-visible + .s-globo--ayuda { opacity: 1; }
+
+/* ── El popup del pozo ─────────────────────────────────────────────────
+   La piel de MapLibre skinneada con los tokens del sistema: superficie
+   opaca (cero backdrop-filter, la regla de los paneles del mapa), radio y
+   sombra de card, y el filete de abajo en --line para que el pie quede como
+   pie de card y no como texto flotando.
+
+   La punta (tip) del popup se pinta del mismo color de superficie; MapLibre
+   la dibuja con border y hay que tapar los dos lados del triángulo. */
+.maplibregl-popup { z-index: 10; }
+.maplibregl-popup-content {
+  padding: 0;
+  background: var(--surface);
+  color: var(--ink);
+  border-radius: var(--radius-card, 10px);
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--line);
+  overflow: hidden;
+}
+.maplibregl-popup-anchor-bottom .maplibregl-popup-tip,
+.maplibregl-popup-anchor-top .maplibregl-popup-tip,
+.maplibregl-popup-anchor-left .maplibregl-popup-tip,
+.maplibregl-popup-anchor-right .maplibregl-popup-tip {
+  border-top-color: var(--surface);
+  border-bottom-color: var(--surface);
+  border-left-color: var(--surface);
+  border-right-color: var(--surface);
+}
+.maplibregl-popup-close-button { display: none; }
+
+.s-popup-cuerpo { display: flex; min-width: 260px; max-width: 300px; flex-direction: column; }
+.s-popup-cab { padding: 10px 12px 8px; border-bottom: 1px solid var(--line); }
+.s-popup-badges { display: flex; flex-wrap: wrap; gap: 4px; padding: 8px 12px; border-bottom: 1px solid var(--line); }
+.s-popup-prod { padding: 8px 12px; border-bottom: 1px solid var(--line); }
+.s-popup-prod .grid { margin-top: 6px; }
+.s-popup-meta { display: flex; flex-direction: column; gap: 3px; padding: 10px 12px; }
+.s-popup-pie { padding: 6px 12px; background: var(--inset); border-top: 1px solid var(--line); font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; }

@@ -1,4 +1,6 @@
 import type { ReactNode } from 'react'
+
+import { Icono } from './iconos'
 import { formatDelta } from '@/lib/format'
 
 /* Kit del sistema V2. Las piezas son las mismas que tiene el producto —dato,
@@ -292,14 +294,68 @@ export function Card({ children, className = '' }: { children: ReactNode; classN
 }
 
 /** Cabecera de card: rótulo a la izquierda, apunte a la derecha. */
-export function CardHead({ titulo, nota }: { titulo: string; nota?: string }) {
+/* El `icono` es OPCIONAL y vive acá, en la pieza, y no puesto a mano en una
+   página: si una card lleva ícono en la cabecera, todas tienen que poder. Es
+   la geometría de §6.8 —14px con trazo 2— en ink-3, que es la tinta que la
+   referencia le da al ícono que acompaña un rótulo. */
+export function CardHead({
+  titulo,
+  nota,
+  icono,
+  sub,
+}: {
+  titulo: string
+  nota?: ReactNode
+  icono?: string
+  /** Segunda línea debajo del título, dentro de su misma columna. Para el dato
+      que pertenece al RÓTULO y no a la card: la nota va a la derecha y describe
+      la card entera; esto cuelga del título y arranca donde el título termina,
+      sin que lo empuje lo que haya del otro lado. */
+  sub?: ReactNode
+}) {
   return (
-    <div
-      className="flex items-baseline justify-between gap-3 border-b px-3 py-2.5"
-      style={{ borderColor: 'var(--line)' }}
-    >
-      <span className="s-etq">{titulo}</span>
-      {nota && <span className="s-micro s-num" style={{ color: 'var(--ink-2)' }}>{nota}</span>}
+    /* El título y su `sub` en una columna a la izquierda, la nota a la
+       derecha. Alinea por arriba y no por línea de base: con dos piezas de
+       distinto alto —dos renglones a la izquierda, dos chips apilados a la
+       derecha— la base no significa nada y el título terminaba flotando.
+
+       Sin `sub` la columna izquierda tiene un solo hijo y el renglón es
+       exactamente el de antes, así que las otras cards no se enteran. */
+    <div className="border-b px-3 py-2.5" style={{ borderColor: 'var(--line)' }}>
+      <div className="flex items-start justify-between gap-3">
+        {/* El `sub` va DENTRO de la columna del título, no debajo del renglón
+            entero: colgado del renglón quedaba empujado por la pieza más alta
+            de la derecha —dos chips apilados— y dejaba un hueco de veinte
+            píxeles abajo del rótulo. Acá arranca donde termina el título. */}
+        <span className="flex min-w-0 flex-col gap-1">
+        <span className="s-etq flex shrink-0 items-center gap-1.5 whitespace-nowrap">
+          {icono && (
+            /* self-center y no baseline: un svg alineado por línea de base
+               cuelga del renglón porque no tiene una. */
+            <Icono d={icono} size={14} grosor={2} className="shrink-0 self-center" />
+          )}
+          {titulo}
+        </span>
+        {/* La segunda línea baja a .s-micro —11,5— y no hereda el cuerpo: sin
+            clase salía a 14 y pesaba MÁS que el rótulo de 12 que la encabeza,
+            que es la jerarquía al revés. */}
+        {sub && <span className="s-micro s-num">{sub}</span>}
+        </span>
+        {/* `flex-1 min-w-0`: sin eso la nota se encoge a su ancho de contenido
+            mínimo —medido, 161px sobre los 584 de la card— y todo lo que lleve
+            adentro se parte en renglones. El título ya es shrink-0, así que la
+            nota se queda con TODO el resto y su contenido sigue alineado a la
+            derecha: para una nota de texto suelto se ve igual que antes, y para
+            una que lleva piezas (la cabecera del ranking) deja de romperse. */}
+        {nota && (
+          <span
+            className="s-micro s-num min-w-0 flex-1 text-right"
+            style={{ color: 'var(--ink-2)' }}
+          >
+            {nota}
+          </span>
+        )}
+      </div>
     </div>
   )
 }

@@ -1,8 +1,10 @@
 'use client'
 
-import { useMemo, useState, type ReactNode } from 'react'
-import { formatInteger } from '@/lib/format'
+import { useEffect, useMemo, useState, type ReactNode } from 'react'
+import { api } from '@/api/client'
+import { formatInteger, formatMonth } from '@/lib/format'
 import { FLUIDO, Marca } from '../_ui/kit'
+import { Serie } from '../_ui/Serie'
 
 /* Paneles flotantes del mapa — con la receta de card MEDIDA de la referencia,
    no con la que yo había inventado.
@@ -287,6 +289,98 @@ export function PanelOperadores({
         </span>
         <span className="s-micro s-num" style={{ color: 'var(--ink-2)' }}>
           {filtradas.length === operadoras.length ? `${operadoras.length}` : `${filtradas.length}/${operadoras.length}`}
+        </span>
+      </Pie>
+    </Panel>
+  )
+}
+
+/* ── La producción de la operadora seleccionada ──────────────────────────
+   GET /api/v1/operators/{slug}/production — la serie que la v1 muestra en la
+   OverviewCard del mapa. Doce meses de BOE/d, nacional (la serie por
+   operadora no tiene filtro de formación), con la misma Serie compacta de las
+   filas de provincias.
+
+   El cache es a nivel de módulo: cambiar de operadora y volver no vuelve a
+   golpear la API. Sin slug muestra la de la PRIMERA del ranking —es lo que
+   hace la v1 con la top— y si el pedido falla el panel no se dibuja: una caja
+   vacía con un rótulo es peor que nada. */
+
+const cacheSerie = new Map<string, { valores: number[]; textos: string[]; mes: string }>()
+
+function useSerieOperadora(slug: string | null) {
+  const [serie, setSerie] = useState<{ valores: number[]; textos: string[]; mes: string } | null>(
+    () => (slug ? cacheSerie.get(slug) ?? null : null),
+  )
+  useEffect(() => {
+    if (!slug) return
+    const hit = cacheSerie.get(slug)
+    if (hit) {
+      setSerie(hit)
+      return
+    }
+    let vivo = true
+    ;(async () => {
+      try {
+        const { data, error } = await api.GET('/api/v1/operators/{slug}/production', {
+          params: { path: { slug } },
+        })
+        if (vivo && !error && data?.data?.length) {
+          const puntos = data.data.slice(-12)
+          const dias = (m: string) => {
+            const [y, mm] = m.split('-').map(Number)
+            return new Date(y, mm, 0).getDate()
+          }
+          const res = {
+            valores: puntos.map((p) => Math.round(p.boe / (dias(p.date_month.slice(0, 7)) || 30))),
+            textos: puntos.map(
+              (p) =>
+                `${formatMonth(p.date_month.slice(0, 7))} · ${formatInteger(
+                  Math.round(p.boe / (dias(p.date_month.slice(0, 7)) || 30)),
+                )} boe/d`,
+            ),
+            mes: puntos[puntos.length - 1].date_month.slice(0, 7),
+          }
+          cacheSerie.set(slug, res)
+          setSerie(res)
+        }
+      } catch {
+        /* sin serie: el panel se desmonta */
+      }
+    })()
+    return () => {
+      vivo = false
+    }
+  }, [slug])
+  return serie
+}
+
+export function PanelProduccion({
+  slug,
+  nombre,
+}: {
+  slug: string | null
+  nombre: string
+}) {
+  const serie = useSerieOperadora(slug)
+  if (!slug || !serie) return null
+  return (
+    <Panel className="w-[268px]">
+      <Cuerpo>
+        <Titulo>Producción de {nombre}</Titulo>
+        <p className="s-micro m-0 mt-1" style={{ color: 'var(--ink-2)' }}>
+          BOE por día · doce meses · nacional
+        </p>
+        <span className="mt-2 block">
+          <Serie valores={serie.valores} textos={serie.textos} className="w-full" />
+        </span>
+      </Cuerpo>
+      <Pie>
+        <span className="s-micro s-num" style={{ fontWeight: 500 }}>
+          {formatInteger(serie.valores[serie.valores.length - 1])} boe/d
+        </span>
+        <span className="s-micro s-num" style={{ color: 'var(--ink-2)' }}>
+          corte {serie.mes}
         </span>
       </Pie>
     </Panel>
