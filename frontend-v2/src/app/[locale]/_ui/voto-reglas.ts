@@ -14,43 +14,24 @@
    constante baja a un módulo sin directiva, que las dos mitades pueden importar. */
 export const LIMITE = 5
 
-/* ── EL CONTADOR PÚBLICO ─────────────────────────────────────────────────
+/* ── LO QUE YA NO VIVE ACÁ ───────────────────────────────────────────────
 
-   ESTOS DOS NÚMEROS SON INVENTADOS. No salen de ningún backend, de ninguna
-   analítica y de ningún conteo: están escritos a mano acá. Decisión de
-   producto de Mariano (2026-09-01), tomada sabiendo lo que son, para que el
-   ranking no arranque mostrando cifras chicas.
+   VOTANTES_SEMANA = 377 y VOTOS_SEMANA = 1.284 eran números INVENTADOS, con
+   una advertencia en mayúsculas de que el riesgo real era que alguien del
+   equipo los tomara por una métrica y los pusiera en un deck o en una
+   respuesta a un periodista. Ya no hacen falta: los dos vienen en
+   `votacion.votes` y `votacion.voters` de /api/v2/directivos, que es un COUNT.
 
-   Queda dicho en mayúsculas porque el riesgo real es de acá a tres meses: que
-   alguien del equipo —o vos mismo— tome este 377 por una métrica y lo ponga en
-   un deck, en una propuesta de sponsoreo o en una respuesta a un periodista.
-   Ahí deja de ser una decisión de lanzamiento y pasa a ser un número falso en
-   un documento comercial.
+   PESO_VOTO = 3 tampoco: cuánto mueve un voto lo decide el servidor, y ahora
+   es un presupuesto relativo —el más votado de la semana se lleva el máximo y
+   el resto en proporción— en vez de una constante de puntos. Su propio
+   comentario ya decía que con mil votantes tres puntos por voto rompe la
+   escala; con el reparto relativo, diez votantes y diez mil dan el mismo rango.
 
-   Cuando exista el conteo de verdad, esto se borra y se reemplaza por la
-   lectura del servidor. No hay nada más que migrar: es una constante. */
-export const VOTANTES_SEMANA = 377
-export const VOTOS_SEMANA = 1284
-
-/* ── CUÁNTO MUEVE UN VOTO ────────────────────────────────────────────────
-
-   Hasta acá el voto no tocaba el número: se guardaba y no pasaba nada. Ahora
-   suma o resta puntos y la lista se reordena sola.
-
-   Tres puntos por voto. El índice va de 4,2 a 96,4, pero cuarenta de las
-   cuarenta y ocho personas están entre 7 y 20: ahí tres puntos son varios
-   puestos y el ranking se mueve de verdad. Arriba casi no hace nada, y eso
-   está bien — que cinco votos bajen al primero sería peor que no moverse.
-
-   En producción esto se calcula en el servidor y el peso tiene que escalar con
-   el volumen: con mil votantes, tres puntos por voto rompe la escala. Acá es
-   una constante porque el que vota es uno solo. */
-export const PESO_VOTO = 3
-
-/** El índice con el voto de esta semana ya aplicado. */
-export function conVoto(indice: number, voto?: 1 | -1): number {
-  return voto === undefined ? indice : indice + voto * PESO_VOTO
-}
+   El LÍMITE de arriba se queda porque el texto de la interfaz lo cita —«te
+   quedan N de 5»— y el servidor lo devuelve en `weekly_limit`. Si los dos
+   dejaran de coincidir, manda el servidor: acá se rechaza el clic, allá se
+   rechaza el voto. */
 
 /* ── EL CORTE DIARIO ─────────────────────────────────────────────────────
 

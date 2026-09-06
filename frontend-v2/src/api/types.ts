@@ -1092,6 +1092,86 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v2/directivos": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Quién dirige la cuenca
+         * @description Los directivos de las empresas del ranking, ordenados por un índice 0–100. El índice es de la EMPRESA —escala de producción, rendimiento por pozo y prima de valor, recalculados sobre la última ventana de doce meses— atribuido a quien la dirige: el dato no trae ninguna métrica de la persona. La ponderación no se publica. Los votos de la semana suman hasta ±6 puntos, repartidos por posición relativa, y entran al corte del día siguiente al que se emitieron.
+         */
+        get: operations["DirectivosController_list_v2"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/directivos/voto": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * El presupuesto de quien pregunta
+         * @description Votos usados y emitidos esta semana por el que hace el pedido, identificado por IP. Respuesta por cliente: no la cachees.
+         */
+        get: operations["DirectivosController_estado_v2"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/directivos/{slug}/foto": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * La foto del directivo
+         * @description Devuelve el retrato desde el bucket privado. 404 si esa empresa no tiene foto cargada — son 32 de 48 y la lista cae al monograma sola. Cachea un año: el nombre del objeto lleva el slug, así que si cambia la cara hay que purgar.
+         */
+        get: operations["DirectivosController_foto_v2"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/directivos/{slug}/voto": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Votar a un directivo
+         * @description Un voto por persona y por semana, cinco por semana en total. El voto NO se edita: una vez emitido no se saca ni se da vuelta hasta el lunes. El votante se identifica por IP — que no es una persona: una oficina o una operadora móvil son miles detrás de una sola, y cualquiera con VPN vota lo que quiera. Devuelve el presupuesto actualizado.
+         */
+        post: operations["DirectivosController_votar_v2"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -2561,6 +2641,120 @@ export interface components {
              * @enum {string}
              */
             source?: "newsletter-modal" | "footer" | "landing-page";
+        };
+        DirectivoDto: {
+            /**
+             * @description Slug de la EMPRESA — la clave del cruce, no del directivo.
+             * @example ypf
+             */
+            company_slug: string;
+            /** @example YPF S.A. */
+            company_name: string;
+            /** @example Horacio Daniel Marín */
+            name: string;
+            /** @example Presidente & CEO */
+            role: string;
+            /**
+             * @description Desde cuándo ocupa el cargo. Año, año-mes o fecha completa, según lo que diga la fuente. NO es la fecha de verificación.
+             * @example 2023-12
+             */
+            in_role_since: Record<string, never> | null;
+            /** @example Ingeniero químico de la UNLP… */
+            bio: Record<string, never> | null;
+            /**
+             * @description null en 16 de 48 — esas filas van al monograma.
+             * @example /api/v2/directivos/ypf/foto
+             */
+            photo_url: Record<string, never> | null;
+            /**
+             * @description La variante retina, para la ficha grande. Es otro archivo, no un reescalado.
+             * @example /api/v2/directivos/ypf/foto?size=2x
+             */
+            photo_url_2x: Record<string, never> | null;
+            /**
+             * @description Índice de la EMPRESA, atribuido a quien la dirige. La parte de producción —escala, rendimiento por pozo y prima de valor, con pesos que no se publican— va de 0 a 100. Los votos de la semana suman hasta ±6 encima de eso, así que el total puede pasar de 100: no se recorta, porque recortarlo empataría a los de arriba justo cuando el voto los separa.
+             * @example 96.5
+             */
+            index: number;
+            /** @example 1 */
+            rank: number;
+            /**
+             * @description Puestos ganados desde el corte de ayer. Positivo = subió. Cero es el caso normal: sólo se mueve cuando entran votos nuevos al corte diario.
+             * @example 2
+             */
+            rank_change: number;
+        };
+        VotacionResumenDto: {
+            /**
+             * @description Lunes de la semana en curso.
+             * @example 2026-08-31
+             */
+            week_start: string;
+            /**
+             * @description Votos emitidos esta semana. Es un COUNT, no una estimación.
+             * @example 1284
+             */
+            votes: number;
+            /**
+             * @description Votantes distintos esta semana (IPs distintas — una IP no es una persona).
+             * @example 377
+             */
+            voters: number;
+            /** @example 5 */
+            weekly_limit: number;
+        };
+        DirectivosSourceDto: {
+            /** @example 2025-06-01 */
+            window_from: string;
+            /** @example 2026-05-01 */
+            window_to: string;
+            /**
+             * @description Los insumos del índice, por su nombre. La ponderación no se publica.
+             * @example [
+             *       "Escala de producción",
+             *       "Rendimiento por pozo",
+             *       "Prima de valor"
+             *     ]
+             */
+            inputs: string[];
+        };
+        DirectivosResponseDto: {
+            directivos: components["schemas"]["DirectivoDto"][];
+            votacion: components["schemas"]["VotacionResumenDto"];
+            source: components["schemas"]["DirectivosSourceDto"];
+        };
+        VotoEmitidoDto: {
+            /** @example ypf */
+            company_slug: string;
+            /**
+             * @example 1
+             * @enum {number}
+             */
+            value: 1 | -1;
+            /**
+             * @description false = se emitió hoy y entra en el corte de mañana. El orden se recalcula una vez por día.
+             * @example false
+             */
+            counted: boolean;
+        };
+        VotoEstadoDto: {
+            /** @example 2026-08-31 */
+            week_start: string;
+            /** @example 5 */
+            weekly_limit: number;
+            /** @example 2 */
+            used: number;
+            /** @example 3 */
+            remaining: number;
+            votes: components["schemas"]["VotoEmitidoDto"][];
+        };
+        VotarDto: {
+            /**
+             * @description +1 sube, -1 baja. No hay otro valor.
+             * @example 1
+             * @enum {number}
+             */
+            value: 1 | -1;
         };
     };
     responses: never;
@@ -4081,6 +4275,122 @@ export interface operations {
                         data: components["schemas"]["SubscribeResponseDto"];
                         meta: components["schemas"]["MetaDto"];
                     };
+                };
+            };
+        };
+    };
+    DirectivosController_list_v2: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["DirectivosResponseDto"];
+                        meta: components["schemas"]["MetaDto"];
+                    };
+                };
+            };
+        };
+    };
+    DirectivosController_estado_v2: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["VotoEstadoDto"];
+                        meta: components["schemas"]["MetaDto"];
+                    };
+                };
+            };
+        };
+    };
+    DirectivosController_foto_v2: {
+        parameters: {
+            query?: {
+                /** @description La variante retina. */
+                size?: "2x";
+            };
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Esa empresa no tiene foto. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "image/jpeg": components["schemas"]["ApiErrorDto"];
+                };
+            };
+        };
+    };
+    DirectivosController_votar_v2: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Slug de la EMPRESA. */
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VotarDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["VotoEstadoDto"];
+                        meta: components["schemas"]["MetaDto"];
+                    };
+                };
+            };
+            /** @description No hay directivo cargado para esa empresa. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto"];
+                };
+            };
+            /** @description Ya votó a esa persona esta semana, o se quedó sin votos. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto"];
                 };
             };
         };

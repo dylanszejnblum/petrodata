@@ -1001,7 +1001,8 @@
     "directivos": {
       "s01t": "Executives",
       "s01d": "The 48 people growing the country's energy production.",
-      "cardRanking": "The ranking"
+      "cardRanking": "The ranking",
+      "sinDatos": "The ranking is unavailable right now. Try again in a little while."
     }
   }
 }

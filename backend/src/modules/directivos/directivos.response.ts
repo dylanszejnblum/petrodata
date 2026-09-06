@@ -19,8 +19,19 @@ export class DirectivoDto {
   @ApiProperty({ example: 'Ingeniero químico de la UNLP…', nullable: true })
   bio!: string | null;
 
-  @ApiProperty({ example: 'https://cdn.example.com/directivos/ypf.jpg', nullable: true })
+  @ApiProperty({
+    example: '/api/v2/directivos/ypf/foto',
+    nullable: true,
+    description: 'null en 16 de 48 — esas filas van al monograma.',
+  })
   photo_url!: string | null;
+
+  @ApiProperty({
+    example: '/api/v2/directivos/ypf/foto?size=2x',
+    nullable: true,
+    description: 'La variante retina, para la ficha grande. Es otro archivo, no un reescalado.',
+  })
+  photo_url_2x!: string | null;
 
   @ApiProperty({
     example: 96.5,
@@ -33,6 +44,14 @@ export class DirectivoDto {
   index!: number;
 
   @ApiProperty({ example: 1 }) rank!: number;
+
+  @ApiProperty({
+    example: 2,
+    description:
+      'Puestos ganados desde el corte de ayer. Positivo = subió. Cero es el caso normal: ' +
+      'sólo se mueve cuando entran votos nuevos al corte diario.',
+  })
+  rank_change!: number;
 }
 
 export class DirectivosSourceDto {
