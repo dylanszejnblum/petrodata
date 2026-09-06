@@ -39,6 +39,13 @@ export type WellFeature = {
     operatorName: string
     status: WellStatus
     recurso: WellResource
+    statusCode?: string
+    formation?: string
+    basin?: string
+    province?: string
+    concession?: string
+    yacimiento?: string
+    depth?: number | null
   }
 }
 

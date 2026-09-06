@@ -7,6 +7,8 @@ import { hasLocale, NextIntlClientProvider } from 'next-intl'
 import { routing } from '@/i18n/routing'
 import { loadHeadline } from '@/lib/data/production'
 import { Indice } from './_ui/Indice'
+import { PageMotion } from './_ui/PageMotion'
+import { siteMetadata } from '@/lib/metadata'
 import '../globals.css'
 import './sistema.css'
 
@@ -44,10 +46,9 @@ export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }))
 }
 
-export const metadata: Metadata = {
-  title: { default: 'Vacamuerta.io', template: '%s · Vacamuerta.io' },
-  description:
-    'Inteligencia de datos sobre petróleo y gas en Argentina: producción, empresas, provincias, indicadores y noticias.',
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params
+  return siteMetadata(locale, '/', locale === 'en' ? 'Energy intelligence' : 'Inteligencia energética')
 }
 
 /* Setea data-theme antes del primer paint. Sin el hack opacity:0 del sitio
@@ -85,6 +86,7 @@ export default async function LocaleLayout({
       suppressHydrationWarning
     >
       <body>
+        <a className="s-skip" href="#contenido">{locale === 'en' ? 'Skip to content' : 'Ir al contenido'}</a>
         <Script id="estrato-theme" strategy="beforeInteractive">
           {themeInit}
         </Script>
@@ -92,7 +94,8 @@ export default async function LocaleLayout({
           <div className="sistema">
             <div className="grid lg:grid-cols-[288px_1fr]">
               <Indice periodo={`${HEADLINE.period}-01`} />
-              <main className="s-contenido min-w-0">
+              <main id="contenido" tabIndex={-1} className="s-contenido min-w-0">
+                <PageMotion />
                 {children}
                 {/* La referencia cierra con un filete punteado y una línea de
                     atribución, no al aire. Es el mismo separador de siempre. */}
@@ -101,7 +104,7 @@ export default async function LocaleLayout({
                     {t('nota')}
                   </span>
                   <span className="s-mono text-[10.5px]" style={{ color: 'var(--ink-2)' }}>
-                    sistema v2
+                    Vacamuerta.io
                   </span>
                 </footer>
               </main>

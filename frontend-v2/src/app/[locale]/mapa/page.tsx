@@ -1,10 +1,8 @@
 import { Suspense } from 'react'
 import { getTranslations } from 'next-intl/server'
-import { Seccion, Card, CardHead, FilaDato, Pie } from '../_ui/kit'
 import { MapaV2 } from './MapaV2'
 import { loadHeadline, loadOperators } from '@/lib/data/production'
 import { loadWells } from '@/lib/data/wells'
-import { formatInteger } from '@/lib/format'
 
 /* MAPA — la única página que rompe la grilla.
 
@@ -42,7 +40,7 @@ export default async function V2Mapa({
 
   return (
     <>
-      <div className="h-dvh w-full">
+      <div className="s-map-viewport w-full">
         {/* Suspense porque MapaV2 lee la query con useSearchParams, y Next
             exige el límite para no forzar el render dinámico de toda la
             página. El fallback es el hueco del mapa y no un spinner: el
@@ -50,26 +48,24 @@ export default async function V2Mapa({
             correcto evita que el contenido de abajo salte cuando el mapa
             aparece. */}
         <Suspense fallback={<div className="h-full w-full" style={{ background: 'var(--canvas)' }} />}>
-          <MapaV2 wells={WELLS} operadores={OPERADORES} />
+          <MapaV2
+            wells={WELLS}
+            operadores={OPERADORES}
+            cobertura={{
+              catalogo: HEADLINE.catalogWells,
+              muestra: WELLS.length,
+              activos: HEADLINE.activeWells,
+              etiquetas: {
+                titulo: t('cobertura'),
+                catalogo: t('catalogo'),
+                muestra: t('muestreados'),
+                activos: t('activosMes'),
+                cerrar: locale === 'en' ? 'Close coverage' : 'Cerrar cobertura',
+              },
+            }}
+          />
         </Suspense>
       </div>
-
-      <Seccion
-        n="01"
-        titulo={t('s01t')}
-        desc={t('s01d')}
-      >
-        <Card>
-          <CardHead titulo={t('cobertura')} />
-          <FilaDato etiqueta={t('catalogo')} valor={formatInteger(HEADLINE.catalogWells)} />
-          <FilaDato etiqueta={t('muestreados')} valor={formatInteger(WELLS.length)} />
-          <FilaDato etiqueta={t('activosMes')} valor={formatInteger(HEADLINE.activeWells)} />
-        </Card>
-        <Pie>
-          La muestra es una fracción del catálogo: dibujar {formatInteger(HEADLINE.catalogWells)}{' '}
-          puntos no agrega información y sí cuesta cuadros por segundo.
-        </Pie>
-      </Seccion>
     </>
   )
 }

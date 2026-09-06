@@ -13,7 +13,11 @@ export async function withFallback<T>(
   fallback: () => T,
 ): Promise<T> {
   try {
-    const value = await live()
+    /* Keep the shell responsive when the optional live API is offline or
+       waking from sleep. Without a deadline, Node's fetch can hold the whole
+       route open for minutes before the fixture fallback is reached. */
+    const deadline = new Promise<null>((resolve) => setTimeout(() => resolve(null), 3500))
+    const value = await Promise.race([live(), deadline])
     if (value == null || (Array.isArray(value) && value.length === 0)) {
       console.warn(`[data] ${label}: la API no devolvió datos, usando fixture`)
       return fallback()

@@ -19,6 +19,10 @@ export const PATH = {
   mas: 'M12 5v14M5 12h14',
   buscar: 'M18 11a7 7 0 1 1-14 0 7 7 0 0 1 14 0zM21 21l-4.3-4.3',
   cerrar: 'M6 6l12 12M18 6L6 18',
+  sol: 'M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41',
+  luna: 'M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z',
+  contraer: 'M8 3v5H3M16 3v5h5M8 21v-5H3M16 21v-5h5',
+  expandir: 'M3 8V3h5M21 8V3h-5M3 16v5h5M21 16v5h-5',
   /* El tilde de confirmación. Misma rejilla de 24 y las mismas puntas
      redondeadas que el resto: dos trazos y nada de relleno. */
   tilde: 'M20 6L9 17l-5-5',
