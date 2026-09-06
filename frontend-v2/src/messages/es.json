@@ -1001,7 +1001,8 @@
     "directivos": {
       "s01t": "Directivos",
       "s01d": "Las 48 personas que hacen crecer la producción de energía del país.",
-      "cardRanking": "El ranking"
+      "cardRanking": "El ranking",
+      "sinDatos": "El ranking no está disponible en este momento. Vuelve a intentarlo en un rato."
     }
   }
 }

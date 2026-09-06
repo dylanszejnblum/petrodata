@@ -1,7 +1,7 @@
-import { Body, Controller, Get, Header, HttpCode, NotFoundException, Param, Post, Req, Res } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, NotFoundException, Param, Post, Query, Req, Res } from '@nestjs/common';
 import type { Request, Response } from 'express';
 import { Throttle } from '@nestjs/throttler';
-import { ApiConflictResponse, ApiNotFoundResponse, ApiOperation, ApiParam, ApiProduces, ApiTags } from '@nestjs/swagger';
+import { ApiConflictResponse, ApiNotFoundResponse, ApiOperation, ApiParam, ApiProduces, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { ResponseMeta } from '../../common/response-meta.decorator';
 import { ApiErrorDto, ApiOkEnvelope } from '../../common/swagger';
 import { VotarDto } from './directivos.dto';
@@ -64,10 +64,11 @@ export class DirectivosController {
       'el slug, así que si cambia la cara hay que purgar.',
   })
   @ApiParam({ name: 'slug', example: 'ypf' })
+  @ApiQuery({ name: 'size', required: false, enum: ['2x'], description: 'La variante retina.' })
   @ApiProduces('image/jpeg')
   @ApiNotFoundResponse({ type: ApiErrorDto, description: 'Esa empresa no tiene foto.' })
-  async foto(@Param('slug') slug: string, @Res() res: Response) {
-    const { body, contentType, etag } = await this.service.foto(slug);
+  async foto(@Param('slug') slug: string, @Query('size') size: string | undefined, @Res() res: Response) {
+    const { body, contentType, etag } = await this.service.foto(slug, size);
     res.setHeader('Content-Type', contentType);
     res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
     if (etag) res.setHeader('ETag', etag);
