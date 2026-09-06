@@ -27,11 +27,14 @@ async function createApp(): Promise<NestExpressApplication> {
   // from CORS_ORIGINS (comma-separated); falls back to the known app origins.
   const corsOrigins = (
     process.env.CORS_ORIGINS ??
-    // localhost:3200 es frontend-v2. Sin él, las lecturas andan igual —son del
-    // servidor— pero votar falla en el navegador: el POST de /directivos/:slug/voto
-    // es cross-origin y el preflight no trae header. Cuando v2 tenga dominio
-    // propio hay que agregarlo a CORS_ORIGINS o pasa lo mismo en producción.
-    'https://vacamuerta.io,https://www.vacamuerta.io,https://petrodata.dylansz.com,http://localhost:3000,http://localhost:3200'
+    // Sólo los dominios publicados: sin localhost, a propósito. Las lecturas de
+    // cualquier frontend son del servidor y no pasan por acá; lo que sí pasa es
+    // el POST de /directivos/:slug/voto, que sale del navegador. Un origen que
+    // falte no da error visible: el preflight vuelve sin header y el voto se
+    // pierde en silencio.
+    // OJO: en producción CORS_ORIGINS ESTÁ seteada, así que esta lista no corre
+    // allá. Tocar las dos.
+    'https://vacamuerta.io,https://www.vacamuerta.io,https://old.vacamuerta.io,https://v1.vacamuerta.io,https://v2.vacamuerta.io,https://petrodata.dylansz.com'
   )
     .split(',')
     .map((o) => o.trim())
