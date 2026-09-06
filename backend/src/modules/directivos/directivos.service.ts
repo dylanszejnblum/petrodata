@@ -104,11 +104,11 @@ export class DirectivosService {
     return hashVotante(ip, salt);
   }
 
-  /** Voto neto por empresa, SÓLO de días anteriores a hoy (el corte diario). */
-  private async netoElegible(semana: Date): Promise<Map<string, number>> {
+  /** Voto neto por empresa, sólo de días anteriores a `corte`. */
+  private async netoHasta(semana: Date, corte: Date): Promise<Map<string, number>> {
     const rows = await this.prisma.executiveVote.groupBy({
       by: ['companySlug'],
-      where: { weekStart: semana, voteDay: { lt: diaDe() } },
+      where: { weekStart: semana, voteDay: { lt: corte } },
       _sum: { value: true },
     });
     return new Map(rows.map((r) => [r.companySlug, r._sum.value ?? 0]));
@@ -116,10 +116,20 @@ export class DirectivosService {
 
   async list(): Promise<DirectivosResponseDto | null> {
     const semana = semanaDe();
-    const [execs, contribution, neto, votos, votantes] = await Promise.all([
+    /* Dos cortes: el de hoy y el de ayer. El segundo es lo único que hace
+       verdadera la frase del pie —«la flecha dice cuántos lugares se movió cada
+       uno»—: sin él, el movimiento habría que compararlo contra un orden que
+       nadie guardó. Recalcularlo sale una consulta más y un sort, contra una
+       tabla de historial y un cron que habría que mantener. */
+    const hoy = diaDe();
+    const ayer = new Date(hoy);
+    ayer.setUTCDate(ayer.getUTCDate() - 1);
+
+    const [execs, contribution, neto, netoAyer, votos, votantes] = await Promise.all([
       this.prisma.companyExecutive.findMany(),
       this.operators.contribution(),
-      this.netoElegible(semana),
+      this.netoHasta(semana, hoy),
+      this.netoHasta(semana, ayer),
       this.prisma.executiveVote.count({ where: { weekStart: semana } }),
       this.prisma.executiveVote.findMany({
         where: { weekStart: semana },
@@ -129,6 +139,7 @@ export class DirectivosService {
     ]);
     if (!execs.length || !contribution) return null;
     const puntos = puntosPorVoto(neto);
+    const puntosAyer = puntosPorVoto(netoAyer);
 
     const companies = await this.prisma.company.findMany({
       where: { slug: { in: execs.map((e) => e.companySlug) } },
@@ -161,6 +172,7 @@ export class DirectivosService {
            bucket es privado y las fotos salen por esta misma API. Guardar una
            URL pública ataba la fila a un hostname que no existe. */
         photo_url: e.photoUrl ? `/api/v2/directivos/${e.companySlug}/foto` : null,
+        photo_url_2x: e.photoUrl ? `/api/v2/directivos/${e.companySlug}/foto?size=2x` : null,
         escala: c?.share_boe ?? 0,
         valorUsd: c?.gross_value_usd ?? 0,
         pozos: company?.projectCountOilGas ?? 0,
@@ -171,15 +183,34 @@ export class DirectivosService {
        propio presupuesto de puntos: así el aporte de la gente es legible
        —«hasta seis puntos»— y no se mezcla con la ponderación de los insumos,
        que es la que no se publica. */
-    const directivos = calcularIndices(filas, totalGross)
-      .map((d) => ({ ...d, index: Math.round((d.index + (puntos.get(d.company_slug) ?? 0)) * 10) / 10 }))
-      .sort((a, b) => b.index - a.index)
-      .map(
-        ({ escala: _e, valorUsd: _v, pozos: _p, ...d }, i): DirectivoDto => ({
-          ...d,
-          rank: i + 1,
-        }),
-      );
+    const base = calcularIndices(filas, totalGross);
+
+    /* EL DESEMPATE ES EXPLÍCITO y no el que regala el sort: veinticinco de las
+       cuarenta y ocho empatan —dieciséis en el mismo valor— y dejarlo librado a
+       la implementación es dejar librado el puesto de media lista. Se cae al
+       índice sin votos y después al slug, que es estable entre pedidos: sin eso
+       dos llamadas seguidas podían devolver órdenes distintos para los mismos
+       datos. */
+    const ordenar = (puntosDelCorte: Map<string, number>) =>
+      base
+        .map((d) => ({ ...d, conVoto: d.index + (puntosDelCorte.get(d.company_slug) ?? 0) }))
+        .sort(
+          (a, b) =>
+            b.conVoto - a.conVoto || b.index - a.index || a.company_slug.localeCompare(b.company_slug),
+        );
+
+    const puestosAyer = new Map(ordenar(puntosAyer).map((d, i) => [d.company_slug, i + 1]));
+
+    const directivos = ordenar(puntos).map(
+      ({ escala: _e, valorUsd: _v, pozos: _p, conVoto, ...d }, i): DirectivoDto => ({
+        ...d,
+        index: Math.round(conVoto * 10) / 10,
+        rank: i + 1,
+        /* Positivo = subió. Cero cuando nadie se movió, que es el caso normal:
+           el frontend no dibuja el renglón. */
+        rank_change: (puestosAyer.get(d.company_slug) ?? i + 1) - (i + 1),
+      }),
+    );
 
     return {
       directivos,
@@ -231,18 +262,28 @@ export class DirectivosService {
      `<bucket>.web-….sslip.io` —da 503—, así que un bucket público no se podía
      servir igual. Son 32 jpg de 30 KB con un año de cache: pasarlos por Nest no
      se nota, y el bucket se queda privado, que es mejor de todos modos. */
-  async foto(slug: string): Promise<{ body: Buffer; contentType: string; etag: string | null }> {
+  async foto(
+    slug: string,
+    size?: string,
+  ): Promise<{ body: Buffer; contentType: string; etag: string | null }> {
     const exec = await this.prisma.companyExecutive.findUnique({
       where: { companySlug: slug },
       select: { photoUrl: true },
     });
     if (!exec?.photoUrl) throw new NotFoundException(`Sin foto para ${slug}.`);
 
+    /* La variante retina es OTRO archivo, no un reescalado: `ypf@2x.jpg` al
+       lado de `ypf.jpg`. La ficha grande se dibuja a 161×200 CSS, que en una
+       pantalla Retina son 322×400 reales, y el archivo de 161 estirado al doble
+       se ve borroso. La fila chica no la necesita —se muestra a 60 y el de 161
+       ya cubre los 120— así que el 2x sólo se baja al abrir una ficha. */
+    const key = size === '2x' ? exec.photoUrl.replace(/\.jpg$/, '@2x.jpg') : exec.photoUrl;
+
     const cfg = s3ConfigFromEnv();
     if (!cfg) {
       throw new ServiceUnavailableException('El almacenamiento de imágenes no está configurado.');
     }
-    const obj = await getObject(cfg, exec.photoUrl);
+    const obj = await getObject(cfg, key);
     if (!obj) throw new NotFoundException(`Sin foto para ${slug}.`);
     return obj;
   }

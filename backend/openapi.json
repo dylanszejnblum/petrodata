@@ -3185,6 +3185,18 @@
               "example": "ypf",
               "type": "string"
             }
+          },
+          {
+            "name": "size",
+            "required": false,
+            "in": "query",
+            "description": "La variante retina.",
+            "schema": {
+              "enum": [
+                "2x"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -7133,8 +7145,15 @@
           },
           "photo_url": {
             "type": "object",
-            "example": "https://cdn.example.com/directivos/ypf.jpg",
-            "nullable": true
+            "example": "/api/v2/directivos/ypf/foto",
+            "nullable": true,
+            "description": "null en 16 de 48 — esas filas van al monograma."
+          },
+          "photo_url_2x": {
+            "type": "object",
+            "example": "/api/v2/directivos/ypf/foto?size=2x",
+            "nullable": true,
+            "description": "La variante retina, para la ficha grande. Es otro archivo, no un reescalado."
           },
           "index": {
             "type": "number",
@@ -7144,6 +7163,11 @@
           "rank": {
             "type": "number",
             "example": 1
+          },
+          "rank_change": {
+            "type": "number",
+            "example": 2,
+            "description": "Puestos ganados desde el corte de ayer. Positivo = subió. Cero es el caso normal: sólo se mueve cuando entran votos nuevos al corte diario."
           }
         },
         "required": [
@@ -7154,8 +7178,10 @@
           "in_role_since",
           "bio",
           "photo_url",
+          "photo_url_2x",
           "index",
-          "rank"
+          "rank",
+          "rank_change"
         ]
       },
       "VotacionResumenDto": {

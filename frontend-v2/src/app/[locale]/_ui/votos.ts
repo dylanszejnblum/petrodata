@@ -1,147 +1,97 @@
 'use client'
 
-import { useCallback, useSyncExternalStore } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
-import { dia, LIMITE } from './voto-reglas'
+import { api } from '@/api/client'
+import { LIMITE } from './voto-reglas'
 
-/* EL VOTO — un store chico, compartido por la lista y el panel de la sección 01.
+/* EL VOTO — ahora contra el servidor.
 
-   Las dos piezas viven en secciones distintas de la página y tienen que ver lo
-   mismo: si votás en la lista, el presupuesto del panel baja en el mismo
-   frame. Con estado local en cada una, una se enteraba y la otra no.
+   Antes esto era localStorage: una maqueta que probaba la mecánica y nada del
+   control. El presupuesto se reseteaba borrando el storage, y el enunciado
+   —«uno por semana»— sólo se sostenía si nadie miraba. Ahora el límite, el
+   corte diario y la semana viven en /api/v2/directivos/voto, y acá queda lo
+   que de verdad es del cliente: el estado optimista mientras vuelve el POST.
 
-   Es `useSyncExternalStore` y no un contexto porque el dato de verdad vive
-   AFUERA de React —en localStorage— y ése es exactamente el caso que este hook
-   resuelve: una fuente externa que muta, con suscripción y con una lectura
-   distinta para el servidor.
+   LO QUE SIGUE SIENDO CIERTO Y ESTÁ DICHO AL PIE: el votante se identifica por
+   IP, y una IP no es una persona. Una oficina o una operadora móvil son miles
+   detrás de una sola, y cualquiera con VPN vota lo que quiera. Es la
+   aproximación que se eligió publicar, no una identidad.
 
-   Todo esto es una MAQUETA. El enunciado —un presupuesto semanal por usuario—
-   sólo se sostiene del lado del servidor: acá el que vota puede borrar el
-   storage y volver a empezar. Lo que la maqueta prueba es la mecánica y la
-   composición, no el control. */
+   EL VOTO NO SE EDITA. Lo hace cumplir un índice único en la base, no este
+   módulo: si dos pestañas mandan el mismo voto, una recibe 409 y la lista
+   queda igual. */
 
-/* La clave cambió con el nombre de la sección. Se pierden los votos que
-   hubiera guardados, que son de una maqueta. */
-const CLAVE = 'v2-directivos-votos'
-
-/* El límite vive en voto-reglas.ts y no acá: un valor exportado desde un
-   módulo 'use client' no sobrevive a un template literal del lado del servidor.
-   Se re-exporta para que quien ya lo importaba de acá siga andando.
-
-   Cinco sobre 48 personas, y el número importa: con votos ilimitados el ranking
-   lo gana el que más aguante tiene apretando, y el voto deja de decir «esta
-   persona me parece la mejor» para decir «alguien insistió». Escaso, cada voto
-   es una elección —hay que dejar a 43 afuera— y de paso encarece muchísimo
-   inflarlo desde una sola mano. */
 export { LIMITE } from './voto-reglas'
 
 export type Voto = 1 | -1
+/** Un voto ya emitido. `contado` = ya entró en el corte; si no, entra mañana. */
+export type Emitido = { v: Voto; contado: boolean }
+export type Estado = { votos: Record<string, Emitido>; restantes: number; usados: number }
 
-/* Cada voto guarda su dirección y el DÍA en que se emitió. El día es lo que
-   permite el corte: la lista se ordena sólo con los votos de días anteriores y
-   los de hoy quedan pendientes hasta medianoche. Antes se guardaba nada más que
-   la dirección, así que no había forma de saber cuáles ya estaban adentro. */
-export type Emitido = { v: Voto; d: string }
-export type Estado = { semana: string; votos: Record<string, Emitido> }
+const VACIO: Estado = { votos: {}, restantes: LIMITE, usados: 0 }
 
-/** Lunes de la semana en curso, en ISO. Es la clave con la que caducan los
-    votos: al cambiar de lunes el objeto guardado deja de coincidir y se
-    descarta entero, presupuesto incluido. */
-export function semana(): string {
-  const d = new Date()
-  const dia = (d.getDay() + 6) % 7 // lunes = 0
-  d.setDate(d.getDate() - dia)
-  return d.toISOString().slice(0, 10)
+function aEstado(d: {
+  used: number
+  remaining: number
+  votes: { company_slug: string; value: number; counted: boolean }[]
+}): Estado {
+  const votos: Record<string, Emitido> = {}
+  for (const v of d.votes) votos[v.company_slug] = { v: v.value as Voto, contado: v.counted }
+  return { votos, usados: d.used, restantes: d.remaining }
 }
-
-const VACIO: Estado = { semana: '', votos: {} }
-
-/* La instantánea se cachea. useSyncExternalStore compara por identidad y
-   parsear el JSON en cada lectura devolvería un objeto nuevo cada vez: React
-   lo vería siempre como un cambio y entraría en un bucle de renders. */
-let cache: Estado = VACIO
-let crudo: string | null = null
-
-function leer(): Estado {
-  let s: string | null = null
-  try {
-    s = localStorage.getItem(CLAVE)
-  } catch {
-    /* storage bloqueado: se trabaja en memoria y nada persiste */
-  }
-  if (s !== crudo) {
-    crudo = s
-    try {
-      const d = JSON.parse(s || '{}') as Estado
-      /* Se descarta lo guardado con la forma vieja —el valor era el número del
-         voto y no un objeto—: sin el día no se puede saber si el voto ya entró
-         en el corte, y adivinarlo sería peor que perder cinco votos de una
-         maqueta. */
-      const sano =
-        d.votos && Object.values(d.votos).every((x) => x && typeof x === 'object' && 'd' in x)
-      cache = d.semana === semana() && sano ? { semana: d.semana, votos: d.votos } : VACIO
-    } catch {
-      cache = VACIO
-    }
-  }
-  return cache
-}
-
-const oyentes = new Set<() => void>()
-function avisar() {
-  for (const f of oyentes) f()
-}
-
-/** En el servidor no hay storage, así que la lectura es el vacío. Es lo que
-    hace que el HTML servido y el primer render del cliente coincidan; el voto
-    guardado aparece recién en el efecto de suscripción. */
-const vacioServidor = () => VACIO
 
 export function useVotos() {
-  const estado = useSyncExternalStore(
-    (f) => {
-      oyentes.add(f)
-      /* Otra pestaña del mismo navegador también vota: `storage` avisa. Sin
-         esto, dos pestañas abiertas muestran presupuestos distintos. */
-      const alStorage = (e: StorageEvent) => {
-        if (e.key === CLAVE) avisar()
-      }
-      window.addEventListener('storage', alStorage)
-      return () => {
-        oyentes.delete(f)
-        window.removeEventListener('storage', alStorage)
-      }
-    },
-    leer,
-    vacioServidor,
-  )
+  const [estado, setEstado] = useState<Estado>(VACIO)
+  /* Hasta que vuelve el primer GET no se sabe qué votó esta IP, y con el
+     presupuesto en 5 los chevrones nacen habilitados: un clic en ese hueco
+     manda un voto que el servidor puede rechazar. Se bloquean hasta saber. */
+  const [listo, setListo] = useState(false)
 
-  const usados = Object.keys(estado.votos).length
-  const restantes = Math.max(0, LIMITE - usados)
-
-  /* EL VOTO NO SE EDITA (pedido de Mariano). Una vez emitido no se saca ni se
-     da vuelta hasta el lunes.
-
-     Es lo correcto para lo que el voto tiene que significar —un voto que se
-     puede deshacer y rehacer es un voto que se puede tantear, y el conteo deja
-     de ser una foto de opiniones para ser una de últimas intenciones— pero
-     tiene un costo que conviene tener presente: un clic equivocado se paga
-     hasta el lunes. Si eso molesta, la salida no es volver a hacerlo editable
-     sino pedir confirmación antes del primer voto de cada fila. */
-  const votar = useCallback((slug: string, v: Voto) => {
-    const act = leer()
-    if (act.votos[slug]) return
-    const sig = { ...act.votos }
-    if (Object.keys(sig).length >= LIMITE) return
-    sig[slug] = { v, d: dia() }
-    try {
-      localStorage.setItem(CLAVE, JSON.stringify({ semana: semana(), votos: sig }))
-    } catch {
-      /* sin storage el voto vale para esta sesión y nada más */
+  /* El presupuesto es POR IP y no se puede renderizar en el servidor: el HTML
+     de la página está cacheado y compartido entre visitantes. Por eso va en un
+     efecto, después de hidratar, y el primer render sale sin votos — igual que
+     antes salía sin lo que hubiera en localStorage. */
+  useEffect(() => {
+    let vivo = true
+    api
+      .GET('/api/v2/directivos/voto', {})
+      .then(({ data, error }) => {
+        if (!vivo || error || !data?.data) return
+        setEstado(aEstado(data.data))
+      })
+      .catch(() => {})
+      .finally(() => {
+        if (vivo) setListo(true)
+      })
+    return () => {
+      vivo = false
     }
-    crudo = null // fuerza la relectura en la próxima instantánea
-    avisar()
   }, [])
 
-  return { votos: estado.votos, votar, usados, restantes }
+  const votar = useCallback(
+    (slug: string, v: Voto) => {
+      if (!listo || estado.votos[slug] || estado.restantes <= 0) return
+      /* Optimista: el voto se dibuja antes de que vuelva el POST. Si el
+         servidor lo rechaza —409 por repetido o sin crédito— la respuesta trae
+         el presupuesto real y lo pisa. */
+      setEstado((e) => ({
+        votos: { ...e.votos, [slug]: { v, contado: false } },
+        usados: e.usados + 1,
+        restantes: Math.max(0, e.restantes - 1),
+      }))
+      api
+        .POST('/api/v2/directivos/{slug}/voto', {
+          params: { path: { slug } },
+          body: { value: v },
+        })
+        .then(({ data }) => {
+          if (data?.data) setEstado(aEstado(data.data))
+        })
+        .catch(() => {})
+    },
+    [listo, estado.votos, estado.restantes],
+  )
+
+  return { votos: estado.votos, votar, usados: estado.usados, restantes: estado.restantes, listo }
 }

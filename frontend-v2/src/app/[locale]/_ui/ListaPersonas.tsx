@@ -3,7 +3,7 @@
 import { Fragment, useCallback, useMemo, useState } from 'react'
 import { AvisoDato } from './AvisoDato'
 import { Icono, PATH } from './iconos'
-import { conVoto, dia, LIMITE, proximoCorte } from './voto-reglas'
+import { LIMITE, proximoCorte } from './voto-reglas'
 import { useVotos } from './votos'
 import type { PersonaFila } from '@/fixtures/personas'
 import { formatDecimal } from '@/lib/format'
@@ -35,58 +35,34 @@ export function ListaPersonas({ personas }: { personas: PersonaFila[] }) {
      que comunicar, se pierde. */
   const [abierta, setAbierta] = useState<string | null>(null)
 
-  /* EL VOTO ENTRA EN EL NÚMERO. Antes se guardaba y no pasaba nada: la página
-     decía que la votación semanal pesa y el ranking no se movía nunca. Ahora
-     cada voto suma o resta (ver PESO_VOTO) y la lista se reordena acá mismo,
-     en el render, sin esperar nada.
+  /* EL ORDEN, EL ÍNDICE Y EL MOVIMIENTO LOS DA EL SERVIDOR. Antes la lista se
+     reordenaba acá, sumándole PESO_VOTO al índice del fixture: era la única
+     forma de que el voto se viera moverse, pero el número que salía no era el
+     de nadie más —cada navegador ordenaba con sus propios votos—.
 
-     Se ordena por el valor ya ajustado, no por el del fixture. El orden del
-     fixture se guarda aparte para poder mostrar cuánto se movió cada uno. */
-  const base = useMemo(() => {
-    const m: Record<string, number> = {}
-    personas.forEach((p, i) => {
-      m[p.slug] = i + 1
-    })
-    return m
-  }, [personas])
+     Ahora /api/v2/directivos manda las filas ya ordenadas, con el voto de toda
+     la gente aplicado y el corte diario hecho del lado del servidor. Acá no se
+     recalcula nada: reordenar en el cliente volvería a mostrar un ranking
+     privado.
 
-  /* EL CORTE. La lista se ordena SÓLO con los votos de días anteriores. Los de
-     hoy están emitidos y no se pueden deshacer, pero no mueven a nadie hasta
-     medianoche. Ver voto-reglas.ts. */
-  const hoy = dia()
+     Lo que sí es del cliente es `pendiente`: el voto que ESTA IP emitió hoy y
+     que entra en el próximo corte. El servidor lo marca con `counted: false`.
+
+     PUESTO ÚNICO, 01 a 48 (pedido de Mariano, 2026-09-01). Los empates siguen
+     estando —dieciséis personas comparten el mismo índice y veinticinco de las
+     cuarenta y ocho empatan con alguien— y adentro de cada grupo el orden lo
+     pone el desempate del servidor, no una diferencia de puntos. La pastilla de
+     Puntos, que va al lado, lo deja ver. */
   const filas = useMemo(
     () =>
-      personas
-        .map((p, i) => {
-          const e = votos[p.slug]
-          const dentro = e && e.d !== hoy ? e.v : undefined
-          return {
-            ...p,
-            orden: i,
-            puntos: conVoto(p.indice, dentro),
-            pendiente: !!e && e.d === hoy,
-          }
-        })
-        /* EL DESEMPATE ES EXPLÍCITO y no el que regala el sort estable: con
-           veinticinco personas empatadas, dejarlo librado a la implementación
-           es dejar librado el puesto de la mitad de la lista. Se cae al orden
-           del fixture, que es el del ranking de empresas —el mismo que produjo
-           el índice—, así que dentro de un empate manda la empresa más
-           grande. */
-        .sort((a, b) => b.puntos - a.puntos || a.orden - b.orden),
-    [personas, votos, hoy],
+      personas.map((p) => ({
+        ...p,
+        puntos: p.indice,
+        pendiente: votos[p.slug]?.contado === false,
+      })),
+    [personas, votos],
   )
 
-  /* PUESTO ÚNICO, 01 a 48 (pedido de Mariano, 2026-09-01: «no tiene que haber
-     empates de puestos»). Antes se compartía el puesto entre empatados, que es
-     la convención de las tablas deportivas.
-
-     Lo que hay que tener presente, porque el dato no cambió: los empates SIGUEN
-     ESTANDO. Dieciséis personas tienen exactamente 7,3 y otras nueve están en
-     grupos de dos y tres —veinticinco de cuarenta y ocho—. Con puesto único, el
-     orden adentro de cada grupo lo pone el desempate y no una diferencia de
-     puntos: entre el 24.º y el 39.º no hay nada que los separe salvo el tamaño
-     de la empresa. La pastilla de Puntos, que va al lado, lo deja ver. */
   const puestos = useMemo(() => {
     const m: Record<string, number> = {}
     filas.forEach((p, i) => {
@@ -134,7 +110,10 @@ export function ListaPersonas({ personas }: { personas: PersonaFila[] }) {
            En la ficha va con la palabra adelante y deja de ser adivinanza. Y de
            paso la columna de 28px se queda sólo con el puesto, que es lo único
            que tiene que decir. */
-        const salto = p.pendiente ? 0 : base[p.slug] - puestos[p.slug]
+        /* Puestos ganados desde el corte de ayer, calculado por el servidor
+           (`rank_change`). El voto que esta IP emitió hoy todavía no movió a
+           nadie, así que la fila pendiente no muestra movimiento. */
+        const salto = p.pendiente ? 0 : p.movimiento
         /* LA FILA VOTADA QUEDA TEÑIDA toda la semana, no un instante. El voto
            dura hasta el lunes, así que la marca dura lo mismo: al volver, las
            filas teñidas son las cinco que elegiste. Un destello al hacer clic
@@ -193,7 +172,7 @@ export function ListaPersonas({ personas }: { personas: PersonaFila[] }) {
                 que deja la fila en la altura del resto de las listas del sitio.
                 Cuando no hay imagen cae al monograma, que es la misma pieza que
                 usa la lista de empresas. */}
-            <Cara slug={p.slug} nombre={p.nombre} hay={p.foto} />
+            <Cara nombre={p.nombre} hay={p.foto} />
 
             {/* Tres renglones —nombre, cargo, empresa— y no dos: 19,5 + 17,25
                 + 17,25 llenan el alto de la foto de 60. En dos, la foto quedaba
@@ -376,7 +355,7 @@ function Ficha({
   const antiguedad = calcularAntiguedad(p.enElCargoDesde)
   return (
     <div className="s-ficha s-entra" id={`ficha-${p.slug}`}>
-      <CaraGrande slug={p.slug} nombre={p.nombre} hay={p.foto} />
+      <CaraGrande nombre={p.nombre} hay={p.foto} hay2x={p.foto2x} />
 
       <div className="s-ficha-col">
         {/* EL TÍTULO ES EL NOMBRE (pedido de Mariano). Repite el de la fila de
@@ -495,15 +474,23 @@ function Ficha({
 
     El navegador elige: 1x en pantalla común, 2x en Retina. El `src` queda como
     respaldo para quien no entienda srcset. */
-function CaraGrande({ slug, nombre, hay }: { slug: string; nombre: string; hay: boolean }) {
+function CaraGrande({
+  nombre,
+  hay,
+  hay2x,
+}: {
+  nombre: string
+  hay: string | null
+  hay2x: string | null
+}) {
   const { rota, alMontar, marcarRota } = useCaidaAMonograma()
   if (!hay || rota) return <span className="s-cara-gr s-cara--mono">{iniciales(nombre)}</span>
   return (
     <img
       ref={alMontar}
       className="s-cara-gr"
-      src={`/images/ceos/${slug}.jpg`}
-      srcSet={`/images/ceos/${slug}.jpg 1x, /images/ceos/${slug}@2x.jpg 2x`}
+      src={hay}
+      srcSet={hay2x ? `${hay} 1x, ${hay2x} 2x` : undefined}
       alt=""
       width={161}
       height={200}
@@ -514,12 +501,12 @@ function CaraGrande({ slug, nombre, hay }: { slug: string; nombre: string; hay: 
   )
 }
 
-/** La cara, con caída al monograma. El `onError` es la caída de verdad: el
-    archivo puede no estar —las imágenes no se versionan— y una cara rota es
-    peor que dos iniciales. */
+/** La cara, con caída al monograma. Las imágenes salen de la API
+    (/api/v2/directivos/:slug/foto), que las lee del bucket privado. */
 /** LA CAÍDA AL MONOGRAMA. Es la segunda línea: quién tiene cara lo decide el
-    servidor (ver page.tsx), así que acá no debería fallar ninguna. Queda para
-    el archivo que se borre después del build.
+    backend —`photo_url` viene en null en 16 de 48— así que acá no debería
+    fallar ninguna. Queda para el archivo que se borre del bucket, o para la API
+    caída.
 
     `onError` NO ALCANZA por sí solo: la lista se renderiza en el servidor,
     así que el navegador empieza a bajar las imágenes mientras parsea el HTML.
@@ -553,14 +540,14 @@ function iniciales(nombre: string) {
     .toUpperCase()
 }
 
-function Cara({ slug, nombre, hay }: { slug: string; nombre: string; hay: boolean }) {
+function Cara({ nombre, hay }: { nombre: string; hay: string | null }) {
   const { rota, alMontar, marcarRota } = useCaidaAMonograma()
   if (!hay || rota) return <span className="s-cara s-cara--mono">{iniciales(nombre)}</span>
   return (
     <img
       ref={alMontar}
       className="s-cara"
-      src={`/images/ceos/${slug}.jpg`}
+      src={hay}
       alt=""
       width={161}
       height={200}

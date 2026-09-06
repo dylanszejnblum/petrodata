@@ -3,11 +3,8 @@ import { ListaPersonas } from '../_ui/ListaPersonas'
 import { CabeceraVotos } from '../_ui/CabeceraVotos'
 import { EstadoVoto } from '../_ui/EstadoVoto'
 import { PATH } from '../_ui/iconos'
-import { VOTANTES_SEMANA, VOTOS_SEMANA } from '../_ui/voto-reglas'
-import { existsSync } from 'node:fs'
-import { join } from 'node:path'
 import { getTranslations } from 'next-intl/server'
-import { aFila, PERSONAS } from '@/fixtures/personas'
+import { loadDirectivos } from '@/lib/data/directivos'
 
 /* DIRECTIVOS — quién dirige la cuenca, ordenado por un índice.
 
@@ -36,7 +33,7 @@ import { aFila, PERSONAS } from '@/fixtures/personas'
    el que llega al límite se entera recién cuando un botón deja de responder.
    La regla queda dicha en la nota de la cabecera, que es estática.
 
-   Dos cosas que quedan pendientes de decisión y no de código:
+   Una cosa que queda pendiente de decisión y no de código:
 
    · LAS CARAS ESTÁN GENERADAS CON IA. Salen de CEOS/data/headshots/, que las
      produce con Higgsfield desde una foto real y el prompt «Recreate this exact
@@ -47,11 +44,19 @@ import { aFila, PERSONAS } from '@/fixtures/personas'
      sola si el archivo no está, así que publicar sin resolver la foto ya
      funciona.
 
-   · EL VOTO ES UNA MAQUETA. El enunciado es «uno por semana por IP» y eso vive
-     en el servidor; acá se guarda en localStorage para poder ver la
-     interacción. Además una IP no es una persona: una oficina o una operadora
-     móvil son miles detrás de una sola, y cualquiera con VPN vota lo que
-     quiera. Está dicho al pie. */
+   EL VOTO YA NO ES UNA MAQUETA: vive en /api/v2/directivos/:slug/voto, con el
+   presupuesto semanal y el corte diario del lado del servidor. Lo que sigue
+   siendo cierto es la advertencia del pie: una IP no es una persona —una
+   oficina o una operadora móvil son miles detrás de una sola— y cualquiera con
+   VPN vota lo que quiera. */
+
+/* Las otras seis páginas con datos declaran su revalidate acá; ésta no lo hacía
+   y el `next: { revalidate: 300 }` del fetch no alcanza para levantar la ruta:
+   salía del build como estática pura —la tabla de `next build` la listaba sin
+   ventana— y el ranking y los contadores de votos quedaban congelados en el
+   momento del deploy. Votar seguía escribiendo en la base; lo que no cambiaba
+   era la página. */
+export const revalidate = 300
 
 export default async function V2Directivos({
   params,
@@ -61,28 +66,37 @@ export default async function V2Directivos({
   const { locale } = await params
   const t = await getTranslations({ locale, namespace: 'v2.directivos' })
 
-  /* Se proyecta ACÁ, del lado del servidor. Ver PersonaFila: pasar `Persona`
-     entero publicaría los tres componentes del índice en el HTML y con eso los
-     pesos se despejan.
+  /* EL ÍNDICE Y EL ORDEN LOS DA EL BACKEND. La proyección que antes se hacía
+     acá —para no serializar los componentes del índice y que no se despejaran
+     los pesos— ahora es innecesaria: /api/v2/directivos manda el índice ya
+     calculado y nunca sus tres partes. Los pesos no salen del servidor.
 
-     QUIÉN TIENE CARA SE RESUELVE ACÁ Y NO EN EL NAVEGADOR. Dieciséis de las
-     cuarenta y ocho no tienen foto, y hasta ahora la fila igual pedía el
-     archivo y caía al monograma con el `onError` de la imagen. Eso fallaba de
-     dos maneras distintas:
+     QUIÉN TIENE CARA SIGUE RESOLVIÉNDOSE DEL LADO DEL SERVIDOR, que era lo
+     importante: `photo_url` llega en null en dieciséis de las cuarenta y ocho
+     y esa fila no pide ninguna imagen. Antes lo resolvía un existsSync contra
+     public/images/ceos; ahora lo sabe el backend, que es el único que ve el
+     bucket. Lo que evita es lo mismo de siempre: que la fila pida un archivo
+     que no está y quede el ícono de imagen rota, porque el 404 puede llegar
+     ANTES de que React hidrate y ahí el `onError` todavía no existe. */
+  const { filas, votos, votantes } = await loadDirectivos()
 
-     · en producción el 404 puede llegar ANTES de que React hidrate, y ahí el
-       manejador todavía no existe: el evento se dispara contra nadie y queda
-       el ícono de imagen rota;
-     · en desarrollo es peor, porque Next responde los estáticos que faltan con
-       200 y la página de error en HTML —35 KB—, así que no hay error que
-       atrapar: la imagen queda cargando para siempre.
-
-     El servidor ya sabe qué archivos hay. Preguntándole al disco acá, la fila
-     que no tiene cara no pide nada y renderiza el monograma de una: no hay
-     404, no hay parpadeo y no hay dieciséis pedidos al pedo. */
-  const filas = PERSONAS.map((p) =>
-    aFila(p, existsSync(join(process.cwd(), 'public/images/ceos', `${p.slug}.jpg`))),
-  )
+  /* SIN DATOS NO SE PUBLICA LA LISTA. Son personas con nombre y apellido en un
+     ranking: si la API no responde, un fixture viejo diría quién dirige qué con
+     un índice que ya no se corresponde con la producción. Es la única sección
+     donde el fallback es peor que el hueco. */
+  if (!filas.length) {
+    return (
+      <Seccion n="01" titulo={t('s01t')} desc={t('s01d')}>
+        <Card>
+          <CardPie>
+            <span className="s-micro" style={{ color: 'var(--ink-2)' }}>
+              {t('sinDatos')}
+            </span>
+          </CardPie>
+        </Card>
+      </Seccion>
+    )
+  }
 
   return (
     <>
@@ -104,10 +118,10 @@ export default async function V2Directivos({
                de quien mira y el reloj del corte— y cierran contra el borde
                derecho, que es donde el sistema pone lo que no se lee de
                corrido. */
-            sub={<CabeceraVotos votos={VOTOS_SEMANA} personas={VOTANTES_SEMANA} />}
-            /* Los dos números salen de VOTANTES_SEMANA y VOTOS_SEMANA, que
-               están escritos a mano. Leé el comentario de voto-reglas.ts antes
-               de citarlos en cualquier lado que no sea esta pantalla. */
+            sub={<CabeceraVotos votos={votos} personas={votantes} />}
+            /* Los dos números son el COUNT de la semana que devuelve
+               /api/v2/directivos. Antes estaban escritos a mano —377 y 1.284—
+               con una advertencia de que alguien iba a citarlos en un deck. */
             nota={<EstadoVoto />}
           />
           <ListaPersonas personas={filas} />

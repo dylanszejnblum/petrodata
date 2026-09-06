@@ -109,13 +109,21 @@ export type PersonaFila = Pick<
   Persona,
   'slug' | 'nombre' | 'cargo' | 'empresa' | 'indice' | 'enElCargoDesde' | 'bio'
 > & {
-  /** si el archivo de la cara existe. Lo resuelve el SERVIDOR, ver page.tsx. */
-  foto: boolean
+  /** URL de la cara, o null si esa persona no tiene. La decide el backend
+      (`photo_url`), que es el único que sabe qué hay en el bucket. */
+  foto: string | null
+  /** La variante retina, para la ficha grande. Es otro archivo, no un reescalado. */
+  foto2x: string | null
+  /** Puestos ganados desde el corte de ayer. Positivo = subió. Lo calcula el
+      servidor: acá no hay con qué, porque la lista llega ya ordenada. */
+  movimiento: number
 }
 
-export function aFila(p: Persona, foto = false): PersonaFila {
+export function aFila(p: Persona, foto: string | null = null): PersonaFila {
   return {
     foto,
+    foto2x: foto,
+    movimiento: 0,
     slug: p.slug,
     nombre: p.nombre,
     cargo: p.cargo,
