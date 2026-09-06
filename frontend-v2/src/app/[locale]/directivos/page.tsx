@@ -50,6 +50,14 @@ import { loadDirectivos } from '@/lib/data/directivos'
    oficina o una operadora móvil son miles detrás de una sola— y cualquiera con
    VPN vota lo que quiera. */
 
+/* Las otras seis páginas con datos declaran su revalidate acá; ésta no lo hacía
+   y el `next: { revalidate: 300 }` del fetch no alcanza para levantar la ruta:
+   salía del build como estática pura —la tabla de `next build` la listaba sin
+   ventana— y el ranking y los contadores de votos quedaban congelados en el
+   momento del deploy. Votar seguía escribiendo en la base; lo que no cambiaba
+   era la página. */
+export const revalidate = 300
+
 export default async function V2Directivos({
   params,
 }: {

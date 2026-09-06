@@ -7,6 +7,13 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  /* Para el Dockerfile: server.js + sólo las dependencias que el build usa.
+     Sin esto habría que copiar node_modules entero a la imagen final. */
+  output: 'standalone',
+  /* Sin esto Next busca la raíz del monorepo hacia arriba, encuentra
+     ~/Documents y escupe .next/standalone/minerals/frontend-v2/server.js.
+     Anclarlo acá hace que local y Docker den la misma ruta. */
+  outputFileTracingRoot: import.meta.dirname,
   images: {
     localPatterns: [
       {
