@@ -51,7 +51,7 @@ export function Seccion({
           <span className="s-mono shrink-0 text-[11px]" style={{ color: 'var(--ink-3)' }}>
             {n}
           </span>
-          <h2 className="s-titulo m-0 whitespace-nowrap">{titulo}</h2>
+          {n === '01' ? <h1 className="s-titulo m-0">{titulo}</h1> : <h2 className="s-titulo m-0">{titulo}</h2>}
           {desc && <p className="s-desc s-desc-trunca m-0 min-w-0 flex-1">{desc}</p>}
         </header>
         {children}

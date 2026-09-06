@@ -44,7 +44,7 @@ export function CapturaNewsletter() {
   }
 
   return (
-    <form onSubmit={suscribir} className="mt-6 shrink-0">
+    <form onSubmit={suscribir} className="s-sidebar-newsletter shrink-0">
       <p className="s-etq m-0">{t('titulo')}</p>
       <p className="s-desc m-0 mt-0.5">{t('bajada')}</p>
       <label className="s-buscador mt-2">
