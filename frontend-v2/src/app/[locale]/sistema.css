@@ -305,12 +305,14 @@
   text-align: center;
 }
 .s-bandera-provincia {
+  display: block;
   width: 24px;
   height: 16px;
   flex: 0 0 24px;
   border-radius: 3px;
   object-fit: cover;
   box-shadow: var(--shadow-hairline);
+  transform: translateY(-1px);
 }
 
 /* ── Controles ────────────────────────────────────────────────────────── */
