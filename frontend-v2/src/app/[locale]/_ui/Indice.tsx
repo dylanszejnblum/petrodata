@@ -1,7 +1,9 @@
 'use client'
 
+import { useState, useEffect } from 'react'
+import { Icono, PATH } from './iconos'
 import { Link, usePathname } from '@/i18n/navigation'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { CapturaNewsletter } from './CapturaNewsletter'
 import { CardCuenca } from './CardCuenca'
 import { formatMonth } from '@/lib/format'
@@ -48,11 +50,24 @@ const SECCIONES = [
 
 export function Indice({ periodo }: { periodo: string }) {
   const t = useTranslations('v2.indice')
+  const tNav = useTranslations('nav')
+  const locale = useLocale()
   const ruta = usePathname()
+  const [expanded, setExpanded] = useState(false)
+  const [dark, setDark] = useState(false)
+  useEffect(() => { setDark(document.documentElement.dataset.theme === 'dark') }, [])
+  useEffect(() => { setExpanded(false) }, [ruta])
+  const toggleTheme = () => {
+    const next = document.documentElement.dataset.theme !== 'dark'
+    document.documentElement.dataset.theme = next ? 'dark' : 'light'
+    setDark(next)
+    try { localStorage.setItem('estrato-theme', next ? 'dark' : 'light') } catch {}
+  }
 
   return (
     <aside
-      className="flex flex-col border-b px-7 pt-4 pb-7 lg:sticky lg:top-0 lg:h-dvh lg:overflow-y-auto lg:border-r lg:border-b-0"
+      data-expanded={expanded}
+      className="s-indice flex flex-col border-b px-6 py-4 lg:sticky lg:top-0 lg:h-dvh lg:border-r lg:border-b-0"
       style={{ borderColor: 'var(--line)', background: 'var(--panel)' }}
     >
       {/* La marca de vacamuerta.io, la misma de Estrato: rombo monocromo más
@@ -95,7 +110,11 @@ export function Indice({ periodo }: { periodo: string }) {
         </span>
       </div>
 
-      <div className="mt-7 shrink-0" />
+      <div className="s-index-tools">
+        <button type="button" className="s-tool s-menu-toggle" aria-expanded={expanded} aria-controls="site-navigation" aria-label={expanded ? tNav('closeMenu') : tNav('openMenu')} onClick={() => setExpanded(!expanded)}>
+          <Icono d={expanded ? PATH.cerrar : PATH.lista} /> {t('secciones')}
+        </button>
+      </div>
 
       {/* Sin flex-1: con siete ítems, estirar la lista abría un hueco de 400px
           entre el último ítem y la card. Ahora todo se apila arriba y el aire
@@ -103,7 +122,7 @@ export function Indice({ periodo }: { periodo: string }) {
           Se va también la máscara de desvanecido: servía cuando la lista
           desbordaba, y sobre una lista corta lo único que hacía era borronear
           el último ítem. */}
-      <nav className="relative shrink-0">
+      <nav id="site-navigation" aria-label={t('secciones')} className="s-sidebar-nav relative shrink-0">
         {/* Sin padding izquierdo: los ítems compensan su propio padding con un
             margen negativo, así que su texto arranca en el borde del nav. Con
             pl-1.5 el rótulo quedaba 6px adentro y no alineaba con los números. */}
@@ -124,11 +143,11 @@ export function Indice({ periodo }: { periodo: string }) {
       {/* La card va entre el índice y el bloque de datos: cierra la columna
           con la cifra que resume todo, en el lugar donde antes había un
           titular que no aportaba dato. */}
-      <div className="mt-7 shrink-0">
+      <div className="s-sidebar-card shrink-0">
         <CardCuenca />
       </div>
 
-      <div className="mt-6 shrink-0">
+      <div className="s-sidebar-copy shrink-0">
         <p className="m-0 text-[12.5px] font-medium">{t('datosTitle')}</p>
         <p className="s-desc m-0 mt-0.5">
           {t('datosDesc')}
@@ -140,6 +159,19 @@ export function Indice({ periodo }: { periodo: string }) {
           — después del bloque que explica de qué son los datos que uno acaba
           de leer. */}
       <CapturaNewsletter />
+
+      <div className="s-sidebar-footer">
+        <div className="s-locale-switch" role="group" aria-label={tNav('switchLanguage')}>
+          <Link href={ruta} locale="es" hrefLang="es" aria-current={locale === 'es' ? 'true' : undefined}>ES</Link>
+          <Link href={ruta} locale="en" hrefLang="en" aria-current={locale === 'en' ? 'true' : undefined}>EN</Link>
+        </div>
+        <button type="button" className="s-tool s-theme-tool" data-dark={dark} onClick={toggleTheme} aria-pressed={dark} aria-label={tNav('switchTheme')} title={tNav('switchTheme')}>
+          <span className="s-theme-icons" aria-hidden>
+            <Icono d={PATH.sol} size={16} className="s-theme-sun" />
+            <Icono d={PATH.luna} size={16} className="s-theme-moon" />
+          </span>
+        </button>
+      </div>
     </aside>
   )
 }

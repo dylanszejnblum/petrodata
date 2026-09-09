@@ -33,6 +33,13 @@ export function toWellFeatures(
           operatorName: nombreOperadora(p.operator_slug, p.operator_name),
           status: mapStatus(p.status_code),
           recurso: mapWellType(p.well_type),
+          statusCode: p.status_code,
+          formation: p.formation_slug,
+          basin: p.basin,
+          province: p.province,
+          concession: p.concession,
+          yacimiento: p.yacimiento,
+          depth: typeof p.depth_m === 'number' ? p.depth_m : null,
         },
       }
     })
@@ -51,6 +58,44 @@ export async function fetchWellsByOperator(operator: string, limit = 1000): Prom
   } catch {
     return null
   }
+}
+
+export async function fetchMapWells(filters: {
+  operator?: string
+  basin?: string
+  province?: string
+  formation?: string
+}, limit = 1000, signal?: AbortSignal): Promise<WellFeature[] | null> {
+  try {
+    const query = new URLSearchParams({ limit: String(limit) })
+    for (const [name, value] of Object.entries(filters)) {
+      if (value) query.set(name, value)
+    }
+    const response = await fetch(`/api/map-wells?${query}`, {
+      cache: 'no-store',
+      signal,
+    })
+    if (!response.ok) return null
+    const data = (await response.json()) as ApiSchemas['GeoWellFeatureCollectionDto']
+    if (!data?.features) return null
+    return toWellFeatures(data.features)
+  } catch {
+    return null
+  }
+}
+
+export async function loadMapWells(limit = 1000): Promise<WellFeature[]> {
+  return withFallback(
+    'map-wells',
+    async () => {
+      const { data, error } = await api.GET('/api/v1/geo/wells', {
+        params: { query: { limit } },
+        next: { revalidate: 300 },
+      })
+      return error || !data?.features?.length ? null : toWellFeatures(data.features)
+    },
+    () => FIXTURE_WELLS,
+  )
 }
 
 export async function loadWells(limit = 1000): Promise<WellFeature[]> {

@@ -78,12 +78,12 @@ export const COMPANIES: Company[] = [
     price: 48.76,
     change: -1.8,
     website: 'www.ypf.com',
-    logoUrl: 'https://ypf.com/images/menu-principal/ypf_logoazul.svg',
+    logoUrl: '/logos/ypf.svg',
     blurb: 'La mayor operadora del país y ancla del desarrollo de Vaca Muerta.',
   }),
   c(2, 'pae', 'PAN AMERICAN ENERGY SL', 10.9, 10.9, 4471, {
     blurb: 'Integrada privada líder, del Golfo San Jorge al gas de Vaca Muerta.',
-    logoUrl: 'https://www.pan-energy.com/Style%20Library/PAE/images/apple-touch-icon-114x114.png',
+    logoUrl: '/logos/pan-american.svg',
   }),
   c(3, 'cgc', 'CGC (Compañía General de Combustibles)', 2.6, 1.9, 1521, {
     website: 'www.cgcenergia.com.ar',
@@ -96,6 +96,7 @@ export const COMPANIES: Company[] = [
   c(9, 'quintana_e_p_argentina_srl', 'QUINTANA E&P ARGENTINA S.R.L.', 0.9, 0.8, 859),
   c(10, 'pluspetrol', 'Pluspetrol S.A.', 8.4, 7.7, 840, {
     website: 'www.pluspetrol.com',
+    logoUrl: '/logos/pluspetrol.png',
     blurb: 'Gas rico en La Calera y expansión en la ventana húmeda.',
   }),
   c(11, 'capex', 'CAPEX S.A.', 1.2, 1.3, 740, {
@@ -120,6 +121,7 @@ export const COMPANIES: Company[] = [
     price: 65.78,
     change: -0.5,
     website: 'www.vistaenergy.com',
+    logoUrl: '/logos/vista.svg',
     blurb: 'Pure play de shale oil con la mejor curva de eficiencia de la cuenca.',
   }),
   c(19, 'totalenergies', 'TotalEnergies', 11.7, 0.9, 366, {
@@ -129,10 +131,11 @@ export const COMPANIES: Company[] = [
     price: 88.18,
     change: 3.5,
     website: 'www.totalenergies.com',
-    logoUrl: 'https://totalenergies.com/themes/custom/totalenergies_com/dist/img/logo_totalenergies.png',
+    logoUrl: '/logos/totalenergies.svg',
   }),
   c(20, 'tecpetrol', 'Tecpetrol S.A.', 7.7, 2.4, 349, {
     website: 'www.tecpetrol.com',
+    logoUrl: '/logos/tecpetrol.png',
     blurb: 'Fortín de Piedra: el desarrollo de gas más rápido de la cuenca.',
   }),
   c(21, 'flxs_oge_sa', 'FLXS OGE S.A', 0.3, 0.0, 314),
@@ -143,7 +146,7 @@ export const COMPANIES: Company[] = [
     price: 79.77,
     change: -5.9,
     website: 'www.pampaenergia.com',
-    logoUrl: 'https://pampa.com/wp-content/uploads/2023/12/pampa-favicon.svg',
+    logoUrl: '/logos/pampa.svg',
   }),
   c(23, 'brest_sa_de_servicios_petroleros', 'BREST S.A. DE SERVICIOS PETROLEROS', 0.1, 0.1, 175),
   c(24, 'shell', 'Shell Argentina', 2.4, 3.9, 162, {
@@ -153,6 +156,7 @@ export const COMPANIES: Company[] = [
     price: 90.56,
     change: 0.8,
     website: 'www.shell.com.ar',
+    logoUrl: '/logos/shell.svg',
     blurb: 'Bandurria Sur y Sierras Blancas, foco en crudo de exportación.',
   }),
   c(25, 'venoil_sa', 'VENOIL S.A.', 0.2, 0.2, 137),
@@ -163,6 +167,7 @@ export const COMPANIES: Company[] = [
     price: 196.31,
     change: 3.1,
     website: 'www.chevron.com',
+    logoUrl: '/logos/chevron.svg',
     blurb: 'Socio histórico de YPF en Loma Campana.',
   }),
   c(27, 'petrolera_el_trebol', 'PETROLERA EL TREBOL S.A.', 0.4, 0.7, 82),

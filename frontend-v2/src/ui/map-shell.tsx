@@ -22,6 +22,7 @@ export function MapShell({
   interactive = true,
   label,
   atribucion = true,
+  fullscreen = false,
 }: {
   center?: [number, number]
   zoom?: number
@@ -34,6 +35,7 @@ export function MapShell({
   label: string
   /** false en miniaturas: la atribución va al pie de la sección */
   atribucion?: boolean
+  fullscreen?: boolean
 }) {
   const container = useRef<HTMLDivElement>(null)
   const mapRef = useRef<MLMap | null>(null)
@@ -68,6 +70,7 @@ export function MapShell({
       navRef.current = new maplibregl.NavigationControl({ showCompass: false })
       navCornerRef.current = controlPosition
       map.addControl(navRef.current, controlPosition)
+      if (fullscreen) map.addControl(new maplibregl.FullscreenControl(), controlPosition)
     }
     map.on('load', () => onReadyRef.current?.(map))
     mapRef.current = map
@@ -75,8 +78,8 @@ export function MapShell({
     // sigue el toggle de tema en vivo
     const observer = new MutationObserver(() => {
       const t = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light'
+      map.once('style.load', () => onReadyRef.current?.(map))
       map.setStyle(STYLE[t])
-      map.once('styledata', () => onReadyRef.current?.(map))
     })
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
 

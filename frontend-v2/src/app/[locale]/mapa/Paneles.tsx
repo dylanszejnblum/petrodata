@@ -2,8 +2,11 @@
 
 import { useEffect, useMemo, useState, type ReactNode } from 'react'
 import { api } from '@/api/client'
-import { formatInteger, formatMonth } from '@/lib/format'
-import { FLUIDO, Marca } from '../_ui/kit'
+import { formatCompact, formatInteger, formatMonth } from '@/lib/format'
+import { COMPANIES } from '@/fixtures/companies'
+import { FLUIDO } from '../_ui/kit'
+import { LogoEmpresa } from '../_ui/LogoEmpresa'
+import { Icono, PATH } from '../_ui/iconos'
 import { Serie } from '../_ui/Serie'
 
 /* Paneles flotantes del mapa — con la receta de card MEDIDA de la referencia,
@@ -35,12 +38,14 @@ const RECURSOS = [
   { valor: 'gas', label: 'Gas', color: FLUIDO.gas },
 ] as const
 
+const EMPRESA_POR_SLUG = new Map(COMPANIES.map((empresa) => [empresa.slug, empresa]))
+
 export type Recurso = (typeof RECURSOS)[number]['valor']
 
 function Panel({ children, className = '' }: { children: ReactNode; className?: string }) {
   return (
     <div
-      className={`pointer-events-auto overflow-hidden ${className}`}
+      className={`s-map-panel pointer-events-auto overflow-hidden ${className}`}
       style={{
         borderRadius: 'var(--radius-card)',
         background: 'var(--surface)',
@@ -78,6 +83,52 @@ function Titulo({ children }: { children: ReactNode }) {
   return <p className="s-titulo m-0">{children}</p>
 }
 
+export function PanelCobertura({
+  datos,
+  abierto,
+  onCambiar,
+}: {
+  datos: {
+    catalogo: number
+    muestra: number
+    activos: number
+    etiquetas: { titulo: string; catalogo: string; muestra: string; activos: string; cerrar: string }
+  }
+  abierto: boolean
+  onCambiar: (abierto: boolean) => void
+}) {
+  if (!abierto) {
+    return (
+      <button type="button" className="s-map-reopen pointer-events-auto" onClick={() => onCambiar(true)}>
+        <span aria-hidden>◎</span> {datos.etiquetas.titulo}
+      </button>
+    )
+  }
+  const filas = [
+    [datos.etiquetas.catalogo, datos.catalogo],
+    [datos.etiquetas.muestra, datos.muestra],
+    [datos.etiquetas.activos, datos.activos],
+  ] as const
+  return (
+    <Panel className="w-[228px] max-w-[calc(100vw-32px)]">
+      <Cuerpo>
+        <div className="flex items-center justify-between gap-3">
+          <Titulo>{datos.etiquetas.titulo}</Titulo>
+          <button type="button" className="s-panel-close" onClick={() => onCambiar(false)} aria-label={datos.etiquetas.cerrar}>×</button>
+        </div>
+        <dl className="m-0 mt-2">
+          {filas.map(([label, value]) => (
+            <div key={label} className="flex items-baseline justify-between gap-4 border-t py-1.5 first:border-t-0">
+              <dt className="s-micro" style={{ color: 'var(--ink-2)' }}>{label}</dt>
+              <dd className="s-micro s-num m-0 font-medium">{formatInteger(value)}</dd>
+            </div>
+          ))}
+        </dl>
+      </Cuerpo>
+    </Panel>
+  )
+}
+
 /** Filtros — recurso y estado; el conteo y el reinicio bajan al pie. */
 export function PanelFiltros({
   recurso,
@@ -86,6 +137,14 @@ export function PanelFiltros({
   onOcultar,
   visibles,
   total,
+  cuenca,
+  onCuenca,
+  provincia,
+  onProvincia,
+  formacion,
+  onFormacion,
+  estado,
+  onEstado,
 }: {
   recurso: Recurso
   onRecurso: (r: Recurso) => void
@@ -93,8 +152,16 @@ export function PanelFiltros({
   onOcultar: (v: boolean) => void
   visibles: number
   total: number
+  cuenca: string
+  onCuenca: (value: string) => void
+  provincia: string
+  onProvincia: (value: string) => void
+  formacion: string
+  onFormacion: (value: string) => void
+  estado: string
+  onEstado: (value: string) => void
 }) {
-  const limpio = recurso === 'todos' && !ocultarAbandonados
+  const limpio = recurso === 'todos' && ocultarAbandonados && !cuenca && !provincia && formacion === 'vaca_muerta' && !estado
   return (
     <Panel className="w-[228px]">
       <Cuerpo>
@@ -140,6 +207,29 @@ export function PanelFiltros({
             )
           })}
         </div>
+        <div className="mt-2 grid gap-1.5">
+          <select className="s-map-select" aria-label="Cuenca" value={cuenca} onChange={(e) => onCuenca(e.target.value)}>
+            <option value="">Todas las cuencas</option>
+            {['NOROESTE', 'NEUQUINA', 'CUYANA', 'GOLFO SAN JORGE', 'AUSTRAL'].map((value) => <option key={value} value={value}>{value}</option>)}
+          </select>
+          <select className="s-map-select" aria-label="Provincia" value={provincia} onChange={(e) => onProvincia(e.target.value)}>
+            <option value="">Todas las provincias</option>
+            {['Neuquén', 'Río Negro', 'Mendoza', 'La Pampa', 'Chubut', 'Santa Cruz', 'Tierra del Fuego', 'Salta', 'Jujuy'].map((value) => <option key={value} value={value}>{value}</option>)}
+          </select>
+          <select className="s-map-select" aria-label="Formación" value={formacion} onChange={(e) => onFormacion(e.target.value)}>
+            <option value="">Todas las formaciones</option>
+            <option value="vaca_muerta">Vaca Muerta</option>
+            <option value="grupo_chubut">Grupo Chubut</option>
+            <option value="huitr_n">Huitrín</option>
+            <option value="mulichinco">Mulichinco</option>
+            <option value="quintuco">Quintuco</option>
+            <option value="lajas">Lajas</option>
+          </select>
+          <select className="s-map-select" aria-label="Estado" value={estado} onChange={(e) => onEstado(e.target.value)}>
+            <option value="">Todos los estados</option>
+            {['En Producción Efectiva', 'Parado Transitoriamente', 'En Estudio', 'En Espera de Abandono', 'Abandono Definitivo', 'Pozo Inyector'].map((value) => <option key={value} value={value}>{value}</option>)}
+          </select>
+        </div>
         <label
           className="s-micro mt-2.5 flex cursor-pointer items-center gap-2"
           style={{ color: 'var(--ink-2)' }}
@@ -166,7 +256,11 @@ export function PanelFiltros({
             type="button"
             onClick={() => {
               onRecurso('todos')
-              onOcultar(false)
+              onOcultar(true)
+              onCuenca('')
+              onProvincia('')
+              onFormacion('vaca_muerta')
+              onEstado('')
             }}
             className="s-micro"
             style={{ color: 'var(--accent-ink)', background: 'none', border: 0, padding: 0, cursor: 'pointer' }}
@@ -190,23 +284,30 @@ export function PanelOperadores({
   operadoras,
   seleccionada,
   onSeleccionar,
+  onCerrar,
 }: {
   /** slug, nombre y pozos de cada operadora presente en el mapa */
-  operadoras: { slug: string; nombre: string; pozos: number }[]
+  operadoras: { slug: string; nombre: string; pozos: number; boe: number }[]
   seleccionada: string
   onSeleccionar: (slug: string) => void
+  onCerrar: () => void
 }) {
   const [busca, setBusca] = useState('')
-  const max = Math.max(1, ...operadoras.map((o) => o.pozos))
+  const max = Math.max(1, ...operadoras.map((o) => o.boe))
   const filtradas = useMemo(() => {
     const q = busca.trim().toLowerCase()
     return q ? operadoras.filter((o) => o.nombre.toLowerCase().includes(q)) : operadoras
   }, [busca, operadoras])
 
   return (
-    <Panel className="w-[268px]">
+    <Panel className="w-[320px] max-w-[calc(100vw-32px)]">
       <Cuerpo>
-        <Titulo>Operadores principales</Titulo>
+        <div className="flex items-center justify-between gap-3">
+          <Titulo>Operadores principales</Titulo>
+          <button type="button" className="s-panel-close" onClick={onCerrar} aria-label="Contraer operadores" title="Contraer operadores">
+            <Icono d={PATH.contraer} size={15} />
+          </button>
+        </div>
 
         <label className="s-buscador mt-2">
           <span aria-hidden className="s-micro" style={{ color: 'var(--ink-3)' }}>
@@ -233,8 +334,8 @@ export function PanelOperadores({
         </label>
 
         <ul
-          className="m-0 mt-1.5 flex list-none flex-col gap-0.5 p-0"
-          style={{ maxHeight: 168, overflowY: 'auto' }}
+          className="s-operator-list m-0 mt-2 flex list-none flex-col gap-0.5 p-0"
+          style={{ maxHeight: 184, overflowY: 'auto', overflowX: 'hidden' }}
         >
           {filtradas.map((op, i) => {
             const on = op.slug === seleccionada
@@ -244,13 +345,11 @@ export function PanelOperadores({
                   type="button"
                   aria-pressed={on}
                   onClick={() => onSeleccionar(on ? '' : op.slug)}
-                  className="flex items-center gap-2 rounded-[7px] px-1.5 py-1 text-left transition-colors"
+                  className="s-operator-row grid w-full grid-cols-[20px_24px_minmax(0,1fr)_40px_34px] items-center gap-2 rounded-[7px] px-1.5 py-1.5 text-left transition-colors"
                   style={{
                     background: on ? 'var(--hover)' : 'transparent',
                     border: 0,
                     cursor: 'pointer',
-                    marginInline: -6,
-                    width: 'calc(100% + 12px)',
                   }}
                 >
                   <span
@@ -259,7 +358,12 @@ export function PanelOperadores({
                   >
                     {String(i + 1).padStart(2, '0')}
                   </span>
-                  <Marca nombre={op.nombre} />
+                  <LogoEmpresa
+                    nombre={op.nombre}
+                    website={EMPRESA_POR_SLUG.get(op.slug)?.website}
+                    logoUrl={EMPRESA_POR_SLUG.get(op.slug)?.logoUrl}
+                    caja={24}
+                  />
                   <span
                     className="s-micro min-w-0 flex-1 truncate"
                     style={{ color: 'var(--ink)', fontWeight: on ? 500 : 400 }}
@@ -267,10 +371,10 @@ export function PanelOperadores({
                     {op.nombre}
                   </span>
                   <span className={`s-barra hidden w-10 shrink-0 sm:block ${on ? 's-barra--lider' : ''}`} aria-hidden>
-                    <i style={{ width: `${Math.max(3, (op.pozos / max) * 100)}%` }} />
+                    <i style={{ width: `${Math.max(3, (op.boe / max) * 100)}%` }} />
                   </span>
-                  <span className="s-num s-micro w-6 shrink-0 text-right" style={{ fontWeight: 500 }}>
-                    {op.pozos}
+                  <span className="s-num s-micro min-w-0 text-right" style={{ fontWeight: 500 }}>
+                    {formatCompact(op.boe)}
                   </span>
                 </button>
               </li>
@@ -288,7 +392,7 @@ export function PanelOperadores({
           {seleccionada ? 'Clic de nuevo para quitarlo' : 'Haz clic para filtrar el mapa'}
         </span>
         <span className="s-micro s-num" style={{ color: 'var(--ink-2)' }}>
-          {filtradas.length === operadoras.length ? `${operadoras.length}` : `${filtradas.length}/${operadoras.length}`}
+          BOE · mes
         </span>
       </Pie>
     </Panel>
@@ -313,6 +417,7 @@ function useSerieOperadora(slug: string | null) {
     () => (slug ? cacheSerie.get(slug) ?? null : null),
   )
   useEffect(() => {
+    setSerie(null)
     if (!slug) return
     const hit = cacheSerie.get(slug)
     if (hit) {
@@ -365,7 +470,7 @@ export function PanelProduccion({
   const serie = useSerieOperadora(slug)
   if (!slug || !serie) return null
   return (
-    <Panel className="w-[268px]">
+    <Panel className="w-[320px] max-w-[calc(100vw-32px)]">
       <Cuerpo>
         <Titulo>Producción de {nombre}</Titulo>
         <p className="s-micro m-0 mt-1" style={{ color: 'var(--ink-2)' }}>

@@ -11,6 +11,8 @@ export const PATH = {
   etiqueta: 'm20.6 13.4-8.6 8.6-8-8V4h10l6.6 6.6a2 2 0 0 1 0 2.8zM7 7h.01',
   lista: 'M3 5h18M3 12h12M3 19h7',
   gota: 'M12 2.7 6.6 9.4a7 7 0 1 0 10.8 0L12 2.7z',
+  gas: 'M13.5 2.5c.7 3.1-.8 4.5-2.2 5.9-1.3 1.3-2.6 2.6-2.3 5.1.2 1.5 1.1 2.7 2.3 3.4-.2-1.8.5-3.2 2.1-4.4-.1 2.6 1.5 3.8 2.8 5.1 1 1 1.4 2.1 1.3 3.4 2.1-1.4 3.4-3.8 3.4-6.5 0-4.8-3.1-8.6-7.3-12z',
+  mineria: 'M4 20l7.2-7.2M8.5 7.5l8 8M13 4l7 7M4 4c4.5 0 8.5 1.5 12 4.5',
   pozo: 'M4 21h16M7 21V7l5-4 5 4v14M10 21v-5h4v5',
   enlace: 'M14 5h5v5M19 5l-8 8',
   abajo: 'M12 5v14M5 12l7 7 7-7',
@@ -19,6 +21,10 @@ export const PATH = {
   mas: 'M12 5v14M5 12h14',
   buscar: 'M18 11a7 7 0 1 1-14 0 7 7 0 0 1 14 0zM21 21l-4.3-4.3',
   cerrar: 'M6 6l12 12M18 6L6 18',
+  sol: 'M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41',
+  luna: 'M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z',
+  contraer: 'M8 3v5H3M16 3v5h5M8 21v-5H3M16 21v-5h5',
+  expandir: 'M3 8V3h5M21 8V3h-5M3 16v5h5M21 16v5h-5',
   /* El tilde de confirmación. Misma rejilla de 24 y las mismas puntas
      redondeadas que el resto: dos trazos y nada de relleno. */
   tilde: 'M20 6L9 17l-5-5',

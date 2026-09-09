@@ -253,11 +253,9 @@ export function PanelPeso({
     <div className="s-panel">
       <div className="s-panel-bar">
         <span className="flex min-w-0 items-center gap-1.5">
-          {/* «Share» y no «Volumen y valor» (pedido de Mariano, 2026-08-17): es
-              como se nombra la participación en el sector, y en 116px de barra
-              entra sin recortarse. Lo que significa cada barra lo dice el globo
-              del ícono de al lado. */}
-          <span className="rot">Share</span>
+          {/* El nombre del bloque y las dos abreviaturas dejan explícito qué
+              compara cada barra; el globo conserva la explicación completa. */}
+          <span className="rot">Participación</span>
           <Ayuda resumen="La primera barra es cuánto pesa en la producción del país; la segunda, cuánto pesa en el valor en dólares. Las dos a la misma escala.">
             La primera barra es cuánto pesa en la producción del país; la segunda, cuánto pesa en
             el valor en dólares. Las dos a la misma escala, para que la diferencia se vea.
@@ -269,6 +267,7 @@ export function PanelPeso({
         style={{ minHeight: ALTO }}
       >
         <span className="flex items-center gap-2">
+          <span className="s-panel-key">Prod.</span>
           <span className="s-barra flex-1" style={{ ['--barra-color' as string]: color }}>
             <i style={{ width: `${Math.max(3, produccionPct)}%` }} />
           </span>
@@ -277,6 +276,7 @@ export function PanelPeso({
           </span>
         </span>
         <span className="flex items-center gap-2">
+          <span className="s-panel-key">Valor</span>
           <span className="s-barra flex-1">
             <i style={{ width: `${Math.max(3, valorPct)}%` }} />
           </span>

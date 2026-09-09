@@ -6,7 +6,7 @@ import { api } from '@/api/client'
 import type { PersonaFila } from '@/fixtures/personas'
 import { str, withFallback } from './fallback'
 
-const BASE = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3001'
+const BASE = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://api.petrodata.dylansz.com'
 
 /** Las rutas de foto llegan relativas a la API, no al sitio: se absolutizan acá. */
 function absoluta(ruta: string | null | undefined): string | null {
