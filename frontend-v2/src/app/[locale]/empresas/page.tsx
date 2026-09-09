@@ -266,13 +266,13 @@ export default async function V2Empresas({
                     responsiva
                   />
                   <div className="min-w-0 flex-1">
-                    <span className="s-cuerpo block truncate font-medium">{c.name}</span>
+                    <h3 className="s-empresa-titulo truncate">{c.name}</h3>
                     {/* Sin reseña en la fuente, la línea DESCRIBE el mix en vez
                         de repetir las figuras que están justo abajo. Se queda en
                         lo que dicen los números —cuánto pesa en volumen contra
                         cuánto en valor— y no afirma nada sobre la empresa que el
                         dato no sostenga. */}
-                    <p className="s-desc m-0 mt-0.5" style={{ ...recorte(2, 18.75), marginTop: 2 }}>
+                    <p className="s-desc s-empresa-resena m-0" style={recorte(2, 18.75)}>
                       {resenaDe(c, m.rot)}
                     </p>
                     {/* Dos paneles en vez de las tres cifras planas: el mapa

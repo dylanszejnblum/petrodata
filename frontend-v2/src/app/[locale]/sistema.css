@@ -2241,6 +2241,24 @@
   object-fit: contain;
   display: block;
 }
+.s-empresa-titulo {
+  margin: 0;
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 650;
+  line-height: 20px;
+  letter-spacing: -.01em;
+}
+.s-empresa-resena { margin-top: 4px; text-wrap: pretty; }
+.s-panel-key {
+  width: 29px;
+  flex: 0 0 29px;
+  color: var(--ink-3);
+  font-size: 9px;
+  font-weight: 600;
+  line-height: 12px;
+  text-transform: uppercase;
+}
 /* La variante grande define su caja ACÁ y no por style inline, y es la única
    forma de que funcione: un custom property inline gana sobre cualquier regla
    de hoja, media query incluida, así que con `--placa` inline la consulta de
