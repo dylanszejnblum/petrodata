@@ -285,6 +285,33 @@
 }
 .s-fila:last-child { border-bottom: 0; }
 .s-fila-hover:hover { background: var(--hover); }
+.s-icono-sector {
+  display: inline-flex;
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  background: var(--field);
+  box-shadow: var(--shadow-hairline);
+}
+.s-bandera-pais {
+  width: 24px;
+  flex: 0 0 24px;
+  overflow: hidden;
+  font-size: 17px;
+  line-height: 18px;
+  text-align: center;
+}
+.s-bandera-provincia {
+  width: 24px;
+  height: 16px;
+  flex: 0 0 24px;
+  border-radius: 3px;
+  object-fit: cover;
+  box-shadow: var(--shadow-hairline);
+}
 
 /* ── Controles ────────────────────────────────────────────────────────── */
 .s-pill {

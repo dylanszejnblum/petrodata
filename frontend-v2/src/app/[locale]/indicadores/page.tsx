@@ -16,6 +16,8 @@ import { SerieBarras } from '../_ui/SerieBarras'
 import { MundoRanking, PodioMundial, MundoCrecimiento } from '../_ui/Mundo'
 import { EscenarioBrent } from '../_ui/EscenarioBrent'
 import { Gasoductos } from '../_ui/Gasoductos'
+import { LogoEmpresa } from '../_ui/LogoEmpresa'
+import { Icono, PATH } from '../_ui/iconos'
 import {
   BRENT,
   DAY_VALUE as DAY_VALUE_FIXTURE,
@@ -29,6 +31,9 @@ import { loadExportsSummary } from '@/lib/data/provinces'
 import { loadOilProducers } from '@/lib/data/production'
 import { formatCompactAR, formatDecimal, formatInteger, formatMonth } from '@/lib/format'
 import { getTranslations } from 'next-intl/server'
+import type { Metadata } from 'next'
+import { COMPANIES as COMPANY_FIXTURES } from '@/fixtures/companies'
+import { siteMetadata } from '@/lib/metadata'
 
 /* INDICADORES — la sección más larga de v2.
 
@@ -70,6 +75,31 @@ const COLOR_SECTOR: Record<string, string> = {
   'Petróleo': FLUIDO.petroleo,
   'Gas': FLUIDO.gas,
   'Minería': PALETA_TAGS[2],
+}
+
+const ICONO_SECTOR: Record<string, string> = {
+  Petróleo: PATH.gota,
+  Gas: PATH.gas,
+  Minería: PATH.mineria,
+}
+
+const EMPRESA_POR_SLUG = new Map(COMPANY_FIXTURES.map((empresa) => [empresa.slug, empresa]))
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}): Promise<Metadata> {
+  const { locale } = await params
+  const english = locale === 'en'
+  return siteMetadata(
+    locale,
+    '/indicadores',
+    english
+      ? 'Production, drilling, exports and global energy indicators for Argentina.'
+      : 'Producción, perforación, exportaciones e indicadores energéticos de Argentina.',
+    english ? 'Argentina energy indicators' : 'Indicadores energéticos de Argentina',
+  )
 }
 
 function CardPieSuelto({ gasKm, oilKm, totalKm }: { gasKm: number; oilKm: number; totalKm: number }) {
@@ -135,6 +165,7 @@ export default async function V2Indicadores({
   const CONTRIBUTION = (contribution?.operators ?? []).slice(0, 8).map((o) => {
     const total = contribution?.totals?.gross_value_usd ?? 1
     return {
+      slug: o.operator_slug,
       operator: o.operator_name,
       partBoePct: Math.round(o.share_boe * 1000) / 10,
       partUsdPct: Math.round((o.gross_value_usd / total) * 1000) / 10,
@@ -433,6 +464,7 @@ export default async function V2Indicadores({
               textos={act.map((p) => formatInteger(p.nuevosPozos))}
               rango={`${mesesAct[0]} – ${mesesAct[mesesAct.length - 1]}`}
               unidad="pozos"
+              color="var(--accent)"
             />
           </div>
         </Card>
@@ -543,6 +575,15 @@ export default async function V2Indicadores({
               lider={i === 0}
               nota={`${formatDecimal(s.sharePct, 1)}% del total`}
               color={COLOR_SECTOR[s.name] ?? undefined}
+              icono={
+                <span
+                  className="s-icono-sector"
+                  style={{ color: COLOR_SECTOR[s.name] ?? 'var(--ink-2)' }}
+                  aria-hidden
+                >
+                  <Icono d={ICONO_SECTOR[s.name] ?? PATH.barras} size={14} />
+                </span>
+              }
             />
           ))}
         </Card>
@@ -652,9 +693,21 @@ export default async function V2Indicadores({
                 </tr>
               </thead>
               <tbody>
-                {CONTRIBUTION.map((c) => (
+                {CONTRIBUTION.map((c) => {
+                  const empresa = EMPRESA_POR_SLUG.get(c.slug)
+                  return (
                   <tr key={c.operator}>
-                    <td className="truncate">{c.operator}</td>
+                    <td>
+                      <span className="flex min-w-0 items-center gap-2">
+                        <LogoEmpresa
+                          nombre={c.operator}
+                          website={empresa?.website}
+                          logoUrl={empresa?.logoUrl}
+                          caja={26}
+                        />
+                        <span className="min-w-0 truncate">{c.operator}</span>
+                      </span>
+                    </td>
                     {/* En ink-2 y no en la tinta plena: son el contexto de la
                         fila, y las tres cifras de dinero son el contenido. */}
                     <td
@@ -667,7 +720,8 @@ export default async function V2Indicadores({
                     <td className="text-right">{formatCompactAR(c.regaliasMUSD)}</td>
                     <td className="text-right">{formatCompactAR(c.expoMUSD)}</td>
                   </tr>
-                ))}
+                  )
+                })}
               </tbody>
             </table>
           </div>

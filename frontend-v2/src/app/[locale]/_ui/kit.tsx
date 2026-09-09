@@ -152,6 +152,7 @@ export function FilaRanking({
   delta,
   unidad,
   color,
+  icono,
 }: {
   n: number
   nombre: string
@@ -176,6 +177,8 @@ export function FilaRanking({
       acento del líder: cuando la categoría significa algo, el color tiene que
       decir la categoría y no el puesto. */
   color?: string
+  /** Ícono categórico opcional, alineado antes del nombre. */
+  icono?: ReactNode
 }) {
   /* La barra va en su PROPIA columna, no debajo del nombre: pegada al texto
      se lee como un subrayado y no como una magnitud. Y el riel se dibuja
@@ -205,6 +208,7 @@ export function FilaRanking({
         </span>
       )}
       {marca && <Marca nombre={nombre} />}
+      {icono}
       {/* La nota va en la MISMA línea, como badge, y no en un segundo renglón.
           Con el renglón de abajo la fila medía 60px contra los 40 de las demás
           listas de v2, y era la única de la página con dos alturas. Es el mismo

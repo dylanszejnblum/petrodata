@@ -46,6 +46,15 @@ const ES: Record<string, string> = {
     peor que en castellano y mucho mejor que en blanco. */
 const nombrePais = (iso3: string, ingles: string) => ES[iso3] ?? ingles
 
+const BANDERA: Record<string, string> = {
+  USA: '🇺🇸', RUS: '🇷🇺', SAU: '🇸🇦', CAN: '🇨🇦',
+  IRQ: '🇮🇶', CHN: '🇨🇳', IRN: '🇮🇷', ARE: '🇦🇪',
+  BRA: '🇧🇷', KWT: '🇰🇼', KAZ: '🇰🇿', NOR: '🇳🇴',
+  ARG: '🇦🇷', QAT: '🇶🇦', AUS: '🇦🇺', DZA: '🇩🇿',
+  MYS: '🇲🇾', TKM: '🇹🇲', LBY: '🇱🇾', VEN: '🇻🇪',
+  GAB: '🇬🇦', ISR: '🇮🇱', AZE: '🇦🇿', OMN: '🇴🇲',
+}
+
 export function MundoRanking({
   rot,
   unidad,
@@ -191,6 +200,7 @@ export function PodioMundial({
               >
                 {String(t.rank).padStart(2, '0')}
               </span>
+              <span className="s-bandera-pais" aria-hidden>{BANDERA[t.iso3] ?? '🏳️'}</span>
               <span
                 className={`s-cuerpo min-w-0 flex-1 truncate ${t.isArgentina ? 'font-semibold' : 'font-medium'}`}
               >

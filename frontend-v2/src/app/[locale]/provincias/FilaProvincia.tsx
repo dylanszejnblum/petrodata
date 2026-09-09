@@ -203,7 +203,19 @@ export function FilaProvincia({
         <span className="s-mono w-5 shrink-0 text-[11px]" style={{ color: 'var(--ink-3)' }}>
           {String(n).padStart(2, '0')}
         </span>
-        <Marca nombre={p.name} />
+        {p.esProvincia === false ? (
+          <Marca nombre={p.name} />
+        ) : (
+          // Las banderas son identidad visual; el nombre contiguo conserva la etiqueta accesible.
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={`/flags/provinces/${p.slug}.svg`}
+            alt=""
+            className="s-bandera-provincia"
+            loading="lazy"
+            decoding="async"
+          />
+        )}
         <span className="flex min-w-0 flex-1 items-center gap-2">
           {/* shrink-0: el nombre no cede, cede el tag. Cabe siempre —el más
               largo mide 100 sobre una ranura de 137 a 375—. */}

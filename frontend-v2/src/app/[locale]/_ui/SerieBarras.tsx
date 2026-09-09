@@ -47,12 +47,15 @@ export function SerieBarras({
   rango,
   /** qué se cuenta, para la línea de cifra: «pozos» */
   unidad,
+  /** Color de las columnas. Si no viene, conserva la tinta neutra del sistema. */
+  color,
 }: {
   valores: number[]
   rotulos: string[]
   textos: string[]
   rango: string
   unidad: string
+  color?: string
 }) {
   const [sobre, setSobre] = useState<number | null>(null)
   const n = valores.length
@@ -99,7 +102,10 @@ export function SerieBarras({
                      menos de un píxel y desaparece, y un hueco en la serie se
                      lee como «no hay dato» cuando lo que hay es un dato bajo. */
                   className={k === sobre ? 'on' : undefined}
-                  style={{ height: `${Math.max(2, (v / max) * 100)}%` }}
+                  style={{
+                    height: `${Math.max(2, (v / max) * 100)}%`,
+                    ...(color ? { background: color } : null),
+                  }}
                 />
               </span>
             ))}
