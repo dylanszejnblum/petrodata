@@ -209,7 +209,7 @@ export function FilaProvincia({
           // Las banderas son identidad visual; el nombre contiguo conserva la etiqueta accesible.
           // eslint-disable-next-line @next/next/no-img-element
           <img
-            src={`/flags/provinces/${p.slug}.svg`}
+            src={`/flags/provinces/${p.slug}.${p.slug === 'la-pampa' ? 'jpg' : 'svg'}`}
             alt=""
             className="s-bandera-provincia"
             loading="lazy"
