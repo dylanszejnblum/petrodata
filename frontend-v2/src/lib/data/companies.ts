@@ -62,7 +62,10 @@ export async function loadCompanies(): Promise<Company[]> {
             price: price?.price,
             change: price?.change,
             website: fx?.website,
-            logoUrl: str(c.logo_url) ?? fx?.logoUrl,
+            /* La selección curada del fixture gana sobre el favicon genérico
+               del API. Para YPF esto cambia un ícono de Google de 64 px por
+               el lockup SVG oficial, que sí soporta la placa destacada. */
+            logoUrl: fx?.logoUrl ?? str(c.logo_url) ?? undefined,
             blurb: fx?.blurb,
           }
         })

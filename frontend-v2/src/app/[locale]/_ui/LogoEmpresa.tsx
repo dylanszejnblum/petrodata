@@ -71,6 +71,7 @@ export function LogoEmpresa({
      —YPF, 300px— llenan la placa. */
   const [natural, setNatural] = useState<number | null>(null)
   const src = logoUrl ?? faviconDe(website)
+  const esVector = src?.toLowerCase().split(/[?#]/)[0].endsWith('.svg') ?? false
 
   /* La variante responsiva NO manda su caja por inline: un custom property
      inline gana sobre la hoja, media query incluida, y la placa se quedaba en
@@ -125,7 +126,9 @@ export function LogoEmpresa({
            superficie del sistema que no cambia entre temas. */
         background: '#fff',
         boxShadow: 'var(--shadow-hairline)',
-        ...(natural ? { ['--placa-tope' as string]: `${natural * 2}px` } : null),
+        /* Los SVG llenan la caja sin perder definición. El límite natural
+           sigue protegiendo los favicons raster pequeños. */
+        ...(!esVector && natural ? { ['--placa-tope' as string]: `${natural * 2}px` } : null),
       }}
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}

@@ -78,7 +78,7 @@ export const COMPANIES: Company[] = [
     price: 48.76,
     change: -1.8,
     website: 'www.ypf.com',
-    logoUrl: 'https://ypf.com/images/menu-principal/ypf_logoazul.svg',
+    logoUrl: '/logos/ypf.svg',
     blurb: 'La mayor operadora del país y ancla del desarrollo de Vaca Muerta.',
   }),
   c(2, 'pae', 'PAN AMERICAN ENERGY SL', 10.9, 10.9, 4471, {
