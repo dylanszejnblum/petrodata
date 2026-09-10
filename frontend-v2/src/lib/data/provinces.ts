@@ -40,6 +40,7 @@ export async function loadProvinces(): Promise<Province[]> {
           featured: fx?.featured,
           operators: fx?.operators,
           blurb: fx?.blurb ?? '',
+          esProvincia: fx?.esProvincia ?? p.slug !== 'estado-nacional',
         }
       })
     },
