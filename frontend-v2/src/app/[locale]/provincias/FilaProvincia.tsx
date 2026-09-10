@@ -11,6 +11,25 @@ import type { Province } from '@/fixtures/provinces'
 const cacheSerie = new Map<string, { boe: number[]; meses: string[] }>()
 const pedidas = new Set<string>()
 
+/* Sólo se intenta cargar una bandera cuando hay un asset conocido. Así una
+   provincia nueva del API cae al monograma y nunca muestra una imagen rota. */
+const BANDERA_POR_SLUG: Record<string, string> = {
+  neuquen: '/flags/provinces/neuquen.svg',
+  'santa-cruz': '/flags/provinces/santa-cruz.svg',
+  chubut: '/flags/provinces/chubut.svg',
+  mendoza: '/flags/provinces/mendoza.svg',
+  'rio-negro': '/flags/provinces/rio-negro.svg',
+  'la-pampa': '/flags/provinces/la-pampa.jpg',
+  'tierra-del-fuego': '/flags/provinces/tierra-del-fuego.svg',
+  jujuy: '/flags/provinces/jujuy.svg',
+  formosa: '/flags/provinces/formosa.svg',
+  salta: '/flags/provinces/salta.svg',
+  catamarca: '/flags/provinces/catamarca.svg',
+  'san-juan': '/flags/provinces/san-juan.svg',
+  'buenos-aires': '/flags/provinces/buenos-aires.svg',
+  'estado-nacional': '/flags/provinces/estado-nacional.svg',
+}
+
 /* Fila de provincia que se despliega en el lugar, en vez de navegar a una
    página dedicada.
 
@@ -189,6 +208,7 @@ export function FilaProvincia({
      Y es honestamente de exportaciones, que era el reclamo: sale de dividir
      dos cifras reales del sitio, no de derivar nada. */
   const porPozo = p.exportsMUSD / p.wells
+  const bandera = BANDERA_POR_SLUG[p.slug]
 
   return (
     <div style={{ borderBottom: '1px solid var(--line)' }}>
@@ -203,18 +223,18 @@ export function FilaProvincia({
         <span className="s-mono w-5 shrink-0 text-[11px]" style={{ color: 'var(--ink-3)' }}>
           {String(n).padStart(2, '0')}
         </span>
-        {p.esProvincia === false ? (
-          <Marca nombre={p.name} />
-        ) : (
+        {bandera ? (
           // Las banderas son identidad visual; el nombre contiguo conserva la etiqueta accesible.
           // eslint-disable-next-line @next/next/no-img-element
           <img
-            src={`/flags/provinces/${p.slug}.${p.slug === 'la-pampa' ? 'jpg' : 'svg'}`}
+            src={bandera}
             alt=""
             className="s-bandera-provincia"
             loading="lazy"
             decoding="async"
           />
+        ) : (
+          <Marca nombre={p.name} />
         )}
         <span className="flex min-w-0 flex-1 items-center gap-2">
           {/* shrink-0: el nombre no cede, cede el tag. Cabe siempre —el más
