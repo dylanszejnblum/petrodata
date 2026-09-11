@@ -1,0 +1,823 @@
+<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Empresas · tres propuestas</title>
+<style>
+/* ═══════════════════════════════════════════════════════════════════════
+   TOKENS — copiados tal cual de apps/ui-prototype/src/app/v2/sistema.css,
+   que a su vez salen de la medición de beautifului.dev.
+   ═══════════════════════════════════════════════════════════════════════ */
+:root {
+  --page:#fafafb; --canvas:#f1f2f3; --surface:#fff; --inset:#f7f8f9;
+  --hover:#f4f5f6; --hover-2:#e7e9eb;
+  --ink:#1f2124; --ink-2:#62656b; --ink-3:#9a9da3;
+  --line:#ecedef; --line-strong:#e0e2e5; --field:#f2f2f3;
+  --accent:#0285ff; --accent-ink:#0170dd; --accent-tint:#e9f3ff;
+  --green:#189a4d; --green-tint:#e8f5ed;
+  --orange:#ef720c; --orange-tint:#fdf1e5;
+  --red:#e3474c; --red-tint:#fcecec;
+  --shadow-hairline:0 0 0 1px var(--line);
+  --shadow-btn:0 0 0 1px var(--line-strong), 0 1px 2px #1018280d;
+  --shadow-card:0 0 0 1px var(--line), 0 1px 2px #1018280a, 0 2px 6px #10182808;
+  --shadow-overlay:0 0 0 1px var(--line), 0 8px 24px #10182814, 0 2px 6px #1018280f;
+  --radius-chip:6px; --radius-control:8px; --radius-card:10px; --radius-window:14px;
+  --ease-in-out:cubic-bezier(.4,0,.2,1); --ease-out-strong:cubic-bezier(.23,1,.32,1);
+  --dot:#4949491a;
+
+  /* Paleta categórica MEDIDA (los 8 --tag-color de la referencia). Petróleo
+     y gas están clavados al 1 y al 4, como en kit.tsx: el color de un fluido
+     no puede depender del orden de la lista. */
+  --oil:#3f78ff; --gas:#16a6c7;
+  --c-naranja:#f09a2f; --c-violeta:#9a5cff; --c-verde:#25a878;
+
+  /* Caja del checkbox: la referencia la tiene en literales, no en tokens.
+     Se copian tal cual. */
+  --check-bd:#c7cdd3; --check-bg:#fff; --check-ink:#4d555e;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme=light]) {
+    --page:#17181a; --canvas:#1c1d1f; --surface:#232427; --inset:#1f2022;
+    --hover:#2a2b2e; --hover-2:#313236;
+    --ink:#f2f3f4; --ink-2:#a5a8ad; --ink-3:#6c6f75;
+    --line:#2e3033; --line-strong:#3a3c40; --field:#2b2c2f;
+    --accent:#3d9aff; --accent-ink:#7ec0ff; --accent-tint:#3d9aff29;
+    --green:#3dbb72; --green-tint:#3dbb7224;
+    --orange:#f68f3c; --orange-tint:#f68f3c24;
+    --red:#ee5c61; --red-tint:#ee5c6124;
+    --shadow-btn:0 0 0 1px var(--line-strong), 0 1px 2px #0000004d;
+    --shadow-card:0 0 0 1px var(--line), 0 1px 2px #0003, 0 2px 6px #0003;
+    --shadow-overlay:0 0 0 1px var(--line), 0 8px 24px #0006, 0 2px 6px #0004;
+    --dot:#ffffff0f;
+    --check-bd:#4a4d52; --check-bg:#2b2c2f; --check-ink:#e0e4e8;
+  }
+}
+
+* { box-sizing:border-box; }
+body {
+  margin:0; padding:40px 24px 80px;
+  background:var(--page);
+  background-image:radial-gradient(circle at 1px 1px, var(--dot) 1px, transparent 0);
+  background-size:12px 12px; background-attachment:fixed;
+  color:var(--ink);
+  font-family:"Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  font-size:14px; line-height:1.5; letter-spacing:-.01em;
+}
+:focus-visible { outline:2px solid var(--accent); outline-offset:2px; border-radius:4px; }
+button { font:inherit; letter-spacing:inherit; cursor:pointer; }
+
+/* ── Tipografía. Nada pasa de 21, y ninguna CIFRA pasa de 17. ─────────── */
+.titular { font-size:21px; font-weight:600; line-height:1.25; letter-spacing:-.02em; margin:0; }
+.cifra   { font-size:17px; font-weight:600; line-height:1.2; font-variant-numeric:tabular-nums; }
+.cifra-sm{ font-size:13px; font-weight:600; line-height:1.3; font-variant-numeric:tabular-nums; }
+.titulo  { font-size:13px; font-weight:600; }
+.cuerpo  { font-size:13px; line-height:19.5px; }
+.desc    { font-size:12.5px; line-height:18.75px; color:var(--ink-2); }
+.etq     { font-size:12px;   line-height:18px;    color:var(--ink-2); }
+.micro   { font-size:11.5px; line-height:17.25px; }
+.mono    { font-family:"JetBrains Mono", ui-monospace,"SF Mono",Menlo,monospace; font-variant-numeric:tabular-nums; }
+.num     { font-variant-numeric:tabular-nums; }
+
+/* ── Andamio de esta página de propuestas (no es del sistema) ─────────── */
+.hoja { max-width:800px; margin:0 auto; }
+.hoja > h1 { font-size:21px; font-weight:600; letter-spacing:-.02em; margin:0 0 6px; }
+.hoja > p.lede { color:var(--ink-2); font-size:12.5px; line-height:18.75px; margin:0 0 32px; max-width:62ch; }
+.prop { margin:0 0 14px; padding-top:34px; border-top:1px dashed var(--line-strong); }
+.prop:first-of-type { border-top:0; padding-top:0; }
+.prop h2 { display:flex; align-items:baseline; gap:8px; flex-wrap:wrap; margin:0 0 6px; }
+.prop h2 .letra { font-family:"JetBrains Mono",ui-monospace,monospace; font-size:11px; color:var(--ink-2); font-weight:400; }
+.prop h2 .nom { font-size:13px; font-weight:600; }
+.prop h2 .sub { font-size:12.5px; font-weight:400; color:var(--ink-2); }
+.prop > p.tesis { font-size:12.5px; line-height:18.75px; color:var(--ink-2); margin:0 0 14px; max-width:70ch; }
+.prop > p.tesis b { font-weight:600; color:var(--ink); }
+.usa { display:flex; flex-wrap:wrap; gap:4px; margin:0 0 14px; }
+.usa span { display:inline-flex; align-items:center; height:19px; padding:0 6px; border-radius:5px;
+  background:var(--field); color:var(--ink-2); font-size:10.5px; font-weight:500; }
+.marco { border-radius:var(--radius-window); background:var(--canvas); box-shadow:var(--shadow-hairline); padding:12px; }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   PIEZAS DEL SISTEMA — todas medidas. La procedencia va en el comentario.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── Records shell. MEDIDO §12: NO es .s-card. Lleva borde real de 1px y
+      una sombra propia, más sutil que la de card. ─────────────────────── */
+.rec-shell { width:100%; min-width:0; overflow:hidden; border:1px solid var(--line);
+  border-radius:10px; background:var(--surface); box-shadow:0 1px 2px #0000000f; }
+/* La barra de herramientas separa con --line-STRONG, no --line: es la única
+   divisoria fuerte del sistema y marca que arriba hay controles y abajo datos. */
+.rec-toolbar { display:flex; align-items:center; justify-content:space-between; gap:12px;
+  min-height:52px; padding:8px 10px; border-bottom:1px solid var(--line-strong); background:var(--surface); }
+.rec-tb-izq, .rec-tb-der { display:inline-flex; align-items:center; gap:4px; }
+.rec-tb-der { flex-shrink:0; }
+/* Los cuatro botones de la barra comparten caja: 32 de alto, 12px en peso 550. */
+.rec-btn { display:inline-flex; align-items:center; gap:7px; height:32px; padding:0 10px;
+  border:0; border-radius:var(--radius-control); background:transparent; white-space:nowrap;
+  font-size:12px; font-weight:550; color:var(--ink-2);
+  transition:background-color .14s var(--ease-out-strong), color .14s var(--ease-out-strong),
+             transform .14s var(--ease-out-strong), box-shadow .14s var(--ease-out-strong); }
+.rec-btn:hover { background:var(--hover); color:var(--ink); }
+.rec-btn:active { transform:scale(.96); }
+.rec-btn--select { border:1px solid var(--line); background:var(--surface); color:var(--ink); gap:8px; }
+.rec-btn.is-active { background:var(--accent-tint); color:var(--accent-ink); }
+/* Acá me aparto de lo medido, y conviene que quede escrito. El botón primario
+   de la §12 es `background:var(--accent); color:#fff` y da 3,62:1 — no llega a
+   AA. Pero la referencia tiene OTRO botón sólido, el de enviar de la §19, que
+   es `bg-ink text-surface`: la tinta plena sobre la superficie invertida, o sea
+   el contraste máximo del sistema. Uso ése. Es una pieza medida, no un invento,
+   y resuelve el único caso donde el acento tenía que llevar texto encima. */
+.rec-btn--primary { margin-left:3px; background:var(--ink); color:var(--surface); }
+.rec-btn--primary:hover { background:var(--ink); color:var(--surface); opacity:.88; }
+.rec-db { display:inline-flex; color:var(--green); }
+.rec-punto-filtro { width:5px; height:5px; margin-left:-2px; border-radius:99px; background:var(--accent); }
+
+.rec-scroll { max-height:438px; overflow:auto; overscroll-behavior:none; scrollbar-gutter:stable; }
+.rec-tabla { width:100%; min-width:900px; border-collapse:separate; border-spacing:0;
+  table-layout:fixed; font-size:12px; color:var(--ink); }
+/* La grilla completa, atenuada al 78%: se ve la estructura sin que las líneas
+   compitan con el dato. Es un color-mix, no un token nuevo. */
+.rec-tabla td, .rec-tabla th { text-align:left; vertical-align:middle;
+  border-right:1px solid color-mix(in srgb, var(--line) 78%, transparent);
+  border-bottom:1px solid color-mix(in srgb, var(--line) 78%, transparent); }
+.rec-tabla tr > :last-child { border-right:0; }
+.rec-tabla thead th { position:sticky; top:0; z-index:5; height:42px; padding:0;
+  background:var(--surface); color:var(--ink-2); font-size:12px; font-weight:600; }
+.rec-th-btn { display:flex; align-items:center; gap:8px; width:100%; height:42px; padding:0 12px;
+  border:0; background:transparent; color:var(--ink-2); text-align:left;
+  transition:background-color .12s ease-out, color .12s ease-out; }
+.rec-th-btn:hover { background:var(--hover); color:var(--ink); }
+.rec-th-ico { display:inline-flex; flex-shrink:0; color:var(--ink-3); }
+/* La flecha de orden vive escondida y aparece en hover: la cabecera dice que
+   es ordenable sólo cuando la estás por usar. */
+.rec-orden { display:inline-flex; flex-shrink:0; margin-left:auto; opacity:0;
+  transition:opacity .12s ease-out, transform .16s var(--ease-out-strong); }
+.rec-th-btn:hover .rec-orden, .rec-orden.visible { opacity:1; }
+.rec-celda { height:42px; padding:0 12px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
+/* Columna congelada: se queda a la izquierda al desplazar y avisa con una
+   sombra de un solo lado que hay más tabla escondida. */
+.rec-fija { position:sticky; left:0; z-index:2; background:var(--surface); box-shadow:5px 0 8px -10px #0006; }
+.rec-emp { display:flex; align-items:center; gap:4px; padding-left:6px; overflow:visible; }
+.rec-fila > .rec-celda { transition:background-color .12s ease-out, color .12s ease-out; }
+.rec-fila:hover > .rec-celda { background:var(--hover); }
+.rec-fila.sel > .rec-celda { background:color-mix(in srgb, var(--accent) 7%, var(--surface)); }
+.rec-cab-emp { display:flex; align-items:center; gap:8px; width:100%; height:42px; padding:0 12px 0 6px; }
+
+/* Checkbox MEDIDO: 24 de zona sensible, caja de 18, radio 6. Los grises son
+   literales en la referencia —no salen de un token— y se copian tal cual. */
+.rec-check { position:relative; display:inline-flex; flex:0 0 24px; width:24px; height:24px;
+  align-items:center; justify-content:center; border-radius:var(--radius-chip); }
+.rec-check input { position:absolute; width:1px; height:1px; opacity:0; }
+.rec-check-box { display:inline-flex; width:18px; height:18px; align-items:center; justify-content:center;
+  border:1px solid var(--check-bd); border-radius:6px; background:var(--check-bg); color:var(--check-ink);
+  transition:border-color .14s ease-out, background-color .14s ease-out, transform .14s var(--ease-out-strong); }
+.rec-check:hover .rec-check-box { border-color:var(--ink-3); }
+.rec-check:active .rec-check-box { transform:scale(.96); }
+.rec-check input:checked + .rec-check-box { border-color:var(--accent); background:var(--accent); color:#fff; }
+.rec-check-box svg { opacity:0; }
+.rec-check input:checked + .rec-check-box svg { opacity:1; }
+.rec-check-dash { width:8px; height:1.5px; border-radius:99px; background:var(--check-ink); }
+
+.rec-marca { display:inline-flex; flex:0 0 20px; width:20px; height:20px; align-items:center;
+  justify-content:center; border-radius:6px; background:var(--field); color:var(--ink-2);
+  font-size:10px; font-weight:650; }
+.rec-nombre { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  color:var(--ink); font-size:12.5px; font-weight:500; text-decoration:none; }
+a.rec-nombre:hover { color:var(--accent-ink); text-decoration:underline; text-underline-offset:3px; }
+/* Punto de 8px + texto: la pieza con la que la referencia muestra un NIVEL en
+   palabras. Acá dice el mix de fluido, y el punto lleva el color del fluido. */
+.rec-nivel { display:inline-flex; align-items:center; gap:8px; color:var(--ink-2); }
+.rec-nivel-punto { display:inline-block; flex:0 0 8px; width:8px; height:8px; border-radius:50%; }
+.rec-tags { display:flex; align-items:center; gap:4px; min-width:0; overflow:hidden; }
+.rec-tag { display:inline-flex; align-items:center; flex-shrink:0; max-width:115px; height:23px;
+  padding:0 7px; border-radius:6px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;
+  font-size:11px; font-weight:500;
+  border:1px solid color-mix(in srgb, var(--tag-color) 24%, var(--surface));
+  /* 55% y no el 82% medido: con 82 la mitad de la paleta no llega a AA.
+     Es la corrección que ya está aplicada en sistema.css. */
+  color:color-mix(in srgb, var(--tag-color) 55%, var(--ink));
+  background:color-mix(in srgb, var(--tag-color) 13%, var(--surface)); }
+.rec-tag-punto { flex:0 0 5px; width:5px; height:5px; margin-right:5px; border-radius:50%; background:var(--tag-color); }
+.rec-mas-tag { display:inline-flex; align-items:center; flex-shrink:0; height:23px; padding:0 7px;
+  border:1px solid var(--line-strong); border-radius:6px; background:var(--inset);
+  color:var(--ink-3); font-size:11px; font-weight:500; }
+/* ink-2 y no ink-3: acá vive el «11 sitios» del pie, que es un dato. El guion
+   de las celdas vacías sí es metadata pura y lleva su propia clase. */
+.rec-mudo { color:var(--ink-2); }
+.rec-vacio { color:var(--ink-3); }
+.rec-link { display:inline-flex; align-items:center; gap:5px; max-width:100%; overflow:hidden;
+  text-overflow:ellipsis; color:var(--accent-ink); text-decoration:underline;
+  text-decoration-color:color-mix(in srgb, currentColor 35%, transparent); text-underline-offset:3px;
+  transition:color .12s ease-out, text-decoration-color .12s ease-out; }
+.rec-link:hover { color:var(--ink); text-decoration-color:currentColor; }
+/* Pie de dos renglones, los dos pegados al fondo. Cada columna trae SU tipo de
+   agregado —recuento, promedio, suma— y no la misma operación repetida. */
+.rec-tabla tfoot td { position:sticky; bottom:0; z-index:4; height:38px;
+  background:var(--inset); color:var(--ink-2); font-size:11.5px; }
+.rec-tabla tfoot .rec-fija { z-index:6; background:var(--inset); }
+.rec-tabla tfoot tr.rec-calc-2 td { bottom:38px; background:color-mix(in srgb, var(--inset) 70%, var(--surface)); }
+.rec-tabla tfoot tr.rec-calc-2 .rec-fija { background:color-mix(in srgb, var(--inset) 70%, var(--surface)); }
+.rec-calc-num { margin-right:3px; color:var(--ink); font-variant-numeric:tabular-nums; }
+.rec-calc-rot { font-weight:550; color:var(--ink-2); }
+.rec-add-calc { display:inline-flex; align-items:center; gap:6px; border:0; background:transparent;
+  color:var(--ink-3); font-size:11.5px; transition:color .12s ease-out; }
+.rec-add-calc:hover { color:var(--ink); }
+
+/* ── Píldora de filtro. MEDIDA §13. La inactiva NO tiene fondo ni anillo:
+      sólo la activa se levanta. ───────────────────────────────────────── */
+.filtros { display:flex; align-items:center; gap:4px; margin:0 -4px 4px; padding:4px; overflow-x:auto; scrollbar-width:none; }
+.filtros::-webkit-scrollbar { display:none; }
+.f-pill { display:flex; align-items:center; flex-shrink:0; gap:6px; height:26px; padding:0 10px;
+  border:0; border-radius:999px; background:transparent; color:var(--ink-2);
+  font-size:12px; font-weight:500;
+  transition:background-color .2s, box-shadow .2s, color .2s; }
+.f-pill:hover { background:var(--hover); }
+.f-pill[aria-pressed=true] { background:var(--surface); color:var(--ink); box-shadow:var(--shadow-btn); }
+.f-pill > i { display:block; width:6px; height:6px; border-radius:50%; }
+.f-pill > b { padding:0 4px; border-radius:4px; font-size:10.5px; font-weight:400;
+  font-variant-numeric:tabular-nums; color:var(--ink-3); }
+.f-pill[aria-pressed=true] > b { background:var(--field); color:var(--ink-2); }
+
+/* ── Colapso de fila. MEDIDO §13 y §9: 1fr → 0fr sobre grid-template-rows.
+      Es la forma que tiene el sistema de hacer aparecer y desaparecer algo
+      sin animar la altura, que no se puede interpolar. ─────────────────── */
+.colapsa { display:grid; grid-template-rows:1fr; opacity:1;
+  transition:grid-template-rows .3s var(--ease-out-strong), opacity .3s var(--ease-out-strong); }
+.colapsa[data-abierto=no] { grid-template-rows:0fr; opacity:0; }
+.colapsa > div { overflow:hidden; }
+
+.grid-fila { display:grid; grid-template-columns:1.5fr .62fr .8fr .62fr; align-items:center;
+  padding:8px 12px; border-bottom:1px solid var(--line); font-size:12px;
+  transition:background-color .1s ease-out; }
+.grid-fila:hover { background:var(--hover); }
+.grid-cab { display:grid; grid-template-columns:1.5fr .62fr .8fr .62fr;
+  padding:8px 12px; border-bottom:1px solid var(--line); font-size:11.5px; font-weight:500; color:var(--ink-2); }
+.trunca { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+/* Chip de estado de la Filter Table: 20 de alto, radio 5, 11px. Es más chico
+   que el chip general de 22 porque vive DENTRO de una celda de 8px de padding. */
+.f-estado { display:inline-flex; align-items:center; height:20px; padding:0 6px;
+  border-radius:5px; font-size:11px; font-weight:500; }
+
+/* ── Buscador. MEDIDO §15: barra de 40, ícono de 14 en ink-3, input pelado. */
+.busca { display:flex; align-items:center; gap:8px; height:40px; padding:0 12px;
+  border-bottom:1px solid var(--line); transition:background-color .1s ease-out; }
+.busca:hover { background:var(--hover); }
+.busca input { min-width:0; flex:1; border:0; background:transparent; outline:none;
+  color:var(--ink); font:inherit; font-size:13px; letter-spacing:inherit; }
+.busca input::placeholder { color:var(--ink-3); }
+
+/* ── Card, barra y pie de card. MEDIDOS: la barra es la ranura más usada de
+      la card en toda la referencia. ────────────────────────────────────── */
+.card { overflow:hidden; border-radius:var(--radius-card); background:var(--surface); box-shadow:var(--shadow-card); }
+.card-bar { display:flex; align-items:center; gap:10px; padding:10px 12px; border-bottom:1px solid var(--line); }
+.card-pie { display:flex; align-items:center; gap:12px; padding:10px 12px; border-top:1px solid var(--line); background:var(--inset); }
+.fila { display:flex; align-items:center; gap:10px; padding:10px 12px; border-bottom:1px solid var(--line);
+  transition:background-color .4s var(--ease-in-out); }
+.fila:last-child { border-bottom:0; }
+.fila:hover { background:var(--hover); }
+
+/* ── Contador de grupo. MEDIDO §10: 20 de alto, --inset con filete. ───── */
+.contador { display:inline-flex; align-items:center; height:20px; padding:0 6px; border-radius:6px;
+  background:var(--inset); box-shadow:var(--shadow-hairline); color:var(--ink-2);
+  font-size:11.5px; font-weight:500; font-variant-numeric:tabular-nums; }
+
+/* ── Píldora de adjunto. MEDIDA §10: la del PDF, con el cuadradito de color
+      y el rótulo en 7px. Acá el cuadradito lleva la bolsa. ─────────────── */
+.adj { display:inline-flex; align-items:center; gap:6px; height:24px; padding:0 8px;
+  border-radius:999px; background:var(--inset); box-shadow:var(--shadow-btn);
+  color:var(--ink-2); font-size:12px; font-weight:500;
+  transition:background-color .3s var(--ease-out-strong); }
+.adj:hover { background:var(--hover); }
+.adj-cuadro { display:flex; width:14px; height:14px; align-items:center; justify-content:center;
+  border-radius:4px; color:#fff; font-size:7px; font-weight:700; letter-spacing:0; }
+
+/* ── Medidor de 3 barras. MEDIDO §9: 4×10, separación 2, alineado abajo. */
+.medidor { display:flex; align-items:flex-end; gap:2px; height:10px; }
+.medidor > i { display:block; width:4px; height:100%; border-radius:999px; background:var(--line-strong); }
+
+/* ── Barra y pila. La pila es EXTENSIÓN: sale de las reglas, no de una
+      medición. La referencia no tiene ninguna. ─────────────────────────── */
+.barra { height:4px; border-radius:999px; background:var(--line-strong); overflow:hidden; }
+.barra > i { display:block; height:100%; border-radius:999px; background:var(--barra-color, var(--ink-3)); }
+.pila { position:relative; display:flex; align-items:center; height:16px; }
+.pila > span { display:flex; align-items:center; height:100%; min-width:4.5px; padding-right:1.5px; }
+.pila > span:last-child { padding-right:0; }
+.pila i { display:block; width:100%; height:8px; border-radius:2px; transition:opacity .12s ease-out; }
+.pila:hover i { opacity:.45; }
+.pila > span:hover i { opacity:1; }
+
+/* ── Globo. EXTENSIÓN documentada: la referencia no tiene ningún tooltip,
+      así que la superficie se toma de sus paneles flotantes. ───────────── */
+.globo { position:absolute; z-index:10; bottom:calc(100% + 6px); transform:translateX(-50%);
+  pointer-events:none; white-space:nowrap; padding:4px 8px; border-radius:var(--radius-chip);
+  background:var(--surface); box-shadow:var(--shadow-card); color:var(--ink-2);
+  font-size:11.5px; line-height:17px; opacity:0; transition:opacity .12s ease-out; }
+.pila > span:hover .globo { opacity:1; }
+
+/* ── Código inline. MEDIDO §9. ────────────────────────────────────────── */
+code.tk { padding:2px 6px; border-radius:6px; background:var(--accent-tint);
+  color:color-mix(in srgb, var(--accent-ink) 55%, var(--ink));
+  font-family:"JetBrains Mono",ui-monospace,monospace; font-size:12px; }
+
+.delta { font-size:11.5px; font-weight:400; font-variant-numeric:tabular-nums; }
+.sube { color:var(--green); } .baja { color:var(--red); }
+
+/* Bloque hundido, MEDIDO en la Insight Card. */
+.hundido { border-radius:var(--radius-control); background:var(--inset); overflow:hidden; }
+.hundido-bar { display:flex; align-items:center; justify-content:space-between; gap:10px;
+  padding:6px 10px; background:var(--field); border-bottom:1px solid var(--line); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration:.01ms !important; animation-duration:.01ms !important; }
+}
+</style>
+</head>
+<body>
+<div class="hoja">
+
+<h1>Empresas · tres propuestas</h1>
+<p class="lede">
+  Tres formas de resolver la misma sección con piezas del sistema. Todas usan los 52 registros
+  reales del fixture. La referencia tiene una ventaja acá que no tuvo en ninguna otra card:
+  su sección 12 del catálogo <em>ya es</em> una tabla de empresas, así que buena parte de esto
+  está medido y no inventado. Cada propuesta declara qué usa y de dónde sale.
+</p>
+
+<!-- ══════════════════════════════════════════════════════════════════ A -->
+<section class="prop">
+  <h2><span class="letra">A</span> <span class="nom">Registro</span>
+      <span class="sub">la receta de la Records Table, entera</span></h2>
+  <p class="tesis">
+    La página actual usa la tabla del sistema al 30%: cabecera plana, celdas y una fila de cierre.
+    La §12 tiene <b>ocho piezas más</b> que nunca portamos —barra de herramientas, cabeceras
+    ordenables con ícono, columna congelada, selección, grilla completa atenuada, tags, enlace
+    externo y un pie de dos renglones donde <b>cada columna trae su propio tipo de agregado</b>.
+    Esta propuesta no inventa nada: copia la receta completa.
+  </p>
+  <div class="usa">
+    <span>§12 records-shell</span><span>§12 toolbar 52px</span><span>§12 cabecera ordenable</span>
+    <span>§12 columna congelada</span><span>§12 checkbox 18/24</span><span>§12 marca de fila</span>
+    <span>§12 tag categórico</span><span>§12 nivel por punto</span><span>§12 pie de 2 renglones</span>
+  </div>
+  <div class="marco"><div id="A"></div></div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════ B -->
+<section class="prop">
+  <h2><span class="letra">B</span> <span class="nom">Filtro</span>
+      <span class="sub">las 52 se recorren, no se leen</span></h2>
+  <p class="tesis">
+    Nadie lee 52 filas: busca una, o mira un grupo. La §13 resuelve exactamente eso y trae la
+    única animación estructural del sistema —<b>las filas colapsan con <code class="tk">grid-template-rows: 1fr → 0fr</code></b>,
+    que es cómo se anima una altura que no se puede interpolar—. Arriba, el buscador de la §15.
+    Las píldoras llevan el punto del fluido y su recuento, así el filtro también es un resumen.
+    <b>Probalo: filtrá y buscá.</b>
+  </p>
+  <div class="usa">
+    <span>§13 píldora de filtro</span><span>§13 colapso 1fr→0fr</span><span>§13 grid de 4 columnas</span>
+    <span>§13 chip de estado 20px</span><span>§15 buscador</span><span>paleta de fluido</span>
+  </div>
+  <div class="marco"><div id="B"></div></div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════ C -->
+<section class="prop">
+  <h2><span class="letra">C</span> <span class="nom">Concentración</span>
+      <span class="sub">el dato de la página no es que hay 52</span></h2>
+  <p class="tesis">
+    Tres empresas explican el <b>56,8%</b> y veintiuna explican <b>0,0%</b>. Una tabla de 52 filas
+    iguales esconde justamente eso. Acá la lista llega tercera: primero la pila partida por empresa,
+    después los tres tramos con el medidor de la §9, y las tres primeras como Context Cards de la
+    §10 —con su reseña y el ticker en la píldora de adjunto, la del cuadradito de color—.
+    La tabla larga queda plegada detrás de un solo renglón.
+  </p>
+  <div class="usa">
+    <span>§10 context card</span><span>§10 contador de grupo</span><span>§10 píldora de adjunto</span>
+    <span>§9 medidor 3 barras</span><span>§9 código inline</span><span>§13 colapso</span>
+    <span>card-bar / card-pie</span><span>pila (extensión)</span>
+  </div>
+  <div class="marco"><div id="C"></div></div>
+</section>
+
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════════
+   DATOS — los 52 registros reales de src/fixtures/companies.ts
+   (scrape de vacamuerta.io/companies del 2026-08-11).
+   pn = % de la producción nacional · pv = % del valor en US$ · p = pozos
+   ═══════════════════════════════════════════════════════════════════════ */
+const EMP = [{"r":1,"n":"YPF S.A.","pn":34.2,"pv":45.6,"p":5725,"pub":1,"tk":"YPF","ex":"NYQ","px":48.76,"ch":-1.8,"w":"www.ypf.com","b":"La mayor operadora del país y ancla del desarrollo de Vaca Muerta."},{"r":2,"n":"PAN AMERICAN ENERGY SL","pn":10.9,"pv":10.9,"p":4471,"pub":0,"b":"Integrada privada líder, del Golfo San Jorge al gas de Vaca Muerta."},{"r":3,"n":"CGC (Compañía General de Combustibles)","pn":2.6,"pv":1.9,"p":1521,"pub":0,"w":"www.cgcenergia.com.ar"},{"r":4,"n":"PETROQUIMICA COMODORO RIVADAVIA S.A.","pn":0.6,"pv":0.9,"p":1312,"pub":0},{"r":5,"n":"PATAGONIA RESOURCES S.A.","pn":0.3,"pv":0.5,"p":1256,"pub":0},{"r":6,"n":"Clear Petroleum S.A.","pn":0.3,"pv":0.6,"p":1177,"pub":0},{"r":7,"n":"ROCH S.A.","pn":0.3,"pv":0.4,"p":1123,"pub":0},{"r":8,"n":"PETROLEOS SUDAMERICANOS S.A.","pn":0.9,"pv":1.7,"p":1083,"pub":0},{"r":9,"n":"QUINTANA E&P ARGENTINA S.R.L.","pn":0.9,"pv":0.8,"p":859,"pub":0},{"r":10,"n":"Pluspetrol S.A.","pn":8.4,"pv":7.7,"p":840,"pub":0,"w":"www.pluspetrol.com","b":"Gas rico en La Calera y expansión en la ventana húmeda."},{"r":11,"n":"CAPEX S.A.","pn":1.2,"pv":1.3,"p":740,"pub":1,"tk":"CAPX","ex":"BUE","px":3400,"ch":-8.6,"w":"www.capex.com.ar"},{"r":12,"n":"Petrolera Aconcagua Energía S.A.","pn":0.5,"pv":0.7,"p":722,"pub":0},{"r":13,"n":"CROWN POINT ENERGIA S.A.","pn":0.3,"pv":0.6,"p":697,"pub":0},{"r":14,"n":"COMPAÑÍAS ASOCIADAS PETROLERAS S.A.","pn":0.7,"pv":1.3,"p":673,"pub":0},{"r":15,"n":"PECOM SERVICIOS ENERGIA SAU","pn":0.7,"pv":1.4,"p":618,"pub":0},{"r":16,"n":"OILSTONE ENERGIA S.A.","pn":0.3,"pv":0.2,"p":491,"pub":0},{"r":17,"n":"BENTIA ENERGY S.A.","pn":0.3,"pv":0.4,"p":418,"pub":0},{"r":18,"n":"Vista Energy","pn":4.4,"pv":7.7,"p":400,"pub":1,"tk":"VIST","ex":"NYQ","px":65.78,"ch":-0.5,"w":"www.vistaenergy.com","b":"Pure play de shale oil con la mejor curva de eficiencia de la cuenca."},{"r":19,"n":"TotalEnergies","pn":11.7,"pv":0.9,"p":366,"pub":1,"tk":"TTE","ex":"NYQ","px":88.18,"ch":3.5,"w":"www.totalenergies.com"},{"r":20,"n":"Tecpetrol S.A.","pn":7.7,"pv":2.4,"p":349,"pub":0,"w":"www.tecpetrol.com","b":"Fortín de Piedra: el desarrollo de gas más rápido de la cuenca."},{"r":21,"n":"FLXS OGE S.A","pn":0.3,"pv":0,"p":314,"pub":0},{"r":22,"n":"Pampa Energía S.A.","pn":5.8,"pv":2.2,"p":277,"pub":1,"tk":"PAM","ex":"NYQ","px":79.77,"ch":-5.9,"w":"www.pampaenergia.com"},{"r":23,"n":"BREST S.A. DE SERVICIOS PETROLEROS","pn":0.1,"pv":0.1,"p":175,"pub":0},{"r":24,"n":"Shell Argentina","pn":2.4,"pv":3.9,"p":162,"pub":1,"tk":"SHEL","ex":"NYQ","px":90.56,"ch":0.8,"w":"www.shell.com.ar","b":"Bandurria Sur y Sierras Blancas, foco en crudo de exportación."},{"r":25,"n":"VENOIL S.A.","pn":0.2,"pv":0.2,"p":137,"pub":0},{"r":26,"n":"Chevron Argentina","pn":1.5,"pv":2.1,"p":122,"pub":1,"tk":"CVX","ex":"NYQ","px":196.31,"ch":3.1,"w":"www.chevron.com","b":"Socio histórico de YPF en Loma Campana."},{"r":27,"n":"PETROLERA EL TREBOL S.A.","pn":0.4,"pv":0.7,"p":82,"pub":0},{"r":28,"n":"PETROLERA SANTA MARIA SAU","pn":0.6,"pv":0.2,"p":58,"pub":0},{"r":29,"n":"PAMPETROL S.A.P.E.M","pn":0,"pv":0,"p":46,"pub":0},{"r":30,"n":"EDHIPSA","pn":0,"pv":0,"p":41,"pub":0},{"r":31,"n":"MADALENA ENERGY ARGENTINA SRL","pn":0,"pv":0,"p":41,"pub":0},{"r":32,"n":"Pilgrim Energy S.A.","pn":0,"pv":0,"p":38,"pub":0},{"r":33,"n":"COLHUE HUAPI S.A.","pn":0,"pv":0,"p":32,"pub":0},{"r":34,"n":"E.M.E.S.A","pn":0,"pv":0,"p":29,"pub":0},{"r":35,"n":"HATTRICK ENERGY SAS","pn":0.1,"pv":0.1,"p":29,"pub":0},{"r":36,"n":"INGENIERIA ALPA S.A.","pn":0,"pv":0,"p":27,"pub":0},{"r":37,"n":"INTEROIL ARGENTINA S A","pn":0.1,"pv":0,"p":26,"pub":0},{"r":38,"n":"COPESA CIA CONSTRUCTORA PETROLERA SA","pn":0,"pv":0,"p":25,"pub":0},{"r":39,"n":"AZRUGE S.A.","pn":0,"pv":0,"p":20,"pub":0},{"r":40,"n":"VACA MUERTA INVERSIONES SAU","pn":0.3,"pv":0.4,"p":18,"pub":0},{"r":41,"n":"MEDANITO S.A.","pn":0,"pv":0,"p":15,"pub":0},{"r":42,"n":"JUJUY HIDROCARBUROS SAU","pn":0,"pv":0,"p":11,"pub":0},{"r":43,"n":"RECURSOS Y ENERGIA FORMOSA S.A.","pn":0,"pv":0.1,"p":10,"pub":0},{"r":44,"n":"ALIANZA PETROLERA ARGENTINA S.A.","pn":0,"pv":0,"p":9,"pub":0},{"r":45,"n":"GeoPark Argentina","pn":0,"pv":0.1,"p":9,"pub":1,"tk":"GPRK","ex":"NYQ","px":9.35,"ch":-0.4,"w":"www.geo-park.com"},{"r":46,"n":"PATAGONIA ENERGY S.A.","pn":0,"pv":0,"p":9,"pub":0},{"r":47,"n":"PETROLSUR ENERGIA S.A.","pn":0,"pv":0,"p":9,"pub":0},{"r":48,"n":"FOMICRUZ S.E.","pn":0,"pv":0,"p":3,"pub":0},{"r":49,"n":"G Y G OIL SERVICE SRL","pn":0,"pv":0,"p":3,"pub":0},{"r":50,"n":"GEOPETROL DRILLING S.A.","pn":0,"pv":0,"p":2,"pub":0},{"r":51,"n":"PETROFARO S.A.","pn":0,"pv":0,"p":2,"pub":0},{"r":52,"n":"HIGH LUCK GROUP LTD. - SUCURSAL ARGENTINA","pn":0,"pv":0,"p":1,"pub":0}];
+
+const OIL = '#3f78ff', GAS = '#16a6c7', MIX = '#9a5cff';
+
+/* El mix de fluido sale de la RELACIÓN entre las dos columnas que la página ya
+   tiene y que hoy no dicen nada juntas. Si una empresa pesa más en valor que en
+   producción, lo que saca es petróleo, que vale mucho más por unidad; si pesa
+   menos, es gas. TotalEnergies es el caso extremo: 11,7% de la producción del
+   país y 0,9% del valor.
+   Las 21 que están en 0,0% en las dos columnas no tienen relación calculable y
+   se marcan como sin dato, en gris. No se les inventa una categoría. */
+function mixDe(c) {
+  if (c.pn === 0) return { k:'sd', rot:'sin dato', color:'var(--line-strong)', tinta:'var(--ink-3)' };
+  const r = c.pv / c.pn;
+  if (r >= 1.2) return { k:'oil', rot:'Petróleo', color:OIL, r };
+  if (r <= 0.8) return { k:'gas', rot:'Gas',      color:GAS, r };
+  return              { k:'mix', rot:'Mixto',     color:MIX, r };
+}
+
+const num = n => n.toLocaleString('es-AR');
+const dec = (n,d=1) => n.toLocaleString('es-AR',{minimumFractionDigits:d,maximumFractionDigits:d});
+const orden = EMP.slice().sort((a,b) => b.pn - a.pn || b.p - a.p);
+const TOT = { p: EMP.reduce((a,c)=>a+c.p,0), cotizan: EMP.filter(c=>c.pub).length };
+const TOP10 = orden.slice(0,10).reduce((a,c)=>a+c.pn,0);
+
+/* ── Íconos. 15px con trazo 1,8 en las cabeceras y 14 con 1,8 en los botones:
+      las dos medidas del sistema. Nunca se rellenan. ───────────────────── */
+const ico = (d,s=15,w=1.8) =>
+  `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+const I = {
+  base:  '<path d="M12 3c4.4 0 8 1.3 8 3v12c0 1.7-3.6 3-8 3s-8-1.3-8-3V6c0-1.7 3.6-3 8-3z"/><path d="M20 6c0 1.7-3.6 3-8 3S4 7.7 4 6"/>',
+  tag:   '<path d="m20.6 13.4-8.6 8.6-8-8V4h10l6.6 6.6a2 2 0 0 1 0 2.8zM7 7h.01"/>',
+  lista: '<path d="M3 5h18M3 12h12M3 19h7"/>',
+  gota:  '<path d="M12 2.7 6.6 9.4a7 7 0 1 0 10.8 0L12 2.7z"/>',
+  pozo:  '<path d="M4 21h16M7 21V7l5-4 5 4v14M10 21v-5h4v5"/>',
+  link:  '<path d="M14 5h5v5M19 5l-8 8"/>',
+  abajo: '<path d="M12 5v14M5 12l7 7 7-7"/>',
+  filtro:'<path d="M3 5h18l-7 8v6l-4 2v-8L3 5z"/>',
+  ordenar:'<path d="M3 6h12M3 12h8M3 18h4M17 14v6m-3-3h6"/>',
+  mas:   '<path d="M12 5v14M5 12h14"/>',
+  buscar:'<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>',
+  tilde: '<path d="M4 12.5 9 17.5 20 6.5"/>',
+};
+
+/* ══════════════════════════════════════════════════════════════════════ A */
+function propuestaA() {
+  const th = (icono, rot, ancho, orden) => `
+    <th style="width:${ancho}px">
+      <button type="button" class="rec-th-btn">
+        <span class="rec-th-ico">${ico(icono)}</span>
+        <span class="trunca">${rot}</span>
+        <span class="rec-orden ${orden ? 'visible' : ''}">${ico(I.abajo,12)}</span>
+      </button>
+    </th>`;
+
+  const check = (id) => `
+    <label class="rec-check" title="Seleccionar ${id}">
+      <input type="checkbox" aria-label="Seleccionar ${id}">
+      <span class="rec-check-box">${ico(I.tilde,11,3)}</span>
+    </label>`;
+
+  const filas = orden.map(c => {
+    const m = mixDe(c);
+    const bolsa = c.pub
+      ? `<span class="rec-tag" style="--tag-color:${OIL}"><span class="rec-tag-punto" style="background:${OIL}"></span>${c.tk}</span>
+         <span class="rec-mas-tag">${c.ex}</span>`
+      : `<span class="rec-tag" style="--tag-color:var(--ink-3)"><span class="rec-tag-punto" style="background:var(--ink-3)"></span>Privada</span>`;
+    return `
+    <tr class="rec-fila">
+      <td class="rec-celda rec-fija rec-emp">
+        ${check(c.n)}
+        <span class="rec-marca">${c.n.trim()[0].toUpperCase()}</span>
+        ${c.w ? `<a href="https://${c.w}" class="rec-nombre" target="_blank" rel="noreferrer">${c.n}</a>`
+              : `<span class="rec-nombre">${c.n}</span>`}
+      </td>
+      <td class="rec-celda">${bolsa}</td>
+      <td class="rec-celda num" style="text-align:right">${dec(c.pn)}%</td>
+      <td class="rec-celda">
+        <span class="rec-nivel">
+          <span class="rec-nivel-punto" style="background:${m.color}"></span>
+          <span style="${m.k==='sd'?'color:var(--ink-2)':''}">${m.rot}</span>
+          ${m.r ? `<span class="num" style="margin-left:auto;color:var(--ink-3)">×${dec(m.r,2)}</span>` : ''}
+        </span>
+      </td>
+      <td class="rec-celda num" style="text-align:right">${num(c.p)}</td>
+      <td class="rec-celda">
+        ${c.w ? `<a class="rec-link" href="https://${c.w}" target="_blank" rel="noreferrer">${c.w}${ico(I.link,12)}</a>`
+              : `<span class="rec-vacio">—</span>`}
+      </td>
+    </tr>`;
+  }).join('');
+
+  return `
+  <div class="rec-shell">
+    <div class="rec-toolbar">
+      <div class="rec-tb-izq">
+        <span class="rec-db">${ico(I.base,16)}</span>
+        <span style="font-size:12px;font-weight:550;padding:0 6px">52 empresas</span>
+        <button type="button" class="rec-btn is-active">${ico(I.filtro,14)} Con producción <span class="rec-punto-filtro"></span></button>
+        <button type="button" class="rec-btn">${ico(I.ordenar,14)} Participación</button>
+      </div>
+      <div class="rec-tb-der">
+        <button type="button" class="rec-btn rec-btn--select">Mayo 2026 ${ico(I.abajo,12)}</button>
+        <button type="button" class="rec-btn rec-btn--primary">Exportar</button>
+      </div>
+    </div>
+    <div class="rec-scroll" tabindex="0" aria-label="Tabla de empresas">
+      <table class="rec-tabla">
+        <thead><tr>
+          <th class="rec-fija" style="width:290px">
+            <div class="rec-cab-emp">
+              <label class="rec-check" title="Seleccionar todas">
+                <input type="checkbox" aria-label="Seleccionar todas">
+                <span class="rec-check-box"><span class="rec-check-dash"></span></span>
+              </label>
+              <span>Empresa</span>
+            </div>
+          </th>
+          ${th(I.tag,   'Cotización', 170)}
+          ${th(I.lista, 'Nacional',   140, true)}
+          ${th(I.gota,  'Mix',        180)}
+          ${th(I.pozo,  'Pozos',      110)}
+          ${th(I.link,  'Sitio',      190)}
+        </tr></thead>
+        <tbody>${filas}</tbody>
+        <tfoot>
+          <!-- Segundo renglón de cálculo, más claro y pegado arriba del primero.
+               La referencia lo tiene así: dos operaciones distintas, apiladas. -->
+          <tr class="rec-calc-2">
+            <td class="rec-celda rec-fija"><span class="rec-calc-rot">Las diez primeras</span></td>
+            <td class="rec-celda"><button type="button" class="rec-add-calc">${ico(I.mas,14)} Añadir cálculo</button></td>
+            <td class="rec-celda num" style="text-align:right"><span class="rec-calc-num">${dec(TOP10)}%</span></td>
+            <td class="rec-celda rec-vacio">—</td>
+            <td class="rec-celda num" style="text-align:right"><span class="rec-calc-num">${num(orden.slice(0,10).reduce((a,c)=>a+c.p,0))}</span></td>
+            <td class="rec-celda rec-vacio">—</td>
+          </tr>
+          <tr>
+            <td class="rec-celda rec-fija"><span class="rec-calc-num">52</span> <span class="rec-calc-rot">registros</span></td>
+            <td class="rec-celda"><span class="rec-calc-num">${TOT.cotizan}</span> cotizan</td>
+            <td class="rec-celda num" style="text-align:right"><span class="rec-calc-num">99,0%</span></td>
+            <td class="rec-celda">
+              <span class="rec-nivel"><span class="rec-nivel-punto" style="background:${OIL}"></span>16 · 8 · 7 · 21 s/d</span>
+            </td>
+            <td class="rec-celda num" style="text-align:right"><span class="rec-calc-num">${num(TOT.p)}</span></td>
+            <td class="rec-celda"><span class="rec-mudo">11 sitios</span></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+  <p class="micro" style="margin:10px 2px 0;color:var(--ink-2)">
+    La suma de «Nacional» da 99,0% y no 100: los 52 valores vienen redondeados a un decimal en la
+    fuente. Es el pie el que tiene que decirlo — una tabla que suma 99 sin explicar por qué se lee
+    como un error.
+  </p>`;
+}
+
+/* ══════════════════════════════════════════════════════════════════════ B */
+function propuestaB() {
+  const GRUPOS = [
+    { id:'todas', rot:'Todas',    color:null, test:()=>true },
+    { id:'oil',   rot:'Petróleo', color:OIL,  test:c=>mixDe(c).k==='oil' },
+    { id:'gas',   rot:'Gas',      color:GAS,  test:c=>mixDe(c).k==='gas' },
+    { id:'mix',   rot:'Mixto',    color:MIX,  test:c=>mixDe(c).k==='mix' },
+    { id:'pub',   rot:'Cotizan',  color:'var(--green)', test:c=>!!c.pub },
+  ];
+
+  const pills = GRUPOS.map((g,i) => `
+    <button type="button" class="f-pill" data-g="${g.id}" aria-pressed="${i===0}">
+      ${g.color ? `<i style="background:${g.color}"></i>` : ''}${g.rot}
+      <b>${EMP.filter(g.test).length}</b>
+    </button>`).join('');
+
+  const filas = orden.map(c => {
+    const m = mixDe(c);
+    const tinte = m.k==='oil' ? OIL : m.k==='gas' ? GAS : m.k==='mix' ? MIX : null;
+    const estado = tinte
+      ? `<span class="f-estado" style="background:color-mix(in srgb, ${tinte} 13%, var(--surface));
+             color:color-mix(in srgb, ${tinte} 55%, var(--ink))">${m.rot}</span>`
+      : `<span class="f-estado" style="background:var(--field);color:var(--ink-2)">sin dato</span>`;
+    return `
+    <div class="colapsa" data-abierto="si" data-emp>
+      <div><div class="grid-fila">
+        <span class="trunca" style="font-weight:500">${c.n}</span>
+        <span class="num" style="text-align:right;padding-right:14px">${dec(c.pn)}%</span>
+        <span>${estado}</span>
+        <span class="num" style="text-align:right;color:var(--ink-2)">${num(c.p)}</span>
+      </div></div>
+    </div>`;
+  }).join('');
+
+  return `
+  <div style="max-width:520px;margin:0 auto">
+    <div class="card" style="margin-bottom:8px">
+      <div class="busca">
+        ${ico(I.buscar,14,2).replace('stroke="currentColor"','stroke="var(--ink-3)"')}
+        <input id="B-q" placeholder="Buscar empresa…" aria-label="Buscar empresa">
+      </div>
+    </div>
+    <div class="filtros">${pills}</div>
+    <div class="card">
+      <div class="grid-cab">
+        <span>Empresa</span>
+        <span style="text-align:right;padding-right:14px">Nacional</span>
+        <span>Mix</span>
+        <span style="text-align:right">Pozos</span>
+      </div>
+      <div id="B-filas" style="max-height:392px;overflow:auto">${filas}</div>
+      <div class="card-pie">
+        <span class="micro" style="color:var(--ink-2)"><b class="num" id="B-n" style="color:var(--ink);font-weight:500">52</b> de 52</span>
+        <span class="micro num" style="margin-left:auto;color:var(--ink-2)"><b id="B-pn" style="color:var(--ink);font-weight:500">99,0%</b> del país</span>
+        <span class="micro num" style="color:var(--ink-2)"><b id="B-p" style="color:var(--ink);font-weight:500">${num(TOT.p)}</b> pozos</span>
+      </div>
+    </div>
+  </div>`;
+}
+
+function activarB(raiz) {
+  const filas = [...raiz.querySelectorAll('[data-emp]')];
+  const pills = [...raiz.querySelectorAll('.f-pill')];
+  const q = raiz.querySelector('#B-q');
+  const nEl = raiz.querySelector('#B-n'), pnEl = raiz.querySelector('#B-pn'), pEl = raiz.querySelector('#B-p');
+  let grupo = 'todas';
+
+  const test = {
+    todas: ()=>true,
+    oil: c=>mixDe(c).k==='oil', gas: c=>mixDe(c).k==='gas',
+    mix: c=>mixDe(c).k==='mix', pub: c=>!!c.pub,
+  };
+
+  function aplicar() {
+    const txt = q.value.trim().toLowerCase();
+    let n=0, pn=0, p=0;
+    orden.forEach((c,i) => {
+      const ok = test[grupo](c) && (!txt || c.n.toLowerCase().includes(txt));
+      filas[i].dataset.abierto = ok ? 'si' : 'no';
+      if (ok) { n++; pn += c.pn; p += c.p; }
+    });
+    nEl.textContent = n; pnEl.textContent = dec(pn)+'%'; pEl.textContent = num(p);
+  }
+  pills.forEach(b => b.addEventListener('click', () => {
+    pills.forEach(o => o.setAttribute('aria-pressed', String(o===b)));
+    grupo = b.dataset.g; aplicar();
+  }));
+  q.addEventListener('input', aplicar);
+}
+
+/* ══════════════════════════════════════════════════════════════════════ C */
+function propuestaC() {
+  const TRAMOS = [
+    { rot:'Con peso propio',  nota:'1% o más del país',      nivel:3, test:c=>c.pn>=1 },
+    { rot:'Con producción',   nota:'entre 0,1% y 0,9%',      nivel:2, test:c=>c.pn>0 && c.pn<1 },
+    { rot:'Bajo el redondeo', nota:'0,0% a un decimal', nivel:1, test:c=>c.pn===0 },
+  ];
+
+  /* La pila: un segmento por empresa, ancho proporcional a su participación,
+     color por fluido. Las 21 en 0,0% se juntan en un resto gris, porque a
+     cero no tienen ancho: mostrarlas sería dibujar nada. */
+  const conPeso = orden.filter(c=>c.pn>0);
+  const sumaPn = conPeso.reduce((a,c)=>a+c.pn,0);
+  const segs = conPeso.map(c => {
+    const m = mixDe(c);
+    return `<span style="width:${(c.pn/99*100).toFixed(3)}%" title="${c.n}">
+      <i style="background:${m.color}"></i>
+      <span class="globo">${c.n.length>28?c.n.slice(0,27)+'…':c.n} · ${dec(c.pn)}%</span>
+    </span>`;
+  }).join('');
+
+  const tramos = TRAMOS.map(t => {
+    const g = EMP.filter(t.test);
+    const pn = g.reduce((a,c)=>a+c.pn,0), p = g.reduce((a,c)=>a+c.p,0);
+    return `
+    <div class="fila" style="flex-wrap:wrap;row-gap:2px">
+      <span class="medidor" aria-hidden>
+        ${[1,2,3].map(i=>`<i${i<=t.nivel?` style="background:var(--ink-3)"`:''}></i>`).join('')}
+      </span>
+      <span style="min-width:120px;flex:1 1 180px">
+        <span class="cuerpo" style="font-weight:500">${t.rot}</span>
+        <span class="micro" style="color:var(--ink-2);margin-left:6px">${t.nota}</span>
+      </span>
+      <span style="display:flex;flex-shrink:0;align-items:baseline;gap:12px">
+        <span style="display:inline-flex;align-items:baseline;gap:4px;width:82px;justify-content:flex-end">
+          <b class="num" style="font-size:13px;font-weight:500">${g.length}</b>
+          <span class="micro" style="color:var(--ink-2)">empresas</span>
+        </span>
+        <span class="num" style="width:48px;text-align:right;font-size:13px;font-weight:500">${dec(pn)}%</span>
+        <span style="display:inline-flex;align-items:baseline;gap:4px;width:86px;justify-content:flex-end">
+          <b class="num" style="font-size:13px;font-weight:500">${num(p)}</b>
+          <span class="micro" style="color:var(--ink-2)">pozos</span>
+        </span>
+      </span>
+    </div>`;
+  }).join('');
+
+  /* Las tres primeras como Context Cards. La reseña es la del fixture; donde
+     no hay, se dice lo que sí se sabe y no se inventa una. */
+  const fichas = orden.slice(0,3).map((c,i) => {
+    const m = mixDe(c);
+    const d = c.ch != null ? `<span class="delta ${c.ch>=0?'sube':'baja'}">${c.ch>=0?'+':'−'}${dec(Math.abs(c.ch))}%</span>` : '';
+    return `
+    <div class="card">
+      <div class="card-bar">
+        <span style="display:flex;min-width:0;align-items:center;gap:6px;font-size:13px;font-weight:500">
+          <span class="rec-marca">${c.n.trim()[0].toUpperCase()}</span>
+          <span class="trunca">${c.n}</span>
+        </span>
+        <span class="num" style="margin-left:auto;flex-shrink:0;font-size:12px;color:var(--ink-2)">
+          ${dec(c.pn)}% del país
+        </span>
+      </div>
+      <p class="desc" style="margin:0;padding:8px 12px 4px">
+        ${c.b || `Sin reseña en la fuente. Aporta el ${dec(c.pn)}% de la producción del país con ${num(c.p)} pozos.`}
+      </p>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;padding:4px 12px 12px">
+        <span class="adj">
+          <span class="adj-cuadro" style="background:${m.color}">${m.k==='oil'?'PET':m.k==='gas'?'GAS':'MIX'}</span>
+          ${m.rot}<span class="num" style="color:var(--ink-3)">×${dec(m.r,2)}</span>
+        </span>
+        ${c.pub ? `<span class="adj">
+          <span class="adj-cuadro" style="background:var(--green)">${c.ex}</span>
+          ${c.tk}<span class="num">US$ ${dec(c.px,2)}</span>${d}
+        </span>` : `<span class="adj"><span class="adj-cuadro" style="background:var(--ink-3)">—</span>Privada</span>`}
+        <span class="adj"><span class="adj-cuadro" style="background:var(--ink-2)">POZ</span>
+          <span class="num">${num(c.p)}</span> pozos</span>
+      </div>
+    </div>`;
+  }).join('');
+
+  const restoFilas = orden.slice(3).map(c => {
+    const m = mixDe(c);
+    return `<div class="fila" style="padding:6px 12px">
+      <span class="rec-nivel-punto" style="background:${m.color};flex:0 0 6px;width:6px;height:6px"></span>
+      <span class="trunca etq" style="flex:1;color:var(--ink)">${c.n}</span>
+      <span class="num micro" style="color:var(--ink-2);width:46px;text-align:right">${dec(c.pn)}%</span>
+      <span class="num micro" style="color:var(--ink-3);width:52px;text-align:right">${num(c.p)}</span>
+    </div>`;
+  }).join('');
+
+  return `
+  <div style="display:flex;flex-direction:column;gap:8px;max-width:560px;margin:0 auto">
+
+    <div class="card">
+      <div class="card-bar">
+        <span class="etq">Cómo se reparte la producción del país</span>
+        <span class="contador" style="margin-left:auto">52</span>
+      </div>
+      <div style="padding:12px">
+        <div class="pila">${segs}<span style="width:1%"><i style="background:var(--line-strong)"></i>
+          <span class="globo">21 empresas en 0,0% · 382 pozos</span></span></div>
+        <p class="micro" style="margin:8px 0 0;color:var(--ink-2)">
+          Cada segmento es una empresa y su ancho, su participación. El color es el fluido que
+          predomina: <b style="color:color-mix(in srgb, ${OIL} 55%, var(--ink));font-weight:500">petróleo</b>,
+          <b style="color:color-mix(in srgb, ${GAS} 55%, var(--ink));font-weight:500">gas</b> o
+          <b style="color:color-mix(in srgb, ${MIX} 55%, var(--ink));font-weight:500">mixto</b>.
+        </p>
+      </div>
+      ${tramos.replace('<div class="fila">','<div class="fila" style="border-top:1px solid var(--line)">')}
+      <div class="card-pie">
+        <span class="micro" style="color:var(--ink-2)">
+          Las tres primeras explican <b class="num" style="color:var(--ink);font-weight:500">56,8%</b>;
+          las diez primeras, <b class="num" style="color:var(--ink);font-weight:500">${dec(TOP10)}%</b>.
+        </span>
+      </div>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:8px;padding:6px 2px 0">
+      <span class="titulo">Las tres primeras</span>
+      <span class="contador">56,8%</span>
+    </div>
+    ${fichas}
+
+    <div class="card">
+      <button type="button" id="C-toggle" class="card-bar"
+        style="width:100%;border:0;background:transparent;text-align:left">
+        <span class="etq">Las 49 restantes</span>
+        <span class="contador" style="margin-left:auto">42,2%</span>
+        <span id="C-flecha" style="display:inline-flex;color:var(--ink-3);transition:transform .3s var(--ease-out-strong)">${ico(I.abajo,14)}</span>
+      </button>
+      <div class="colapsa" id="C-resto" data-abierto="no">
+        <div><div style="max-height:260px;overflow:auto">${restoFilas}</div></div>
+      </div>
+    </div>
+
+    <p class="micro" style="margin:2px 2px 0;color:var(--ink-2)">
+      «Mix» no es un dato de la fuente: es la relación entre el % de producción y el % del valor en
+      dólares. Por encima de 1,2 pesa el petróleo, por debajo de 0,8 el gas. Las 21 empresas que
+      están en 0,0% en las dos columnas no tienen relación calculable y quedan sin clasificar.
+    </p>
+  </div>`;
+}
+
+/* ── Montaje ──────────────────────────────────────────────────────────── */
+document.getElementById('A').innerHTML = propuestaA();
+document.getElementById('B').innerHTML = propuestaB();
+document.getElementById('C').innerHTML = propuestaC();
+activarB(document.getElementById('B'));
+
+(() => {
+  const b = document.getElementById('C-toggle');
+  const c = document.getElementById('C-resto');
+  const f = document.getElementById('C-flecha');
+  b.addEventListener('click', () => {
+    const abierto = c.dataset.abierto === 'si';
+    c.dataset.abierto = abierto ? 'no' : 'si';
+    f.style.transform = abierto ? 'rotate(0deg)' : 'rotate(180deg)';
+  });
+})();
+
+/* Selección de fila en A: es la única interacción de la §12 que cambia el
+   fondo de la fila entera, y conviene verla. */
+document.querySelectorAll('#A .rec-fila input[type=checkbox]').forEach(i => {
+  i.addEventListener('change', () => i.closest('.rec-fila').classList.toggle('sel', i.checked));
+});
+</script>
+</body>
+</html>

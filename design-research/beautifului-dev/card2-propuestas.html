@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Card 02 · tres propuestas</title>
+<style>
+/* ═══════════════════════════════════════════════════════════════════════
+   TOKENS — copiados tal cual de apps/ui-prototype/src/app/v2/sistema.css,
+   que a su vez salen de la medición de beautifului.dev.
+   ═══════════════════════════════════════════════════════════════════════ */
+:root {
+  --page:#fafafb; --canvas:#f1f2f3; --surface:#fff; --inset:#f7f8f9;
+  --hover:#f4f5f6; --hover-2:#e7e9eb;
+  --ink:#1f2124; --ink-2:#62656b; --ink-3:#9a9da3;
+  --line:#ecedef; --line-strong:#e0e2e5; --field:#f2f2f3;
+  --accent:#0285ff; --accent-ink:#0170dd; --accent-tint:#e9f3ff;
+  --green:#189a4d; --orange:#ef720c; --red:#e3474c;
+  --shadow-hairline:0 0 0 1px var(--line);
+  --shadow-card:0 0 0 1px var(--line), 0 1px 2px #1018280a, 0 2px 6px #10182808;
+  --radius-chip:6px; --radius-control:8px; --radius-card:10px; --radius-window:14px;
+  --ease-in-out:cubic-bezier(.4,0,.2,1);
+  --dot:#4949491a;
+
+  /* paleta categórica de 8, con --tag-color inyectado por elemento */
+  --c1:#3f78ff; --c2:#f09a2f; --c3:#9a5cff; --c4:#16a6c7; --c5:#25a878;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme=light]) {
+    --page:#17181a; --canvas:#1c1d1f; --surface:#232427; --inset:#1f2022;
+    --hover:#2a2b2e; --hover-2:#313236;
+    --ink:#f2f3f4; --ink-2:#a5a8ad; --ink-3:#6c6f75;
+    --line:#2e3033; --line-strong:#3a3c40; --field:#2b2c2f;
+    --accent:#3d9aff; --accent-ink:#7ec0ff; --accent-tint:#3d9aff29;
+    --green:#3dbb72; --orange:#f68f3c; --red:#ee5c61;
+    --shadow-card:0 0 0 1px var(--line), 0 1px 2px #0003, 0 2px 6px #0003;
+    --dot:#ffffff0f;
+  }
+}
+
+* { box-sizing:border-box; }
+body {
+  margin:0; padding:40px 24px 80px;
+  background:var(--page);
+  background-image:radial-gradient(var(--dot) 1px, transparent 1px);
+  background-size:18px 18px;
+  color:var(--ink);
+  font-family:"Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  font-size:14px; line-height:1.5; letter-spacing:-.01em;
+}
+:focus-visible { outline:2px solid var(--accent); outline-offset:2px; border-radius:4px; }
+
+/* ── Tipografía. Nada pasa de 21, y ninguna CIFRA pasa de 17. ─────────── */
+.titular { font-size:21px; font-weight:600; line-height:1.25; letter-spacing:-.02em; margin:0; }
+.cifra   { font-size:17px; font-weight:600; line-height:1.2; font-variant-numeric:tabular-nums; }
+.titulo  { font-size:13px; font-weight:600; }
+.cuerpo  { font-size:13px; line-height:19.5px; }
+.desc    { font-size:12.5px; line-height:18.75px; color:var(--ink-2); }
+.etq     { font-size:12px;   line-height:18px;    color:var(--ink-2); }
+.micro   { font-size:11.5px; line-height:17.25px; }
+.mono    { font-family:"JetBrains Mono", ui-monospace,"SF Mono",Menlo,monospace; font-variant-numeric:tabular-nums; }
+.num     { font-variant-numeric:tabular-nums; }
+.ink2 { color:var(--ink-2); } .ink3 { color:var(--ink-3); }
+
+/* ── Estructura de página ─────────────────────────────────────────────── */
+.hoja { max-width:760px; margin:0 auto; }
+.intro { margin:0 0 32px; }
+.intro h1 { font-size:21px; font-weight:600; letter-spacing:-.02em; margin:0 0 6px; }
+.intro p  { margin:0; max-width:60ch; }
+
+.propuesta { margin:0 0 12px; }
+.rotulo {
+  display:flex; align-items:baseline; gap:8px; flex-wrap:wrap;
+  padding:0 4px 10px;
+}
+.rotulo .n { font-family:"JetBrains Mono",ui-monospace,monospace; font-size:11px; color:var(--ink-3); }
+.piezas { display:flex; flex-wrap:wrap; gap:4px; padding:0 4px 12px; }
+.pieza {
+  font-family:"JetBrains Mono",ui-monospace,monospace; font-size:10px;
+  padding:2px 6px; border-radius:5px;
+  background:var(--field); color:var(--ink-2);
+}
+.pieza.ext { background:transparent; box-shadow:inset 0 0 0 1px var(--line-strong); color:var(--ink-3); }
+
+.marco {
+  border-radius:var(--radius-window); background:var(--canvas);
+  box-shadow:var(--shadow-hairline); padding:12px; overflow:hidden;
+}
+.corte { border:0; border-top:1px dashed var(--line-strong); margin:28px 0; }
+
+/* ── Card y sus TRES ranuras medidas ──────────────────────────────────── */
+.card { border-radius:var(--radius-card); background:var(--surface); box-shadow:var(--shadow-card); overflow:hidden; }
+.card-bar { display:flex; align-items:center; gap:10px; padding:10px 12px; border-bottom:1px solid var(--line); }
+.card-pad { padding:12px; }
+.card-pie { display:flex; align-items:center; gap:12px; padding:10px 12px; border-top:1px solid var(--line); background:var(--inset); }
+
+/* ── Fila de dato ─────────────────────────────────────────────────────── */
+.fila { display:flex; align-items:center; gap:10px; padding:10px 12px; border-bottom:1px solid var(--line); transition:background-color 400ms var(--ease-in-out); }
+.fila:last-child { border-bottom:0; }
+.fila:hover { background:var(--hover); }
+
+/* ── Medidor de 3 barras (Recommendation Card) ────────────────────────── */
+.medidor { display:flex; align-items:flex-end; gap:2px; height:10px; flex-shrink:0; }
+.medidor i { display:block; width:4px; height:100%; border-radius:999px; background:var(--line-strong); }
+.medidor i.on { background:var(--ink-3); }
+
+/* ── Ecualizador "en vivo": misma caja que el medidor ─────────────────── */
+@keyframes eq { 0%,to{transform:scaleY(.35)} 50%{transform:scaleY(1)} }
+.eq { display:flex; align-items:flex-end; gap:2px; height:10px; }
+.eq i { display:block; width:4px; height:100%; border-radius:999px; background:var(--ink-3);
+  animation:eq 900ms var(--ease-in-out) infinite; transform-origin:bottom; }
+.eq i:nth-child(2){animation-delay:150ms} .eq i:nth-child(3){animation-delay:300ms}
+
+/* ── Chip y tag ───────────────────────────────────────────────────────── */
+.chip { display:inline-flex; align-items:center; gap:5px; height:19px; padding:0 6px;
+  border-radius:5px; font-size:10.5px; font-weight:500; white-space:nowrap;
+  background:var(--field); color:var(--ink-2); }
+.tag { display:inline-flex; align-items:center; gap:4px; height:19px; padding:0 6px;
+  border-radius:5px; font-size:10.5px; font-weight:500; white-space:nowrap;
+  border:1px solid color-mix(in srgb, var(--tag-color) 24%, var(--surface));
+  color:color-mix(in srgb, var(--tag-color) 82%, var(--ink));
+  background:color-mix(in srgb, var(--tag-color) 13%, var(--surface)); }
+.tag b { width:4px; height:4px; border-radius:50%; background:var(--tag-color); }
+
+/* ── Barra de proporción ──────────────────────────────────────────────── */
+.barra { height:4px; border-radius:999px; background:var(--line-strong); overflow:hidden; }
+.barra i { display:block; height:100%; border-radius:999px; background:var(--ink-3); }
+.barra.lider i { background:var(--accent); }
+
+/* ── Pila por categoría ───────────────────────────────────────────────── */
+.pila { display:flex; align-items:center; height:16px; }
+.pila > span { display:flex; align-items:center; height:100%; padding-right:1.5px; min-width:4.5px; }
+.pila > span:last-child { padding-right:0; }
+.pila i { display:block; width:100%; height:8px; border-radius:2px; }
+
+/* ── Serie compacta ───────────────────────────────────────────────────── */
+.serie { display:flex; align-items:stretch; height:16px; flex-shrink:0; }
+.serie > span { display:flex; align-items:flex-end; height:100%; padding-right:2px; }
+.serie > span:last-child { padding-right:0; }
+.serie { --serie-color:var(--accent); }
+/* Toda la serie lleva el color de SU fluido, mezclado al 40% para que el mes
+   de corte —que va pleno— siga saltando sin cambiar de color. Antes el corte
+   iba en acento: el acento es para foco, enlaces y detalles, no para decir de
+   qué fluido es la serie. */
+.serie i { display:block; width:3px; min-height:1px; border-radius:1px;
+  background:color-mix(in srgb, var(--serie-color) 40%, var(--line-strong));
+  transition:background-color 120ms; }
+.serie > span:last-child i { background:var(--serie-color); }
+.serie.ancha > span { flex:1; justify-content:center; padding:0; }
+.serie.ancha i { width:6px; border-radius:3px; }
+.serie.alta { height:64px; }
+.serie.alta i { border-radius:3px; }
+.tabla tr.ult td { background:var(--inset); }
+.tabla td.der { font-variant-numeric:tabular-nums; }
+/* Las barras de la tabla van en su propia columna de ancho fijo: con ancho
+   automático quedaban de 20px y no se leía nada. */
+.tabla td.b { width:88px; padding-left:0; }
+.barra { display:block; }
+
+/* ── Riel de desglose y sus pasos ─────────────────────────────────────── */
+.rama > * { position:relative; }
+.rama > *::before { content:""; position:absolute; left:-7px; top:-4px; bottom:0; width:1px; background:var(--line); }
+.rama > *:first-child::before { top:50%; }
+.rama > *:last-child::before { bottom:auto; height:calc(50% + 4px); }
+.rama > *::after { content:""; position:absolute; left:-7px; top:50%; width:6px; height:1px; background:var(--line); }
+.paso { display:flex; flex-wrap:wrap; align-items:center; gap:2px 8px;
+  width:100%; min-height:28px; padding:2px 6px; border-radius:6px; background:transparent; }
+.paso svg { flex-shrink:0; color:var(--ink-3); }
+
+/* ── Tabla (primitive-table-cell) ─────────────────────────────────────── */
+.tabla { width:100%; border-collapse:collapse; text-align:left; }
+.tabla th { padding:10px 12px; font-size:12px; font-weight:500; color:var(--ink-3);
+  border-bottom:1px solid var(--line); white-space:nowrap; }
+.tabla td { padding:10px 12px; font-size:13px; border-bottom:1px solid var(--line); font-variant-numeric:tabular-nums; }
+.tabla tr:last-child td { border-bottom:0; }
+.tabla tbody tr { transition:background-color 400ms var(--ease-in-out); }
+.tabla tbody tr:hover { background:var(--hover); }
+.der { text-align:right; }
+/* La conclusión es la ÚLTIMA FILA de la tabla y no un pie aparte, pero se
+   sirve con la receta del pie de card: fondo --inset y filete arriba. Así
+   cierra la tabla en vez de flotar debajo. */
+.tabla tr.cierre td { background:var(--inset); border-top:1px solid var(--line); border-bottom:0; padding:10px 12px; }
+.tabla tbody tr.cierre:hover td { background:var(--inset); }
+
+/* ── Bloque hundido (Insight Card) ────────────────────────────────────── */
+.hundido { border-radius:var(--radius-control); background:var(--inset); overflow:hidden; }
+.hundido-bar { display:flex; align-items:center; justify-content:space-between;
+  padding:6px 10px; border-bottom:1px solid var(--line); }
+
+@media (max-width:639px) { body { padding:24px 16px 60px } .col-3 { flex-direction:column; gap:12px !important } }
+.col-3 { display:flex; align-items:flex-start; gap:16px; }
+.col-3 > div { flex:1; min-width:0; }
+
+/* ── Gráfico de líneas ─────────────────────────────────────────────────
+   MEDIDO en la Insight Card (sección 16 del catálogo). Yo había dicho que la
+   referencia no tiene gráficos: falso. Los tiene, dibujados en un <canvas> de
+   320×166, y por eso mi barrido del DOM buscando SVG no encontró nada.
+
+   Su lenguaje, mirándolo: líneas SUAVES superpuestas en el mismo plano, una
+   por serie, cada una con el color de su categoría; un punto relleno al final
+   de cada línea; una punteada horizontal al nivel de ese último valor; y NADA
+   más: sin ejes, sin grilla, sin números sobre el trazo. Los valores viven
+   arriba del gráfico, no adentro. */
+.gr { display:block; width:100%; height:150px; }
+.gr .linea { fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+.gr .guia { stroke-dasharray:2 4; stroke-width:1; opacity:.45; }
+.gr .fin { r:3.5; }
+.toggle { display:inline-flex; gap:2px; padding:2px; border-radius:999px; background:var(--field); }
+.toggle button { display:inline-flex; align-items:center; gap:4px; border:0; cursor:pointer;
+  padding:3px 8px; border-radius:999px; background:var(--surface); box-shadow:var(--shadow-btn);
+  font-size:11px; font-weight:500; color:var(--ink-2); font-family:inherit; }
+.toggle button i { display:block; width:6px; height:6px; border-radius:50%; }
+/* Tabla estilo Records: separadores VERTICALES entre grupos de columna, que es
+   algo que la referencia usa y nosotros no teníamos. */
+.tabla td.sep, .tabla th.sep { border-left:1px solid var(--line); }
+.tabla tfoot td { background:var(--inset); border-top:1px solid var(--line); font-size:12px; color:var(--ink-2); font-weight:400; }
+.pill { display:inline-flex; align-items:center; height:32px; padding:0 14px; border-radius:999px;
+  background:var(--surface); box-shadow:var(--shadow-btn); font-size:12.5px; font-weight:500; color:var(--ink-2); }
+</style></head>
+<body>
+<div class="hoja">
+
+  <div class="intro">
+    <h1>Card 02 · tres propuestas</h1>
+    <p class="desc">
+      Volví a inspeccionar el catálogo y encontré un error mío importante: <strong>la referencia
+      SÍ tiene gráficos</strong>. Están en la Insight Card (sección 16) y se dibujan en un
+      <code class="mono">&lt;canvas&gt;</code>, por eso mi barrido del DOM buscando SVG no
+      encontró nada y yo venía diciendo que no existían.
+      <br><br>
+      Su lenguaje es el contrario del que yo venía usando: <strong>líneas suaves superpuestas</strong>
+      —no barras—, cada una con el color de su categoría, un punto relleno al final, una punteada
+      horizontal al nivel de ese último valor, y nada más: sin ejes, sin grilla, sin números sobre
+      el trazo. Los valores viven arriba del gráfico. Estas tres propuestas salen de ahí.
+    </p>
+  </div>
+
+  <div class="propuesta">
+    <div class="rotulo"><span class="n">A</span><span class="titulo">Insight</span>
+      <span class="desc">La composición de la Insight Card, con nuestros datos.</span></div>
+    <div class="piezas"><span class="pieza">card-pad</span><span class="pieza">bloque --inset</span>
+      <span class="pieza">gráfico de líneas</span><span class="pieza">punto terminal</span>
+      <span class="pieza">guía punteada</span><span class="pieza">toggle por serie</span>
+      <span class="pieza">cifra 17/600</span><span class="pieza">chip</span><span class="pieza">pill</span></div>
+    <div class="marco">
+      <div class="card">
+        <div class="card-pad">
+          <div style="display:flex;align-items:baseline;justify-content:space-between">
+            <span class="titulo">Producción mensual <span class="ink3" style="font-weight:400">12</span></span>
+            <span class="micro ink3">jun 2025 – may 2026</span>
+          </div>
+          <p class="desc" style="margin:6px 0 0">
+            El petróleo subió <code class="mono" style="color:var(--green)">+16,7%</code> en los doce
+            meses; el gas sólo <code class="mono" style="color:var(--green)">+5,4%</code> y con una
+            caída en <span style="color:var(--ink)">septiembre</span>.
+          </p>
+
+          <div class="hundido" style="margin-top:12px">
+            <div class="hundido-bar">
+              <div class="col-3" style="gap:24px;flex:1">
+                <div>
+                  <span class="micro" style="display:flex;align-items:center;gap:6px;color:var(--ink-2)">
+                    <i style="width:8px;height:8px;border-radius:50%;background:var(--c1);display:block"></i>Petróleo</span>
+                  <span class="cifra" style="display:block;margin-top:2px">650.190</span>
+                  <span class="mono ink3" style="font-size:11.5px">bbl/d</span>
+                </div>
+                <div>
+                  <span class="micro" style="display:flex;align-items:center;gap:6px;color:var(--ink-2)">
+                    <i style="width:8px;height:8px;border-radius:50%;background:var(--c4);display:block"></i>Gas natural</span>
+                  <span class="cifra" style="display:block;margin-top:2px">75,5</span>
+                  <span class="mono ink3" style="font-size:11.5px">MMm³/d</span>
+                </div>
+              </div>
+              <span class="chip">may 2026</span>
+            </div>
+            <div style="padding:10px 10px 12px">
+              <span class="toggle" style="margin-bottom:2px">
+                <button><i style="background:var(--c1)"></i>Petróleo</button>
+                <button><i style="background:var(--c4)"></i>Gas</button>
+              </span>
+              <svg class="gr" viewBox="0 0 628 150" preserveAspectRatio="none" aria-hidden="true">
+                <line class="guia" x1="14" y1="14.0" x2="614" y2="14.0" stroke="var(--c1)"/>
+                <line class="guia" x1="14" y1="14.0" x2="614" y2="14.0" stroke="var(--c4)"/>
+                <path class="linea" d="M 14.0 136.0 C 23.1 134.2, 50.4 129.1, 68.5 125.3 C 86.7 121.6, 104.9 117.6, 123.1 113.6 C 141.3 109.5, 159.5 105.2, 177.6 100.9 C 195.8 96.6, 214.0 92.1, 232.2 87.7 C 250.4 83.2, 268.5 78.7, 286.7 74.3 C 304.9 69.9, 323.1 65.4, 341.3 61.2 C 359.5 56.9, 377.6 52.8, 395.8 48.8 C 414.0 44.8, 432.2 41.0, 450.4 37.4 C 468.5 33.8, 486.7 30.3, 504.9 27.1 C 523.1 23.8, 541.3 20.1, 559.5 17.9 C 577.6 15.7, 604.9 14.7, 614.0 14.0" stroke="var(--c1)"/>
+                <path class="linea" d="M 14.0 79.2 C 23.1 77.2, 50.4 71.4, 68.5 67.5 C 86.7 63.6, 104.9 44.4, 123.1 55.8 C 141.3 67.2, 159.5 124.6, 177.6 136.0 C 195.8 147.4, 214.0 128.5, 232.2 124.3 C 250.4 120.1, 268.5 115.1, 286.7 110.9 C 304.9 106.8, 323.1 103.1, 341.3 99.2 C 359.5 95.3, 377.6 91.4, 395.8 87.5 C 414.0 83.6, 432.2 80.0, 450.4 75.8 C 468.5 71.7, 486.7 66.6, 504.9 62.5 C 523.1 58.3, 541.3 58.8, 559.5 50.8 C 577.6 42.7, 604.9 20.1, 614.0 14.0" stroke="var(--c4)"/>
+                <circle class="fin" cx="614.0" cy="14.0" fill="var(--c1)"/>
+                <circle class="fin" cx="614.0" cy="14.0" fill="var(--c4)"/>
+              </svg>
+              <div style="display:flex;justify-content:space-between;margin-top:4px">
+                <span class="mono ink3" style="font-size:10.5px">jun 2025</span>
+                <span class="mono ink3" style="font-size:10.5px">may 2026</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top:12px"><span class="pill">¿Por qué cayó el gas en septiembre?</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="corte">
+
+  <div class="propuesta">
+    <div class="rotulo"><span class="n">B</span><span class="titulo">Records</span>
+      <span class="desc">La tabla del catálogo: separadores verticales y un pie con el agregado.</span></div>
+    <div class="piezas"><span class="pieza">card-bar</span><span class="pieza">table-cell</span>
+      <span class="pieza">separador vertical</span><span class="pieza">pie con agregado</span>
+      <span class="pieza">tag categórico</span><span class="pieza ext">barra de proporción</span></div>
+    <div class="marco">
+      <div class="card">
+        <div class="card-bar"><span class="etq">Producción mensual</span></div>
+        <table class="tabla">
+          <thead><tr>
+            <th>Mes</th>
+            <th class="der sep">Petróleo · bbl/d</th>
+            <th class="der sep">Gas · MMm³/d</th>
+          </tr></thead>
+          <tbody>
+            <tr>
+              <td class="mono ink3" style="font-size:11px">jun 2025</td>
+              <td class="der sep"><span style="display:inline-flex;align-items:center;gap:8px">
+                <span class="barra" style="width:56px;--barra-color:color-mix(in srgb, var(--c1) 40%, var(--line-strong))"><i style="width:6%"></i></span>
+                <span style="font-weight:500;width:56px;text-align:right">557.149</span></span></td>
+              <td class="der sep"><span style="display:inline-flex;align-items:center;gap:8px">
+                <span class="barra" style="width:56px;--barra-color:color-mix(in srgb, var(--c4) 40%, var(--line-strong))"><i style="width:50%"></i></span>
+                <span style="font-weight:500;width:40px;text-align:right">71,6</span></span></td>
+            </tr>
+            <tr>
+              <td class="mono ink3" style="font-size:11px">jul 2025</td>
+              <td class="der sep"><span style="display:inline-flex;align-items:center;gap:8px">
+                <span class="barra" style="width:56px;--barra-color:color-mix(in srgb, var(--c1) 40%, var(--line-strong))"><i style="width:14%"></i></span>
+                <span style="font-weight:500;width:56px;text-align:right">565.283</span></span></td>
+              <td class="der sep"><span style="display:inline-flex;align-items:center;gap:8px">
+                <span class="barra" style="width:56px;--barra-color:color-mix(in srgb, var(--c4) 40%, var(--line-strong))"><i style="width:59%"></i></span>
+                <span style="font-weight:500;width:40px;text-align:right">72,3</span></span></td>
+            </tr>
+            <tr>
+              <td class="mono ink3" style="font-size:11px">ago 2025</td>
+              <td class="der sep"><span style="display:inline-flex;align-items:center;gap:8px">
+                <span class="barra" style="width:56px;--barra-color:color-mix(in srgb, var(--c1) 40%, var(--line-strong))"><i style="width:23%"></i></span>
+                <span style="font-weight:500;width:56px;text-align:right">574.257</span></span></td>
+              <td class="der sep"><span style="display:inline-flex;align-items:center;gap:8px">
+                <span class="barra" style="width:56px;--barra-color:color-mix(in srgb, var(--c4) 40%, var(--line-strong))"><i style="width:68%"></i></span>
+                <span style="font-weight:500;width:40px;text-align:right">73,0</span></span></td>
+            </tr>
+            <tr>
+              <td class="mono ink3" style="font-size:11px">sept 2025</td>
+              <td class="der sep"><span style="display:inline-flex;align-items:center;gap:8px">
+                <span class="barra" style="width:56px;--barra-color:color-mix(in srgb, var(--c1) 40%, var(--line-strong))"><i style="width:33%"></i></span>
+                <span style="font-weight:500;width:56px;text-align:right">583.917</span></span></td>
+              <td class="der sep"><span style="display:inline-flex;align-items:center;gap:8px">
+                <span class="barra" style="width:56px;--barra-color:color-mix(in srgb, var(--c4) 40%, var(--line-strong))"><i style="width:6%"></i></span>
+                <span style="font-weight:500;width:40px;text-align:right">68,2</span></span></td>
+            </tr>
+            <tr>
+              <td class="mono ink3" style="font-size:11px">oct 2025</td>
+              <td class="der sep"><span style="display:inline-flex;align-items:center;gap:8px">
+                <span class="barra" style="width:56px;--barra-color:color-mix(in srgb, var(--c1) 40%, var(--line-strong))"><i style="width:43%"></i></span>
+                <span style="font-weight:500;width:56px;text-align:right">594.009</span></span></td>
+              <td class="der sep"><span style="display:inline-flex;align-items:center;gap:8px">
+                <span class="barra" style="width:56px;--barra-color:color-mix(in srgb, var(--c4) 40%, var(--line-strong))"><i style="width:15%"></i></span>
+                <span style="font-weight:500;width:40px;text-align:right">68,9</span></span></td>
+            </tr>
+            <tr>
+              <td class="mono ink3" style="font-size:11px">nov 2025</td>
+              <td class="der sep"><span style="display:inline-flex;align-items:center;gap:8px">
+                <span class="barra" style="width:56px;--barra-color:color-mix(in srgb, var(--c1) 40%, var(--line-strong))"><i style="width:54%"></i></span>
+                <span style="font-weight:500;width:56px;text-align:right">604.213</span></span></td>
+              <td class="der sep"><span style="display:inline-flex;align-items:center;gap:8px">
+                <span class="barra" style="width:56px;--barra-color:color-mix(in srgb, var(--c4) 40%, var(--line-strong))"><i style="width:25%"></i></span>
+                <span style="font-weight:500;width:40px;text-align:right">69,7</span></span></td>
+            </tr>
+            <tr>
+              <td class="mono ink3" style="font-size:11px">dic 2025</td>
+              <td class="der sep"><span style="display:inline-flex;align-items:center;gap:8px">
+                <span class="barra" style="width:56px;--barra-color:color-mix(in srgb, var(--c1) 40%, var(--line-strong))"><i style="width:64%"></i></span>
+                <span style="font-weight:500;width:56px;text-align:right">614.196</span></span></td>
+              <td class="der sep"><span style="display:inline-flex;align-items:center;gap:8px">
+                <span class="barra" style="width:56px;--barra-color:color-mix(in srgb, var(--c4) 40%, var(--line-strong))"><i style="width:34%"></i></span>
+                <span style="font-weight:500;width:40px;text-align:right">70,4</span></span></td>
+            </tr>
+            <tr>
+              <td class="mono ink3" style="font-size:11px">ene 2026</td>
+              <td class="der sep"><span style="display:inline-flex;align-items:center;gap:8px">
+                <span class="barra" style="width:56px;--barra-color:color-mix(in srgb, var(--c1) 40%, var(--line-strong))"><i style="width:73%"></i></span>
+                <span style="font-weight:500;width:56px;text-align:right">623.655</span></span></td>
+              <td class="der sep"><span style="display:inline-flex;align-items:center;gap:8px">
+                <span class="barra" style="width:56px;--barra-color:color-mix(in srgb, var(--c4) 40%, var(--line-strong))"><i style="width:43%"></i></span>
+                <span style="font-weight:500;width:40px;text-align:right">71,1</span></span></td>
+            </tr>
+            <tr>
+              <td class="mono ink3" style="font-size:11px">feb 2026</td>
+              <td class="der sep"><span style="display:inline-flex;align-items:center;gap:8px">
+                <span class="barra" style="width:56px;--barra-color:color-mix(in srgb, var(--c1) 40%, var(--line-strong))"><i style="width:82%"></i></span>
+                <span style="font-weight:500;width:56px;text-align:right">632.366</span></span></td>
+              <td class="der sep"><span style="display:inline-flex;align-items:center;gap:8px">
+                <span class="barra" style="width:56px;--barra-color:color-mix(in srgb, var(--c4) 40%, var(--line-strong))"><i style="width:52%"></i></span>
+                <span style="font-weight:500;width:40px;text-align:right">71,8</span></span></td>
+            </tr>
+            <tr>
+              <td class="mono ink3" style="font-size:11px">mar 2026</td>
+              <td class="der sep"><span style="display:inline-flex;align-items:center;gap:8px">
+                <span class="barra" style="width:56px;--barra-color:color-mix(in srgb, var(--c1) 40%, var(--line-strong))"><i style="width:90%"></i></span>
+                <span style="font-weight:500;width:56px;text-align:right">640.211</span></span></td>
+              <td class="der sep"><span style="display:inline-flex;align-items:center;gap:8px">
+                <span class="barra" style="width:56px;--barra-color:color-mix(in srgb, var(--c4) 40%, var(--line-strong))"><i style="width:63%"></i></span>
+                <span style="font-weight:500;width:40px;text-align:right">72,6</span></span></td>
+            </tr>
+            <tr>
+              <td class="mono ink3" style="font-size:11px">abr 2026</td>
+              <td class="der sep"><span style="display:inline-flex;align-items:center;gap:8px">
+                <span class="barra" style="width:56px;--barra-color:color-mix(in srgb, var(--c1) 40%, var(--line-strong))"><i style="width:97%"></i></span>
+                <span style="font-weight:500;width:56px;text-align:right">647.201</span></span></td>
+              <td class="der sep"><span style="display:inline-flex;align-items:center;gap:8px">
+                <span class="barra" style="width:56px;--barra-color:color-mix(in srgb, var(--c4) 40%, var(--line-strong))"><i style="width:72%"></i></span>
+                <span style="font-weight:500;width:40px;text-align:right">73,3</span></span></td>
+            </tr>
+            <tr style="background:var(--inset)">
+              <td class="mono ink3" style="font-size:11px">may 2026</td>
+              <td class="der sep"><span style="display:inline-flex;align-items:center;gap:8px">
+                <span class="barra" style="width:56px;--barra-color:var(--c1)"><i style="width:100%"></i></span>
+                <span style="font-weight:500;width:56px;text-align:right">650.190</span></span></td>
+              <td class="der sep"><span style="display:inline-flex;align-items:center;gap:8px">
+                <span class="barra" style="width:56px;--barra-color:var(--c4)"><i style="width:100%"></i></span>
+                <span style="font-weight:500;width:40px;text-align:right">75,5</span></span></td>
+            </tr>
+          </tbody>
+          <tfoot><tr>
+            <td>12 <span class="ink3">meses</span></td>
+            <td class="der sep">607.221 <span class="ink3">promedio</span></td>
+            <td class="der sep">71,5 <span class="ink3">promedio</span></td>
+          </tr></tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <hr class="corte">
+
+  <div class="propuesta">
+    <div class="rotulo"><span class="n">C</span><span class="titulo">Sólo el gráfico</span>
+      <span class="desc">La versión mínima: la barra de card, el trazo y el pie. Nada más.</span></div>
+    <div class="piezas"><span class="pieza">card-bar</span><span class="pieza">gráfico de líneas</span>
+      <span class="pieza">punto terminal</span><span class="pieza">guía punteada</span>
+      <span class="pieza">card-footer</span><span class="pieza">chip</span></div>
+    <div class="marco">
+      <div class="card">
+        <div class="card-bar">
+          <span class="etq" style="flex:1">Producción mensual · doce meses</span>
+          <span class="chip"><i style="width:6px;height:6px;border-radius:50%;background:var(--c1);display:block"></i>650.190 bbl/d</span>
+          <span class="chip"><i style="width:6px;height:6px;border-radius:50%;background:var(--c4);display:block"></i>75,5 MMm³/d</span>
+        </div>
+        <div style="padding:14px 12px 10px">
+          <svg class="gr" viewBox="0 0 628 150" preserveAspectRatio="none" aria-hidden="true">
+            <line class="guia" x1="14" y1="14.0" x2="614" y2="14.0" stroke="var(--c1)"/>
+            <line class="guia" x1="14" y1="14.0" x2="614" y2="14.0" stroke="var(--c4)"/>
+            <path class="linea" d="M 14.0 136.0 C 23.1 134.2, 50.4 129.1, 68.5 125.3 C 86.7 121.6, 104.9 117.6, 123.1 113.6 C 141.3 109.5, 159.5 105.2, 177.6 100.9 C 195.8 96.6, 214.0 92.1, 232.2 87.7 C 250.4 83.2, 268.5 78.7, 286.7 74.3 C 304.9 69.9, 323.1 65.4, 341.3 61.2 C 359.5 56.9, 377.6 52.8, 395.8 48.8 C 414.0 44.8, 432.2 41.0, 450.4 37.4 C 468.5 33.8, 486.7 30.3, 504.9 27.1 C 523.1 23.8, 541.3 20.1, 559.5 17.9 C 577.6 15.7, 604.9 14.7, 614.0 14.0" stroke="var(--c1)"/>
+            <path class="linea" d="M 14.0 79.2 C 23.1 77.2, 50.4 71.4, 68.5 67.5 C 86.7 63.6, 104.9 44.4, 123.1 55.8 C 141.3 67.2, 159.5 124.6, 177.6 136.0 C 195.8 147.4, 214.0 128.5, 232.2 124.3 C 250.4 120.1, 268.5 115.1, 286.7 110.9 C 304.9 106.8, 323.1 103.1, 341.3 99.2 C 359.5 95.3, 377.6 91.4, 395.8 87.5 C 414.0 83.6, 432.2 80.0, 450.4 75.8 C 468.5 71.7, 486.7 66.6, 504.9 62.5 C 523.1 58.3, 541.3 58.8, 559.5 50.8 C 577.6 42.7, 604.9 20.1, 614.0 14.0" stroke="var(--c4)"/>
+            <circle class="fin" cx="614.0" cy="14.0" fill="var(--c1)"/>
+            <circle class="fin" cx="614.0" cy="14.0" fill="var(--c4)"/>
+          </svg>
+          <div style="display:flex;justify-content:space-between;margin-top:4px">
+            <span class="mono ink3" style="font-size:10.5px">jun 2025</span>
+            <span class="mono ink3" style="font-size:10.5px">may 2026</span>
+          </div>
+        </div>
+        <div class="card-pie">
+          <span class="micro ink2" style="flex:1">Cada línea usa su propia escala: los dos fluidos no son comparables entre sí.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="corte">
+
+  <p class="desc" style="padding:0 4px">
+    <strong>Qué cambió respecto de mis propuestas anteriores.</strong> Las tres usan
+    <strong>líneas y no barras</strong>, que es lo que la referencia hace cuando muestra una serie.
+    La punteada horizontal marca el nivel del último valor —así se ve de un vistazo cuánto está
+    por encima o por debajo del resto del período— y el punto relleno cierra el trazo. No hay ejes
+    ni grilla: los valores están arriba del gráfico, nunca adentro.
+    <br><br>
+    <strong>Dos cosas que el trazo deja a la vista y las barras escondían.</strong>
+    La línea del petróleo sale <strong>casi recta</strong>, y no es un error de dibujo: la serie del
+    fixture es una rampa sintética escalada para terminar en el valor real de mayo, así que crece
+    casi lo mismo todos los meses. Con barras eso no se notaba; con una línea, salta. Si algún día
+    entra la serie real, este mismo gráfico va a mostrar la forma verdadera sin tocar una coma.
+    <br><br>
+    Y la punteada de los dos fluidos queda pegada arriba porque los dos terminan en su máximo del
+    período. En la referencia esa guía sirve para ver cuánto está el último valor por encima o por
+    debajo del resto; acá dice «hoy es el techo», que también es información, pero conviene saber
+    por qué está donde está.
+    <br><br>
+    <strong>A</strong> es la composición completa de la Insight Card, incluido el toggle por serie y
+    el pill de pregunta abajo. <strong>B</strong> trae dos cosas del catálogo que no estábamos
+    usando: los separadores verticales entre grupos de columna y el pie de tabla con un agregado
+    —allá dice «26 count», acá el promedio del período—. <strong>C</strong> es el mínimo: barra,
+    trazo y pie.
+  </p>
+
+</div>
+</body>
+</html>

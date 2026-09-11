@@ -1,0 +1,119 @@
+/* ============================================================
+   ESTRATO — tokens v0.3 · 2026-08-05
+   Fuente de verdad: docs/design/ESTRATO.md
+   Destino en Fase 1 del roadmap: frontend/src/styles/tokens.css
+   (reemplaza a los --nd-* de globals.css vía capa de alias)
+   ============================================================ */
+
+:root {
+  /* --- surface --- */
+  --canvas: #f5f5f4;
+  --surface: #ffffff;
+  --surface-raised: #f0efee;
+  --surface-inverse: #16191d;   /* fija: no cambia con el tema (D3) */
+  --surface-inverse-2: #20242a; /* fija */
+
+  /* --- border --- */
+  --border: #e6e4e2;            /* hairline decorativa */
+  --border-strong: #cfccc9;     /* límites de controles (>=3:1 sobre surface) */
+
+  /* --- text --- */
+  --text-primary: #000000;      /* titulares y cifras */
+  --text-body: #1a1a1a;
+  --text-secondary: #5f5d5b;
+  --text-tertiary: #837f7c;     /* etiquetas; no usar < 10px */
+  --on-dark: #f4f3f1;           /* sobre inverse/photo (fijas) */
+  --on-dark-2: rgba(244, 243, 241, 0.64);
+  --on-dark-3: rgba(244, 243, 241, 0.42);
+
+  /* --- data (D6) --- */
+  --data-oil: #3fb883;          /* petróleo — el verde de Provincias */
+  --data-gas: #2382cf;          /* gas — azul */
+
+  /* --- status (D7, D9) --- */
+  --status-positive: #0aa173;   /* subas ▲, en vivo, pozo activo */
+  --status-negative: #dd4136;   /* bajas ▼ y errores — el único rojo */
+  --status-caution: #9a7420;    /* avisos, truncados */
+
+  /* --- interactive --- */
+  --focus-ring: #007aff;
+
+  /* --- photo scrims (reemplazan 14 alfas ad hoc) --- */
+  --scrim-soft: rgba(22, 25, 29, 0.5);
+  --scrim-mid: rgba(22, 25, 29, 0.8);
+  --scrim-hard: rgba(12, 14, 16, 0.95);
+
+  /* --- shape (D5) --- */
+  --radius-card: 10px;
+  --radius-control: 8px;
+  --radius-pill: 999px;
+
+  /* --- elevation --- */
+  --elevation-overlay: 0 8px 24px -12px rgba(0, 0, 0, 0.4);
+
+  /* --- sizing --- */
+  --chart-sm: 240px;
+  --chart-md: 280px;
+  --chart-lg: 400px;
+  --touch-min: 24px;
+
+  /* --- motion --- */
+  --duration-fast: 150ms;
+  --duration-base: 300ms;
+  --duration-slow: 700ms;
+  --duration-ambient: 2400ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* --- type (cargadas via next/font: Inter Tight 600/700, Schibsted 400/500) --- */
+  --font-display: var(--font-inter-tight), system-ui, sans-serif;
+  --font-technical: var(--font-schibsted), system-ui, sans-serif;
+  --tracking-label: 0.08em;
+  --tracking-display: -0.02em;
+}
+
+[data-theme='dark'] {
+  --canvas: #0a0a0a;
+  --surface: #141414;
+  --surface-raised: #1d1d1c;
+  /* surface-inverse NO se redefine: la oscuridad es jerarquía, no tema */
+
+  --border: #262626;
+  --border-strong: #3a3a3a;
+
+  --text-primary: #ffffff;
+  --text-body: #e8e8e8;
+  --text-secondary: #a3a19f;
+  --text-tertiary: #7c7977;
+
+  --data-oil: #46c98f;
+  --data-gas: #4da3e8;
+
+  --status-positive: #2fe0a4;
+  --status-negative: #ff6d5f;
+  --status-caution: #c49a3f;
+
+  --focus-ring: #5b9bf6;
+}
+
+/* ------------------------------------------------------------
+   Capa de alias de migración (Fase 1): mantiene vivos los --nd-*
+   mientras las 1.157 clases existentes se migran gradualmente.
+   Borrar en Fase 5 (consolidación).
+   ------------------------------------------------------------ */
+:root,
+[data-theme='dark'] {
+  --nd-black: var(--canvas);
+  --nd-surface: var(--surface);
+  --nd-surface-raised: var(--surface-raised);
+  --nd-border: var(--border);
+  --nd-border-visible: var(--border-strong);
+  --nd-text-disabled: var(--text-tertiary);
+  --nd-text-secondary: var(--text-secondary);
+  --nd-text-primary: var(--text-body);
+  --nd-text-display: var(--text-primary);
+  --nd-accent: var(--status-negative);  /* el rojo de marca desaparece: donde marcaba bajas, ahora es status */
+  --nd-success: var(--status-positive);
+  --nd-warning: var(--status-caution);
+  --nd-error: var(--status-negative);   /* fix del token inexistente (VIS-06) */
+  --nd-interactive: var(--focus-ring);
+}

@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Argentina en el mundo · tres versiones</title>
+<style>
+/* TOKENS — copiados tal cual de apps/ui-prototype/src/app/v2/sistema.css. */
+:root {
+  --page:#fafafb; --canvas:#f1f2f3; --surface:#fff; --inset:#f7f8f9;
+  --hover:#f4f5f6; --hover-2:#e7e9eb;
+  --ink:#1f2124; --ink-2:#62656b; --ink-3:#9a9da3;
+  --line:#ecedef; --line-strong:#e0e2e5; --field:#f2f2f3;
+  --accent:#0285ff; --accent-ink:#0170dd; --accent-tint:#e9f3ff;
+  --green:#189a4d; --green-tint:#e8f5ed;
+  --orange:#ef720c; --orange-tint:#fdf1e5;
+  --red:#e3474c; --red-tint:#fcecec;
+  --shadow-hairline:0 0 0 1px var(--line);
+  --shadow-btn:0 0 0 1px var(--line-strong), 0 1px 2px #1018280d;
+  --shadow-card:0 0 0 1px var(--line), 0 1px 2px #1018280a, 0 2px 6px #10182808;
+  --radius-chip:6px; --radius-control:8px; --radius-card:10px; --radius-window:14px;
+  --ease-in-out:cubic-bezier(.4,0,.2,1); --ease-out:cubic-bezier(.16,1,.3,1);
+  --ease-out-strong:cubic-bezier(.23,1,.32,1);
+  --dur-base:140ms; --dur-slower:220ms;
+  --dot:#4949491a;
+  --oil:#3f78ff; --gas:#16a6c7; --mix:#9a5cff;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme=light]) {
+    --page:#17181a; --canvas:#1c1d1f; --surface:#232427; --inset:#1f2022;
+    --hover:#2a2b2e; --hover-2:#313236;
+    --ink:#f2f3f4; --ink-2:#a5a8ad; --ink-3:#6c6f75;
+    --line:#2e3033; --line-strong:#3a3c40; --field:#2b2c2f;
+    --accent:#3d9aff; --accent-ink:#7ec0ff; --accent-tint:#3d9aff29;
+    --green:#3dbb72; --green-tint:#3dbb7224;
+    --orange:#f68f3c; --orange-tint:#f68f3c24;
+    --red:#ee5c61; --red-tint:#ee5c6124;
+    --shadow-btn:0 0 0 1px var(--line-strong), 0 1px 2px #0000004d;
+    --shadow-card:0 0 0 1px var(--line), 0 1px 2px #0003, 0 2px 6px #0003;
+    --dot:#ffffff0f;
+  }
+}
+* { box-sizing:border-box; }
+body {
+  margin:0; padding:40px 24px 80px;
+  background:var(--page);
+  background-image:radial-gradient(circle at 1px 1px, var(--dot) 1px, transparent 0);
+  background-size:12px 12px; background-attachment:fixed;
+  color:var(--ink);
+  font-family:"Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  font-size:14px; line-height:1.5; letter-spacing:-.01em;
+}
+
+/* Tipografía del sistema. Toda la escala va de 10 a 21px: para destacar algo
+   hay exactamente dos palancas, el peso y la tinta. */
+.cifra   { font-size:17px; font-weight:600; line-height:1.2; letter-spacing:-.01em; font-variant-numeric:tabular-nums; }
+.cifra-sm{ font-size:13px; font-weight:600; line-height:1.3; font-variant-numeric:tabular-nums; }
+.titulo  { font-size:13px; font-weight:600; line-height:1.3; font-variant-numeric:tabular-nums; }
+.cuerpo  { font-size:13px; line-height:19.5px; }
+.etq     { font-size:12.5px; color:var(--ink-2); }
+.micro   { font-size:11.5px; line-height:17.25px; }
+.mono    { font-family:"JetBrains Mono", ui-monospace,"SF Mono",Menlo,monospace; font-variant-numeric:tabular-nums; }
+.num     { font-variant-numeric:tabular-nums; }
+.i2 { color:var(--ink-2); } .i3 { color:var(--ink-3); }
+
+/* Andamio del archivo — no es parte del sistema. */
+.hoja { max-width:760px; margin:0 auto; }
+.hoja > h1 { font-size:21px; font-weight:600; letter-spacing:-.02em; margin:0 0 6px; }
+.hoja > p.lede { color:var(--ink-2); font-size:12.5px; line-height:18.75px; margin:0 0 14px; max-width:66ch; }
+.hoja > p.lede b { color:var(--ink); font-weight:600; }
+.nota-dato { margin:0 0 30px; padding:10px 12px; border-radius:var(--radius-control);
+  background:var(--orange-tint); color:color-mix(in srgb, var(--orange) 55%, var(--ink));
+  font-size:11.5px; line-height:17.25px; max-width:72ch; }
+.nota-dato b { font-weight:600; }
+.op { margin:0 0 14px; padding-top:32px; border-top:1px dashed var(--line-strong); }
+.op:first-of-type { border-top:0; padding-top:0; }
+.op h2 { display:flex; align-items:baseline; gap:8px; flex-wrap:wrap; margin:0 0 6px; }
+.op h2 .letra { font-family:"JetBrains Mono",ui-monospace,monospace; font-size:11px; color:var(--ink-2); font-weight:400; }
+.op h2 .nom { font-size:13px; font-weight:600; }
+.op h2 .sub { font-size:12.5px; font-weight:400; color:var(--ink-2); }
+.op > p.tesis { font-size:12.5px; line-height:18.75px; color:var(--ink-2); margin:0 0 14px; max-width:72ch; }
+.op > p.tesis b { font-weight:600; color:var(--ink); }
+.marco { border-radius:var(--radius-window); background:var(--canvas); box-shadow:var(--shadow-hairline); padding:12px; }
+.pie-op { font-size:11.5px; line-height:17.25px; color:var(--ink-2); margin:10px 2px 0; max-width:72ch; }
+
+/* ═══════════════ PIEZAS DEL SISTEMA ═══════════════ */
+.card { overflow:hidden; border-radius:var(--radius-card); background:var(--surface); box-shadow:var(--shadow-card); }
+.card-bar { display:flex; align-items:baseline; justify-content:space-between; gap:12px;
+  padding:10px 12px; border-bottom:1px solid var(--line); }
+.card-pie { display:flex; align-items:center; flex-wrap:wrap; gap:8px; padding:10px 12px;
+  border-top:1px solid var(--line); background:var(--inset); }
+.fila { display:flex; align-items:center; gap:8px; padding:10px 12px; border-bottom:1px solid var(--line); }
+.fila:last-child { border-bottom:0; }
+.fila:hover { background:var(--hover); }
+.chip { display:inline-flex; align-items:center; gap:5px; height:22px; padding:0 8px;
+  border-radius:var(--radius-chip); font-size:11.5px; font-weight:500; white-space:nowrap;
+  background:var(--field); color:var(--ink-2); }
+.chip--mini { height:19px; padding:0 6px; border-radius:5px; font-size:10.5px; }
+/* El texto mezclado con la tinta al 55%: el token pleno sobre su propio tinte
+   no llega a AA a 10,5px. Es la misma receta que ya usaba --info. */
+.chip--ok   { background:var(--green-tint);  color:color-mix(in srgb, var(--green) 55%, var(--ink)); }
+.chip--info { background:var(--accent-tint); color:color-mix(in srgb, var(--accent-ink) 55%, var(--ink)); }
+/* display:block: como <span> suelto colapsa a inline y la barra no se dibuja.
+   En el sistema real siempre llega con `block` de Tailwind o como hijo flex. */
+.barra { display:block; height:4px; border-radius:999px; background:var(--line-strong); overflow:hidden; }
+.barra > i { display:block; height:100%; border-radius:999px; background:var(--barra-color, var(--ink-3)); }
+.hundido { border-radius:var(--radius-control); background:var(--inset); overflow:hidden; }
+.hundido-bar { display:flex; align-items:center; justify-content:space-between; gap:10px;
+  padding:6px 10px; background:var(--field); border-bottom:1px solid var(--line); }
+.panel { border-radius:var(--radius-control); background:var(--surface); box-shadow:var(--shadow-hairline); overflow:hidden; }
+.panel-bar { display:flex; align-items:center; justify-content:space-between; gap:8px;
+  height:30px; padding:0 10px; border-bottom:1px solid var(--line); }
+.panel-bar .rot { font-size:10.5px; font-weight:500; color:var(--ink-2); }
+.panel-cuerpo { padding:10px; }
+
+/* ── 1 · LA CADENA ────────────────────────────────────────────────────────
+   El operador entre cifra y cifra. No es decoración: es lo que convierte tres
+   cajas sueltas en una sola cuenta. Va en --field con la tinta secundaria,
+   como cualquier anotación del sistema, y NUNCA pesa más que las cifras. */
+.cadena { display:flex; align-items:center; flex-wrap:wrap; gap:0; padding:14px 12px; }
+.cadena > .paso { display:flex; flex-direction:column; gap:2px; min-width:0; }
+.cadena > .op-mat { display:flex; flex-direction:column; align-items:center; gap:3px;
+  flex-shrink:0; padding:0 14px; }
+.cadena > .op-mat > .signo { font-family:"JetBrains Mono",ui-monospace,monospace;
+  font-size:12px; font-weight:500; color:var(--ink-2); }
+.cadena > .op-mat > .flecha { font-size:11px; color:var(--ink-3); line-height:1; }
+.cadena .val { display:flex; align-items:baseline; gap:5px; }
+
+/* ── 2 · LA ESCALERA ──────────────────────────────────────────────────────
+   Cuatro escalas de tiempo, y entre una y otra el MULTIPLICADOR.
+
+   Primero le puse una barra por fila y estaba mal: entre el segundo y el día
+   hay un factor de 86.400, así que lineal las tres primeras filas quedan en
+   cero y logarítmica la barra no se puede leer como proporción —o sea, es
+   decoración con forma de dato—. El «×60» es exacto, no necesita escala, y
+   convierte la lista en una escalera de verdad. */
+.escalon { display:flex; align-items:center; gap:10px; padding:9px 12px; border-bottom:1px solid var(--line); }
+.escalon:last-child { border-bottom:0; }
+.escalon:hover { background:var(--hover); }
+.escalon > .u { flex:1; min-width:0; white-space:nowrap; font-size:11.5px; color:var(--ink-2); }
+.escalon > .x { flex-shrink:0; width:44px; text-align:right;
+  font-family:"JetBrains Mono",ui-monospace,monospace; font-size:10.5px; color:var(--ink-3); }
+.escalon > .v { display:flex; align-items:baseline; justify-content:flex-end; gap:5px;
+  width:120px; flex-shrink:0; }
+.escalon.destaca { background:var(--accent-tint); }
+
+/* ── 3 · LA DERIVACIÓN ────────────────────────────────────────────────────
+   Los insumos que la sección hoy esconde. La regla del sistema que aplica: un
+   número publicado sin sus entradas no se puede auditar, y esta sección es la
+   única de la página cuyo valor es 100% calculado. */
+.deriv { display:grid; grid-template-columns:1fr 1fr; gap:8px; padding:10px; }
+@media (max-width:640px) { .deriv { grid-template-columns:1fr; } }
+.ins { display:flex; align-items:baseline; justify-content:space-between; gap:8px;
+  padding:7px 10px; border-bottom:1px solid var(--line); }
+.ins:last-child { border-bottom:0; }
+.pbi-riel { position:relative; height:22px; border-radius:5px; background:var(--field); overflow:hidden; }
+.pbi-riel > i { display:block; height:100%; background:var(--accent); }
+.pbi-marca { display:flex; justify-content:space-between; margin-top:5px; }
+
+
+/* ═══════════ PIEZAS DE ESTA CARD ═══════════ */
+
+/* El eje invertido, que es el problema de fondo de la versión actual: en TODA
+   la página el número más alto está arriba, y acá el bueno es el chico. Sin
+   marcarlo, la caída del 20.º al 29.º entre 2000 y 2019 se lee como una
+   mejora. Las tres versiones lo resuelven distinto. */
+
+/* ── A · Con eje ──────────────────────────────────────────────────────── */
+.gcaja { position:relative; }
+.gcaja svg { display:block; width:100%; }
+.eje-rot { position:absolute; left:0; font-family:"JetBrains Mono",ui-monospace,monospace;
+  font-size:10px; color:var(--ink-3); transform:translateY(-50%); background:var(--surface);
+  padding-right:4px; }
+.linea-eje { stroke:var(--line); stroke-width:1; }
+.curva { fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+.curva-proy { fill:none; stroke-width:1.5; stroke-dasharray:3 3; stroke-linecap:round; }
+.pin-mejor { display:inline-flex; align-items:center; gap:5px; }
+
+/* ── B · La banda de puestos ──────────────────────────────────────────────
+   Se tira el eje del tiempo y queda sólo el del ranking, que es lo que la
+   sección promete. La banda va del mejor puesto histórico al peor, con tres
+   marcas: el peor, el de hoy y el proyectado. El movimiento queda literal —una
+   distancia sobre una regla— en vez de tener que leerse en una pendiente. */
+.banda { position:relative; height:56px; margin:6px 0 4px; }
+.banda-riel { position:absolute; left:0; right:0; top:24px; height:4px; border-radius:999px;
+  background:var(--line-strong); }
+/* Dos tramos y no uno. El sólido es lo YA recuperado —del peor puesto al de
+   hoy— y el punteado es lo que falta. Pintados iguales, la card decía que el
+   salto proyectado ya ocurrió. */
+.banda-hecho { position:absolute; top:24px; height:4px; border-radius:999px; }
+.banda-falta { position:absolute; top:25px; height:2px;
+  background:repeating-linear-gradient(to right, currentColor 0 4px, transparent 4px 8px); }
+.banda-marca { position:absolute; top:0; text-align:center; white-space:nowrap; }
+.banda-marca > .p { display:block; font-size:13px; font-weight:600;
+  font-variant-numeric:tabular-nums; line-height:1.3; }
+.banda-marca > i { display:block; width:2px; height:9px; margin:1px auto 0; background:var(--line-strong); }
+.banda-marca.act > i { width:3px; }
+.banda-marca > .cap { display:block; margin-top:12px; font-size:10.5px; color:var(--ink-2); }
+/* Los extremos se anclan al borde en vez de centrarse: centrados, la mitad del
+   rótulo quedaba fuera de la card y «2017 · el peor» salía cortado. */
+.banda-marca.ini { left:0; transform:none; text-align:left; }
+.banda-marca.ini > i { margin-left:1px; }
+.banda-marca.fin { right:0; transform:none; text-align:right; }
+.banda-marca.fin > i { margin-right:1px; }
+.banda-marca.mid { transform:translateX(-50%); }
+
+/* ── C · Con el podio adentro ─────────────────────────────────────────── */
+.fila { display:flex; align-items:center; gap:8px; padding:8px 12px; border-bottom:1px solid var(--line); }
+.fila:last-child { border-bottom:0; }
+.fila:hover { background:var(--hover); }
+.fila.arg { background:var(--accent-tint); }
+.rk { width:20px; flex-shrink:0; font-family:"JetBrains Mono",ui-monospace,monospace;
+  font-size:11px; color:var(--ink-3); }
+.fila.arg .rk { color:var(--ink); }
+.pais { flex:1; min-width:0; font-size:13px; font-weight:500; overflow:hidden;
+  text-overflow:ellipsis; white-space:nowrap; }
+.fila.arg .pais { font-weight:600; }
+.brecha { display:flex; align-items:center; justify-content:center; height:24px;
+  background:var(--inset); border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+  font-size:11.5px; color:var(--ink-2); }
+.spark { display:block; width:100%; height:36px; }
+.dosco { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+@media (max-width:700px) { .dosco { grid-template-columns:1fr; } }
+
+@media (prefers-reduced-motion: reduce) { *,*::before,*::after { transition-duration:.01ms !important; } }
+</style>
+</head>
+<body>
+<div class="hoja">
+
+<h1>Argentina en el mundo · tres versiones</h1>
+<p class="lede">
+  Lo que falla en la que está: <b>la curva no tiene eje</b>. Sube y baja pero nada dice qué
+  puesto es cada altura, y el fondo del valle —29.º— sólo aparece escrito en el pie. Peor: el
+  eje está <b>invertido</b> porque acá el número chico es el bueno, así que la caída del 20.º al
+  29.º entre 2000 y 2019 se dibuja como una subida. Las tres versiones atacan eso distinto.
+</p>
+
+<section class="op">
+  <h2><span class="letra">1</span> <span class="nom">Con eje de puestos</span>
+    <span class="sub">el arreglo directo</span></h2>
+  <p class="tesis">
+    La misma curva, con <b>líneas de referencia cada cinco puestos</b> y su rótulo. Con el eje
+    puesto, el valle se lee en el gráfico y el pie deja de tener que explicarlo. Arriba a la
+    derecha, el aviso de que la escala va al revés: es la única del sistema donde el número más
+    chico está más arriba.
+  </p>
+  <div class="marco"><div class="pila-cards" style="display:flex;flex-direction:column;gap:8px">
+    
+    <div class="card">
+      <div class="card-bar"><span class="etq">Petróleo crudo</span>
+        <span class="pin-mejor micro i2"><span class="chip chip--mini">mejor puesto arriba</span>
+          <span class="mono" style="font-size:11px">98 países · 2025</span></span></div>
+      <div style="display:flex;align-items:center;gap:16px;padding:12px">
+        <span style="display:flex;align-items:center;gap:12px;flex-shrink:0">
+      <span><span class="micro i2">Hoy</span>
+        <span style="display:flex;align-items:baseline;gap:5px">
+          <b class="cifra">#21</b><span class="micro num i2">794 mil bbl/d</span></span></span>
+      <span class="mono i3" style="font-size:13px" aria-hidden>→</span>
+      <span><span class="micro i2" style="display:flex;align-items:center;gap:6px">2030
+          <span class="chip chip--mini chip--info">proyectado</span></span>
+        <span style="display:flex;align-items:baseline;gap:5px">
+          <b class="cifra">#15</b><span class="micro num i2">1.500 mil bbl/d</span></span></span>
+    </span>
+        <span style="flex:1;min-width:200px" class="conejes"><div class="gcaja" style="padding-left:26px"><svg viewBox="0 0 430 132" preserveAspectRatio="none" role="img" aria-label="Puesto mundial de Argentina, 2000 a 2030">
+      <line class="linea-eje" x1="6" x2="424" y1="12.0" y2="12.0"/><line class="linea-eje" x1="6" x2="424" y1="44.7" y2="44.7"/><line class="linea-eje" x1="6" x2="424" y1="77.3" y2="77.3"/><line class="linea-eje" x1="6" x2="424" y1="110.0" y2="110.0"/>
+      <path class="curva" d="M 6.0 44.7 L 19.9 44.7 L 33.9 57.7 L 47.8 70.8 L 61.7 70.8 L 75.7 70.8 L 89.6 77.3 L 103.5 83.9 L 117.5 83.9 L 131.4 96.9 L 145.3 96.9 L 159.3 83.9 L 173.2 96.9 L 187.1 96.9 L 201.1 96.9 L 215.0 96.9 L 228.9 96.9 L 242.9 103.5 L 256.8 103.5 L 270.7 103.5 L 284.7 90.4 L 298.6 90.4 L 312.5 83.9 L 326.5 64.3 L 340.4 57.7 L 354.3 51.2" stroke="var(--oil)"/>
+      <path class="curva-proy" d="M 354.3 51.2 L 424.0 12.0" stroke="var(--oil)"/>
+      <circle cx="354.3" cy="51.2" r="3.5" fill="var(--oil)"/>
+      <circle cx="424.0" cy="12.0" r="3.5" fill="var(--surface)" stroke="var(--oil)" stroke-width="1.5"/>
+    </svg><span class="eje-rot" style="top:9.09%">#15</span><span class="eje-rot" style="top:33.84%">#20</span><span class="eje-rot" style="top:58.59%">#25</span><span class="eje-rot" style="top:83.33%">#30</span></div><span style="display:flex;justify-content:space-between;padding-left:26px;margin-top:2px"><span class="micro mono i2">2000</span><span class="micro mono i2">2030</span></span></span>
+      </div>
+      <div class="card-pie"><span class="micro i2">Tocó fondo en 2017 en el puesto 29 y desde entonces recuperó <b style="font-weight:600;color:var(--ink)">8 puestos</b>. La proyección suma <b style="font-weight:600;color:var(--ink)">6</b> más.</span></div>
+    </div>
+    <div class="card">
+      <div class="card-bar"><span class="etq">Gas natural</span>
+        <span class="pin-mejor micro i2"><span class="chip chip--mini">mejor puesto arriba</span>
+          <span class="mono" style="font-size:11px">96 países · 2024</span></span></div>
+      <div style="display:flex;align-items:center;gap:16px;padding:12px">
+        <span style="display:flex;align-items:center;gap:12px;flex-shrink:0">
+      <span><span class="micro i2">Hoy</span>
+        <span style="display:flex;align-items:baseline;gap:5px">
+          <b class="cifra">#16</b><span class="micro num i2">1.652 BCF/año</span></span></span>
+      <span class="mono i3" style="font-size:13px" aria-hidden>→</span>
+      <span><span class="micro i2" style="display:flex;align-items:center;gap:6px">2030
+          <span class="chip chip--mini chip--info">proyectado</span></span>
+        <span style="display:flex;align-items:baseline;gap:5px">
+          <b class="cifra">#14</b><span class="micro num i2">2.300 BCF/año</span></span></span>
+    </span>
+        <span style="flex:1;min-width:200px" class="conejes"><div class="gcaja" style="padding-left:26px"><svg viewBox="0 0 430 132" preserveAspectRatio="none" role="img" aria-label="Puesto mundial de Argentina, 2000 a 2030">
+      <line class="linea-eje" x1="6" x2="424" y1="12.0" y2="12.0"/><line class="linea-eje" x1="6" x2="424" y1="44.7" y2="44.7"/><line class="linea-eje" x1="6" x2="424" y1="77.3" y2="77.3"/><line class="linea-eje" x1="6" x2="424" y1="110.0" y2="110.0"/>
+      <path class="curva" d="M 6.0 44.7 L 19.9 44.7 L 33.9 51.2 L 47.8 44.7 L 61.7 44.7 L 75.7 57.7 L 89.6 70.8 L 103.5 70.8 L 117.5 70.8 L 131.4 70.8 L 145.3 90.4 L 159.3 103.5 L 173.2 110.0 L 187.1 103.5 L 201.1 103.5 L 215.0 103.5 L 228.9 77.3 L 242.9 77.3 L 256.8 64.3 L 270.7 64.3 L 284.7 64.3 L 298.6 64.3 L 312.5 57.7 L 326.5 57.7 L 340.4 51.2" stroke="var(--gas)"/>
+      <path class="curva-proy" d="M 340.4 51.2 L 424.0 38.1" stroke="var(--gas)"/>
+      <circle cx="340.4" cy="51.2" r="3.5" fill="var(--gas)"/>
+      <circle cx="424.0" cy="38.1" r="3.5" fill="var(--surface)" stroke="var(--gas)" stroke-width="1.5"/>
+    </svg><span class="eje-rot" style="top:9.09%">#10</span><span class="eje-rot" style="top:33.84%">#15</span><span class="eje-rot" style="top:58.59%">#20</span><span class="eje-rot" style="top:83.33%">#25</span></div><span style="display:flex;justify-content:space-between;padding-left:26px;margin-top:2px"><span class="micro mono i2">2000</span><span class="micro mono i2">2030</span></span></span>
+      </div>
+      <div class="card-pie"><span class="micro i2">Tocó fondo en 2012 en el puesto 25 y desde entonces recuperó <b style="font-weight:600;color:var(--ink)">9 puestos</b>. La proyección suma <b style="font-weight:600;color:var(--ink)">2</b> más.</span></div>
+    </div>
+  </div></div>
+  <p class="pie-op">
+    Las líneas de eje van en --line, el filete más tenue del sistema: tienen que estar sin
+    competir con la curva. Los números caen en múltiplos de cinco para que el eje no invente
+    marcas donde no hay nada.
+  </p>
+</section>
+
+<section class="op">
+  <h2><span class="letra">2</span> <span class="nom">La banda de puestos</span>
+    <span class="sub">se tira el eje del tiempo</span></h2>
+  <p class="tesis">
+    La sección promete «qué puesto ocupa el país». Esta versión se queda con <b>ese</b> eje y
+    tira el del tiempo: una regla del mejor puesto al peor, con tres marcas —el peor histórico,
+    el de hoy y el proyectado—. El movimiento pasa a ser una distancia sobre una escala en vez
+    de una pendiente que hay que interpretar, y el tramo pintado es lo ya recuperado.
+  </p>
+  <div class="marco"><div style="display:flex;flex-direction:column;gap:8px">
+    
+    <div class="card">
+      <div class="card-bar"><span class="etq">Petróleo crudo</span>
+        <span class="micro mono i2">98 países · 2025</span></div>
+      <div style="padding:12px 18px 14px"><div class="banda">
+      <span class="banda-riel"></span>
+      <span class="banda-hecho" style="left:42.9%;right:0;background:var(--oil)"></span>
+      <span class="banda-falta" style="left:0;right:57.1%;color:var(--oil)"></span>
+      <span class="banda-marca ini act"><span class="p" style="color:var(--oil)">#15</span>
+        <i style="background:var(--oil)"></i><span class="cap">2030 · proyectado</span></span>
+      <span class="banda-marca mid act" style="left:42.9%"><span class="p">#21</span>
+        <i style="background:var(--ink)"></i><span class="cap">hoy</span></span>
+      <span class="banda-marca fin"><span class="p i2">#29</span>
+        <i></i><span class="cap">2017 · el peor</span></span>
+    </div></div>
+      <div class="card-pie"><span class="micro i2">Tocó fondo en 2017 en el puesto 29 y desde entonces recuperó <b style="font-weight:600;color:var(--ink)">8 puestos</b>. La proyección suma <b style="font-weight:600;color:var(--ink)">6</b> más.</span></div>
+    </div>
+    <div class="card">
+      <div class="card-bar"><span class="etq">Gas natural</span>
+        <span class="micro mono i2">96 países · 2024</span></div>
+      <div style="padding:12px 18px 14px"><div class="banda">
+      <span class="banda-riel"></span>
+      <span class="banda-hecho" style="left:18.2%;right:0;background:var(--gas)"></span>
+      <span class="banda-falta" style="left:0;right:81.8%;color:var(--gas)"></span>
+      <span class="banda-marca ini act"><span class="p" style="color:var(--gas)">#14</span>
+        <i style="background:var(--gas)"></i><span class="cap">2030 · proyectado</span></span>
+      <span class="banda-marca mid act" style="left:18.2%"><span class="p">#16</span>
+        <i style="background:var(--ink)"></i><span class="cap">hoy</span></span>
+      <span class="banda-marca fin"><span class="p i2">#25</span>
+        <i></i><span class="cap">2012 · el peor</span></span>
+    </div></div>
+      <div class="card-pie"><span class="micro i2">Tocó fondo en 2012 en el puesto 25 y desde entonces recuperó <b style="font-weight:600;color:var(--ink)">9 puestos</b>. La proyección suma <b style="font-weight:600;color:var(--ink)">2</b> más.</span></div>
+    </div>
+  </div></div>
+  <p class="pie-op">
+    Es la más compacta de las tres y la única que no necesita explicar que la escala va al
+    revés: acá el mejor está a la izquierda, donde todo el mundo espera el principio. El tramo
+    sólido es lo ya recuperado y el punteado lo que falta — pintados iguales, la card decía que
+    el salto proyectado ya ocurrió.
+  </p>
+</section>
+
+<section class="op">
+  <h2><span class="letra">3</span> <span class="nom">Con el podio adentro</span>
+    <span class="sub">fusiona las secciones 10 y 11</span></h2>
+  <p class="tesis">
+    Hoy el puesto está en la 10 y contra quién en la 11, dos secciones separadas. Un «#21» sin
+    la lista al lado no dice nada: hace falta ver que arriba hay un Estados Unidos con 13.586
+    para entender qué significa. Esta versión pone las dos cosas en una card —la curva pasa a
+    sparkline arriba y el podio abajo— y <b>elimina una sección entera</b> de la página.
+  </p>
+  <div class="marco"><div class="dosco">
+    
+    <div class="card">
+      <div class="card-bar"><span class="etq">Petróleo crudo</span>
+        <span class="micro mono i2">mil bbl/d</span></div>
+      <div style="padding:10px 12px 6px">
+        <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:2px">
+          <b class="cifra">#21</b>
+          <span class="micro i2">de 98 · 2025</span>
+          <span class="chip chip--mini chip--info" style="margin-left:auto">2030 → #15</span>
+        </div>
+        <svg class="spark" viewBox="0 0 300 36" preserveAspectRatio="none" role="img" aria-label="puesto 2000–2030">
+      <path class="curva" d="M 3.0 14.3 L 12.8 14.3 L 22.6 18.0 L 32.4 21.7 L 42.2 21.7 L 52.0 21.7 L 61.8 23.6 L 71.6 25.4 L 81.4 25.4 L 91.2 29.1 L 101.0 29.1 L 110.8 25.4 L 120.6 29.1 L 130.4 29.1 L 140.2 29.1 L 150.0 29.1 L 159.8 29.1 L 169.6 31.0 L 179.4 31.0 L 189.2 31.0 L 199.0 27.3 L 208.8 27.3 L 218.6 25.4 L 228.4 19.9 L 238.2 18.0 L 248.0 16.1" stroke="var(--oil)" stroke-width="1.5"/>
+      <path class="curva-proy" d="M 248.0 16.1 L 297.0 5.0" stroke="var(--oil)"/>
+      <circle cx="248.0" cy="16.1" r="2.5" fill="var(--oil)"/>
+      <circle cx="297.0" cy="5.0" r="2.5" fill="var(--surface)" stroke="var(--oil)" stroke-width="1.2"/>
+    </svg>
+        <div style="display:flex;justify-content:space-between">
+          <span class="micro mono i2">2000</span><span class="micro mono i2">2030</span></div>
+      </div>
+      <div class="fila"><span class="rk">01</span><span class="pais">Estados Unidos</span><span class="barra" style="width:70px;flex-shrink:0"><i style="width:100.0%"></i></span><span class="cifra-sm num" style="width:56px;text-align:right">13.586</span></div><div class="fila"><span class="rk">02</span><span class="pais">Rusia</span><span class="barra" style="width:70px;flex-shrink:0"><i style="width:72.8%"></i></span><span class="cifra-sm num" style="width:56px;text-align:right">9.885</span></div><div class="fila"><span class="rk">03</span><span class="pais">Arabia Saudita</span><span class="barra" style="width:70px;flex-shrink:0"><i style="width:70.3%"></i></span><span class="cifra-sm num" style="width:56px;text-align:right">9.556</span></div><div class="fila"><span class="rk">04</span><span class="pais">Canadá</span><span class="barra" style="width:70px;flex-shrink:0"><i style="width:36.5%"></i></span><span class="cifra-sm num" style="width:56px;text-align:right">4.964</span></div><div class="fila"><span class="rk">05</span><span class="pais">Irak</span><span class="barra" style="width:70px;flex-shrink:0"><i style="width:32.3%"></i></span><span class="cifra-sm num" style="width:56px;text-align:right">4.388</span></div><div class="fila"><span class="rk">06</span><span class="pais">China</span><span class="barra" style="width:70px;flex-shrink:0"><i style="width:31.8%"></i></span><span class="cifra-sm num" style="width:56px;text-align:right">4.325</span></div><div class="brecha">14 puestos entre medio</div><div class="fila arg"><span class="rk">21</span><span class="pais">Argentina</span><span class="barra" style="width:70px;flex-shrink:0;--barra-color:var(--oil)"><i style="width:5.8%"></i></span><span class="cifra-sm num" style="width:56px;text-align:right">794</span></div>
+    </div>
+    <div class="card">
+      <div class="card-bar"><span class="etq">Gas natural</span>
+        <span class="micro mono i2">BCF/año</span></div>
+      <div style="padding:10px 12px 6px">
+        <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:2px">
+          <b class="cifra">#16</b>
+          <span class="micro i2">de 96 · 2024</span>
+          <span class="chip chip--mini chip--info" style="margin-left:auto">2030 → #14</span>
+        </div>
+        <svg class="spark" viewBox="0 0 300 36" preserveAspectRatio="none" role="img" aria-label="puesto 2000–2030">
+      <path class="curva" d="M 3.0 7.4 L 12.8 7.4 L 22.6 9.7 L 32.4 7.4 L 42.2 7.4 L 52.0 12.1 L 61.8 16.8 L 71.6 16.8 L 81.4 16.8 L 91.2 16.8 L 101.0 23.9 L 110.8 28.6 L 120.6 31.0 L 130.4 28.6 L 140.2 28.6 L 150.0 28.6 L 159.8 19.2 L 169.6 19.2 L 179.4 14.5 L 189.2 14.5 L 199.0 14.5 L 208.8 14.5 L 218.6 12.1 L 228.4 12.1 L 238.2 9.7" stroke="var(--gas)" stroke-width="1.5"/>
+      <path class="curva-proy" d="M 238.2 9.7 L 297.0 5.0" stroke="var(--gas)"/>
+      <circle cx="238.2" cy="9.7" r="2.5" fill="var(--gas)"/>
+      <circle cx="297.0" cy="5.0" r="2.5" fill="var(--surface)" stroke="var(--gas)" stroke-width="1.2"/>
+    </svg>
+        <div style="display:flex;justify-content:space-between">
+          <span class="micro mono i2">2000</span><span class="micro mono i2">2030</span></div>
+      </div>
+      <div class="fila"><span class="rk">01</span><span class="pais">Estados Unidos</span><span class="barra" style="width:70px;flex-shrink:0"><i style="width:100.0%"></i></span><span class="cifra-sm num" style="width:56px;text-align:right">37.767</span></div><div class="fila"><span class="rk">02</span><span class="pais">Rusia</span><span class="barra" style="width:70px;flex-shrink:0"><i style="width:60.0%"></i></span><span class="cifra-sm num" style="width:56px;text-align:right">22.673</span></div><div class="fila"><span class="rk">03</span><span class="pais">Irán</span><span class="barra" style="width:70px;flex-shrink:0"><i style="width:26.1%"></i></span><span class="cifra-sm num" style="width:56px;text-align:right">9.853</span></div><div class="fila"><span class="rk">04</span><span class="pais">China</span><span class="barra" style="width:70px;flex-shrink:0"><i style="width:24.2%"></i></span><span class="cifra-sm num" style="width:56px;text-align:right">9.127</span></div><div class="fila"><span class="rk">05</span><span class="pais">Canadá</span><span class="barra" style="width:70px;flex-shrink:0"><i style="width:18.6%"></i></span><span class="cifra-sm num" style="width:56px;text-align:right">7.026</span></div><div class="fila"><span class="rk">06</span><span class="pais">Qatar</span><span class="barra" style="width:70px;flex-shrink:0"><i style="width:15.9%"></i></span><span class="cifra-sm num" style="width:56px;text-align:right">6.002</span></div><div class="brecha">9 puestos entre medio</div><div class="fila arg"><span class="rk">16</span><span class="pais">Argentina</span><span class="barra" style="width:70px;flex-shrink:0;--barra-color:var(--gas)"><i style="width:4.4%"></i></span><span class="cifra-sm num" style="width:56px;text-align:right">1.652</span></div>
+    </div>
+  </div></div>
+  <p class="pie-op">
+    A dos columnas los nombres entran porque el podio se corta en seis: con doce, esta card
+    necesita el ancho completo. Es la que más cambia la página —se lleva puesta la sección 11— y
+    también la que más contesta la pregunta del título.
+  </p>
+</section>
+
+</div>
+</body>
+</html>

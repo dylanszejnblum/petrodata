@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="416" height="416" viewBox="0 0 416 416" fill="none">
+  <title>Vacamuerta</title>
+  <style>
+    path { fill: #1f2124 }
+    @media (prefers-color-scheme: dark) { path { fill: #f2f3f4 } }
+  </style>
+  <path transform="translate(22 416) scale(1 -1)" fill-rule="evenodd" d="M164 6C178-2 194-2 208 6L348 88C364 97 372 109 372 128V288C372 306 365 318 350 327L208 410C194 418 178 418 164 410L22 327C7 318 0 306 0 288V128C0 109 8 97 24 88L164 6ZM166 65C166 38 206 38 206 65V145C206 181 219 206 249 224L323 270C346 284 326 316 303 302L230 258C202 239 170 239 142 258L66 302C43 316 24 284 47 270L124 223C153 205 166 181 166 145V65Z" clip-rule="evenodd"/>
+</svg>

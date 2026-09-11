@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Card de empresa · cinco opciones</title>
+<style>
+/* ═══════════════════════════════════════════════════════════════════════
+   TOKENS — copiados tal cual de apps/ui-prototype/src/app/v2/sistema.css.
+   ═══════════════════════════════════════════════════════════════════════ */
+:root {
+  --page:#fafafb; --canvas:#f1f2f3; --surface:#fff; --inset:#f7f8f9;
+  --hover:#f4f5f6; --hover-2:#e7e9eb;
+  --ink:#1f2124; --ink-2:#62656b; --ink-3:#9a9da3;
+  --line:#ecedef; --line-strong:#e0e2e5; --field:#f2f2f3;
+  --accent:#0285ff; --accent-ink:#0170dd; --accent-tint:#e9f3ff;
+  --green:#189a4d; --orange:#ef720c; --red:#e3474c;
+  --shadow-hairline:0 0 0 1px var(--line);
+  --shadow-btn:0 0 0 1px var(--line-strong), 0 1px 2px #1018280d;
+  --shadow-card:0 0 0 1px var(--line), 0 1px 2px #1018280a, 0 2px 6px #10182808;
+  --radius-chip:6px; --radius-control:8px; --radius-card:10px; --radius-window:14px;
+  --ease-in-out:cubic-bezier(.4,0,.2,1); --ease-out-strong:cubic-bezier(.23,1,.32,1);
+  --dur-fast:120ms; --dur-slow:300ms; --dur-slower:400ms;
+  --dot:#4949491a;
+  /* Los dos colores de fluido, clavados a la cosa y no al orden de la lista. */
+  --oil:#3f78ff; --gas:#16a6c7; --mix:#9a5cff;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme=light]) {
+    --page:#17181a; --canvas:#1c1d1f; --surface:#232427; --inset:#1f2022;
+    --hover:#2a2b2e; --hover-2:#313236;
+    --ink:#f2f3f4; --ink-2:#a5a8ad; --ink-3:#6c6f75;
+    --line:#2e3033; --line-strong:#3a3c40; --field:#2b2c2f;
+    --accent:#3d9aff; --accent-ink:#7ec0ff; --accent-tint:#3d9aff29;
+    --green:#3dbb72; --orange:#f68f3c; --red:#ee5c61;
+    --shadow-btn:0 0 0 1px var(--line-strong), 0 1px 2px #0000004d;
+    --shadow-card:0 0 0 1px var(--line), 0 1px 2px #0003, 0 2px 6px #0003;
+    --dot:#ffffff0f;
+  }
+}
+
+* { box-sizing:border-box; }
+body {
+  margin:0; padding:40px 24px 80px;
+  background:var(--page);
+  background-image:radial-gradient(circle at 1px 1px, var(--dot) 1px, transparent 0);
+  background-size:12px 12px; background-attachment:fixed;
+  color:var(--ink);
+  font-family:"Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  font-size:14px; line-height:1.5; letter-spacing:-.01em;
+}
+:focus-visible { outline:2px solid var(--accent); outline-offset:2px; border-radius:4px; }
+
+.cifra   { font-size:17px; font-weight:600; line-height:1.2; font-variant-numeric:tabular-nums; }
+.cifra-sm{ font-size:13px; font-weight:600; line-height:1.3; font-variant-numeric:tabular-nums; }
+.cuerpo  { font-size:13px; line-height:19.5px; }
+.desc    { font-size:12.5px; line-height:18.75px; color:var(--ink-2); }
+.etq     { font-size:12px;   line-height:18px;    color:var(--ink-2); }
+.micro   { font-size:11.5px; line-height:17.25px; }
+.mono    { font-family:"JetBrains Mono", ui-monospace,"SF Mono",Menlo,monospace; font-variant-numeric:tabular-nums; }
+.num     { font-variant-numeric:tabular-nums; }
+.i2 { color:var(--ink-2); } .i3 { color:var(--ink-3); }
+.trunca { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+/* ── Andamio de esta página (no es del sistema) ───────────────────────── */
+.hoja { max-width:760px; margin:0 auto; }
+.hoja > h1 { font-size:21px; font-weight:600; letter-spacing:-.02em; margin:0 0 6px; }
+.hoja > p.lede { color:var(--ink-2); font-size:12.5px; line-height:18.75px; margin:0 0 30px; max-width:66ch; }
+.op { margin:0 0 14px; padding-top:32px; border-top:1px dashed var(--line-strong); }
+.op:first-of-type { border-top:0; padding-top:0; }
+.op h2 { display:flex; align-items:baseline; gap:8px; flex-wrap:wrap; margin:0 0 6px; }
+.op h2 .letra { font-family:"JetBrains Mono",ui-monospace,monospace; font-size:11px; color:var(--ink-2); font-weight:400; }
+.op h2 .nom { font-size:13px; font-weight:600; }
+.op h2 .sub { font-size:12.5px; font-weight:400; color:var(--ink-2); }
+.op > p.tesis { font-size:12.5px; line-height:18.75px; color:var(--ink-2); margin:0 0 14px; max-width:72ch; }
+.op > p.tesis b { font-weight:600; color:var(--ink); }
+.marco { border-radius:var(--radius-window); background:var(--canvas); box-shadow:var(--shadow-hairline); padding:12px; }
+.pila-cards { display:flex; flex-direction:column; gap:8px; }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   PIEZAS DEL SISTEMA
+   ═══════════════════════════════════════════════════════════════════════ */
+.card { overflow:hidden; border-radius:var(--radius-card); background:var(--surface); box-shadow:var(--shadow-card); }
+.card-pie { display:flex; align-items:center; flex-wrap:wrap; gap:6px; padding:10px 12px;
+  border-top:1px solid var(--line); background:var(--inset); }
+
+.chip { display:inline-flex; align-items:center; gap:5px; height:22px; padding:0 8px; border-radius:var(--radius-chip);
+  font-size:11.5px; font-weight:500; white-space:nowrap; background:var(--field); color:var(--ink-2); }
+.chip--mini { height:19px; padding:0 6px; border-radius:5px; font-size:10.5px; }
+
+/* Píldora de adjunto medida (§10), con el punto de color en vez del cuadradito
+   de tres letras, que a 7px no se leía. */
+.adj { display:inline-flex; align-items:center; gap:6px; height:24px; padding:0 9px; border-radius:999px;
+  background:var(--inset); box-shadow:var(--shadow-btn); color:var(--ink-2); font-size:12px; font-weight:500;
+  white-space:nowrap; }
+.adj > i { display:block; flex:0 0 6px; width:6px; height:6px; border-radius:50%; }
+.adj > b { color:var(--ink); font-weight:500; }
+
+.barra { height:4px; border-radius:999px; background:var(--line-strong); overflow:hidden; }
+.barra > i { display:block; height:100%; border-radius:999px; background:var(--barra-color, var(--ink-3)); }
+
+.medidor { display:flex; align-items:flex-end; gap:2px; height:10px; }
+.medidor > i { display:block; width:4px; height:100%; border-radius:999px; background:var(--line-strong); }
+.medidor > i.on { background:var(--ink-3); }
+
+.delta { font-size:11.5px; font-weight:400; font-variant-numeric:tabular-nums; }
+.sube { color:var(--green); } .baja { color:var(--red); }
+
+.figuras { display:flex; gap:16px; }
+.figura  { min-width:0; flex:1; }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   LA COMPOSICIÓN — IGUAL EN LAS CINCO
+
+   Es la de la fila de noticias del dashboard: placa cuadrada de 56 a la
+   izquierda, alineada arriba con el título, y todo el contenido en la columna
+   de la derecha. Lo único que cambia entre las cinco opciones es QUÉ va en esa
+   columna; el logo y el renglón de identidad no se tocan.
+
+   items-start y no center: las cards miden distinto y centrada, la placa
+   quedaría a una altura distinta en cada una.
+   ═══════════════════════════════════════════════════════════════════════ */
+.comp { display:flex; align-items:flex-start; gap:12px; padding:12px; }
+.comp > .col { min-width:0; flex:1; }
+/* Renglón de identidad: nombre a la izquierda y puesto a la derecha, que es
+   donde la fila de noticias pone su tag de categoría. */
+.ident { display:flex; align-items:center; gap:8px; }
+
+/* ── La placa ───────────────────────────────────────────────────────────
+   56×56 en PÍXELES, sin aspect-ratio —el sistema lo prohíbe— y con radio de
+   control: la misma caja que la miniatura de noticias.
+
+   El fondo blanco es funcional y no decorativo: los logos se dibujan asumiendo
+   fondo claro y varios traen transparencia. Es la única superficie del sistema
+   que no cambia entre temas.
+
+   El logo va CONTENIDO, nunca estirado ni recortado. Y ahí está el límite real
+   de esta pieza, que conviene decir en vez de disimular: ninguna de las tres
+   publica un isotipo cuadrado en alta. Lo busqué en las nueve rutas estándar
+   de app icon y en el manifest de cada una — YPF y TotalEnergies no tienen
+   ninguna; PAE, un apple-touch-icon de 114. Lo que sí publican es el LOCKUP
+   del header, apaisado: YPF 300×81 (ratio 3,7), TotalEnergies 208×152 (1,4),
+   PAE 300×133 (2,3).
+
+   Contenido en los 48px útiles, el de YPF se dibuja a 13 de alto y el de PAE a
+   21. Se leen igual, porque son letras grandes, pero la placa les queda ancha:
+   la única forma de llenarla sería recortar el logo, y a una marca no se la
+   recorta.
+
+   PAE es el caso que mejor sale parado: su apple-touch-icon SÍ es cuadrado y
+   viene en color, así que llena la caja. La otra versión que publica —la del
+   header— es blanca (medido: luminancia 255) y sobre esta placa desaparecería. */
+.placa {
+  display:inline-flex; flex-shrink:0;
+  width:56px; height:56px;
+  align-items:center; justify-content:center;
+  padding:4px;
+  border-radius:var(--radius-control);
+  background:#fff;
+  box-shadow:var(--shadow-hairline);
+  overflow:hidden;
+}
+.placa > img { max-width:100%; max-height:100%; width:auto; height:auto; object-fit:contain; display:block; }
+
+@media (prefers-reduced-motion: reduce) { *,*::before,*::after { transition-duration:.01ms !important; } }
+</style>
+</head>
+<body>
+<div class="hoja">
+
+<h1>Card de empresa · cinco opciones</h1>
+<p class="lede">
+  La composición es la misma en las cinco —placa cuadrada de 56 a la izquierda, como la fila de
+  noticias del dashboard— y lo que cambia es qué se muestra en la columna de la derecha. Los logos
+  también son nuevos: salen del header o del app icon de cada sitio, en alta y con transparencia,
+  en vez del favicon de 16px que veníamos usando.
+</p>
+
+<section class="op">
+  <h2><span class="letra">A</span> <span class="nom">Figuras</span>
+      <span class="sub">tres columnas de cifra</span></h2>
+  <p class="tesis">
+    El bloque de figuras medido: rótulo, cifra y apoyo, tres veces. <b>Producción y Valor lado a
+    lado</b> es lo que vuelve legible el mix sin hacer una cuenta mental — se ve que TotalEnergies
+    pesa 11,7% en volumen y 0,9% en dólares. La que muestra más datos sin leerse como una tabla.
+  </p>
+  <div class="marco"><div class="pila-cards" id="A"></div></div>
+</section>
+
+<section class="op">
+  <h2><span class="letra">B</span> <span class="nom">Balanza</span>
+      <span class="sub">volumen contra dólares, en dos barras</span></h2>
+  <p class="tesis">
+    Las mismas dos cifras, pero <b>a la misma escala</b>: la brecha se ve en vez de calcularse.
+    Debajo, una línea que dice qué significa esa brecha. Es la única opción donde el dato principal
+    es una relación y no un número suelto.
+  </p>
+  <div class="marco"><div class="pila-cards" id="B"></div></div>
+</section>
+
+<section class="op">
+  <h2><span class="letra">C</span> <span class="nom">Ficha</span>
+      <span class="sub">etiqueta a la izquierda, valor a la derecha</span></h2>
+  <p class="tesis">
+    La más densa: cinco renglones con todo lo que hay, incluida la cotización, que en las otras
+    vive apretada en el pie. Se lee como una <b>ficha técnica</b> y es la única que se puede
+    recorrer hacia abajo. A cambio es la más alta.
+  </p>
+  <div class="marco"><div class="pila-cards" id="C"></div></div>
+</section>
+
+<section class="op">
+  <h2><span class="letra">D</span> <span class="nom">Titular</span>
+      <span class="sub">una cifra manda y el resto acompaña</span></h2>
+  <p class="tesis">
+    Una sola cifra a 17px —la participación— con su barra, y todo lo demás al pie. Es la única que
+    usa el <b>tamaño máximo de cifra del sistema</b>, y se lo puede permitir porque hay una sola
+    por card. La apuesta: el detalle está en la lista de abajo y acá alcanza el orden de magnitud.
+  </p>
+  <div class="marco"><div class="pila-cards" id="D"></div></div>
+</section>
+
+<section class="op">
+  <h2><span class="letra">E</span> <span class="nom">Reseña</span>
+      <span class="sub">el texto adelante, los datos como anotación</span></h2>
+  <p class="tesis">
+    Invierte la jerarquía: manda <b>lo que la empresa es</b> —la reseña, a 13px, no a 12,5— y los
+    números bajan a una tira de píldoras. Es la más parecida a la fila de noticias, donde el título
+    manda y la metadata acompaña, y la más liviana de leer, a costa de que ninguna cifra se
+    destaque sobre las otras.
+  </p>
+  <div class="marco"><div class="pila-cards" id="E"></div></div>
+</section>
+
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════════
+   DATOS — las tres primeras del fixture (scrape de vacamuerta.io, 2026-08-11).
+   Cada logo se verificó uno por uno: tamaño real, cuadratura, canal alfa y
+   luminancia media, para saber cuál sirve sobre una placa clara.
+   ═══════════════════════════════════════════════════════════════════════ */
+const POZOS_PAIS = 26623;
+
+const EMP = [
+  { n:'YPF S.A.', puesto:1, pn:34.2, pv:45.6, pozos:5725,
+    mix:'Petróleo', color:'var(--oil)',
+    blurb:'La mayor operadora del país y ancla del desarrollo de Vaca Muerta.',
+    bolsa:'NYQ', tk:'YPF', px:48.76, ch:-1.8,
+    // SVG del header: 300×81, transparente, azul. Se dibuja a 48×13 en la placa.
+    logo:'https://ypf.com/images/menu-principal/ypf_logoazul.svg' },
+  { n:'TotalEnergies', puesto:2, pn:11.7, pv:0.9, pozos:366,
+    mix:'Gas', color:'var(--gas)',
+    blurb:'El grueso de lo que produce es gas: pesa 11,7% del volumen del país y 0,9% del valor en dólares.',
+    bolsa:'NYQ', tk:'TTE', px:88.18, ch:3.5,
+    // PNG del header: 208×152, transparente. Casi cuadrado, así que llena bien.
+    logo:'https://totalenergies.com/themes/custom/totalenergies_com/dist/img/logo_totalenergies.png' },
+  { n:'PAN AMERICAN ENERGY SL', puesto:3, pn:10.9, pv:10.9, pozos:4471,
+    mix:'Mixto', color:'var(--mix)',
+    blurb:'Integrada privada líder, del Golfo San Jorge al gas de Vaca Muerta.',
+    bolsa:null,
+    // apple-touch-icon: 114×114, CUADRADO y en color. La versión del header es
+    // blanca (lum 255) y sobre la placa clara desaparecería.
+    logo:'https://www.pan-energy.com/Style%20Library/PAE/images/apple-touch-icon-114x114.png' },
+];
+
+const dec = (n,d=1) => n.toLocaleString('es-AR',{minimumFractionDigits:d,maximumFractionDigits:d});
+const num = n => n.toLocaleString('es-AR');
+const pctPozos = c => (c.pozos / POZOS_PAIS) * 100;
+/* Cuánto rinde cada pozo contra la media del país: participación en producción
+   dividida por participación en pozos. Es lo que explica que TotalEnergies esté
+   segunda con 366 pozos y PAE tercera con 4.471. */
+const rinde = c => c.pn / pctPozos(c);
+/* Escala común de las barras: el máximo de las seis cifras, no el 100%. Contra
+   100 las tres quedarían pegadas a cero y no se compararían entre sí. */
+const MAXB = Math.max(...EMP.flatMap(c => [c.pn, c.pv]));
+
+const cotiza = c => c.bolsa
+  ? `<span class="adj" title="${c.tk} en ${c.bolsa}"><i style="background:var(--green)"></i><b>${c.tk}</b>
+       <span class="num">US$ ${dec(c.px,2)}</span>
+       <span class="delta ${c.ch>=0?'sube':'baja'}">${c.ch>=0?'+':'−'}${dec(Math.abs(c.ch))}%</span></span>`
+  : `<span class="adj"><i style="background:var(--ink-3)"></i>Privada</span>`;
+
+const fluido = c => `<span class="adj"><i style="background:${c.color}"></i>${c.mix}</span>`;
+const rindePie = c => `<span class="adj"><b class="num">×${dec(rinde(c))}</b> por pozo</span>`;
+
+/* ── La composición, IDÉNTICA en las cinco ─────────────────────────────── */
+const card = (c, columna, pie) => `
+  <div class="card">
+    <div class="comp">
+      <span class="placa"><img src="${c.logo}" alt="${c.n}" loading="lazy"></span>
+      <div class="col">
+        <div class="ident">
+          <span class="cuerpo trunca" style="flex:1;font-weight:500">${c.n}</span>
+          <span class="chip chip--mini num" style="flex-shrink:0">${c.puesto}.ª</span>
+        </div>
+        ${columna}
+      </div>
+    </div>
+    ${pie ? `<div class="card-pie">${pie}</div>` : ''}
+  </div>`;
+
+/* ══════════════════════════════════════════════════════════════════════ A */
+document.getElementById('A').innerHTML = EMP.map(c => card(c, `
+  <p class="desc" style="margin:2px 0 0">${c.blurb}</p>
+  <div class="figuras" style="margin-top:10px">
+    <span class="figura">
+      <span class="micro i2" style="display:block">Producción</span>
+      <span class="cifra-sm" style="display:block;margin-top:2px">${dec(c.pn)}%</span>
+      <span class="micro i2" style="display:block">del país</span>
+    </span>
+    <span class="figura">
+      <span class="micro i2" style="display:block">Valor</span>
+      <span class="cifra-sm" style="display:block;margin-top:2px">${dec(c.pv)}%</span>
+      <span class="micro i2" style="display:block">en dólares</span>
+    </span>
+    <span class="figura">
+      <span class="micro i2" style="display:block">Pozos</span>
+      <span class="cifra-sm" style="display:block;margin-top:2px">${num(c.pozos)}</span>
+      <span class="micro i2" style="display:block">${dec(pctPozos(c))}% del país</span>
+    </span>
+  </div>`,
+  `${fluido(c)} ${rindePie(c)} ${cotiza(c)}`)).join('');
+
+/* ══════════════════════════════════════════════════════════════════════ B */
+document.getElementById('B').innerHTML = EMP.map(c => card(c, `
+  <div style="display:flex;align-items:center;gap:10px;margin-top:9px">
+    <span class="micro i2" style="width:62px;flex-shrink:0">Producción</span>
+    <span class="barra" style="flex:1;--barra-color:${c.color}"><i style="width:${(c.pn/MAXB*100).toFixed(1)}%"></i></span>
+    <span class="cifra-sm" style="width:44px;text-align:right">${dec(c.pn)}%</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px;margin-top:7px">
+    <span class="micro i2" style="width:62px;flex-shrink:0">Valor</span>
+    <span class="barra" style="flex:1;--barra-color:var(--ink-3)"><i style="width:${(c.pv/MAXB*100).toFixed(1)}%"></i></span>
+    <span class="cifra-sm" style="width:44px;text-align:right">${dec(c.pv)}%</span>
+  </div>
+  <p class="micro i2" style="margin:9px 0 0">
+    ${c.pv > c.pn * 1.2
+      ? 'Pesa <b style="color:var(--ink);font-weight:500">más en dólares que en volumen</b>: lo que saca es sobre todo petróleo.'
+      : c.pv < c.pn * 0.8
+        ? 'Pesa <b style="color:var(--ink);font-weight:500">mucho menos en dólares que en volumen</b>: el gas vale bastante menos por unidad.'
+        : 'Pesa <b style="color:var(--ink);font-weight:500">casi lo mismo</b> en las dos: mezcla pareja de petróleo y gas.'}
+  </p>`,
+  `${fluido(c)} <span class="adj"><b class="num">${num(c.pozos)}</b> pozos</span> ${rindePie(c)} ${cotiza(c)}`)).join('');
+
+/* ══════════════════════════════════════════════════════════════════════ C */
+const filaC = (rot, val, apoyo, marca = '') => `
+  <div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--line)">
+    <span class="etq" style="flex:1;min-width:0">${rot}</span>
+    ${marca}
+    <span class="cifra-sm" style="text-align:right">${val}</span>
+    <span class="micro i2" style="width:88px;text-align:right;flex-shrink:0">${apoyo}</span>
+  </div>`;
+
+document.getElementById('C').innerHTML = EMP.map(c => card(c, `
+  <div style="margin-top:6px">
+    ${filaC('Producción', dec(c.pn)+'%', 'del país')}
+    ${filaC('Valor en dólares', dec(c.pv)+'%', 'del país')}
+    ${filaC('Pozos', num(c.pozos), dec(pctPozos(c))+'% del país')}
+    ${filaC('Rinde por pozo', '×'+dec(rinde(c)), 'contra la media',
+      `<span class="medidor" style="margin-right:6px">${[1,2,3].map(i =>
+        `<i class="${i <= (rinde(c)>=2?3:rinde(c)>=1?2:1) ? 'on' : ''}"></i>`).join('')}</span>`)}
+    ${filaC('Fluido', c.mix, c.bolsa ? c.tk+' · '+c.bolsa : 'privada',
+      `<span style="display:block;width:8px;height:8px;border-radius:50%;background:${c.color};margin-right:6px"></span>`)}
+  </div>`,
+  `<span class="micro i2">${c.blurb}</span>`)).join('');
+
+/* ══════════════════════════════════════════════════════════════════════ D */
+document.getElementById('D').innerHTML = EMP.map(c => card(c, `
+  <p class="micro i2" style="margin:9px 0 0">Producción del país</p>
+  <p class="cifra" style="margin:2px 0 0">${dec(c.pn)}%</p>
+  <span class="barra" style="display:block;margin-top:9px;--barra-color:${c.color}">
+    <i style="width:${(c.pn/MAXB*100).toFixed(1)}%"></i>
+  </span>`,
+  `${fluido(c)} <span class="adj"><b class="num">${dec(c.pv)}%</b> del valor</span>
+   <span class="adj"><b class="num">${num(c.pozos)}</b> pozos</span> ${cotiza(c)}`)).join('');
+
+/* ══════════════════════════════════════════════════════════════════════ E */
+document.getElementById('E').innerHTML = EMP.map(c => card(c, `
+  <p class="cuerpo" style="margin:2px 0 0">${c.blurb}</p>
+  <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:9px">
+    <span class="adj"><b class="num">${dec(c.pn)}%</b> del país</span>
+    <span class="adj"><b class="num">${dec(c.pv)}%</b> del valor</span>
+    <span class="adj"><b class="num">${num(c.pozos)}</b> pozos</span>
+    ${fluido(c)}
+    ${rindePie(c)}
+    ${cotiza(c)}
+  </div>`, null)).join('');
+</script>
+</body>
+</html>
