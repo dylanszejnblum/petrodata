@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Valor de un día · tres diseños</title>
+<style>
+/* TOKENS — copiados tal cual de apps/ui-prototype/src/app/v2/sistema.css. */
+:root {
+  --page:#fafafb; --canvas:#f1f2f3; --surface:#fff; --inset:#f7f8f9;
+  --hover:#f4f5f6; --hover-2:#e7e9eb;
+  --ink:#1f2124; --ink-2:#62656b; --ink-3:#9a9da3;
+  --line:#ecedef; --line-strong:#e0e2e5; --field:#f2f2f3;
+  --accent:#0285ff; --accent-ink:#0170dd; --accent-tint:#e9f3ff;
+  --green:#189a4d; --green-tint:#e8f5ed;
+  --orange:#ef720c; --orange-tint:#fdf1e5;
+  --red:#e3474c; --red-tint:#fcecec;
+  --shadow-hairline:0 0 0 1px var(--line);
+  --shadow-btn:0 0 0 1px var(--line-strong), 0 1px 2px #1018280d;
+  --shadow-card:0 0 0 1px var(--line), 0 1px 2px #1018280a, 0 2px 6px #10182808;
+  --radius-chip:6px; --radius-control:8px; --radius-card:10px; --radius-window:14px;
+  --ease-in-out:cubic-bezier(.4,0,.2,1); --ease-out:cubic-bezier(.16,1,.3,1);
+  --ease-out-strong:cubic-bezier(.23,1,.32,1);
+  --dur-base:140ms; --dur-slower:220ms;
+  --dot:#4949491a;
+  --oil:#3f78ff; --gas:#16a6c7; --mix:#9a5cff;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme=light]) {
+    --page:#17181a; --canvas:#1c1d1f; --surface:#232427; --inset:#1f2022;
+    --hover:#2a2b2e; --hover-2:#313236;
+    --ink:#f2f3f4; --ink-2:#a5a8ad; --ink-3:#6c6f75;
+    --line:#2e3033; --line-strong:#3a3c40; --field:#2b2c2f;
+    --accent:#3d9aff; --accent-ink:#7ec0ff; --accent-tint:#3d9aff29;
+    --green:#3dbb72; --green-tint:#3dbb7224;
+    --orange:#f68f3c; --orange-tint:#f68f3c24;
+    --red:#ee5c61; --red-tint:#ee5c6124;
+    --shadow-btn:0 0 0 1px var(--line-strong), 0 1px 2px #0000004d;
+    --shadow-card:0 0 0 1px var(--line), 0 1px 2px #0003, 0 2px 6px #0003;
+    --dot:#ffffff0f;
+  }
+}
+* { box-sizing:border-box; }
+body {
+  margin:0; padding:40px 24px 80px;
+  background:var(--page);
+  background-image:radial-gradient(circle at 1px 1px, var(--dot) 1px, transparent 0);
+  background-size:12px 12px; background-attachment:fixed;
+  color:var(--ink);
+  font-family:"Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  font-size:14px; line-height:1.5; letter-spacing:-.01em;
+}
+
+/* Tipografía del sistema. Toda la escala va de 10 a 21px: para destacar algo
+   hay exactamente dos palancas, el peso y la tinta. */
+.cifra   { font-size:17px; font-weight:600; line-height:1.2; letter-spacing:-.01em; font-variant-numeric:tabular-nums; }
+.cifra-sm{ font-size:13px; font-weight:600; line-height:1.3; font-variant-numeric:tabular-nums; }
+.titulo  { font-size:13px; font-weight:600; line-height:1.3; font-variant-numeric:tabular-nums; }
+.cuerpo  { font-size:13px; line-height:19.5px; }
+.etq     { font-size:12.5px; color:var(--ink-2); }
+.micro   { font-size:11.5px; line-height:17.25px; }
+.mono    { font-family:"JetBrains Mono", ui-monospace,"SF Mono",Menlo,monospace; font-variant-numeric:tabular-nums; }
+.num     { font-variant-numeric:tabular-nums; }
+.i2 { color:var(--ink-2); } .i3 { color:var(--ink-3); }
+
+/* Andamio del archivo — no es parte del sistema. */
+.hoja { max-width:760px; margin:0 auto; }
+.hoja > h1 { font-size:21px; font-weight:600; letter-spacing:-.02em; margin:0 0 6px; }
+.hoja > p.lede { color:var(--ink-2); font-size:12.5px; line-height:18.75px; margin:0 0 14px; max-width:66ch; }
+.hoja > p.lede b { color:var(--ink); font-weight:600; }
+.nota-dato { margin:0 0 30px; padding:10px 12px; border-radius:var(--radius-control);
+  background:var(--orange-tint); color:color-mix(in srgb, var(--orange) 55%, var(--ink));
+  font-size:11.5px; line-height:17.25px; max-width:72ch; }
+.nota-dato b { font-weight:600; }
+.op { margin:0 0 14px; padding-top:32px; border-top:1px dashed var(--line-strong); }
+.op:first-of-type { border-top:0; padding-top:0; }
+.op h2 { display:flex; align-items:baseline; gap:8px; flex-wrap:wrap; margin:0 0 6px; }
+.op h2 .letra { font-family:"JetBrains Mono",ui-monospace,monospace; font-size:11px; color:var(--ink-2); font-weight:400; }
+.op h2 .nom { font-size:13px; font-weight:600; }
+.op h2 .sub { font-size:12.5px; font-weight:400; color:var(--ink-2); }
+.op > p.tesis { font-size:12.5px; line-height:18.75px; color:var(--ink-2); margin:0 0 14px; max-width:72ch; }
+.op > p.tesis b { font-weight:600; color:var(--ink); }
+.marco { border-radius:var(--radius-window); background:var(--canvas); box-shadow:var(--shadow-hairline); padding:12px; }
+.pie-op { font-size:11.5px; line-height:17.25px; color:var(--ink-2); margin:10px 2px 0; max-width:72ch; }
+
+/* ═══════════════ PIEZAS DEL SISTEMA ═══════════════ */
+.card { overflow:hidden; border-radius:var(--radius-card); background:var(--surface); box-shadow:var(--shadow-card); }
+.card-bar { display:flex; align-items:baseline; justify-content:space-between; gap:12px;
+  padding:10px 12px; border-bottom:1px solid var(--line); }
+.card-pie { display:flex; align-items:center; flex-wrap:wrap; gap:8px; padding:10px 12px;
+  border-top:1px solid var(--line); background:var(--inset); }
+.fila { display:flex; align-items:center; gap:8px; padding:10px 12px; border-bottom:1px solid var(--line); }
+.fila:last-child { border-bottom:0; }
+.fila:hover { background:var(--hover); }
+.chip { display:inline-flex; align-items:center; gap:5px; height:22px; padding:0 8px;
+  border-radius:var(--radius-chip); font-size:11.5px; font-weight:500; white-space:nowrap;
+  background:var(--field); color:var(--ink-2); }
+.chip--mini { height:19px; padding:0 6px; border-radius:5px; font-size:10.5px; }
+/* El texto mezclado con la tinta al 55%: el token pleno sobre su propio tinte
+   no llega a AA a 10,5px. Es la misma receta que ya usaba --info. */
+.chip--ok   { background:var(--green-tint);  color:color-mix(in srgb, var(--green) 55%, var(--ink)); }
+.chip--info { background:var(--accent-tint); color:color-mix(in srgb, var(--accent-ink) 55%, var(--ink)); }
+/* display:block: como <span> suelto colapsa a inline y la barra no se dibuja.
+   En el sistema real siempre llega con `block` de Tailwind o como hijo flex. */
+.barra { display:block; height:4px; border-radius:999px; background:var(--line-strong); overflow:hidden; }
+.barra > i { display:block; height:100%; border-radius:999px; background:var(--barra-color, var(--ink-3)); }
+.hundido { border-radius:var(--radius-control); background:var(--inset); overflow:hidden; }
+.hundido-bar { display:flex; align-items:center; justify-content:space-between; gap:10px;
+  padding:6px 10px; background:var(--field); border-bottom:1px solid var(--line); }
+.panel { border-radius:var(--radius-control); background:var(--surface); box-shadow:var(--shadow-hairline); overflow:hidden; }
+.panel-bar { display:flex; align-items:center; justify-content:space-between; gap:8px;
+  height:30px; padding:0 10px; border-bottom:1px solid var(--line); }
+.panel-bar .rot { font-size:10.5px; font-weight:500; color:var(--ink-2); }
+.panel-cuerpo { padding:10px; }
+
+/* ── 1 · LA CADENA ────────────────────────────────────────────────────────
+   El operador entre cifra y cifra. No es decoración: es lo que convierte tres
+   cajas sueltas en una sola cuenta. Va en --field con la tinta secundaria,
+   como cualquier anotación del sistema, y NUNCA pesa más que las cifras. */
+.cadena { display:flex; align-items:center; flex-wrap:wrap; gap:0; padding:14px 12px; }
+.cadena > .paso { display:flex; flex-direction:column; gap:2px; min-width:0; }
+.cadena > .op-mat { display:flex; flex-direction:column; align-items:center; gap:3px;
+  flex-shrink:0; padding:0 14px; }
+.cadena > .op-mat > .signo { font-family:"JetBrains Mono",ui-monospace,monospace;
+  font-size:12px; font-weight:500; color:var(--ink-2); }
+.cadena > .op-mat > .flecha { font-size:11px; color:var(--ink-3); line-height:1; }
+.cadena .val { display:flex; align-items:baseline; gap:5px; }
+
+/* ── 2 · LA ESCALERA ──────────────────────────────────────────────────────
+   Cuatro escalas de tiempo, y entre una y otra el MULTIPLICADOR.
+
+   Primero le puse una barra por fila y estaba mal: entre el segundo y el día
+   hay un factor de 86.400, así que lineal las tres primeras filas quedan en
+   cero y logarítmica la barra no se puede leer como proporción —o sea, es
+   decoración con forma de dato—. El «×60» es exacto, no necesita escala, y
+   convierte la lista en una escalera de verdad. */
+.escalon { display:flex; align-items:center; gap:10px; padding:9px 12px; border-bottom:1px solid var(--line); }
+.escalon:last-child { border-bottom:0; }
+.escalon:hover { background:var(--hover); }
+.escalon > .u { flex:1; min-width:0; white-space:nowrap; font-size:11.5px; color:var(--ink-2); }
+.escalon > .x { flex-shrink:0; width:44px; text-align:right;
+  font-family:"JetBrains Mono",ui-monospace,monospace; font-size:10.5px; color:var(--ink-3); }
+.escalon > .v { display:flex; align-items:baseline; justify-content:flex-end; gap:5px;
+  width:120px; flex-shrink:0; }
+.escalon.destaca { background:var(--accent-tint); }
+
+/* ── 3 · LA DERIVACIÓN ────────────────────────────────────────────────────
+   Los insumos que la sección hoy esconde. La regla del sistema que aplica: un
+   número publicado sin sus entradas no se puede auditar, y esta sección es la
+   única de la página cuyo valor es 100% calculado. */
+.deriv { display:grid; grid-template-columns:1fr 1fr; gap:8px; padding:10px; }
+@media (max-width:640px) { .deriv { grid-template-columns:1fr; } }
+.ins { display:flex; align-items:baseline; justify-content:space-between; gap:8px;
+  padding:7px 10px; border-bottom:1px solid var(--line); }
+.ins:last-child { border-bottom:0; }
+.pbi-riel { position:relative; height:22px; border-radius:5px; background:var(--field); overflow:hidden; }
+.pbi-riel > i { display:block; height:100%; background:var(--accent); }
+.pbi-marca { display:flex; justify-content:space-between; margin-top:5px; }
+
+@media (prefers-reduced-motion: reduce) { *,*::before,*::after { transition-duration:.01ms !important; } }
+</style>
+</head>
+<body>
+<div class="hoja">
+
+<h1>Valor de un día · tres diseños</h1>
+<p class="lede">
+  Los tres números de la card 02 —61,0 MUSD por día, 22,3 BUSD por año, 3,5% del PBI— no son
+  tres datos: son <b>uno solo dicho tres veces</b>. 61,0 × 365 = 22,3, y 22,3 sobre el PBI de
+  2024 da 3,5%. Tres cajas iguales dicen «tres hechos independientes», y encima el «3,5% del
+  PBI» flota sin el PBI. Las tres propuestas atacan eso de tres formas distintas.
+</p>
+<p class="nota-dato">
+  <b>Antes de elegir:</b> el volumen que hay detrás de estos 22,3 B son 304.768.305 barriles en
+  doce meses, o sea <b>834.982 bbl/d</b>. Eso es producción nacional, no de Vaca Muerta: en la
+  misma ventana VM promedió 567.195 bbl/d. El título «Valor de un día de Vaca Muerta» viene así
+  de la fuente, pero la cifra parece ser del país entero. Lo dejo anotado porque cambia lo que
+  se puede escribir en la card, no lo resolví.
+</p>
+
+<!-- ══════════════════ 1 ══════════════════ -->
+<section class="op">
+  <h2><span class="letra">1</span> <span class="nom">La cadena</span>
+    <span class="sub">una cuenta, no tres cajas</span></h2>
+  <p class="tesis">
+    Las mismas tres cifras en una sola fila, con <b>el operador escrito entre ellas</b>. Es el
+    cambio más chico posible y el que arregla el problema de raíz: al ver «×365» y «÷ PBI» se
+    entiende que la segunda sale de la primera y la tercera de la segunda. El PBI deja de estar
+    implícito y aparece con su valor, que es lo que le da sentido al 3,5%.
+  </p>
+  <div class="marco">
+    <div class="card">
+      <div class="card-bar">
+        <span class="etq">Valor bruto de producción</span>
+        <span class="micro mono i2">últimos 12 meses</span>
+      </div>
+      <div class="cadena">
+        <span class="paso">
+          <span class="micro i2">Por día</span>
+          <span class="val"><b class="cifra">61,0</b><span class="micro i3">MUSD</span></span>
+        </span>
+        <span class="op-mat"><span class="signo">× 365</span><span class="flecha">→</span></span>
+        <span class="paso">
+          <span class="micro i2">Por año</span>
+          <span class="val"><b class="cifra">22,3</b><span class="micro i3">BUSD</span></span>
+        </span>
+        <span class="op-mat"><span class="signo">÷ 638,4</span><span class="flecha">→</span></span>
+        <span class="paso">
+          <span class="micro i2">Del PBI 2024</span>
+          <span class="val"><b class="cifra">3,5</b><span class="micro i3">%</span></span>
+        </span>
+      </div>
+      <div class="card-pie">
+        <span class="micro i2">
+          El PBI de 2024 fue de <b style="font-weight:600;color:var(--ink)">638,4 BUSD</b>: uno de
+          cada <b style="font-weight:600;color:var(--ink)">29 pesos</b> de la economía argentina.
+        </span>
+      </div>
+    </div>
+  </div>
+  <p class="pie-op">
+    Ocupa menos alto que las tres cards de hoy (una card de ~130px contra tres de 172) y suma
+    información en vez de sacarla. En 375 la fila envuelve y los operadores quedan al final de
+    cada renglón, que es donde se leen igual.
+  </p>
+</section>
+
+<!-- ══════════════════ 2 ══════════════════ -->
+<section class="op">
+  <h2><span class="letra">2</span> <span class="nom">La escalera de tiempo</span>
+    <span class="sub">hacer tangible el número</span></h2>
+  <p class="tesis">
+    «61 millones de dólares por día» no se puede imaginar. <b>707 dólares por segundo</b> sí.
+    Esta versión baja la misma cifra a cuatro escalas de tiempo y deja el año y el PBI en el pie,
+    donde califican a la card entera. Es la única de las tres que agrega una lectura que hoy no
+    está en ningún lado de la página.
+  </p>
+  <div class="marco">
+    <div class="card">
+      <div class="card-bar">
+        <span class="etq">Valor bruto de producción</span>
+        <span class="micro mono i2">US$ · 12 meses</span>
+      </div>
+      <div class="escalon">
+        <span class="u">Por segundo</span>
+        <span class="x"></span>
+        <span class="v"><b class="cifra-sm">707</b><span class="micro i3">USD</span></span>
+      </div>
+      <div class="escalon">
+        <span class="u">Por minuto</span>
+        <span class="x">× 60</span>
+        <span class="v"><b class="cifra-sm">42.391</b><span class="micro i3">USD</span></span>
+      </div>
+      <div class="escalon">
+        <span class="u">Por hora</span>
+        <span class="x">× 60</span>
+        <span class="v"><b class="cifra-sm">2,54</b><span class="micro i3">MUSD</span></span>
+      </div>
+      <div class="escalon destaca">
+        <span class="u" style="color:var(--ink)">Por día</span>
+        <span class="x">× 24</span>
+        <span class="v"><b class="cifra">61,0</b><span class="micro i3">MUSD</span></span>
+      </div>
+      <div class="card-pie">
+        <span class="chip chip--mini">22,3 BUSD al año</span>
+        <span class="chip chip--mini chip--info">3,5% del PBI 2024</span>
+        <span class="micro i2">sobre un PBI de 638,4 BUSD</span>
+      </div>
+    </div>
+  </div>
+  <p class="pie-op">
+    Sin barras: entre el segundo y el día hay un factor de 86.400, así que lineal las tres
+    primeras filas quedan en cero y logarítmica la barra deja de leerse como proporción. El
+    «×60» dice la razón exacta y no necesita escala.
+  </p>
+</section>
+
+<!-- ══════════════════ 3 ══════════════════ -->
+<section class="op">
+  <h2><span class="letra">3</span> <span class="nom">De dónde sale</span>
+    <span class="sub">los insumos, que hoy están escondidos</span></h2>
+  <p class="tesis">
+    Es la única sección de la página cuyo valor es <b>100% calculado</b>: no hay una fuente que
+    publique «61 MUSD por día», sale de multiplicar volumen por precio. Los insumos están en el
+    fixture y la card no muestra ninguno. Esta versión los pone: el volumen, el Brent promedio,
+    el descuento por calidad y el PBI contra el que se compara.
+  </p>
+  <div class="marco">
+    <div class="card">
+      <div class="card-bar">
+        <span class="etq">Valor bruto de producción</span>
+        <span class="micro mono i2">últimos 12 meses</span>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:10px;padding:12px 12px 2px">
+        <b class="cifra">61,0</b><span class="micro i3">MUSD por día</span>
+        <span class="chip chip--mini" style="margin-left:auto">22,3 BUSD al año</span>
+      </div>
+      <div class="deriv">
+        <div class="panel">
+          <div class="panel-bar"><span class="rot">Cómo se calcula</span></div>
+          <div>
+            <span class="ins"><span class="micro i2">Volumen 12 meses</span>
+              <span class="num cifra-sm">304.768.305 <span class="micro i3">bbl</span></span></span>
+            <span class="ins"><span class="micro i2">Brent promedio</span>
+              <span class="num cifra-sm">78,70 <span class="micro i3">US$/bbl</span></span></span>
+            <span class="ins"><span class="micro i2">Descuento por calidad</span>
+              <span class="num cifra-sm">−5,00 <span class="micro i3">US$/bbl</span></span></span>
+            <span class="ins" style="background:var(--inset)"><span class="micro" style="color:var(--ink)">Precio realizado</span>
+              <span class="num cifra-sm">73,70 <span class="micro i3">US$/bbl</span></span></span>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-bar"><span class="rot">Contra el PBI</span></div>
+          <div class="panel-cuerpo">
+            <div class="pbi-riel"><i style="width:3.49%"></i></div>
+            <div class="pbi-marca">
+              <span class="micro i2">22,3 B de producción</span>
+              <span class="micro i2">638,4 B de PBI</span>
+            </div>
+            <p class="micro i2" style="margin:8px 0 0">
+              Uno de cada <b style="font-weight:600;color:var(--ink)">29 pesos</b> de la economía
+              argentina en 2024.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="card-pie">
+        <span class="micro i2">
+          Petróleo a Brent menos calidad; el gas al precio PIST. No descuenta costos ni impuestos:
+          es valor bruto de boca de pozo.
+        </span>
+      </div>
+    </div>
+  </div>
+  <p class="pie-op">
+    La barra del PBI es un 3,5% real, o sea una astilla — y esa astilla ES el dato. Al lado, «uno
+    de cada 29» dice lo mismo en palabras para quien no lea la barra.
+  </p>
+</section>
+
+</div>
+</body>
+</html>

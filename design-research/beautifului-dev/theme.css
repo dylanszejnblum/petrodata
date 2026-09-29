@@ -1,0 +1,228 @@
+/* ============================================================================
+   theme.css — identidad visual de https://www.beautifului.dev/
+   Reconstruida por medición directa el 2026-08-14.
+
+   Los valores de :root y .dark son COPIA EXACTA de los que sirve el sitio
+   (bloques `:root` y `.dark` de su hoja compilada). Lo que se agrega acá y
+   no está en el original son: los comentarios, los tokens de radio que el
+   sitio expresa como utilidades sueltas (--radius-window) y las tres
+   primitivas de composición del final, que en el original viven repartidas
+   entre utilidades de Tailwind.
+
+   Los "usos" son MEDIDOS: cantidad de elementos cuyo color, background-color
+   o border-color computado a 1280px es exactamente ese valor. Los de tinta
+   son altos porque el color se hereda; lo que importa es la proporción
+   entre ellos, no el número absoluto. Formato: claro / oscuro.
+   ========================================================================= */
+
+:root {
+  /* ── Superficies: una escalera de 6 peldaños, del fondo hacia arriba ──── */
+  --page: #fafafb;        /* fondo de página                        ·   1 /   1 */
+  --canvas: #f1f2f3;      /* zona hundida / segundo plano           ·  28 /  28 */
+  --surface: #ffffff;     /* card: el plano que sostiene contenido  · 164 / 111 */
+  --inset: #f7f8f9;       /* hundido DENTRO de una card             ·  20 /  20 */
+  --hover: #f4f5f6;       /* realce de fila al pasar el mouse       ·   3 /   3 */
+  --hover-2: #e7e9eb;     /* realce fuerte (presionado / activo)    ·   2 /   0 */
+
+  /* ── Tinta: tres niveles, nunca más ─────────────────────────────────── */
+  --ink: #1f2124;         /* texto primario                         · 1801 / 1754 */
+  --ink-2: #62656b;       /* texto secundario                       ·  498 /  498 */
+  --ink-3: #9a9da3;       /* terciario / metadata                   ·  759 /  747 */
+
+  /* ── Líneas: hairline y hairline con énfasis ────────────────────────── */
+  --line: #ecedef;        /* borde por defecto                      ·  57 /  56 */
+  --line-strong: #e0e2e5; /* borde de énfasis                       ·   6 /   6 */
+
+  /* ── Campos ─────────────────────────────────────────────────────────── */
+  --field: #f2f2f3;
+
+  /* ── La trama diagonal de fondo (la firma del sitio) ────────────────── */
+  --stripe: #49494913;    /* color de la veta (alfa 0.075)                    */
+  --stripe-bg: #f5f5f5;   /* fondo sobre el que se dibuja                     */
+
+  /* ── Acento: uno solo, azul ─────────────────────────────────────────── */
+  --accent: #0285ff;      /* marca / acción / anillo de foco        ·  19 /  21 */
+  --accent-ink: #0170dd;  /* variante para texto y enlaces          · 134 / 132 */
+  --accent-tint: #e9f3ff; /* fondo teñido                           ·   3 /   0 */
+
+  /* ── Estados: verde, naranja, rojo. Cada uno con su tinte ─────────────
+        Los tintes casi no se usan: son para fondos de fila, no para texto. */
+  --green: #189a4d;        /*                                        ·  27 /  23 */
+  --green-tint: #e8f5ed;   /*                                        ·   2 /   0 */
+  --orange: #ef720c;       /*                                        ·  12 /  13 */
+  --orange-tint: #fdf1e5;  /*                                        ·   0 /   0 */
+  --red: #e3474c;          /*                                        ·  20 /  20 */
+  --red-tint: #fcecec;     /*                                        ·   0 /   0 */
+
+  /* ── Tooltip: no usa las superficies del tema, tiene las suyas.
+        No se pudo medir su uso: el tooltip sólo existe al hacer hover y no
+        estaba montado durante el censo. En oscuro además comparte hex con
+        --ink / --ink-2 / --line, así que el conteo no los separa. ──────── */
+  --tooltip-bg: #25272b;
+  --tooltip-fg: #f6f7f8;
+  --tooltip-muted: #a5a8ad;
+  --tooltip-border: #3a3c40;
+
+  /* ── Elevación. Ojo: TODAS empiezan por un anillo de 1px.
+        La sombra difusa es secundaria; el borde es lo que define el plano. */
+  --shadow-hairline: 0 0 0 1px var(--line);
+  --shadow-btn: 0 0 0 1px var(--line-strong), 0 1px 2px #1018280d;
+  --shadow-card: 0 0 0 1px var(--line), 0 1px 2px #1018280a, 0 2px 6px #10182808;
+  --shadow-raised: 0 0 0 1px var(--line), 0 2px 10px #0000000b;
+  --shadow-overlay: 0 0 0 1px var(--line), 0 8px 28px #0001;
+  --shadow-inset-field: inset 0 1px 2px #0000001f;
+
+  /* ── Radios: cuatro peldaños con nombre + el pill ───────────────────── */
+  --radius-chip: 6px;     /* 175 usos — el más frecuente de todos             */
+  --radius-control: 8px;  /*  66 usos                                        */
+  --radius-card: 10px;    /*  14 usos                                        */
+  --radius-window: 14px;  /*  22 usos — el marco de las demos                */
+
+  /* ── Curvas ─────────────────────────────────────────────────────────── */
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);   /* el default de Tailwind   */
+  --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1); /* entradas con carácter */
+  --ease-link: cubic-bezier(0.16, 1, 0.3, 1);        /* subrayado de enlaces  */
+
+  /* ── Tiempos MEDIDOS (el sitio no los declara como tokens) ──────────── */
+  --dur-instant: 100ms;   /*  86 usos — hover de controles                    */
+  --dur-fast: 120ms;      /* 153 usos — el más frecuente                      */
+  --dur-base: 150ms;      /*  82 usos — default de Tailwind                   */
+  --dur-slow: 300ms;      /*  35 usos — entradas                              */
+  --dur-slower: 400ms;    /*  25 usos — cambios de estado en tablas           */
+
+  /* ── Tipografía ─────────────────────────────────────────────────────── */
+  --font-sans: Inter, "Inter Fallback", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "JetBrains Mono Fallback", ui-monospace, "SF Mono", monospace;
+}
+
+.dark {
+  --page: #17181a;
+  --canvas: #1c1d1f;
+  --surface: #232427;
+  --inset: #1f2022;
+  --hover: #2a2b2e;
+  --hover-2: #313236;
+
+  --ink: #f2f3f4;
+  --ink-2: #a5a8ad;
+  --ink-3: #6c6f75;
+
+  --line: #2e3033;
+  --line-strong: #3a3c40;
+
+  --field: #2b2c2f;
+
+  --stripe: #ffffff0e;    /* la veta se invierte a blanco (alfa 0.055)        */
+  --stripe-bg: #1b1c1e;
+
+  --accent: #3d9aff;      /* el azul sube de luminosidad, no cambia de tono   */
+  --accent-ink: #7ec0ff;  /* en oscuro el "ink" es MÁS claro que el acento    */
+  --accent-tint: #3d9aff29;
+
+  --green: #3dbb72;
+  --green-tint: #3dbb7224;
+  --orange: #f68f3c;
+  --orange-tint: #f68f3c24;
+  --red: #ee5c61;
+  --red-tint: #ee5c6124;
+
+  --tooltip-bg: #111214;  /* en oscuro el tooltip es MÁS oscuro que la página */
+  --tooltip-fg: #f2f3f4;
+  --tooltip-muted: #a5a8ad;
+  --tooltip-border: #2e3033;
+
+  --shadow-hairline: 0 0 0 1px var(--line);
+  --shadow-btn: 0 0 0 1px var(--line-strong), 0 1px 2px #0000004d;
+  --shadow-card: 0 0 0 1px var(--line), 0 1px 2px #0003, 0 2px 6px #0003;
+  --shadow-raised: 0 0 0 1px var(--line), 0 2px 10px #00000038;
+  --shadow-overlay: 0 0 0 1px var(--line-strong), 0 8px 28px #00000057;
+  --shadow-inset-field: inset 0 1px 2px #0006;
+}
+
+/* ============================================================================
+   PRIMITIVAS DE COMPOSICIÓN
+   Tres reglas que definen la identidad más que cualquier token suelto.
+   ========================================================================= */
+
+/* 1. LA TRAMA. Va en el <body>, fija respecto del scroll, y se ve por los
+      huecos de todo lo demás. Período de 8px: 7 transparentes y 1 de veta,
+      a −45°. Es lo único con textura en todo el sitio. */
+body {
+  background-color: var(--stripe-bg);
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent 0,
+    transparent 7px,
+    var(--stripe) 7px,
+    var(--stripe) 8px
+  );
+  background-attachment: fixed;
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.5;
+  letter-spacing: -0.01em;          /* tracking negativo GLOBAL */
+  font-feature-settings: "cv11", "ss01";
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* 2. EL FOCO. Una sola regla global, sin excepciones por componente. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+[contenteditable]:focus-visible {
+  outline: none;                    /* el campo se marca por su contenedor */
+}
+
+/* 3. LA SEPARACIÓN. Las secciones no se separan con espacio: se separan con
+      una línea PUNTEADA. Medido: 0px de margen entre secciones en los cuatro
+      viewports. El punteado es el rasgo estructural más reconocible. */
+.seccion {
+  border-bottom: 1px dashed var(--line);
+  padding: 40px 32px;
+}
+
+/* ── Paddings con nombre (el sitio los define así, literal) ───────────── */
+.card-pad { padding: 12px; }
+.table-cell { padding: 10px 12px; }
+.icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-control);
+}
+
+/* ── Movimiento: el corte por accesibilidad es total y global ─────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+/* ── Los 9 keyframes del sitio, tal cual ──────────────────────────────── */
+@keyframes fade-in   { 0% { opacity: 0 } to { opacity: 1 } }
+@keyframes fade-up   { 0% { opacity: 0; transform: translateY(8px) } to { opacity: 1; transform: translateY(0) } }
+@keyframes pop-in    { 0% { opacity: 0; transform: scale(.95) } to { opacity: 1; transform: scale(1) } }
+@keyframes stream-in { 0% { opacity: 0; filter: blur(4px) } to { opacity: 1; filter: blur(0) } }
+@keyframes shimmer-text { 0% { background-position: 150% } to { background-position: -50% } }
+@keyframes pixel-on  { 0%, to { opacity: .15 } 18%, 42% { opacity: 1 } 62% { opacity: .15 } }
+@keyframes eq-bounce { 0%, to { transform: scaleY(.35) } 50% { transform: scaleY(1) } }
+@keyframes caret-blink { 0%, to { opacity: 1 } 50% { opacity: 0 } }
+@keyframes spin      { to { transform: rotate(1turn) } }

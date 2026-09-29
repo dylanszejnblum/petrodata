@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Puntos clave · tres rediseños</title>
+<style>
+/* TOKENS — copiados tal cual de apps/ui-prototype/src/app/v2/sistema.css. */
+:root {
+  --page:#fafafb; --canvas:#f1f2f3; --surface:#fff; --inset:#f7f8f9;
+  --hover:#f4f5f6; --hover-2:#e7e9eb;
+  --ink:#1f2124; --ink-2:#62656b; --ink-3:#9a9da3;
+  --line:#ecedef; --line-strong:#e0e2e5; --field:#f2f2f3;
+  --accent:#0285ff; --accent-ink:#0170dd; --accent-tint:#e9f3ff;
+  --green:#189a4d; --green-tint:#e8f5ed;
+  --orange:#ef720c; --orange-tint:#fdf1e5;
+  --red:#e3474c; --red-tint:#fcecec;
+  --shadow-hairline:0 0 0 1px var(--line);
+  --shadow-btn:0 0 0 1px var(--line-strong), 0 1px 2px #1018280d;
+  --shadow-card:0 0 0 1px var(--line), 0 1px 2px #1018280a, 0 2px 6px #10182808;
+  --radius-chip:6px; --radius-control:8px; --radius-card:10px; --radius-window:14px;
+  --ease-in-out:cubic-bezier(.4,0,.2,1); --ease-out:cubic-bezier(.16,1,.3,1);
+  --ease-out-strong:cubic-bezier(.23,1,.32,1);
+  --dur-base:140ms; --dur-slower:220ms;
+  --dot:#4949491a;
+  --oil:#3f78ff; --gas:#16a6c7; --mix:#9a5cff;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme=light]) {
+    --page:#17181a; --canvas:#1c1d1f; --surface:#232427; --inset:#1f2022;
+    --hover:#2a2b2e; --hover-2:#313236;
+    --ink:#f2f3f4; --ink-2:#a5a8ad; --ink-3:#6c6f75;
+    --line:#2e3033; --line-strong:#3a3c40; --field:#2b2c2f;
+    --accent:#3d9aff; --accent-ink:#7ec0ff; --accent-tint:#3d9aff29;
+    --green:#3dbb72; --green-tint:#3dbb7224;
+    --orange:#f68f3c; --orange-tint:#f68f3c24;
+    --red:#ee5c61; --red-tint:#ee5c6124;
+    --shadow-btn:0 0 0 1px var(--line-strong), 0 1px 2px #0000004d;
+    --shadow-card:0 0 0 1px var(--line), 0 1px 2px #0003, 0 2px 6px #0003;
+    --dot:#ffffff0f;
+  }
+}
+* { box-sizing:border-box; }
+body {
+  margin:0; padding:40px 24px 80px;
+  background:var(--page);
+  background-image:radial-gradient(circle at 1px 1px, var(--dot) 1px, transparent 0);
+  background-size:12px 12px; background-attachment:fixed;
+  color:var(--ink);
+  font-family:"Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  font-size:14px; line-height:1.5; letter-spacing:-.01em;
+}
+
+/* Tipografía del sistema. Toda la escala va de 10 a 21px: para destacar algo
+   hay exactamente dos palancas, el peso y la tinta. */
+.cifra   { font-size:17px; font-weight:600; line-height:1.2; letter-spacing:-.01em; font-variant-numeric:tabular-nums; }
+.cifra-sm{ font-size:13px; font-weight:600; line-height:1.3; font-variant-numeric:tabular-nums; }
+.titulo  { font-size:13px; font-weight:600; line-height:1.3; font-variant-numeric:tabular-nums; }
+.cuerpo  { font-size:13px; line-height:19.5px; }
+.etq     { font-size:12.5px; color:var(--ink-2); }
+.micro   { font-size:11.5px; line-height:17.25px; }
+.mono    { font-family:"JetBrains Mono", ui-monospace,"SF Mono",Menlo,monospace; font-variant-numeric:tabular-nums; }
+.num     { font-variant-numeric:tabular-nums; }
+.i2 { color:var(--ink-2); } .i3 { color:var(--ink-3); }
+
+/* Andamio del archivo — no es parte del sistema. */
+.hoja { max-width:760px; margin:0 auto; }
+.hoja > h1 { font-size:21px; font-weight:600; letter-spacing:-.02em; margin:0 0 6px; }
+.hoja > p.lede { color:var(--ink-2); font-size:12.5px; line-height:18.75px; margin:0 0 14px; max-width:66ch; }
+.hoja > p.lede b { color:var(--ink); font-weight:600; }
+.nota-dato { margin:0 0 30px; padding:10px 12px; border-radius:var(--radius-control);
+  background:var(--orange-tint); color:color-mix(in srgb, var(--orange) 55%, var(--ink));
+  font-size:11.5px; line-height:17.25px; max-width:72ch; }
+.nota-dato b { font-weight:600; }
+.op { margin:0 0 14px; padding-top:32px; border-top:1px dashed var(--line-strong); }
+.op:first-of-type { border-top:0; padding-top:0; }
+.op h2 { display:flex; align-items:baseline; gap:8px; flex-wrap:wrap; margin:0 0 6px; }
+.op h2 .letra { font-family:"JetBrains Mono",ui-monospace,monospace; font-size:11px; color:var(--ink-2); font-weight:400; }
+.op h2 .nom { font-size:13px; font-weight:600; }
+.op h2 .sub { font-size:12.5px; font-weight:400; color:var(--ink-2); }
+.op > p.tesis { font-size:12.5px; line-height:18.75px; color:var(--ink-2); margin:0 0 14px; max-width:72ch; }
+.op > p.tesis b { font-weight:600; color:var(--ink); }
+.marco { border-radius:var(--radius-window); background:var(--canvas); box-shadow:var(--shadow-hairline); padding:12px; }
+.pie-op { font-size:11.5px; line-height:17.25px; color:var(--ink-2); margin:10px 2px 0; max-width:72ch; }
+
+/* ═══════════════ PIEZAS DEL SISTEMA ═══════════════ */
+.card { overflow:hidden; border-radius:var(--radius-card); background:var(--surface); box-shadow:var(--shadow-card); }
+.card-bar { display:flex; align-items:baseline; justify-content:space-between; gap:12px;
+  padding:10px 12px; border-bottom:1px solid var(--line); }
+.card-pie { display:flex; align-items:center; flex-wrap:wrap; gap:8px; padding:10px 12px;
+  border-top:1px solid var(--line); background:var(--inset); }
+.fila { display:flex; align-items:center; gap:8px; padding:10px 12px; border-bottom:1px solid var(--line); }
+.fila:last-child { border-bottom:0; }
+.fila:hover { background:var(--hover); }
+.chip { display:inline-flex; align-items:center; gap:5px; height:22px; padding:0 8px;
+  border-radius:var(--radius-chip); font-size:11.5px; font-weight:500; white-space:nowrap;
+  background:var(--field); color:var(--ink-2); }
+.chip--mini { height:19px; padding:0 6px; border-radius:5px; font-size:10.5px; }
+/* El texto mezclado con la tinta al 55%: el token pleno sobre su propio tinte
+   no llega a AA a 10,5px. Es la misma receta que ya usaba --info. */
+.chip--ok   { background:var(--green-tint);  color:color-mix(in srgb, var(--green) 55%, var(--ink)); }
+.chip--info { background:var(--accent-tint); color:color-mix(in srgb, var(--accent-ink) 55%, var(--ink)); }
+/* display:block: como <span> suelto colapsa a inline y la barra no se dibuja.
+   En el sistema real siempre llega con `block` de Tailwind o como hijo flex. */
+.barra { display:block; height:4px; border-radius:999px; background:var(--line-strong); overflow:hidden; }
+.barra > i { display:block; height:100%; border-radius:999px; background:var(--barra-color, var(--ink-3)); }
+.hundido { border-radius:var(--radius-control); background:var(--inset); overflow:hidden; }
+.hundido-bar { display:flex; align-items:center; justify-content:space-between; gap:10px;
+  padding:6px 10px; background:var(--field); border-bottom:1px solid var(--line); }
+.panel { border-radius:var(--radius-control); background:var(--surface); box-shadow:var(--shadow-hairline); overflow:hidden; }
+.panel-bar { display:flex; align-items:center; justify-content:space-between; gap:8px;
+  height:30px; padding:0 10px; border-bottom:1px solid var(--line); }
+.panel-bar .rot { font-size:10.5px; font-weight:500; color:var(--ink-2); }
+.panel-cuerpo { padding:10px; }
+
+/* ── 1 · LA CADENA ────────────────────────────────────────────────────────
+   El operador entre cifra y cifra. No es decoración: es lo que convierte tres
+   cajas sueltas en una sola cuenta. Va en --field con la tinta secundaria,
+   como cualquier anotación del sistema, y NUNCA pesa más que las cifras. */
+.cadena { display:flex; align-items:center; flex-wrap:wrap; gap:0; padding:14px 12px; }
+.cadena > .paso { display:flex; flex-direction:column; gap:2px; min-width:0; }
+.cadena > .op-mat { display:flex; flex-direction:column; align-items:center; gap:3px;
+  flex-shrink:0; padding:0 14px; }
+.cadena > .op-mat > .signo { font-family:"JetBrains Mono",ui-monospace,monospace;
+  font-size:12px; font-weight:500; color:var(--ink-2); }
+.cadena > .op-mat > .flecha { font-size:11px; color:var(--ink-3); line-height:1; }
+.cadena .val { display:flex; align-items:baseline; gap:5px; }
+
+/* ── 2 · LA ESCALERA ──────────────────────────────────────────────────────
+   Cuatro escalas de tiempo, y entre una y otra el MULTIPLICADOR.
+
+   Primero le puse una barra por fila y estaba mal: entre el segundo y el día
+   hay un factor de 86.400, así que lineal las tres primeras filas quedan en
+   cero y logarítmica la barra no se puede leer como proporción —o sea, es
+   decoración con forma de dato—. El «×60» es exacto, no necesita escala, y
+   convierte la lista en una escalera de verdad. */
+.escalon { display:flex; align-items:center; gap:10px; padding:9px 12px; border-bottom:1px solid var(--line); }
+.escalon:last-child { border-bottom:0; }
+.escalon:hover { background:var(--hover); }
+.escalon > .u { flex:1; min-width:0; white-space:nowrap; font-size:11.5px; color:var(--ink-2); }
+.escalon > .x { flex-shrink:0; width:44px; text-align:right;
+  font-family:"JetBrains Mono",ui-monospace,monospace; font-size:10.5px; color:var(--ink-3); }
+.escalon > .v { display:flex; align-items:baseline; justify-content:flex-end; gap:5px;
+  width:120px; flex-shrink:0; }
+.escalon.destaca { background:var(--accent-tint); }
+
+/* ── 3 · LA DERIVACIÓN ────────────────────────────────────────────────────
+   Los insumos que la sección hoy esconde. La regla del sistema que aplica: un
+   número publicado sin sus entradas no se puede auditar, y esta sección es la
+   única de la página cuyo valor es 100% calculado. */
+.deriv { display:grid; grid-template-columns:1fr 1fr; gap:8px; padding:10px; }
+@media (max-width:640px) { .deriv { grid-template-columns:1fr; } }
+.ins { display:flex; align-items:baseline; justify-content:space-between; gap:8px;
+  padding:7px 10px; border-bottom:1px solid var(--line); }
+.ins:last-child { border-bottom:0; }
+.pbi-riel { position:relative; height:22px; border-radius:5px; background:var(--field); overflow:hidden; }
+.pbi-riel > i { display:block; height:100%; background:var(--accent); }
+.pbi-marca { display:flex; justify-content:space-between; margin-top:5px; }
+
+
+/* ═══════════ LO QUE HAY HOY ═══════════ */
+.rama { position:relative; padding-left:59px; }
+.rama > * { position:relative; }
+.rama > *::before { content:''; position:absolute; left:-7px; top:0; bottom:0; width:1px; background:var(--line); }
+.rama > *:first-child::before { top:50%; }
+.rama > *:last-child::before { bottom:50%; }
+.rama > *::after { content:''; position:absolute; left:-7px; top:50%; width:6px; height:1px; background:var(--line); }
+.paso { display:flex; align-items:flex-start; gap:8px; min-height:28px; padding:2px 6px; }
+
+/* ═══════════ 1 · FILAS DE TAREA (§06 Task Rows) ═══════════
+   MEDIDO: cada item es su PROPIA card —bg-surface + shadow-card— con radio 22
+   sobre una fila de 44, o sea una píldora entera. Adentro: gap 10, padding
+   horizontal 10, y el check en un círculo de 22 relleno de verde con el tilde
+   en blanco a 13px y trazo 3,5. Los items se apilan con 8 de separación.
+   Hover: el fondo pasa a --inset. */
+.tarea { display:flex; flex-direction:column; gap:8px; }
+.tarea > li { list-style:none; display:flex; align-items:flex-start; gap:10px; min-height:44px;
+  padding:11px 10px; border-radius:22px; background:var(--surface); box-shadow:var(--shadow-card);
+  transition:background-color 300ms var(--ease-in-out); }
+.tarea > li:hover { background:var(--inset); }
+.tarea .tilde { display:grid; place-items:center; flex-shrink:0; width:22px; height:22px;
+  border-radius:50%; background:var(--green); color:#fff; }
+
+/* ═══════════ 2 · CON CONTADOR (§11 Context Cards) ═══════════
+   MEDIDO: una cabecera fuera de la card —rótulo 13/600 más un contador de 20
+   de alto en --inset con anillo— y después las cards, cada una con su
+   primitive-card-bar: padding 10×12, filete abajo, ícono de 11 a trazo 2,5 y
+   el apunte a la derecha en ink-3 de 12.
+
+   Lo que NO se copia: el ícono. En la referencia cada context card es un tipo
+   distinto de cosa —una regla, una fila, un documento— y el ícono lo dice. Acá
+   los dos items son la misma clase de cosa, así que un ícono repetido no
+   distingue nada: es el mismo defecto que tiene el diseño actual. Queda el
+   número, que sí sirve —permite referirse a un punto— y va a la IZQUIERDA,
+   que es donde vive el marcador de una lista numerada. */
+.cab-ctx { display:flex; align-items:center; gap:8px; padding:0 2px; margin-bottom:8px; }
+.cab-ctx > .rot { font-size:13px; font-weight:600; }
+.contador { display:inline-flex; align-items:center; height:20px; padding:0 6px; border-radius:6px;
+  background:var(--inset); box-shadow:var(--shadow-hairline); color:var(--ink-2);
+  font-size:11.5px; font-weight:500; font-variant-numeric:tabular-nums; }
+.num-pto { flex-shrink:0; width:18px; font-size:11px; line-height:19.5px; }
+.ctx-bar { display:flex; align-items:flex-start; gap:10px; padding:10px 12px; border-bottom:1px solid var(--line); }
+.ctx-bar:last-child { border-bottom:0; }
+
+
+/* ═══════════ MARCADORES PARA LA 2 ═══════════
+   Los tres son piezas medidas. El criterio no es cuál se ve mejor suelto sino
+   cuál significa algo estando REPETIDO, porque los puntos no se diferencian en
+   el dato y cualquier marcador va a ser idéntico en las dos filas. */
+
+/* a · El número en la caja del contador. MEDIDO §10: 20 de alto sobre --inset
+   con anillo. Es el mismo número que ya está, con presencia. Significa lo de
+   siempre —el orden— y permite decir «el punto 02». */
+.mk-caja { display:inline-flex; align-items:center; justify-content:center; flex-shrink:0;
+  min-width:22px; height:20px; padding:0 5px; border-radius:6px; background:var(--inset);
+  box-shadow:var(--shadow-hairline); color:var(--ink-2);
+  font-family:"JetBrains Mono",ui-monospace,monospace; font-size:10.5px; font-variant-numeric:tabular-nums; }
+
+/* b · El tilde. MEDIDO §06: la referencia repite EL MISMO check en todas sus
+   filas de tarea, así que un marcador repetido no es decoración cuando lo que
+   dice es un estado que todas comparten — acá, «esto ya está establecido».
+   A 18 y no a 22: en la §06 la fila mide 44 y acá 42, y el círculo no puede
+   pesar más que el renglón de texto que ancla. */
+.mk-tilde { display:grid; place-items:center; flex-shrink:0; width:18px; height:18px;
+  border-radius:50%; background:var(--green); color:#fff; }
+/* Variante sin relleno, por si el verde pesa: el mismo tilde en la tinta media
+   sobre --inset. Dice «punto» sin afirmar «completado». */
+.mk-tilde--neutro { background:var(--inset); box-shadow:var(--shadow-hairline); color:var(--ink-2); }
+
+/* c · El punto de color. MEDIDO §16: el punto de 8px al lado del rótulo de una
+   figura, que es la única marca de color del sistema. Acá va en el color de la
+   categoría de la nota, así los puntos quedan atados al tema. */
+.mk-punto { display:block; flex-shrink:0; width:8px; height:8px; border-radius:50%; margin-top:6px; }
+
+/* ═══════════ 3 · COMPACTA (§04 Approval Card) ═══════════
+   MEDIDO: el enunciado a 13/500 y las opciones apretadas debajo —gap 2, radio
+   de control, padding 6×6— con margen negativo de 6 a los costados, así el
+   realce del hover sobresale del texto sin que el texto se mueva. */
+/* margin en 0 explícito: el <ul> trae 1em abajo por defecto y dejaba
+   catorce píxeles muertos entre el último punto y el borde de la card. */
+.apr { display:flex; flex-direction:column; gap:2px; margin:8px 0 0; }
+.apr > li { list-style:none; display:flex; align-items:flex-start; gap:8px; margin:0 -6px;
+  padding:6px; border-radius:var(--radius-control); transition:background-color 100ms; }
+.apr > li:hover { background:var(--hover); }
+.apr .n { flex-shrink:0; width:16px; font-family:"JetBrains Mono",ui-monospace,monospace;
+  font-size:11px; color:var(--ink-3); line-height:19.5px; }
+
+@media (prefers-reduced-motion: reduce) { *,*::before,*::after { transition-duration:.01ms !important; } }
+</style>
+</head>
+<body>
+<div class="hoja">
+
+<h1>Puntos clave · tres rediseños</h1>
+<p class="lede">
+  Lo que falla en el que está: el riel de desglose es la pieza que el sistema usa para decir
+  <b>«esto se desprende de aquello»</b>, y está pensada para colgar de una fila que la ancla —así
+  se usa en provincias y en empresas—. Acá no cuelga de nada: el codo del primer punto apunta a
+  un espacio vacío. Y el ícono de lista repetido en cada renglón no dice nada, porque
+  <b>todos</b> los renglones son items de una lista.
+</p>
+<p class="lede">
+  Las tres alternativas salen de componentes MEDIDOS de la referencia, no de invención: las
+  filas de tarea de la §06, la cabecera con contador de la §11 y las filas apretadas de la §04.
+</p>
+
+<section class="op" style="opacity:.72">
+  <h2><span class="letra">·</span> <span class="nom">Lo que está hoy</span>
+    <span class="sub">el riel de desglose</span></h2>
+  <div class="marco">
+    <div class="card">
+      <div style="padding:12px">
+        <span class="etq" style="display:block;margin-bottom:8px">Puntos clave</span>
+        <div class="rama">
+          <div class="paso"><span class="i3" style="margin-top:3px;flex-shrink:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18M3 12h12M3 19h7"/></svg></span><span class="cuerpo">El capítulo de exportación concentra la conversación del sector: sets de fractura, evacuación y logística de arena son los cuellos de botella a vigilar.</span></div>
+          <div class="paso"><span class="i3" style="margin-top:3px;flex-shrink:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18M3 12h12M3 19h7"/></svg></span><span class="cuerpo">El ritmo hacia adelante depende menos de la geología y más de la macro: financiamiento, reglas estables e infraestructura en marcha.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ 1 ══════════════════ -->
+<section class="op">
+  <h2><span class="letra">1</span> <span class="nom">Filas de tarea</span>
+    <span class="sub">§06 · cada punto, su propia píldora</span></h2>
+  <p class="tesis">
+    En la referencia cada tarea es una <b>card entera</b> —fondo propio, sombra propia y radio 22
+    sobre una fila de 44, o sea una píldora— con un check verde de 22 al principio. Traducido
+    acá: cada punto clave es una afirmación cerrada, y una píldora por punto lo dice sin
+    necesitar ni riel ni viñeta. El check es el único uso de color, y significa algo — «esto ya
+    está establecido», que es lo que un punto clave es.
+  </p>
+  <div class="marco">
+    <div class="card">
+      <div style="padding:12px">
+        <span class="etq" style="display:block;margin-bottom:8px">Puntos clave</span>
+        <ul class="tarea" style="margin:0;padding:0">
+          <li><span class="tilde"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span><span class="cuerpo">El capítulo de exportación concentra la conversación del sector: sets de fractura, evacuación y logística de arena son los cuellos de botella a vigilar.</span></li>
+          <li><span class="tilde"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span><span class="cuerpo">El ritmo hacia adelante depende menos de la geología y más de la macro: financiamiento, reglas estables e infraestructura en marcha.</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <p class="pie-op">
+    Es la más alta de las tres —cada píldora trae su propio aire— y la única que usa color. Si el
+    pipeline algún día trae seis puntos en vez de dos, ésta es la que peor escala.
+  </p>
+</section>
+
+<!-- ══════════════════ 2 ══════════════════ -->
+<section class="op">
+  <h2><span class="letra">2</span> <span class="nom">Con contador</span>
+    <span class="sub">§11 · la cabecera afuera y la barra de card adentro</span></h2>
+  <p class="tesis">
+    La referencia saca el rótulo <b>afuera</b> de la card y le pega un contador; adentro, cada
+    item es una barra de card medida —10×12 con filete abajo— con un ícono de 11 y el apunte a
+    la derecha. Acá el rótulo deja de ser una etiqueta flotando dentro de la card y el contador
+    dice cuántos puntos hay antes de leerlos. No se copia el ícono: allá cada card es un tipo
+    distinto de cosa y el ícono lo dice, acá los dos items son la misma clase y
+    un ícono repetido no distingue nada — el mismo defecto que tiene el diseño
+    actual. Queda el número, que sí sirve.
+  </p>
+  <div class="marco">
+    <div class="cab-ctx"><span class="rot">Puntos clave</span><span class="contador">2</span></div>
+    <div class="card">
+      <div class="ctx-bar">
+        <span class="mono i3 num-pto">01</span>
+        <span class="cuerpo" style="flex:1;min-width:0">El capítulo de exportación concentra la conversación del sector: sets de fractura, evacuación y logística de arena son los cuellos de botella a vigilar.</span>
+      </div>
+      <div class="ctx-bar">
+        <span class="mono i3 num-pto">02</span>
+        <span class="cuerpo" style="flex:1;min-width:0">El ritmo hacia adelante depende menos de la geología y más de la macro: financiamiento, reglas estables e infraestructura en marcha.</span>
+      </div>
+    </div>
+  </div>
+  <p class="pie-op">
+    Es la que mejor se integra con el resto de la nota: la cabecera afuera de la card es el mismo
+    patrón que ya usa cada sección del sitio —rótulo, y el bloque debajo—.
+  </p>
+</section>
+
+<!-- ══════════════════ 3 ══════════════════ -->
+<section class="op">
+  <h2><span class="letra">3</span> <span class="nom">Compacta</span>
+    <span class="sub">§04 · el enunciado y las opciones pegadas</span></h2>
+  <p class="tesis">
+    La Approval Card pone la pregunta a 13/500 y las opciones <b>apretadas</b> justo debajo —2px
+    de separación, padding de 6— con un margen negativo a los costados para que el realce del
+    hover sobresalga del texto sin que el texto se mueva. Es la receta del sistema para «un
+    enunciado y sus renglones», que es exactamente esto. El número reemplaza a la viñeta:
+    numerar es la forma que tiene el sistema de ordenar sin decorar.
+  </p>
+  <div class="marco">
+    <div class="card">
+      <div style="padding:12px">
+        <span class="cuerpo" style="font-weight:500">Puntos clave</span>
+        <ul class="apr" style="padding:0">
+          <li><span class="n">01</span><span class="cuerpo">El capítulo de exportación concentra la conversación del sector: sets de fractura, evacuación y logística de arena son los cuellos de botella a vigilar.</span></li>
+          <li><span class="n">02</span><span class="cuerpo">El ritmo hacia adelante depende menos de la geología y más de la macro: financiamiento, reglas estables e infraestructura en marcha.</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <p class="pie-op">
+    La más baja de las tres y la que menos interrumpe la lectura de la nota. Lo que pierde: sin
+    superficie propia por punto, con seis items empieza a leerse como un párrafo con sangría.
+  </p>
+</section>
+
+<h1 style="margin:36px 0 6px">Marcadores para la 2</h1>
+<p class="lede">Los puntos no se diferencian en el dato, así que cualquier marcador va a ser idéntico en las dos filas. El criterio no es cuál se ve mejor suelto sino <b>cuál significa algo estando repetido</b>.</p>
+
+<section class="op">
+  <h2><span class="letra">2a</span> <span class="nom">El número en su caja</span>
+    <span class="sub">§10 · el contador</span></h2>
+  <p class="tesis">El mismo número que ya está, con presencia. Es la caja del contador de grupo —20 de alto sobre --inset con anillo— y significa lo de siempre: el orden. Es el único de los tres que permite decir «el punto 02».</p>
+  <div class="marco">
+    <div class="cab-ctx"><span class="rot">Puntos clave</span><span class="contador">2</span></div>
+    <div class="card">
+      <div class="ctx-bar">
+        <span class="mk-caja">01</span>
+        <span class="cuerpo" style="flex:1;min-width:0">El capítulo de exportación concentra la conversación del sector: sets de fractura, evacuación y logística de arena son los cuellos de botella a vigilar.</span>
+      </div>
+      <div class="ctx-bar">
+        <span class="mk-caja">02</span>
+        <span class="cuerpo" style="flex:1;min-width:0">El ritmo hacia adelante depende menos de la geología y más de la macro: financiamiento, reglas estables e infraestructura en marcha.</span>
+      </div>
+    </div>
+  </div>
+  <p class="pie-op">No agrega significado nuevo, agrega peso al que ya había. Es la opción que no arriesga nada.</p>
+</section>
+
+<section class="op">
+  <h2><span class="letra">2b</span> <span class="nom">El tilde</span>
+    <span class="sub">§06 · el check de las filas de tarea</span></h2>
+  <p class="tesis">La referencia repite <b>el mismo</b> check en todas sus filas de tarea, así que un marcador repetido no es decoración cuando lo que dice es un estado que todas comparten. Acá dice «esto ya está establecido», que es lo que un punto clave es. Se pierde el número.</p>
+  <div class="marco">
+    <div class="cab-ctx"><span class="rot">Puntos clave</span><span class="contador">2</span></div>
+    <div class="card">
+      <div class="ctx-bar">
+        <span class="mk-tilde"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>
+        <span class="cuerpo" style="flex:1;min-width:0">El capítulo de exportación concentra la conversación del sector: sets de fractura, evacuación y logística de arena son los cuellos de botella a vigilar.</span>
+      </div>
+      <div class="ctx-bar">
+        <span class="mk-tilde"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>
+        <span class="cuerpo" style="flex:1;min-width:0">El ritmo hacia adelante depende menos de la geología y más de la macro: financiamiento, reglas estables e infraestructura en marcha.</span>
+      </div>
+    </div>
+  </div>
+  <div class="marco" style="margin-top:8px">
+    <div class="cab-ctx"><span class="rot">Puntos clave</span><span class="contador">2</span></div>
+    <div class="card">
+      <div class="ctx-bar">
+        <span class="mk-tilde mk-tilde--neutro"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>
+        <span class="cuerpo" style="flex:1;min-width:0">El capítulo de exportación concentra la conversación del sector: sets de fractura, evacuación y logística de arena son los cuellos de botella a vigilar.</span>
+      </div>
+      <div class="ctx-bar">
+        <span class="mk-tilde mk-tilde--neutro"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>
+        <span class="cuerpo" style="flex:1;min-width:0">El ritmo hacia adelante depende menos de la geología y más de la macro: financiamiento, reglas estables e infraestructura en marcha.</span>
+      </div>
+    </div>
+  </div>
+  <p class="pie-op">Abajo, la misma pieza sin el relleno verde: dice «punto» sin afirmar «completado», que es más prudente cuando el punto sale de un pipeline y no de un editor.</p>
+</section>
+
+<section class="op">
+  <h2><span class="letra">2c</span> <span class="nom">El punto de color</span>
+    <span class="sub">§16 · la marca de la figura</span></h2>
+  <p class="tesis">El punto de 8px de la Insight Card, que es la única marca de color del sistema, en el color de la categoría de la nota. Ata los puntos al tema sin repetir la palabra. Se pierde el número.</p>
+  <div class="marco">
+    <div class="cab-ctx"><span class="rot">Puntos clave</span><span class="contador">2</span></div>
+    <div class="card">
+      <div class="ctx-bar">
+        <span class="mk-punto" style="background:#8fb520"></span>
+        <span class="cuerpo" style="flex:1;min-width:0">El capítulo de exportación concentra la conversación del sector: sets de fractura, evacuación y logística de arena son los cuellos de botella a vigilar.</span>
+      </div>
+      <div class="ctx-bar">
+        <span class="mk-punto" style="background:#8fb520"></span>
+        <span class="cuerpo" style="flex:1;min-width:0">El ritmo hacia adelante depende menos de la geología y más de la macro: financiamiento, reglas estables e infraestructura en marcha.</span>
+      </div>
+    </div>
+  </div>
+  <p class="pie-op">Es el marcador más liviano de los tres. El riesgo: el color ya está dicho por el tag de la cabecera de la nota, así que puede leerse como adorno.</p>
+</section>
+</div>
+</body>
+</html>

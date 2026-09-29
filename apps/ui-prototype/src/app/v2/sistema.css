@@ -1,0 +1,2272 @@
+/* ============================================================================
+   Sistema V2 — la identidad medida en beautifului.dev, aplicada a Vaca Muerta.
+   La guía completa está en design-research/beautifului-dev/SISTEMA.md.
+
+   Todo va colgado de .sistema para no filtrarse al prototipo Estrato, que
+   convive en las mismas rutas. Por eso la trama vive acá y no en el <body>.
+   ========================================================================= */
+
+.sistema {
+  /* Superficies — del fondo hacia adelante */
+  --page: #fafafb;
+  --canvas: #f1f2f3;
+  --surface: #fff;
+  --inset: #f7f8f9;
+  --hover: #f4f5f6;
+  --hover-2: #e7e9eb;
+
+  /* Tinta — tres niveles, nunca un cuarto */
+  --ink: #1f2124;
+  --ink-2: #62656b;
+  --ink-3: #9a9da3;
+
+  --line: #ecedef;
+  --line-strong: #e0e2e5;
+  --field: #f2f2f3;
+
+  /* Grilla de puntos. La referencia usa una trama de líneas a −45°; acá se
+     prueba una grilla (pedido de Mariano, 2026-08-14). Mismo papel —dar
+     textura sin competir con el dato— pero más quieta: la diagonal arrastra
+     la vista y el punto no.
+
+     El alfa sube bastante respecto de la trama y aun así queda más tenue.
+     Es geometría: una trama de 1px cada 8px cubre el 12,5% de la superficie;
+     una grilla de puntos de 1px de radio cada 18px cubre el 0,97%. Trece
+     veces menos superficie, así que con el alfa viejo no se vería nada. */
+  --dot: #4949491a;
+  --dot-bg: #f5f5f5;
+
+  /* Fondo propio del panel lateral: un peldaño MÁS CLARO que el suelo en los
+     dos temas. No puede ser un token existente porque los temas no son
+     inversos: en claro "más claro que --page" es el blanco de --surface, y
+     en oscuro es --inset, que está 3,4 puntos por encima de --page. */
+  --panel: #ffffff;
+
+  --accent: #0285ff;
+  --accent-ink: #0170dd;
+  --accent-tint: #e9f3ff;
+
+  --green: #189a4d;
+  --green-tint: #e8f5ed;
+  --orange: #ef720c;
+  --orange-tint: #fdf1e5;
+  --red: #e3474c;
+  --red-tint: #fcecec;
+
+  --shadow-hairline: 0 0 0 1px var(--line);
+  --shadow-btn: 0 0 0 1px var(--line-strong), 0 1px 2px #1018280d;
+  --shadow-card: 0 0 0 1px var(--line), 0 1px 2px #1018280a, 0 2px 6px #10182808;
+
+  --radius-chip: 6px;
+  --radius-control: 8px;
+  --radius-card: 10px;
+  --radius-window: 14px;
+
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
+
+  --dur-instant: 100ms;
+  --dur-fast: 120ms;
+  --dur-base: 150ms;
+  --dur-slow: 300ms;
+  --dur-slower: 400ms;
+}
+
+[data-theme='dark'] .sistema {
+  --page: #17181a;
+  --canvas: #1c1d1f;
+  --surface: #232427;
+  --inset: #1f2022;
+  --hover: #2a2b2e;
+  --hover-2: #313236;
+  --ink: #f2f3f4;
+  --ink-2: #a5a8ad;
+  --ink-3: #6c6f75;
+  --line: #2e3033;
+  --line-strong: #3a3c40;
+  --field: #2b2c2f;
+  --dot: #ffffff0f;
+  --dot-bg: #1b1c1e;
+  --panel: #1f2022;
+  --accent: #3d9aff;
+  --accent-ink: #7ec0ff;
+  --accent-tint: #3d9aff29;
+  --green: #3dbb72;
+  --green-tint: #3dbb7224;
+  --orange: #f68f3c;
+  --orange-tint: #f68f3c24;
+  --red: #ee5c61;
+  --red-tint: #ee5c6124;
+  --shadow-hairline: 0 0 0 1px var(--line);
+  --shadow-btn: 0 0 0 1px var(--line-strong), 0 1px 2px #0000004d;
+  --shadow-card: 0 0 0 1px var(--line), 0 1px 2px #0003, 0 2px 6px #0003;
+}
+
+/* ── EL FONDO. El suelo general queda liso; la grilla de puntos vive sólo en
+      la columna de contenido (.s-contenido), así el panel lateral se
+      distingue por color Y por textura.
+
+      El suelo pasa de --dot-bg a --page. --dot-bg era el fondo que la
+      referencia le ponía al body DEBAJO de la trama, y sin trama no tiene
+      sentido: --page es el token que nombra el suelo de la página.
+
+      Medido, mejora los dos temas. En claro el suelo sube de L 97,0 a 98,5
+      —más claro, que era el pedido— y de paso la separación contra el marco
+      pasa de 0,9 a 2,4 puntos. En oscuro BAJA de 22,6 a 20,9, y ahí la
+      ganancia es mayor: el marco estaba a 0,5 puntos del suelo, o sea
+      prácticamente invisible, y pasa a 2,2. ────────────────────────────── */
+.sistema {
+  min-height: 100dvh;
+  background-color: var(--page);
+
+  color: var(--ink);
+  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  letter-spacing: -0.01em; /* tracking negativo global */
+}
+
+/* ── EL FOCO. Una sola regla, no se define por componente. ─────────────── */
+.sistema :focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+.sistema input:focus-visible,
+.sistema textarea:focus-visible,
+.sistema select:focus-visible {
+  outline: none; /* el campo se marca por su contenedor */
+}
+
+/* ── Tipografía. Nada por encima de 21px: la jerarquía es peso y tinta. ── */
+.s-titular { font-size: 21px; font-weight: 600; line-height: 1.25; letter-spacing: -0.02em; }
+/* 17px y no 21. Busqué en la referencia todas las cifras de 15px para arriba
+   y hay exactamente dos —"−4.41%" y "+1.15%"—, las dos a 17/600. El 21 existe
+   en el sistema pero se usa UNA sola vez en todo el sitio y es el título de la
+   página: ninguna cifra llega ahí. Queda declarado en .s-titular, que es donde
+   corresponde.
+   La secundaria baja a 13, que es el tamaño de celda de tabla del sistema, con
+   el peso subido a 600 para que se lea como cifra y no como celda. A 16 estaba
+   a un punto de la principal y la distinción no significaba nada. */
+.s-cifra { font-size: 17px; font-weight: 600; line-height: 1.2; font-variant-numeric: tabular-nums; }
+.s-cifra-sm { font-size: 13px; font-weight: 600; line-height: 1.3; font-variant-numeric: tabular-nums; }
+.s-titulo { font-size: 13px; font-weight: 600; }
+.s-cuerpo { font-size: 13px; line-height: 19.5px; }
+/* Acá el sistema se aparta de la referencia a propósito. En beautifului.dev
+   las descripciones y los rótulos van en la tinta más tenue, que no llega a
+   AA sobre ninguna superficie (2,4-3,5:1). Es la trampa documentada en
+   SISTEMA.md §10.1: ink-3 queda SÓLO para metadata que nadie precisa leer
+   —números de sección, fechas, unidades— y todo lo legible sube a ink-2. */
+.s-desc { font-size: 12.5px; line-height: 18.75px; color: var(--ink-2); text-wrap: pretty; }
+.s-etq { font-size: 12px; line-height: 18px; color: var(--ink-2); }
+.s-micro { font-size: 11.5px; line-height: 17.25px; }
+.s-mono { font-family: var(--font-jetbrains), ui-monospace, "SF Mono", monospace; font-variant-numeric: tabular-nums; }
+.s-num { font-variant-numeric: tabular-nums; }
+
+/* ── Sección: cero margen entre secciones, separa una línea PUNTEADA ─────
+      El vertical baja de 40 a 16 (pedido de Mariano, 2026-08-14): entre marco
+      y marco quedaban 81px —40 abajo + 1 de línea + 40 arriba— medidos de la
+      referencia, donde cada sección es una demo de 272px de alto y necesita
+      ese aire. Las nuestras son filas de datos, mucho más bajas, y 81px
+      pesaba de más. Con 16 quedan 33.
+
+      Efecto lateral que conviene notar: ahora el padding horizontal (32)
+      supera al vertical (20), que es la relación que el sistema usa en todos
+      los demás componentes. La sección era la única que la invertía. */
+.s-seccion { max-width: 672px; padding: 16px 32px; }
+@media (max-width: 639px) { .s-seccion { padding: 12px 20px; } }
+/* La página de una nota es la única de largo aliento del sitio, y ahí el largo
+   del renglón importa. A 672 —o sea 584 adentro del marco— los párrafos daban
+   unos 81 caracteres por línea, bien arriba del rango cómodo.
+
+   Se angosta LA SECCIÓN y no la columna de adentro, que fue el primer intento
+   y estuvo mal: con el tope en un contenedor interno la columna quedaba pegada
+   a la izquierda del marco y sobraban 36px sólo del lado derecho — un margen
+   de un lado y no del otro se lee como error, no como composición. Angostada
+   la sección, todo anida a ras y el aire que sobra queda a la derecha de la
+   columna de contenido, que es donde el sistema ya lo deja: «en una pantalla
+   de 1920 el contenido sigue midiendo 960 y se ve la trama a los costados».
+
+   636 = 548 de texto + 24 del marco + 64 de la sección. Medido sobre el texto
+   servido, ese ancho da 76 caracteres de promedio contra los 81 de antes. No
+   llega a los 66 del ideal tipográfico y conviene decirlo: bajar más obligaría
+   a angostar tanto la sección que dejaría de parecerse al resto del sitio. */
+.s-seccion--lectura { max-width: 636px; }
+
+/* la descripción comparte renglón con el título: el layout impone su largo */
+@media (min-width: 640px) {
+  .s-desc-trunca { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+}
+
+/* ── El marco: el contenedor de contenido de cada sección ──────────────── */
+.s-marco {
+  border-radius: var(--radius-window);
+  background: var(--canvas);
+  box-shadow: var(--shadow-hairline);
+  padding: 12px;
+  overflow: hidden;
+}
+
+/* ── Card ─────────────────────────────────────────────────────────────── */
+.s-card {
+  border-radius: var(--radius-card);
+  background: var(--surface);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+/* ── Barra y pie de card ────────────────────────────────────────────────
+   Las dos primitivas con nombre propio en el CSS de la referencia que v2 no
+   estaba usando. Están medidas y comparten padding:
+
+     .primitive-card-bar, .primitive-card-footer { padding: 10px 12px }
+
+   La barra lleva borde ABAJO y fondo transparente; el pie lleva borde ARRIBA y
+   fondo --inset. Son cinco usos de barra y tres de pie en el sitio, así que la
+   barra es la ranura más usada de la card, más que el propio card-pad.
+
+   Corrijo acá una afirmación que dejé escrita en los paneles del mapa: ahí
+   escribí que la referencia NO tiene barra de cabecera. Sí la tiene, y es su
+   ranura más frecuente. */
+.s-barra-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+}
+.s-pie-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-top: 1px solid var(--line);
+  background: var(--inset);
+}
+
+/* ── Filas de datos: divisorias SÓLIDAS (adentro de un componente) ─────── */
+.s-fila {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+  transition: background-color var(--dur-slower) var(--ease-in-out);
+}
+.s-fila:last-child { border-bottom: 0; }
+.s-fila-hover:hover { background: var(--hover); }
+
+/* ── Controles ────────────────────────────────────────────────────────── */
+.s-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--field);
+  box-shadow: var(--shadow-btn);
+  color: var(--ink);
+  font-size: 11.5px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color var(--dur-base), transform var(--dur-base);
+}
+.s-pill:hover { background: var(--hover); }
+.s-pill:active { transform: scale(0.98); }
+
+.s-icono {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: var(--ink-3);
+  cursor: pointer;
+  transition: background-color var(--dur-instant), color var(--dur-instant);
+}
+.s-icono:hover { background: var(--hover); color: var(--ink); }
+
+/* el realce sobresale del texto sin que el texto se mueva */
+.s-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: calc(100% + 12px);
+  margin-inline: -6px;
+  padding: 5px 6px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--ink-2);
+  font-size: 12.5px;
+  line-height: 18.75px;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color var(--dur-base), color var(--dur-base);
+}
+.s-item:hover { color: var(--ink); }
+.s-item[aria-current] { color: var(--ink); font-weight: 500; background: var(--hover); }
+
+/* ── Chips de estado. El tinte es opaco en claro y con alfa en oscuro. ─── */
+.s-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 22px;
+  padding: 0 8px;
+  border-radius: var(--radius-chip);
+  font-size: 11.5px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+/* Los tres tonos de estado llevan el texto MEZCLADO con la tinta al 55%, la
+   misma receta que ya usaba --info y por la misma razón. El token pleno sobre
+   su propio tinte mide 3,24 / 2,67 / 3,48 en claro y 4,98 / 5,16 / 3,93 en
+   oscuro: cinco de los seis reprobados, y a 10,5px el mínimo es 4,5. Mezclado
+   al 55% pasa a 6,42 / 5,72 / 6,84 y 7,10 / 7,20 / 6,36, conservando el tono.
+
+   Estaban declarados y sin usar —el primer uso es el badge de variación de la
+   sección 01 de indicadores—, así que el arreglo no toca nada existente. */
+.s-chip--ok {
+  background: var(--green-tint);
+  color: color-mix(in srgb, var(--green) 55%, var(--ink));
+}
+.s-chip--warn {
+  background: var(--orange-tint);
+  color: color-mix(in srgb, var(--orange) 55%, var(--ink));
+}
+.s-chip--bad {
+  background: var(--red-tint);
+  color: color-mix(in srgb, var(--red) 55%, var(--ink));
+}
+/* --accent-ink sobre --accent-tint daba 4,29:1, apenas debajo de AA. El texto
+   baja a la tinta plena mezclada con el acento: conserva el tono azul del chip
+   y pasa a 8,4. El fondo no se toca, que es lo que le da identidad. */
+.s-chip--info { background: var(--accent-tint); color: color-mix(in srgb, var(--accent-ink) 55%, var(--ink)); }
+.s-chip--neutro { background: var(--field); color: var(--ink-2); }
+/* Mini: la misma escala a la que bajó el tag —19px de alto, 10,5 de texto y
+   radio 5—. Es para cuando el chip va adentro de una fila de 28: a 22px se
+   come el renglón y pesa como el contenido, cuando es una anotación. */
+.s-chip--mini { height: 19px; padding: 0 6px; border-radius: 5px; font-size: 10.5px; }
+
+/* ── Barra de proporción: neutra, y el líder en acento (es un detalle) ─── */
+/* riel visible: sobre la card, --field casi no se despega. Con --line-strong
+   se entiende que hay una escala y no una raya suelta. */
+.s-barra { height: 4px; border-radius: 999px; background: var(--line-strong); overflow: hidden; }
+.s-barra > i {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  /* el color puede venir clavado por instancia —el fluido, la cuenca— y si no
+     viene, la barra va neutra: el color se gana significando algo */
+  background: var(--barra-color, var(--ink-3));
+  transition: width var(--dur-slower) var(--ease-out-strong);
+}
+.s-barra--lider > i { background: var(--accent); }
+
+/* ── Tabla ────────────────────────────────────────────────────────────── */
+.s-tabla { width: 100%; border-collapse: collapse; text-align: left; }
+.s-tabla th,
+.s-tabla td { padding: 10px 12px; }
+.s-tabla th { font-size: 12px; font-weight: 500; color: var(--ink-2); white-space: nowrap; }
+.s-tabla td { font-size: 13px; font-weight: 500; font-variant-numeric: tabular-nums; }
+.s-tabla tbody tr {
+  border-bottom: 1px solid var(--line);
+  transition: background-color var(--dur-slower) var(--ease-in-out);
+}
+.s-tabla tbody tr:last-child { border-bottom: 0; }
+.s-tabla tbody tr:hover { background: var(--hover); }
+/* La cabecera lleva filete abajo, como la barra de card: es la misma idea de
+   ranura que encabeza y separa. */
+.s-tabla thead tr { border-bottom: 1px solid var(--line); }
+/* Separador VERTICAL entre grupos de columna. Está medido en la Records Table
+   del catálogo y no lo estábamos usando en ninguna parte: separa la identidad
+   de la fila —el nombre— de las columnas de cifras. */
+.s-tabla .s-sep { border-left: 1px solid var(--line); }
+/* Fila de cierre: la conclusión de la tabla, servida con la receta del pie de
+   card —fondo --inset y filete arriba— pero como ÚLTIMA FILA y no como bloque
+   aparte. Así cierra la tabla en vez de flotar debajo. */
+.s-tabla tr.s-cierre td { background: var(--inset); border-top: 1px solid var(--line); }
+.s-tabla tbody tr.s-cierre:hover { background: transparent; }
+.s-tabla tbody tr.s-cierre:hover td { background: var(--inset); }
+
+/* ── Estados de dato ──────────────────────────────────────────────────── */
+.s-sube { color: var(--green); }
+.s-baja { color: var(--red); }
+
+/* ── Movimiento. Corte global y total. ────────────────────────────────── */
+.s-entra { animation: s-fade-up var(--dur-slow) var(--ease-out-strong) both; }
+@keyframes s-fade-up {
+  0% { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes s-pixel-on {
+  0%, to { opacity: 0.15; }
+  18%, 42% { opacity: 1; }
+  62% { opacity: 0.15; }
+}
+.s-pixel { animation: s-pixel-on 1.6s var(--ease-in-out) infinite; }
+@keyframes s-eq {
+  0%, to { transform: scaleY(0.35); }
+  50% { transform: scaleY(1); }
+}
+/* La geometría sale del MEDIDOR de la Recommendation Card, que es la pieza que
+   la referencia usa para mostrar nivel: tres barras de 4×10 con 2px de
+   separación y radio completo, alineadas abajo.
+
+     <span class="flex items-end gap-0.5">
+       <span class="w-1 rounded-full">   ← 4x10
+       …
+
+   Nuestro ecualizador tenía 2px de ancho y radio 1: la misma idea con otras
+   medidas, inventadas. Ahora comparte la caja con el medidor, así que las dos
+   piezas de "tres barritas" de v2 son la misma pieza. */
+.s-medidor { display: flex; align-items: flex-end; gap: 2px; height: 10px; }
+.s-medidor > i { display: block; width: 4px; height: 100%; border-radius: 999px; background: var(--line-strong); }
+.s-medidor > i.on { background: var(--ink-3); }
+.s-eq > i { display: block; width: 4px; height: 100%; border-radius: 999px; background: var(--ink-3);
+  animation: s-eq 900ms var(--ease-in-out) infinite; transform-origin: bottom; }
+.s-eq > i:nth-child(2) { animation-delay: 150ms; }
+.s-eq > i:nth-child(3) { animation-delay: 300ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .sistema *,
+  .sistema *::before,
+  .sistema *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+/* ── Pie de página ────────────────────────────────────────────────────── */
+.s-pie {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  max-width: 672px;
+  padding: 24px 32px;
+}
+
+/* ── Entrada de sección. El sistema pide movimiento; este es el suyo
+      (fade-up), escalonado por sección. No simula datos en vivo: sólo
+      evita que la página aterrice muerta. ─────────────────────────────── */
+.s-seccion { animation: s-fade-up var(--dur-slow) var(--ease-out-strong) both; }
+
+/* ── Columna de contenido: la grilla de puntos, sólo acá ────────────────
+   Puntos de 1px cada 18px, fija al scroll: el contenido pasa por delante de
+   una textura que no se mueve. Va en la columna y no en el suelo general
+   para que el panel lateral se separe por dos vías —color y textura— y no
+   sólo por la divisoria.
+
+   Trama densa y de punto muy tenue: 12px de paso y alfa 0,10 en claro / 0,06
+   en oscuro. Al acercar los puntos la superficie cubierta sube de 0,97% a
+   2,18%, así que bajar el alfa no sólo no la apaga: la deja en una textura
+   más fina y pareja en vez de puntos sueltos y distinguibles. */
+.s-contenido {
+  background-image: radial-gradient(circle at 1px 1px, var(--dot) 1px, transparent 0);
+  background-size: 12px 12px;
+  background-attachment: fixed;
+}
+
+/* ── Campo de búsqueda ─────────────────────────────────────────────────
+   La regla del sistema: el input es transparente y sin borde, y quien dibuja
+   el estado es el contenedor. Va como clase y no inline porque :focus-within
+   no existe en un style attribute. */
+.s-buscador {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-control);
+  background: var(--surface);
+  transition: border-color var(--dur-base), background-color var(--dur-base);
+}
+.s-buscador:focus-within {
+  border-color: var(--line-strong);
+  background: var(--hover);
+}
+.s-buscador input { flex: 1; min-width: 0; border: 0; background: transparent; outline: none; color: var(--ink); }
+.s-buscador input::placeholder { color: var(--ink-3); }
+
+/* ── Tags categóricos ───────────────────────────────────────────────────
+   Receta MEDIDA de .records-tag de la referencia. Es un hallazgo que se me
+   había escapado en la auditoría: los tags llevan su color inyectado inline
+   como --tag-color y las tres capas —borde, texto y fondo— se derivan de él
+   con color-mix. Por eso no aparecía buscando clases de color, y por eso
+   SISTEMA.md decía que no había color-mix en la hoja. Sí lo hay.
+
+   El truco vale la pena: un solo color por categoría define las tres capas y
+   el resultado queda siempre legible, porque el texto se mezcla con la tinta
+   y el fondo con la superficie. Cambia solo entre temas.
+
+   El tamaño SÍ se aparta del original: 19px de alto en vez de 23, texto de
+   10,5 en vez de 11 y radio 5 en vez de 6. En la referencia el tag acompaña
+   nombres largos —"Andes Snow Creamery — Quito"— con etiquetas cortas como
+   "Gelato", y ahí los 23px se leen como secundarios. Acá pasa al revés:
+   "Neuquén" con "Cuenca Neuquina" al lado, y el tag terminaba pesando más que
+   el dato. Con 19 entra en la caja de línea del nombre (19,5px) y vuelve a
+   leerse como anotación. El radio baja con la caja, como manda la regla. */
+/* El tag cede TODO el espacio antes que el nombre. Con flex-shrink:0 pasaba
+   lo contrario: a 375 el tag se quedaba con sus 140px y "Neuquén" quedaba en
+   "N.". El nombre es la identidad de la fila y el tag es la anotación, así
+   que el orden de cesión tiene que ser ese.
+
+   Medido a 375: la ranura de nombre+tag da 137px en la lista de pozos y 117 en
+   la de exportaciones, que tiene una columna más —el movimiento de puesto—. El
+   nombre más largo de las once provincias es "Tierra del Fuego" con 100, así
+   que en la lista angosta al tag le quedan 9px.
+
+   El piso son 18px: 4 del punto + 12 de padding + 2 de borde, o sea lo justo
+   para que el punto de color siga estando. Debajo de eso el tag no sería una
+   etiqueta corta sino un recorte roto. En esas dos filas queda como una marca
+   de color sin texto, que sigue diciendo a qué cuenca pertenece.
+
+   Con 34, que era el piso anterior, el tag se montaba 14px sobre la cifra en
+   la lista de exportaciones. De 640 para arriba nada de esto se activa. */
+.s-tag {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 1;
+  min-width: 18px;
+  height: 19px;
+  max-width: 140px;
+  padding: 0 6px;
+  border-radius: 5px;
+  font-size: 10.5px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border: 1px solid color-mix(in srgb, var(--tag-color) 24%, var(--surface));
+  /* 55% y no 82%. Con 82 —que es lo medido en la referencia— cinco de los seis
+     tags de la página no llegaban a AA: Golfo San Jorge daba 2,77:1 y Cuenca
+     Austral 3,35. Barrí la paleta entera de ocho colores contra su propio
+     fondo y 55% es el primer escalón donde los OCHO pasan 4,5 (el mínimo queda
+     en 4,66). El tono se conserva —sigue siendo el color de la categoría—, lo
+     que cambia es cuánta tinta lleva mezclada.
+     Es la trampa 10.1 de SISTEMA.md aplicada al tag: la referencia calibra sus
+     colores para desaparecer y nosotros necesitamos leerlos. */
+  color: color-mix(in srgb, var(--tag-color) 55%, var(--ink));
+  background: color-mix(in srgb, var(--tag-color) 13%, var(--surface));
+}
+/* Variante sin categoría: gris de campo, sin punto de color. La usa lo que
+   está en la lista pero no pertenece a ninguna categoría. */
+.s-tag--neutro {
+  border-color: var(--line);
+  color: var(--ink-2);
+  background: var(--field);
+}
+.s-tag--neutro > i { display: none; }
+.s-tag > i {
+  flex: 0 0 4px;
+  width: 4px;
+  height: 4px;
+  margin-right: 4px;
+  border-radius: 50%;
+  background: var(--tag-color);
+}
+
+/* ── Marca de fila ──────────────────────────────────────────────────────
+   La pastilla con la inicial que la referencia pone al principio de cada
+   fila (.records-company-mark). El peso 650 a 10px es la compensación óptica
+   del sistema: a ese tamaño un 600 se ve más liviano de lo que corresponde. */
+.s-marca {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 20px;
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  background: var(--field);
+  color: var(--ink-2);
+  font-size: 10px;
+  font-weight: 650;
+}
+
+/* ── Paso ───────────────────────────────────────────────────────────────
+   La fila que cuelga del riel. MEDIDA en la traza "Thinking" de la
+   referencia, que es el único lugar donde el riel aparece:
+
+     .flex.min-h-7.w-full.items-center.gap-2.rounded-[6px].px-1.5.py-0.5
+       ├─ svg 14 · trazo 2,5 · ink-3 · shrink-0
+       ├─ span 12,5px · peso 500 · ink · min-w-0 truncate     ← el flexible
+       └─ span 11,5px · peso 400 · ink-3 · shrink-0           ← el detalle
+
+   Lo importante es lo que NO tiene: fondo transparente, sin anillo y sin
+   sombra. El radio de 6 está para el hover, no para dibujar una caja. Todos
+   los hijos del riel son ESTA pieza, sin excepción —28px cada uno—, y ahí
+   está la mitad del valor: cuatro cosas que cuelgan del mismo riel se leen
+   como pares porque tienen la misma forma.
+
+   Antes yo tenía tres formas distintas colgando del mismo riel: un párrafo
+   suelto, dos píldoras con anillo y una fila de chips sobre --field. Además
+   de la jerarquía rota, la píldora traía un anillo a 3px del riel y el codo
+   le entraba 14px adentro. Las dos cosas se arreglan con la misma decisión:
+   una sola forma, sin caja.
+
+   El paso envuelve. De 640 para arriba nunca lo hace —medido, cero desbordes
+   en 640, 1024 y 1440—, pero a 375 la fila tiene 240px para seis piezas y sin
+   envolver la nota quedaba reducida a un muñón ilegible: "32,5% del país" se
+   veía como "3..". Envolver mantiene todo el contenido, que es lo que manda
+   la regla de no esconder nada en mobile. */
+.s-paso {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px 8px;
+  width: 100%;
+  min-height: 28px;
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: transparent;
+}
+/* ── Delta ──────────────────────────────────────────────────────────────
+   MEDIDO en la referencia, en su lista de archivos tocados:
+
+     <span class="shrink-0 text-green tabular-nums">+74</span>
+     <span class="shrink-0 text-red tabular-nums">−41</span>
+
+   11,5px en peso 400, fondo transparente, padding CERO y radio CERO. No es un
+   chip y no lleva flecha ni triangulito: es texto de color y nada más. Va en
+   una fila de 28 con gap de 6, pegado a lo que califica.
+
+   El signo menos es el real (U+2212) y no un guion, como en la referencia. A
+   11,5px el guion queda más corto y más alto que el "+" y la columna se ve
+   desprolija. */
+.s-delta {
+  font-size: 11.5px;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+}
+.s-delta--sube { color: var(--green); }
+.s-delta--baja { color: var(--red); }
+
+/* ── Globo ──────────────────────────────────────────────────────────────
+   EXTENSIÓN. La referencia no tiene NINGÚN tooltip: cero role="tooltip", cero
+   popover, cero capas flotantes; lo único que usa son 27 `title` nativos. Así
+   que la superficie se toma de lo que el sistema sí tiene para lo que flota
+   —los paneles del mapa—: --surface OPACO, --shadow-card, y cero
+   backdrop-filter, que está prohibido.
+
+   z-index 10 es el máximo del sistema, no un 9999. Radio 6, que es el que le
+   toca a una caja de este tamaño. pointer-events:none para que el globo no se
+   robe el hover del segmento que lo abrió y quede parpadeando. */
+.s-globo {
+  position: absolute;
+  z-index: 10;
+  transform: translateX(-50%);
+  pointer-events: none;
+  white-space: nowrap;
+  padding: 4px 8px;
+  border-radius: var(--radius-chip);
+  background: var(--surface);
+  box-shadow: var(--shadow-card);
+  color: var(--ink-2);
+  font-size: 11.5px;
+  line-height: 17px;
+}
+
+/* ── Pila ───────────────────────────────────────────────────────────────
+   Barra de una sola línea partida en categorías. EXTENSIÓN: la referencia no
+   tiene ninguna, igual que no tiene gráficos. Sale de sus reglas:
+
+   · el color SIGNIFICA algo. Cada segmento es una cuenca y lleva el color que
+     esa cuenca ya tiene en el tag de cada fila y en la card de cuencas. No es
+     una paleta nueva ni decoración: es la misma clave, tres veces.
+   · el segmento que no es una categoría —el Estado Nacional, que no está en
+     ninguna cuenca— va en --line-strong, igual que su tag va neutro. Así la
+     pila suma EXACTO la cifra que tiene arriba en vez de dejar un resto mudo.
+   · 4px de alto, como .s-barra. Nada de superficies de color grandes.
+
+   La separación de 1,5px va sobre --surface y es lo que hace que dos cuencas
+   contiguas se lean como dos y no como una mancha. El piso de 3px es para que
+   una cuenca chica —Noroeste tiene 24 pozos sobre 14.441— siga estando. */
+.s-pila {
+  display: flex;
+  align-items: center;
+  height: 16px;
+}
+/* El envoltorio es la zona sensible: se lleva la separación como padding y
+   ocupa los 16px de alto, así los segmentos son contiguos y hay dónde
+   apuntar. La barra visible son 8px. */
+.s-pila > span {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  min-width: 4.5px;
+  padding-right: 1.5px;
+}
+.s-pila > span:last-child { padding-right: 0; }
+.s-pila i {
+  display: block;
+  width: 100%;
+  height: 8px;
+  border-radius: 2px;
+  transition: opacity var(--dur-fast) var(--ease-out);
+}
+
+/* ── Bloque hundido y su barra ──────────────────────────────────────────
+   MEDIDO en la Insight Card: div.mt-2.rounded-control.bg-inset con una barra
+   arriba —etiqueta a la izquierda, chip a la derecha, filete abajo— y el
+   gráfico debajo.
+
+   La barra va en --field y no en --inset como el bloque: dos puntos de L* de
+   escalón, que es lo que hace que se lea como cabecera y no como parte del
+   mismo plano. Con --hover el escalón daba uno solo y casi no se veía. */
+.s-hundido {
+  border-radius: var(--radius-control);
+  background: var(--inset);
+  overflow: hidden;
+}
+.s-hundido-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 6px 10px;
+  background: var(--field);
+  border-bottom: 1px solid var(--line);
+}
+
+/* Interruptor de serie. SIN pista: la pista es la afordancia de un control de
+   opción única y estos son independientes —los dos pueden estar encendidos—.
+   Además en tema oscuro quedaba a medio punto de L* del fondo de la barra y
+   desaparecía. Cada botón se sostiene con su superficie y su anillo. */
+.s-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 19px;
+  padding: 0 7px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow: var(--shadow-btn);
+  color: var(--ink-2);
+  font: inherit;
+  /* 19px de alto y 10,5 de texto: la misma caja que .s-chip--mini, que es la
+     que usan los badges de la card 01. Estaba a 11px con 3px de padding, o sea
+     22 de alto, y al lado de la otra sección se leía como otra escala. */
+  font-size: 10.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity var(--dur-base) var(--ease-out);
+}
+.s-toggle-btn > i { display: block; width: 5px; height: 5px; border-radius: 50%; }
+
+/* ── Gráfico de líneas ──────────────────────────────────────────────────
+   Ver el comentario de SerieLinea.tsx: la referencia SÍ tiene gráficos —yo
+   había concluido que no— y son líneas suaves superpuestas, con punto terminal
+   y una punteada al nivel del último valor. Sin ejes y sin grilla. */
+.s-graf { display: block; width: 100%; height: 158px; }
+.s-graf-linea { fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.s-graf-guia { stroke-dasharray: 2 4; stroke-width: 1; opacity: 0.45; }
+.s-graf-fin { r: 3.5; }
+/* Anillo del color de la serie al 16%: despega el punto de cierre del trazo
+   sin agrandarlo. */
+.s-graf-halo { r: 8; opacity: 0.16; }
+.s-graf-scrub { stroke: var(--line-strong); stroke-width: 1; }
+.s-graf-pt { r: 4; stroke: var(--surface); stroke-width: 2; }
+
+/* ── Riel de proporción ────────────────────────────────────────────────
+   El riel es el TOTAL y el relleno es la parte. Es distinto de .s-barra, que
+   compara filas entre sí dentro de una lista: acá hay una sola magnitud y lo
+   que se mira es cuánto ocupa de su universo.
+
+   Por eso mide 26px y no 4: es el contenido de la card, no una anotación al
+   costado de una cifra. Y por eso el relleno va en acento —la única superficie
+   de color de más de 4px de alto en todo v2—: a 3,49% sobre un riel neutro, en
+   tinta neutra no se vería nada, y lo que hay que ver es justamente lo chica
+   que es la parte. El anillo interior separa el riel del fondo de la card sin
+   agregarle una sombra.
+
+   El relleno NO tiene mínimo. Todas las barras del sistema llevan un piso de
+   3px para que una fila con valor chico no desaparezca; acá sería mentir,
+   porque el tamaño de la astilla ES el dato. */
+.s-riel {
+  /* block explícito: es un <span> y sin esto colapsa a inline, donde el alto
+     no aplica y el riel directamente no se dibuja. */
+  display: block;
+  position: relative;
+  height: 26px;
+  border-radius: 5px;
+  background: var(--field);
+  box-shadow: inset 0 0 0 1px var(--line);
+  overflow: hidden;
+}
+.s-riel > i { display: block; height: 100%; background: var(--accent); }
+.s-riel-ejes { display: flex; justify-content: space-between; gap: 10px; margin-top: 6px; }
+
+/* ── Banda de puestos ──────────────────────────────────────────────────
+   Ver Mundo.tsx. Reemplaza a la curva del puesto en el tiempo, que tenía dos
+   problemas de raíz: no llevaba eje —la altura no decía qué puesto era, y el
+   fondo del valle sólo aparecía escrito en el pie— y ese eje además iba
+   INVERTIDO, porque acá el número chico es el bueno; sin marcarlo, la caída
+   del 20.º al 29.º entre 2000 y 2019 se dibujaba como una subida.
+
+   La banda tira el eje del tiempo y se queda con el del ranking, que es lo que
+   la sección promete. El mejor puesto va a la izquierda, donde todo el mundo
+   espera el principio, así que no hay nada que aclarar.
+
+   Dos tramos y no uno: el sólido es lo YA recuperado —del peor puesto al de
+   hoy— y el punteado es lo que falta. Pintados iguales, la card afirmaba que
+   el salto proyectado ya ocurrió. */
+.s-banda { position: relative; height: 56px; }
+.s-banda-riel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 24px;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--line-strong);
+}
+.s-banda-hecho { position: absolute; top: 24px; height: 4px; border-radius: 999px; }
+.s-banda-falta {
+  position: absolute;
+  top: 25px;
+  height: 2px;
+  background: repeating-linear-gradient(to right, currentColor 0 4px, transparent 4px 8px);
+}
+.s-banda-marca { position: absolute; top: 0; text-align: center; white-space: nowrap; }
+.s-banda-marca > .p {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.3;
+  font-variant-numeric: tabular-nums;
+}
+.s-banda-marca > i {
+  display: block;
+  width: 2px;
+  height: 9px;
+  margin: 1px auto 0;
+  background: var(--line-strong);
+}
+.s-banda-marca--act > i { width: 3px; }
+.s-banda-marca > .cap { display: block; margin-top: 12px; font-size: 10.5px; color: var(--ink-2); }
+/* La marca del medio lleva su rótulo EN LÍNEA con el número y no debajo. En
+   gas, Argentina cae al 18% de la banda y el «hoy» centrado abajo terminaba
+   pegado al «2030 · proyectado» del extremo izquierdo: los dos se leían como
+   una sola frase. Arriba no hay con qué chocar, porque a esa altura los
+   extremos sólo tienen un «#14» de treinta píxeles. */
+.s-banda-marca > .p { position: relative; }
+/* Absoluto y no en el flujo: en el flujo, el rótulo ensancha la marca y la
+   marca se centra sobre la raya, así que la raya terminaba cayendo entre el
+   número y el «hoy» en vez de debajo del número. Sacado del flujo, la marca
+   mide lo que mide el número y la raya vuelve a marcar el puesto. */
+.s-banda-marca > .p > .cap-en-linea {
+  position: absolute;
+  top: 0;
+  left: 100%;
+  margin-left: 4px;
+  font-size: 10.5px;
+  font-weight: 400;
+  line-height: inherit;
+  color: var(--ink-2);
+}
+/* Los extremos se anclan al borde en vez de centrarse: centrados, la mitad del
+   rótulo queda fuera de la card y «2017 · el peor» sale cortado. */
+.s-banda-marca--ini { left: 0; text-align: left; }
+.s-banda-marca--ini > i { margin-left: 1px; }
+.s-banda-marca--fin { right: 0; text-align: right; }
+.s-banda-marca--fin > i { margin-right: 1px; }
+.s-banda-marca--mid { transform: translateX(-50%); }
+
+/* Corte de numeración en un ranking: entre el puesto 12 y el 21 hay ocho
+   países que no se listan, y sin marcarlo la lista miente sobre quién está al
+   lado de quién. Va con el fondo hundido del sistema —el mismo escalón que
+   usan el pie de card y .s-hundido— y no con una punteada: la punteada ya
+   significa «proyectado» dos secciones más arriba. */
+.s-brecha {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 24px;
+  background: var(--inset);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+/* ── Gráfico de columnas ───────────────────────────────────────────────
+   Ver SerieBarras.tsx: columnas y no línea porque los pozos nuevos por mes son
+   un CONTEO. Una línea entre 44 y 49 dibuja una pendiente y sugiere que en el
+   medio hubo 46; no hubo nada en el medio.
+
+   Mismo alto que .s-graf —158px— para que las dos series de la página ocupen
+   la misma caja. Cada mes es un envoltorio con el separador adentro, como en
+   .s-serie: la columna mide poco y con el blanco por fuera el hover sería una
+   lotería; así las zonas sensibles son contiguas. */
+.s-cols {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  height: 158px;
+}
+.s-cols > span {
+  display: flex;
+  flex: 1;
+  align-items: flex-end;
+  min-width: 0;
+  padding-right: 2px;
+}
+.s-cols > span:last-child { padding-right: 0; }
+.s-cols i {
+  display: block;
+  width: 100%;
+  min-height: 2px;
+  border-radius: 1.5px;
+  /* --ink-3, que es el relleno por defecto de .s-barra: el nivel que el sistema
+     ya eligió para «una barra que muestra una magnitud».
+
+     Las dos alternativas están probadas y las dos fallan. Con el color del
+     fluido, cuarenta columnas de 158px llenaban media card de azul saturado y
+     el sistema no hace superficies de color. Con --line-strong —que es el
+     RIEL de .s-barra, no el relleno— las columnas casi no se veían: sobre
+     --inset queda a un suspiro de distancia. */
+  background: var(--ink-3);
+  transition: background-color var(--dur-base) var(--ease-out);
+}
+/* La columna señalada toma el acento, que es el mismo trato que .s-serie le da
+   al mes de corte: el acento marca UN detalle, nunca llena una superficie. */
+.s-cols i.on { background: var(--accent); opacity: 1; }
+
+/* ── Serie compacta ─────────────────────────────────────────────────────
+   EXTENSIÓN, no una pieza medida, y conviene que quede escrito: la referencia
+   no tiene NINGÚN gráfico. Barrí su DOM buscando SVG de datos, contenedores
+   con hijos angostos de la misma fila y cualquier cosa parecida a una serie:
+   cero resultados. La auditoría tampoco registra ninguno. Lo más cerca que
+   llega son los dos shimmer de los estados de carga, que no son datos.
+
+   Así que esto sale de las reglas del sistema, no de una medición:
+   - la magnitud se muestra con barras, que es como v2 ya la muestra en el
+     dashboard y en las barras de proporción de cada fila
+   - nada de superficies de color grandes: barras de 3px sobre --line-strong,
+     que es el mismo riel que usa .s-barra
+   - el acento sólo como detalle: lo lleva el mes de corte y nada más
+   - alto fijo en px y no aspect-ratio, que está prohibido en el sistema */
+.s-serie {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  flex-shrink: 0;
+  height: 16px;
+}
+/* El globo de la serie va ARRIBA de las barras: abajo choca con el borde de la
+   card, que tiene overflow:hidden. Arriba siempre hay card de sobra —la barra
+   de cabecera o la fila anterior—. */
+.s-serie > .s-globo { bottom: calc(100% + 6px); }
+/* Cada mes es un envoltorio y no una barra suelta: la barra mide 3px y con
+   ese blanco de destino el hover sería una lotería. El envoltorio se lleva
+   los 2px de separación como padding, así que la zona sensible es de 5×16 y
+   son contiguas —no hay huecos muertos entre meses—. */
+.s-serie > span {
+  display: flex;
+  align-items: flex-end;
+  padding-right: 2px;
+}
+.s-serie > span:last-child { padding-right: 0; }
+.s-serie i {
+  display: block;
+  width: 3px;
+  min-height: 1px;
+  border-radius: 1px;
+  background: var(--line-strong);
+  /* 120ms: adentro del rango de hover del sistema, que va de 100 a 150 */
+  transition: background-color 120ms var(--ease-out);
+}
+.s-serie i.on { background: var(--accent); }
+
+/* Variante para la introducción: el contenido es prosa que envuelve, así que
+   el ícono se alinea arriba —centrado en el primer renglón, con los 3px de
+   corrección que van en el svg— y no a media altura del párrafo entero. Y no
+   envuelve: el ícono nunca se separa del texto que ancla. */
+.s-paso--intro {
+  align-items: flex-start;
+  flex-wrap: nowrap;
+}
+
+/* ── Riel de desglose ───────────────────────────────────────────────────
+   El riel de las trazas de "Thinking": medido en el sitio, es un span
+   absoluto de 1px en left:3px sobre --line, con el contenido corrido 16px
+   —o sea 13px de separación entre el riel y el texto—.
+
+   Acá se le suma un codo por línea, que la referencia no tiene: pedido de
+   Mariano.
+
+   Geometría: el contenedor arranca el contenido en 59 y el riel queda en 52,
+   que es el centro exacto de la pastilla de la fila. El codo va de 52 a 58 y
+   muere 1px antes de la caja del paso; con los 6px de padding del paso, el
+   ícono cae en 65 y quedan los mismos 13px de la referencia entre riel y
+   contenido.
+
+   El segmento vertical va en CADA hijo en vez de en el contenedor, y el
+   último se corta a la mitad. Es la forma de que el riel termine en el codo
+   de la última línea y no siga de largo hasta el borde: con un solo riel en
+   el contenedor habría que saber de antemano cuánto mide la última fila. */
+.s-rama > * {
+  position: relative;
+}
+/* El segmento sube 4px —el gap de la lista— para tapar el corte que quedaba
+   entre línea y línea: sin eso el riel se ve punteado. */
+.s-rama > *::before {
+  content: '';
+  position: absolute;
+  left: -7px;
+  top: -4px;
+  bottom: 0;
+  width: 1px;
+  background: var(--line);
+}
+/* El riel arranca en el codo del primer hijo y no en su borde de arriba: si no
+   queda un muñón colgando de nada. En un paso el codo está a media altura; en
+   la introducción, a 12px, que es donde está el centro de su ícono. */
+.s-rama > *:first-child::before { top: 50%; }
+.s-rama > .s-paso--intro:first-child::before { top: 12px; }
+.s-rama > *:last-child::before {
+  bottom: auto;
+  height: calc(50% + 4px);
+}
+.s-rama > *:first-child:last-child::before { height: 50%; }
+.s-rama > *::after {
+  content: '';
+  position: absolute;
+  left: -7px;
+  top: 50%;
+  width: 6px;
+  height: 1px;
+  background: var(--line);
+}
+/* La introducción cuelga por su PRIMER renglón y no por su centro: el párrafo
+   envuelve —dos líneas en desktop, tres a 375— y su mitad cae entre renglones,
+   con lo cual el codo apuntaría a un hueco. 12px es donde está el centro del
+   ícono: 2 de padding + 3 de corrección de línea de base + 7 de medio ícono. */
+.s-rama > .s-paso--intro::after { top: 12px; }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   LISTA FILTRABLE — la Filter Table (§13) más el buscador de la §15.
+
+   Nadie lee 52 filas: busca una, o mira un grupo. La §13 resuelve exactamente
+   eso, y de paso trae la única animación ESTRUCTURAL del catálogo: al filtrar,
+   las filas que salen no desaparecen de golpe, se colapsan con
+   `grid-template-rows: 1fr → 0fr`. Es la forma de animar una altura `auto`,
+   que no se puede interpolar.
+
+   Ojo con las medidas: la §13 NO es la Records Table. Sus celdas van a 8×12 y
+   12px —no 10×12 y 13—, es un grid y no una <table>, y el chip de estado mide
+   20 de alto y no 22. Son dos recetas distintas y conviene no mezclarlas.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Píldora de filtro. MEDIDA §13: 26 de alto, radio completo, 12px en peso
+      500. Lo importante es lo que NO tiene la inactiva: ni fondo ni anillo.
+      Sólo la activa se levanta con --surface y el anillo de botón, así que la
+      barra entera se lee como una sola cosa con un estado marcado, y no como
+      cinco botones. ─────────────────────────────────────────────────────── */
+.s-filtros {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0 -4px 4px;
+  padding: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.s-filtros::-webkit-scrollbar { display: none; }
+/* ── Escenario: el rótulo arrastrable ──────────────────────────────────
+   MEDIDO en la Fine-tune Card (§19). La referencia NO tiene un deslizador de
+   riel; lo que tiene son cuatro `role="slider"` que son rótulos ARRASTRABLES:
+   un span con cursor ew-resize que al arrastrarse cambia el número de al lado,
+   dentro de una píldora sobre --field con un campo numérico editable. Es el
+   idioma de las herramientas de diseño y resuelve lo mismo que un riel sin
+   ocupar el ancho de uno.
+
+   La píldora: 26 de alto, radio de chip, padding 4px 4px 4px 2px y gap 4. El
+   rótulo: radio 4, padding 0 2, 12px en ink-3 que sube a ink-2 en hover y a
+   accent-ink con foco. El campo: 12px, tinta plena, tabular, transparente y
+   sin contorno.
+
+   `touch-action: none` en el rótulo, o en un teléfono el arrastre horizontal
+   se lo lleva el scroll de la página antes de que el gesto empiece. */
+.s-escenario {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 26px;
+  padding: 4px 4px 4px 2px;
+  border-radius: var(--radius-chip);
+  background: var(--field);
+}
+.s-escenario > .tirador {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  height: 100%;
+  padding: 0 2px;
+  border-radius: 4px;
+  /* ink-2 y no ink-3, apartándose de la referencia a propósito. Allá el
+     tirador es una letra —«W», «H»— que sólo nombra la propiedad y se puede
+     ignorar; acá es la ÚNICA afordancia del control, y medido en ink-3 daba
+     2,43 en claro y 2,77 en oscuro. Un mando que no se ve no se agarra.
+     El hover sube a la tinta plena y el foco al acento, así el estado se
+     sigue leyendo por encima del reposo. */
+  color: var(--ink-2);
+  font-size: 12px;
+  cursor: ew-resize;
+  touch-action: none;
+  user-select: none;
+  transition: color var(--dur-instant) var(--ease-out);
+}
+.s-escenario > .tirador:hover { color: var(--ink); }
+.s-escenario > .tirador:focus-visible { color: var(--accent-ink); outline: none; }
+.s-escenario > input {
+  width: 48px;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  outline: none;
+}
+
+/* ── Directivos ────────────────────────────────────────────────────────
+   La fila y su cabecera comparten UNA grilla, que es como el sistema resuelve
+   una tabla en la §13: .s-gcab y .s-gfila declaran el mismo
+   grid-template-columns y por eso caen a plomo. Acá estaban como dos flex que
+   yo mantenía sincronizados a mano, y no lo estaban: la cabecera reservaba
+   100px para el voto y el voto medía 98, así que las dos columnas de la
+   derecha salían corridas dos píxeles.
+
+   Las cinco columnas: puesto 28, foto 60, persona 1fr, puntos 64 y voto
+   semanal 100. Los 100 los fijaba el ENCABEZADO cuando decía «Votación
+   semanal»; con «Voto semanal» —unos 75 a 11,5px— los fija el badge «En
+   contra», que mide 83. El par de chevrones mide 48, así que el control va
+   centrado y no pegado al borde.
+
+   La fila es la más alta de v2 —76— y es la excepción que hay que justificar:
+   acá la persona ES el contenido y en 32 no se distingue una cara de otra. */
+.s-persona,
+.s-pcab {
+  display: grid;
+  grid-template-columns: 28px 60px minmax(0, 1fr) 64px 100px;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--line);
+}
+.s-persona { transition: background-color var(--dur-slower) var(--ease-in-out); }
+.s-persona:last-child { border-bottom: 0; }
+.s-persona:hover { background: var(--hover); }
+/* LA FILA QUE VOTASTE. Sólo el tinte de estado: el filete lateral de 2px
+   está sacado (no gustó, 2026-09-01). El tinte solo alcanza porque el badge
+   de la celda del voto ya nombra el estado; el filete repetía en el canto lo
+   que la fila dice dos veces adentro.
+
+   El hover se repite con la misma especificidad porque .s-persona:hover le
+   gana a una sola clase. Sin esto, pasar el mouse por encima borra el tinte y
+   parece que se despintó. */
+.s-persona--favor { background: var(--green-tint); }
+.s-persona--contra { background: var(--red-tint); }
+.s-persona--favor:hover { background: var(--green-tint); }
+.s-persona--contra:hover { background: var(--red-tint); }
+
+/* LA FILA SE ABRE. El cursor es lo único que se agrega: el fondo del hover ya
+   estaba y es la señal de que la fila responde. Un chevrón de «ver más» al
+   lado de los dos del voto se lee como un tercer control de lo mismo.
+
+   Abierta, la fila se queda con el fondo del hover y PIERDE su filete de
+   abajo: la fila y su ficha pasan a ser un solo bloque, que es lo que son. */
+.s-persona--abre { cursor: pointer; }
+.s-persona--abre:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+.s-persona--abierta { border-bottom-color: transparent; }
+.s-persona--abierta:not(.s-persona--favor):not(.s-persona--contra) { background: var(--hover); }
+
+/* LA FICHA que se abre bajo la fila. Fondo --inset y filete abajo: es la
+   receta del pie de card de la §6, que es exactamente lo que esto es —un
+   bloque que cierra lo de arriba—.
+
+   LA COMPOSICIÓN sale de .s-placa--grande: ahí la imagen iguala el alto de la
+   columna que acompaña «para que el logo y los datos terminen a ras». Acá el
+   alto no se puede clavar —la bio cambia de largo y veintiséis fichas no
+   tienen— así que se invierte: manda la FOTO, que mide 200 fijo, y la columna
+   se estira a esa altura con los datos empujados al pie. El bloque cierra
+   parejo tenga bio o no. */
+.s-ficha {
+  display: flex;
+  align-items: stretch;
+  gap: 16px;
+  padding: 14px 12px;
+  background: var(--inset);
+  border-bottom: 1px solid var(--line);
+}
+.s-ficha:last-child { border-bottom: 0; }
+
+/* La columna de la derecha, estirada al alto de la foto. `min-width: 0` para
+   que el nombre largo de una empresa trunque en vez de empujar la caja. */
+.s-ficha-col {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+}
+
+/* La bio. 62ch es el renglón cómodo a 13px: más largo y el ojo se pierde al
+   volver. El margen de arriba es 10 y el de abajo 12, los dos de la escala de
+   bloques de la §6.1. */
+.s-ficha-bio {
+  margin: 10px 0 12px;
+  max-width: 62ch;
+  text-wrap: pretty;
+}
+
+/* Los datos, al pie. `margin-top: auto` es lo que los empuja contra el borde
+   de abajo de la foto: con bio quedan justo debajo, sin bio caen igual al pie
+   y la ficha no se ve a medio llenar. */
+.s-ficha-datos {
+  margin-top: auto;
+  font-size: 11.5px;
+  line-height: 17.25px;
+}
+/* EL VALOR DE CADA RENGLÓN va en la medida del renglón —11,5, la que fija
+   .s-ficha-datos— con el peso y la tinta subidos. Estaba en .s-cifra-sm, que
+   es 13/600: el mismo tamaño y el mismo peso que el NOMBRE que encabeza la
+   ficha, así que «20 años» pesaba igual que «Marcelo Mindlin». La jerarquía se
+   hace con peso y tinta y NUNCA con tamaño (§2): a igual medida que su rótulo,
+   el 600 y la tinta plena ya lo separan.
+
+   tabular-nums porque son cifras y se comparan de un renglón al otro. */
+.s-ficha-valor {
+  font-weight: 600;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.s-ficha-datos a { text-decoration: none; }
+.s-ficha-datos a:hover { background: var(--hover-2); }
+
+/* LA CARA GRANDE va a 161×200, que es el tamaño nativo de los archivos:
+   ampliar una imagen de 161 a más deja el borrón que .s-placa evita con
+   --placa-tope. Y 161 ya es medida del sistema —el lado de .s-placa--grande—,
+   así que el número no se inventa acá.
+
+   `object-fit: cover` VA, aunque la caja mida lo mismo que el archivo. Se
+   había sacado con el argumento de que a tamaño nativo no hay nada que
+   recortar, y el argumento estaba mal: daba por sentado que los treinta
+   archivos miden igual. Cuatro no —dos de 200×200 y dos de 149×200— y sin
+   cover se estiraban dentro de la caja: la de 200 cuadrada perdía un 24% de
+   ancho y la cara salía angosta.
+
+   Los cuatro archivos se normalizaron, así que hoy no recorta nada. Queda
+   igual, porque la próxima cara que alguien agregue no va a venir medida. */
+.s-cara-gr {
+  display: block;
+  flex-shrink: 0;
+  width: 161px;
+  height: 200px;
+  border-radius: var(--radius-control);
+  object-fit: cover;
+  background: var(--field);
+  box-shadow: var(--shadow-hairline);
+}
+.s-cara-gr.s-cara--mono { font-size: 40px; }
+
+@media (max-width: 639px) {
+  /* A 375 la card mide 287 por dentro: la foto de 161 le dejaría 110 al texto.
+     Se apila, y la columna deja de estirarse porque ya no acompaña a nada. */
+  .s-ficha { flex-direction: column; gap: 12px; }
+  .s-ficha-datos { margin-top: 0; }
+}
+
+/* ── Acción en línea ────────────────────────────────────────────────────
+   El control que dispara algo sin navegar: abrir un diálogo, enviar un
+   formulario. NO es .s-pill. En v2 el pill se usa tres veces y las tres son
+   navegación —«Ver todas las noticias», «Volver»—, y la §6.3 lo declara «el
+   llamado a la acción más fuerte del sistema»: ni reportar un dato ni confirmar
+   un formulario chico lo son.
+
+   Es la gramática que el sitio ya usa para actuar en línea: 11,5 en peso 500
+   sobre --accent-ink, como «Leer →» en noticias y «Ver el mapa →» en el pie del
+   minimapa. Sin flecha, que ahí significa «vas a otra pantalla». El acento es
+   para enlaces y detalles, §3.
+
+   APAGADO BAJA A ink-2, NO A OPACIDAD. Con opacity 0.4 la tinta plena caía a
+   2,41 de contraste: ilegible. Perdiendo el acento ya se lee como inactivo, y a
+   ink-2 mide 5,5. */
+.s-accion {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--accent-ink);
+  font-size: 11.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color var(--dur-instant);
+}
+.s-accion:hover { color: var(--accent); }
+.s-accion:disabled { color: var(--ink-2); cursor: default; }
+.s-accion:disabled:hover { color: var(--ink-2); }
+
+/* ── Botón de acción ────────────────────────────────────────────────────
+   El control que CONFIRMA. Tiene cuerpo, a diferencia de .s-accion: fondo
+   --field y el anillo de --shadow-btn, que es como el sistema dibuja un botón
+   (§1.1: el borde de 1px reemplaza a la sombra).
+
+   NO ES EL PILL, y la diferencia es el radio. El pill va a 999 y la §6.3 lo
+   reserva para el llamado a la acción más fuerte del sitio —navegar—. Acá la
+   caja mide 28 de alto y le corresponde radio 8, que es la escala de la §1.3:
+   el radio sale del tamaño de la caja, no del gusto.
+
+   POR QUÉ TIENE QUE TENER CUERPO. Como texto suelto, el que envía y el que
+   cancela medían los dos 5,5 de contraste: misma presencia, ninguna jerarquía,
+   y ninguno se leía como un control. Con --field y anillo, el texto en tinta
+   plena mide 14,42 y la caja lo separa del pie.
+
+   APAGADO pierde el anillo y baja a ink-2 —5,5—: se lee inactivo sin
+   desaparecer, que es lo que pasaba con opacidad (2,41). */
+.s-boton {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: var(--radius-control);
+  background: var(--field);
+  box-shadow: var(--shadow-btn);
+  color: var(--ink);
+  font-size: 11.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color var(--dur-base), color var(--dur-base);
+}
+.s-boton:hover { background: var(--hover-2); }
+.s-boton:active { transform: scale(0.98); }
+.s-boton:disabled {
+  color: var(--ink-2);
+  box-shadow: none;
+  cursor: default;
+  transform: none;
+}
+.s-boton:disabled:hover { background: var(--field); }
+
+/* ── Campo en fila ──────────────────────────────────────────────────────
+   El sitio NO usa campos en caja. Su campo real es .s-busca: una FILA de 40 de
+   alto con padding 0 12 y filete abajo, sin borde ni recuadro. Es la §1.1 en un
+   formulario —la línea de 1px reemplaza a la caja— y la §1.4 —divisoria sólida
+   adentro de un componente—.
+
+   Estos campos copian esa fila y le agregan el rótulo a la izquierda, que es la
+   misma gramática de .s-ficha-fila: etiqueta izquierda, valor derecha, un
+   renglón por dato. Así el formulario se lee como la ficha desde la que se
+   abre, y no como un formulario pegado encima.
+
+   El foco se marca en la FILA, no en el input: quien dibuja el control es el
+   contenedor (§6.5). */
+.s-fcampo {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  min-height: 40px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+  transition: background-color var(--dur-instant) var(--ease-out);
+}
+.s-fcampo:focus-within { background: var(--hover); }
+.s-fcampo > .rot {
+  flex-shrink: 0;
+  width: 68px;
+  font-size: 11.5px;
+  color: var(--ink-2);
+}
+.s-fcampo input,
+.s-fcampo textarea {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  outline: none;
+  font: inherit;
+  font-size: 13px;
+  line-height: 19.5px;
+  color: var(--ink);
+}
+/* El interlineado del campo baja a 1,385 (§1.3): a 13px son 18, y es lo que
+   hace que un renglón de texto entre en la fila sin estirarla. */
+.s-fcampo input { line-height: 18px; }
+.s-fcampo textarea { resize: none; }
+.s-fcampo input::placeholder,
+.s-fcampo textarea::placeholder { color: var(--ink-3); }
+
+/* ── El modal ───────────────────────────────────────────────────────────
+   Es un <dialog> nativo con la receta de card: superficie, radio de card,
+   sombra y overflow oculto. No hay componente de modal en el sistema y éste es
+   el primero, así que se compone con lo que ya existe en vez de inventar una
+   caja nueva —barra de card arriba, pie de card abajo—.
+
+   El ancho es fijo en 420 y no un porcentaje: a 13px de cuerpo, 420 menos el
+   padding deja un renglón cómodo, y un modal que cambia de ancho con la
+   ventana obliga a releer dónde empieza cada cosa.
+
+   El ::backdrop va en la tinta al 45% y SIN blur: la §9 prohíbe el
+   backdrop-filter en todo el sistema. */
+.s-modal {
+  /* `margin: auto` es lo que centra un <dialog> abierto con showModal(): lo
+     pone la hoja del navegador y el preflight de Tailwind lo pisa con
+     `margin: 0`, así que el modal salía pegado arriba a la izquierda. Hay que
+     reponerlo a mano. */
+  margin: auto;
+  width: min(420px, calc(100vw - 32px));
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-card);
+  background: var(--surface);
+  box-shadow: var(--shadow-card);
+  color: var(--ink);
+  overflow: hidden;
+}
+/* El velo va con alfa EN EL COLOR y no con `opacity`: sobre ::backdrop la
+   opacidad se comporta distinto entre navegadores y el velo salía lavado.
+   Sin blur, que la §9 prohíbe el backdrop-filter en todo el sistema. */
+.s-modal::backdrop { background: rgb(31 33 36 / 45%); }
+.s-modal .s-barra-card { justify-content: space-between; }
+
+/* El botón de cerrar: el de ícono chico de la §6.3 —24×24 con radio 6—. */
+.s-modal-x {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--ink-3);
+  cursor: pointer;
+  transition: background-color var(--dur-instant), color var(--dur-instant);
+}
+.s-modal-x:hover { background: var(--hover); color: var(--ink); }
+
+/* La descripción, con el padding de celda del sistema (10×12) y su filete: es
+   una fila más, no un bloque suelto con aire alrededor. */
+.s-modal-desc { padding: 10px 12px; border-bottom: 1px solid var(--line); }
+
+/* El pie alinea a la derecha y el cancelar queda a la izquierda del envío,
+   que es el orden de lectura: primero la salida, después la acción. */
+.s-modal-pie { justify-content: space-between; }
+/* Cancelar es la salida, no una acción: va en ink-2 —5,5 de contraste sobre el
+   pie— y sin acento, que se lo queda el envío. */
+.s-modal-cancel {
+  border: 0;
+  background: transparent;
+  color: var(--ink-2);
+  font-size: 11.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color var(--dur-instant);
+}
+.s-modal-cancel:hover { color: var(--ink); }
+
+/* LA PASTILLA DE PUNTOS SOBRE LA FILA TEÑIDA. --field y el tinte tienen la
+   misma luminancia —1,003 contra el verde y 1,023 contra el rojo—: la
+   pastilla no se ve poco, DESAPARECE, y lo que queda es una mancha sucia
+   alrededor de la cifra.
+
+   Pasa a --surface, que es el papel de la card. Se despega del tinte en los
+   dos temas (1,12 en claro, 1,27 en oscuro) —más que el escalón surface/inset
+   que el sistema ya usa para separar superficies— y la cifra sube de 14,42 a
+   16,14 de contraste. */
+.s-persona--favor .s-idx,
+.s-persona--contra .s-idx { background: var(--surface); }
+/* La cabecera es .s-gcab de la §13: 11,5/500 en ink-2 sobre el escalón de
+   fondo. Sin ella el badge podía leerse como un precio y los chevrones no se
+   sabía qué movían. */
+.s-pcab {
+  padding-top: 6px;
+  padding-bottom: 6px;
+  background: var(--inset);
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--ink-2);
+}
+
+/* display:contents en escritorio: el envoltorio desaparece de la grilla y sus
+   dos hijos —el índice y el voto— ocupan sus columnas. En móvil vuelve a ser
+   una caja y se lleva su propio renglón. */
+.s-pcontrol { display: contents; }
+
+/* La foto CUADRADA con el radio de control, igual que la fila de noticia.
+   Redonda leía como avatar de aplicación; el cuadrado con radio es el
+   tratamiento que el sistema ya usa para una imagen de contenido. */
+.s-cara {
+  display: block;
+  width: 60px;
+  height: 60px;
+  border-radius: var(--radius-control);
+  object-fit: cover;
+  background: var(--inset);
+  box-shadow: var(--shadow-hairline);
+}
+.s-cara--mono {
+  display: grid;
+  place-items: center;
+  color: var(--ink-2);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+/* El índice: la caja de .s-chip —22 de alto, radio de chip, padding 0 8— que
+   HUGEA su contenido. Antes tenía min-width 56 con el texto pegado a la
+   derecha, y adentro de una pastilla de ancho fijo un «8,1» quedaba con 25px
+   de aire de un lado y 9 del otro: descentrado a la vista.
+
+   El ancho fijo vive en la COLUMNA y no en la pastilla, así que las pastillas
+   quedan centradas por construcción y su borde derecho igual alineado. */
+.s-idx {
+  justify-self: end;
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 8px;
+  border-radius: var(--radius-chip);
+  background: var(--field);
+  color: var(--ink);
+  /* 11,5 Y NO 13. A 13 con peso 600 era el texto más pesado de la fila: el
+     nombre va a 13 en peso 500, o sea que el puntaje le ganaba a la persona en
+     una lista de personas. La jerarquía es peso y tinta y nunca tamaño (§2), y
+     acá el número ya tiene DOS marcas propias que el nombre no tiene —el 600 y
+     la pastilla— así que no necesita además ser el más grande.
+
+     La pastilla se queda en 22, que es la altura de chip del sistema: lo que
+     baja es el texto de adentro, no la caja. */
+  font-size: 11.5px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── El voto ───────────────────────────────────────────────────────────
+   Los dos chevrones juntos en una pastilla partida al medio. Los botones son
+   de 24×24 con radio 6, que es el tamaño chico que SISTEMA.md §6.3 declara
+   para el botón de ícono —«28×28 con radio 8, o 24×24 con radio 6»—. Estaban
+   en 30×26, una medida que no existe en el sistema y que al lado de un badge
+   de 22 pesaba más que el dato.
+
+   El color va siempre y no sólo al votar: es lo que dice para qué lado va cada
+   uno sin tener que probarlo. Mezclado con la tinta al 55%, como todos los
+   tonos de estado del sistema. */
+/* CENTRADO en su columna y no pegado a la derecha. Con el conteo al lado, el
+   control medía 86 sobre una columna de 100 y alinearlo a la derecha era lo
+   correcto. Sin el conteo mide 48, y ahí el rótulo quedaba flotando sobre
+   cincuenta píxeles de nada. Centrado, el rótulo y el control comparten eje.
+
+   Es la excepción entre las columnas de la derecha, y se justifica sola: las
+   otras llevan cifras, que se alinean por el borde para poder compararlas de
+   arriba abajo; ésta lleva un control, que no se compara con nada. */
+.s-voto { justify-self: center; display: inline-flex; align-items: center; }
+.s-voto > .par {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 6px;
+  background: var(--field);
+  overflow: hidden;
+}
+.s-voto button {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  transition: background-color var(--dur-instant), color var(--dur-instant);
+}
+.s-voto button.arriba { color: color-mix(in srgb, var(--green) 55%, var(--ink)); }
+/* La divisoria va como sombra interior del segundo botón: un span de 1px en el
+   medio se desalinea con el radio de la pastilla. */
+.s-voto button.abajo {
+  color: color-mix(in srgb, var(--red) 55%, var(--ink));
+  box-shadow: inset 1px 0 0 var(--line-strong);
+}
+.s-voto button.arriba:hover { background: var(--green-tint); }
+.s-voto button.abajo:hover { background: var(--red-tint); }
+
+/* A 375 la card mide 287 por dentro: entre la foto de 60, el índice y el voto
+   al nombre le quedaban 45px y sólo se veía el chip de «sin confirmar». Abajo
+   de 640 la grilla pasa a tres columnas y los controles bajan a un segundo
+   renglón, alineados a la derecha. */
+@media (max-width: 639px) {
+  .s-persona {
+    grid-template-columns: 28px 60px minmax(0, 1fr);
+    row-gap: 6px;
+  }
+  .s-pcontrol {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    grid-column: 2 / -1;
+  }
+}
+
+/* ── Panel del voto ────────────────────────────────────────────────────
+   Dos bloques lado a lado: el presupuesto de quien mira —real, del storage— y
+   la actividad de la semana —simulada, y rotulada como tal—. La divisoria
+   entre los dos es el filete de 1px del sistema, que es como separa dos cosas
+   que conviven sin jerarquía entre ellas.
+
+   A 640 se apilan y la divisoria pasa de vertical a horizontal: dos bloques de
+   texto uno al lado del otro en 287px no entran. */
+.s-pvoto { display: grid; grid-template-columns: repeat(3, 1fr); }
+.s-pvoto-col { padding: 12px; }
+.s-pvoto-col + .s-pvoto-col { border-left: 1px solid var(--line); }
+/* A 640 se apilan y la divisoria gira: tres bloques de cifra en 287px no
+   entran, y a dos columnas la tercera quedaría sola en un renglón. */
+@media (max-width: 639px) {
+  .s-pvoto { grid-template-columns: 1fr; }
+  .s-pvoto-col + .s-pvoto-col { border-left: 0; border-top: 1px solid var(--line); }
+}
+
+/* Fila de «más votados»: puesto, apellido y votos. Es la fila de ranking del
+   sistema apretada a 18 de alto, que es lo que permite meter tres adentro de
+   una columna que las otras dos resuelven con una sola cifra: las tres
+   columnas del panel tienen que medir lo mismo. */
+.s-mvotado { display: flex; align-items: baseline; gap: 6px; height: 18px; }
+
+/* Los créditos: un punto por voto. Cinco marcas se cuentan de un vistazo y un
+   «3 de 5» hay que leerlo. El gastado se llena con la tinta media y el que
+   queda es el riel vacío, que es la misma gramática de .s-medidor. */
+.s-creditos { display: inline-flex; align-items: center; gap: 4px; }
+.s-creditos > i {
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--line-strong);
+  transition: background-color var(--dur-base) var(--ease-out);
+}
+.s-creditos > i.usado { background: var(--ink-2); }
+
+/* Sin crédito, los chevrones de las filas que no votaste se apagan. No se
+   esconden: una columna que desaparece a mitad de la lista es peor que una
+   apagada, porque no se entiende qué pasó. */
+.s-voto button:disabled { cursor: default; opacity: 0.35; }
+.s-voto button:disabled:hover { background: transparent; }
+
+/* ── Puntos clave ──────────────────────────────────────────────────────
+   La receta de las Context Cards (§11): el rótulo y su contador AFUERA de la
+   card, y adentro un renglón por item con el padding medido de 10×12 y filete
+   abajo.
+
+   Antes esto era el riel de desglose —.s-rama con un .s-paso por línea—, que
+   es la pieza que el sistema usa para decir «esto se desprende de aquello» y
+   está pensada para colgar de una fila que la ancla, como en provincias y en
+   empresas. Acá no colgaba de nada: el codo del primer punto apuntaba a un
+   espacio vacío.
+
+   El marcador es el punto de 8px de la Insight Card (§16), en el color de la
+   categoría de la nota (elección de Mariano). Es la única marca de color del
+   sistema, y acá ata los puntos al tema sin repetir la palabra. Iba con el
+   ícono de lista repetido en cada renglón, que no distinguía nada: todos los
+   renglones son items de una lista.
+
+   align-items en flex-start y el punto bajado 6px: el texto envuelve en dos
+   líneas y centrado el punto quedaba a media altura del bloque en vez de al
+   lado del primer renglón, que es lo que ancla. */
+.s-clave-cab { display: flex; align-items: center; gap: 8px; padding: 0 2px; margin-bottom: 8px; }
+.s-clave-cab > .rot { font-size: 13px; font-weight: 600; }
+.s-clave { display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+.s-clave:last-child { border-bottom: 0; }
+.s-clave > i { display: block; flex-shrink: 0; width: 8px; height: 8px; margin-top: 6px; border-radius: 50%; }
+
+/* ── Bloques del cuerpo de la nota ─────────────────────────────────────
+   Las interrupciones que hacen que una nota no sea un bloque de texto. La
+   referencia no tiene ninguna, así que todas son extensión y se construyen con
+   lo que el sistema sí tiene: el filete de 1px, las seis superficies y los tres
+   niveles de tinta. Nada de comillas gigantes, itálicas ni degradados. */
+
+/* ── Nota larga ────────────────────────────────────────────────────────
+   El sistema no tiene precedente de texto corrido: la referencia es un
+   catálogo de componentes y su prosa más larga es una descripción de sección
+   de dos renglones. Así que esto es extensión, y conviene que quede escrito
+   qué se toma prestado y qué se decide.
+
+   Se toma: el cuerpo en 13/19,5 —.s-cuerpo, el tamaño de celda del sistema—,
+   la tinta plena para el texto y ink-2 para lo que califica, y el marco de
+   sección como contenedor.
+
+   Se decide el ANCHO. La columna de contenido mide 672 y a 13px eso son unos
+   110 caracteres por renglón, casi el doble de lo que se lee cómodo. No es un
+   cambio de tamaño de fuente, que el sistema sí prohíbe: es dónde corta el
+   renglón.
+
+   El ancho lo pone la SECCIÓN —.s-seccion--lectura— y no un contenedor de
+   adentro: con el tope adentro, la columna quedaba pegada a la izquierda del
+   marco y sobraban 36px sólo del lado derecho.
+
+   El párrafo separa con 12px y sin sangría, que es lo que hace la referencia
+   entre bloques de texto. */
+.s-prosa > p { margin: 0 0 12px; font-size: 13px; line-height: 19.5px; text-wrap: pretty; }
+.s-prosa > p:last-child { margin-bottom: 0; }
+/* La entradilla sube UN escalón de peso y de tinta, no de tamaño: es la
+   jerarquía del sistema —peso y color, nunca cuerpo— aplicada a un párrafo. */
+.s-prosa > p.entrada { font-weight: 500; }
+
+/* La cita va a 17 y no a 13 (pedido de Mariano, 2026-08-21). Era el único
+   bloque del cuerpo que se distinguía sólo por el filete: a 13/500 entre
+   párrafos de 13/400 la interrupción casi no se notaba, y una cita destacada
+   existe justamente para cortar el ritmo.
+
+   17 es el escalón que hay. El sistema declara 21 y lo reserva para el título
+   de la página —hay uno por página, y en una nota es el titular—; una cita a
+   21 competiría con él. 17 es el «display» que queda debajo, y sale de la
+   escala: no se inventa nada.
+
+   Conviene decir qué regla toca. SISTEMA.md §2 dice que agrandar la fuente no
+   es una herramienta disponible PARA DESTACAR ALGO, y prohíbe el titular de
+   40px. Una cita destacada no es un párrafo enfatizado: es un bloque con su
+   propio rol editorial, y en cualquier diario tiene su cuerpo. El resto del
+   cuerpo se queda entero en 13.
+
+   La interlínea baja de 1,5 a 1,35 —23 sobre 17—: el texto grande necesita
+   menos aire entre renglones que el de lectura, o se desarma en líneas
+   sueltas. Y el peso BAJA a 400: a 17 el tamaño ya hace el trabajo que a 13
+   hacía el 500, y sumar los dos lo dejaba pesado.
+
+   Sin color: el filete en acento la convertiría en un aviso, y una cita no es
+   un estado. */
+.s-cita {
+  margin: 22px 0;
+  padding: 2px 0 2px 16px;
+  border-left: 2px solid var(--line-strong);
+  font-size: 17px;
+  line-height: 23px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  text-wrap: pretty;
+}
+
+/* El intertítulo. 13/600 —.s-titulo— y no más: la jerarquía es peso y tinta.
+   Lo que lo separa del párrafo es el aire de arriba, no el cuerpo. Y el
+   párrafo que le sigue arranca pegado: con el mismo aire arriba y abajo no
+   diría de cuál de los dos bloques es cabecera. */
+.s-intertitulo { margin: 24px 0 6px; font-size: 13px; font-weight: 600; }
+.s-intertitulo + p { margin-top: 0; }
+
+/* Figura del cuerpo: foto a ancho completo de la prosa con su epígrafe. Alto
+   FIJO en px y no aspect-ratio, que el sistema prohíbe, y porque las fotos del
+   bucket tienen proporciones distintas: con alto libre cada figura mediría
+   otra cosa. */
+.s-figura { margin: 20px 0; }
+.s-figura > img {
+  display: block;
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: var(--radius-control);
+}
+.s-figura > figcaption { margin-top: 6px; font-size: 11.5px; line-height: 17.25px; color: var(--ink-2); }
+
+/* El reproductor. Es un mock —igual que en la ruta vieja— así que lo único
+   que hay que resolver es la afordancia: que se lea «esto es un video» sobre
+   una foto cualquiera.
+
+   El botón va en --surface OPACO y no en un vidrio translúcido: el sistema
+   prohíbe backdrop-filter, y sobre una foto en blanco y negro un círculo
+   blanco con el triángulo en tinta plena se ve siempre.
+
+   El rótulo va en un CHIP y no en texto blanco sobre un velo. Primero lo puse
+   así —blanco al 88% sobre un degradado negro al 45%— y medido sobre los
+   píxeles compuestos daba 3,39 en el punto más claro de la foto, reprobado; y
+   ésta es de las oscuras, con una más brillante sería peor. Un chip sólido no
+   depende de lo que haya debajo. Con el chip, el velo no sostiene nada y se
+   va: era un degradado sin función. */
+.s-video { position: relative; display: block; width: 100%; margin: 20px 0; padding: 0; border: 0; background: transparent; cursor: pointer; }
+.s-video > img {
+  display: block;
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  border-radius: var(--radius-control);
+}
+.s-video > .play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: var(--surface);
+  box-shadow: var(--shadow-btn);
+  color: var(--ink);
+  transition: transform var(--dur-base) var(--ease-out-strong);
+}
+.s-video:hover > .play { transform: translate(-50%, -50%) scale(1.06); }
+.s-video > .rot { position: absolute; bottom: 10px; left: 10px; }
+
+/* Compartir. Círculos de 28 con el anillo de botón del sistema, que es la
+   misma caja de .s-icono. En la ruta vieja iban sobre la foto del hero, en
+   blanco translúcido; acá el hero es una card clara, así que van en el pie de
+   card con el resto de los metadatos. */
+.s-share { display: inline-flex; align-items: center; gap: 6px; }
+.s-share > a {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--surface);
+  box-shadow: var(--shadow-btn);
+  color: var(--ink-2);
+  transition: color var(--dur-instant), background-color var(--dur-instant);
+}
+.s-share > a:hover { background: var(--hover); color: var(--ink); }
+
+/* ── Foto de la fila de noticia ────────────────────────────────────────
+   El lado iguala el alto que la columna de texto tiene POR CONSTRUCCIÓN: el
+   título va recortado a dos líneas de 19,5 y el resumen a dos de 18,75, así
+   que con resumen la columna mide 100 y sin él, 60. Es la misma jugada que la
+   placa de 161 de la card de empresa, y con la misma advertencia: si el bloque
+   de la derecha cambia de alto, estos números cambian con él.
+
+   Los dos lados van fijos. Con el alto en auto la foto toma su proporción
+   natural y las del bucket tienen proporciones distintas —hay apaisadas y
+   verticales—, así que una fila de 60 se iba a 100 mientras la de al lado
+   quedaba en 60.
+
+   En CSS y no inline: a 640 y menos la foto grande vuelve a 60 y el resumen se
+   esconde, y un estilo inline le gana a cualquier media query. A 375 la card
+   mide 287 por dentro: con la foto en 100 al texto le quedaban 179 y los
+   títulos salían cortados a la mitad. Sin resumen la columna vuelve a medir 60
+   y la foto la sigue. */
+.s-foto-nota { width: 60px; height: 60px; }
+.s-foto-nota--grande { width: 100px; height: 100px; }
+@media (max-width: 640px) {
+  .s-foto-nota--grande { width: 60px; height: 60px; }
+  .s-fila-nota .resumen { display: none; }
+  .s-fila-nota .min-lectura { display: none; }
+}
+
+/* Fila de nota secundaria: tag, título y fecha. A 375 la columna del tag
+   (112) más la fecha (85) le dejaban 95px al título y los cuatro salían en
+   «Ley de Tierra…». La fecha se esconde —las cuatro son del mismo período que
+   la destacada, que ya la muestra— y el tag toma su ancho natural. */
+@media (max-width: 640px) {
+  .s-nota-sec > .tag { width: auto; }
+  .s-nota-sec > .fecha { display: none; }
+}
+
+/* Variante que ENVUELVE en vez de scrollear. El scroll horizontal es lo medido
+   en la §13 y funciona con cinco o seis píldoras cortas, pero las siete de
+   noticias suman 730px contra los 664 de la card: la barra scrolleaba sin
+   ninguna afordancia que lo dijera, y al clickear una píldora el navegador la
+   traía a la vista y se llevaba puesta a «Todas», que es justo la que hay que
+   poder ver para volver atrás. */
+.s-filtros--envuelve { flex-wrap: wrap; overflow-x: visible; row-gap: 4px; }
+.s-fpill {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 6px;
+  height: 26px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink-2);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  /* 200ms, que es lo medido en esta pieza: más lento que el hover de fila
+     (120) porque acá cambian tres propiedades a la vez. */
+  transition: background-color 200ms, box-shadow 200ms, color 200ms;
+}
+.s-fpill:hover { background: var(--hover); }
+.s-fpill[aria-pressed='true'] { background: var(--surface); color: var(--ink); box-shadow: var(--shadow-btn); }
+.s-fpill > i { display: block; width: 6px; height: 6px; border-radius: 50%; }
+/* El recuento va en peso 400 y sin fondo mientras el filtro está apagado, y
+   toma --field cuando se enciende: acompaña al estado de su píldora en vez de
+   ser un chip aparte. */
+.s-fpill > b {
+  padding: 0 4px;
+  border-radius: 4px;
+  color: var(--ink-2);
+  font-size: 10.5px;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+}
+.s-fpill[aria-pressed='true'] > b { background: var(--field); }
+
+/* ── Buscador. MEDIDO §15: barra de 40 con filete abajo, lupa de 14 en la
+      tinta más tenue e input pelado. La regla del sistema otra vez: el input
+      no dibuja nada, dibuja el contenedor. Es distinto de .s-buscador, que es
+      un campo suelto con su propio borde; éste es la cabecera de una card. ─ */
+.s-busca {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 12px;
+  border-bottom: 1px solid var(--line);
+  transition: background-color var(--dur-instant) var(--ease-out);
+}
+.s-busca:hover { background: var(--hover); }
+.s-busca input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  outline: none;
+  color: var(--ink);
+  font: inherit;
+  font-size: 13px;
+  letter-spacing: inherit;
+}
+.s-busca input::placeholder { color: var(--ink-3); }
+
+/* ── Fila de grilla. MEDIDA §13: cuatro columnas en fr, 8×12 de padding y
+      12px de texto. Va en grid y no en <table> para que la fila entera pueda
+      ser el hijo de un contenedor que colapsa. ──────────────────────────── */
+.s-gfila,
+.s-gcab {
+  display: grid;
+  /* La quinta columna es el chevron: 16px fijos, fuera del reparto en fr para
+     que no se mueva cuando cambia el ancho de la card. */
+  grid-template-columns: 1.5fr 0.62fr 0.8fr 0.62fr 16px;
+  align-items: center;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--line);
+}
+.s-gcab { font-size: 11.5px; font-weight: 500; color: var(--ink-2); }
+.s-gfila {
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 12px;
+  letter-spacing: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color var(--dur-instant) var(--ease-out);
+}
+.s-gfila:hover { background: var(--hover); }
+/* Abierta se queda realzada: dice cuál de las 52 es la que estás mirando
+   cuando el desglose ya empujó la fila fuera del centro de la vista. */
+.s-gfila[aria-expanded='true'] { background: var(--hover); }
+.s-gcab { cursor: default; }
+/* Chip de estado de la §13: 20 de alto y radio 5, más chico que el chip
+   general de 22. Es por la caja que lo contiene: en una celda de 8px de
+   padding, un chip de 22 se come el renglón. */
+.s-festado {
+  display: inline-flex;
+  align-items: center;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 5px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+/* Fila de gasoducto: nombre con su badge, tramos, km y el chevron. La de la
+   §13 reparte cuatro campos en fr y acá hay tres, así que lleva sus propias
+   columnas.
+
+   A 375 la cuenta de tramos se esconde y el nombre se queda con el ancho: con
+   las cuatro columnas, «Gasoducto General San Martín» salía «Gasoducto G…» y
+   GNEA quedaba en una sola letra. El dato no es crítico —es de cuántos tramos
+   administrativos se compone— y en el ancho chico el nombre gana. */
+.s-gfila--gaso { grid-template-columns: 1fr auto 72px 16px; }
+@media (max-width: 640px) {
+  .s-gfila--gaso { grid-template-columns: 1fr 72px 16px; }
+  .s-gfila--gaso > .tramos { display: none; }
+}
+
+/* ── Ficha ──────────────────────────────────────────────────────────────
+   El desglose que se abre al clickear una fila de la lista: etiqueta a la
+   izquierda, valor a la derecha, un renglón por dato.
+
+   Es la misma gramática de .s-fila —divisoria sólida abajo, porque estamos
+   adentro de un componente— pero más apretada: 5px de padding vertical en vez
+   de 10, y sin hover, porque el renglón no es accionable. Cinco datos que
+   caben en la altura de dos filas de la tabla que los contiene.
+
+   El último no lleva divisoria: cerraría contra el borde del bloque hundido y
+   se verían dos líneas pegadas. */
+.s-ficha-fila {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--line);
+}
+.s-ficha-fila:last-child { border-bottom: 0; }
+
+/* ── Colapso. MEDIDO §13 y §9: 1fr → 0fr sobre grid-template-rows. Es cómo el
+      sistema hace aparecer y desaparecer un bloque sin animar una altura
+      `auto`, que no se puede interpolar. ────────────────────────────────── */
+.s-colapsa {
+  display: grid;
+  grid-template-rows: 1fr;
+  opacity: 1;
+  transition: grid-template-rows var(--dur-slow) var(--ease-out-strong),
+    opacity var(--dur-slow) var(--ease-out-strong);
+}
+.s-colapsa[data-abierto='no'] { grid-template-rows: 0fr; opacity: 0; }
+.s-colapsa > * { overflow: hidden; }
+
+
+/* ── Contador de grupo. MEDIDO §10: 20 de alto sobre --inset con filete. Es el
+      número que acompaña a un rótulo de grupo, no un chip de estado. ─────── */
+.s-contador {
+  display: inline-flex;
+  align-items: center;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: var(--radius-chip);
+  background: var(--inset);
+  box-shadow: var(--shadow-hairline);
+  color: var(--ink-2);
+  font-size: 11.5px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Píldora de adjunto. MEDIDA §10 —la del PDF—: 24 de alto, radio completo,
+      --inset con el anillo de botón, 12px en peso 500.
+
+      Lo que NO se copia es el cuadradito de 14 con tres letras a 7px. Allá dice
+      "PDF", que se reconoce por la forma antes que por la letra; acá tenía que
+      decir "POZ", "PET" o "NYQ", y a 7px eso no se lee: Mariano leyó "NYC"
+      donde decía "NYQ". Una sigla que hay que descifrar es peor que la palabra
+      entera.
+
+      En su lugar va el punto de color de 6px, que es la misma pieza con la que
+      el sistema marca categoría en la píldora de filtro y en el nivel de la
+      tabla. El color dice la categoría y la palabra queda completa. ─────── */
+.s-adj {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 24px;
+  padding: 0 9px;
+  border-radius: 999px;
+  background: var(--inset);
+  box-shadow: var(--shadow-btn);
+  color: var(--ink-2);
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: background-color var(--dur-slow) var(--ease-out-strong);
+}
+.s-adj:hover { background: var(--hover); }
+.s-adj > i { display: block; flex: 0 0 6px; width: 6px; height: 6px; border-radius: 50%; }
+.s-adj > b { color: var(--ink); font-weight: 500; }
+
+/* ── Bloque de figuras dentro de una card ───────────────────────────────
+   MEDIDO: una sola caja, `flex gap-4`, cada figura `flex-1`, con el rótulo de
+   11,5 en ink-2 arriba y el apoyo debajo.
+
+   La cifra va a 13/600 —.s-cifra-sm— y no a 17: son tres figuras por card y
+   tres cards, o sea nueve cifras en la sección, y a 17 la página se leería como
+   un tablero de titulares. El 17 queda para cuando una cifra es LA cifra. */
+/* Sin padding propio: el bloque vive tanto suelto en una card como adentro de
+   una columna que ya tiene el suyo, y quien lo compone decide. */
+.s-figuras { display: flex; gap: 16px; }
+.s-figura { min-width: 0; flex: 1; }
+
+/* ── Placa de logo ──────────────────────────────────────────────────────
+   La caja cuadrada donde vive el logo de una empresa. Misma idea que la
+   miniatura de la fila de noticias: una imagen que ocupa el alto de lo que
+   acompaña.
+
+   El lado entra por `--placa` en vez de estar clavado en el componente,
+   porque tiene que cambiar en mobile: 120 es el alto de la columna de datos
+   en escritorio, pero a 375 se come un tercio del ancho útil y encima la
+   columna crece a 155 al envolver la reseña, con lo cual el balance se pierde
+   igual. A 88 la placa sigue siendo grande y le deja aire al texto.
+
+   El fondo blanco es funcional y no decorativo: los logos se dibujan asumiendo
+   fondo claro y varios traen transparencia. Es la única superficie del sistema
+   que no cambia entre temas.
+
+   El aire y el radio salen del lado, con los escalones del sistema. */
+.s-placa {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: var(--placa);
+  height: var(--placa);
+  padding: var(--placa-aire);
+  border-radius: var(--placa-radio);
+  overflow: hidden;
+}
+/* El logo NUNCA se estira más allá de su tamaño natural por dos: casi todos
+   los favicons son de 16px y ampliarlos los deja como un borrón. El tope entra
+   por `--placa-tope` cuando la imagen ya cargó y se sabe cuánto mide. */
+.s-placa > img {
+  width: auto;
+  height: auto;
+  max-width: min(100%, var(--placa-tope, 100%));
+  max-height: 100%;
+  object-fit: contain;
+  display: block;
+}
+/* La variante grande define su caja ACÁ y no por style inline, y es la única
+   forma de que funcione: un custom property inline gana sobre cualquier regla
+   de hoja, media query incluida, así que con `--placa` inline la consulta de
+   abajo no se aplicaba nunca. */
+.s-placa--grande {
+  /* 161 es el alto MEDIDO de la columna que acompaña: 19,5 del nombre + 37,5
+     de la reseña recortada a dos líneas + 10 de separación + 94 de los dos
+     paneles. La placa lo iguala para que el logo y los datos terminen a ras,
+     que es la composición de la fila de noticias del dashboard.
+
+     Si el bloque de la derecha cambia de alto, ESTE número cambia con él. No
+     hay forma de atarlo en CSS sin estirar la placa, y estirada dejaría de ser
+     cuadrada: un lockup apaisado en una ranura vertical es la peor caja
+     posible para él. */
+  --placa: 161px;
+  --placa-aire: 14px;
+  --placa-radio: var(--radius-card);
+}
+/* A 375 la columna sube a 182 —la reseña y los paneles envuelven— y una placa
+   de ese lado se comería el 54% del ancho útil. Acá el balance se pierde a
+   propósito: la placa se queda en 88 y el hueco queda debajo, igual que en la
+   fila de noticias cuando el título ocupa más que su miniatura. */
+@media (max-width: 639px) {
+  .s-placa--grande { --placa: 88px; --placa-aire: 9px; }
+}
+
+/* ── Panel ──────────────────────────────────────────────────────────────
+   La mini card que vive DENTRO de una card, con su barra de cabecera y su
+   contenido. Sale de la Insight Card (§16), que es la única del catálogo que
+   combina cifras y gráfico: allá la card interna va en --surface con
+   shadow-hairline, y adentro lleva un bloque hundido para el gráfico.
+
+   Acá va blanca (pedido de Mariano, 2026-08-17). Sobre la card —que también
+   es blanca— lo único que la separa es el anillo de 1px, que es exactamente
+   la regla del sistema: la profundidad la hace un borde y no una sombra.
+
+   overflow VISIBLE y no hidden: el globo de ayuda nace en la barra y tiene que
+   poder salirse. El redondeo lo respeta el cuerpo con su propio radio. */
+.s-panel {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  border-radius: var(--radius-control);
+  background: var(--surface);
+  box-shadow: var(--shadow-hairline);
+}
+/* Alto FIJO y no dictado por el contenido. Con el alto libre, la barra que
+   lleva chip mide 31 y la que sólo tiene rótulo 27: los cuerpos arrancan a
+   distinta altura y, como el panel se estira al más alto de la fila, abajo
+   queda una franja en blanco. 30 es el alto de la barra con chip, que es la más
+   alta de las dos. */
+.s-panel-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  height: 30px;
+  padding: 0 10px;
+  border-bottom: 1px solid var(--line);
+}
+/* DESCENDIENTE y no hijo directo: con `>` la regla no llegaba al rótulo que va
+   envuelto junto al ícono de ayuda, y ése heredaba los 14px del body. Quedaban
+   dos tamaños de rótulo en la misma fila y una barra 4px más alta que las
+   otras.
+   10,5 en peso 500 es el escalón de anotación del sistema —el mismo que el chip
+   de al lado— así que los dos elementos de la barra son la misma tipografía. */
+.s-panel-bar .rot { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  font-size: 10.5px; font-weight: 500; color: var(--ink-2); }
+/* El chip de la barra: 10,5px sobre --field con radio completo. Es el mismo
+   que la Insight Card pone a la derecha de su bloque hundido. */
+.s-panel-bar > .pin {
+  flex-shrink: 0;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--field);
+  color: var(--ink-2);
+  font-size: 10.5px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+.s-panel-cuerpo {
+  border-radius: 0 0 var(--radius-control) var(--radius-control);
+  overflow: hidden;
+}
+
+/* ── Ayuda ──────────────────────────────────────────────────────────────
+   Ícono de 13px —un escalón por debajo del de 14 de los pasos, porque es una
+   anotación del rótulo y no un par suyo— con un globo al pasar por encima o al
+   recibir el foco de teclado.
+
+   El globo reusa .s-globo, que ya está declarado como EXTENSIÓN: la referencia
+   no tiene ningún tooltip —cero role="tooltip", cero popover, sólo 27 `title`
+   nativos— así que su superficie se toma de lo único que el sistema tiene para
+   lo que flota, los paneles del mapa.
+
+   Se ancla por la DERECHA: el panel que lo usa es el de la derecha de la fila,
+   y anclado a la izquierda el globo se salía de la card. */
+/* El reset va en la CLASE y no por instancia: los disparadores son <button> y
+   sin esto traen el borde y el fondo nativos del navegador, así que dos íconos
+   idénticos se veían distintos según cómo estuviera escrito cada uno. */
+.s-ayuda {
+  display: inline-flex;
+  align-items: center;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--ink-3);
+  cursor: help;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+/* Card que deja salir un globo. .s-card recorta —lo necesita para el radio— y
+   el globo de un panel interno nace adentro, así que quedaba cortado. Acá el
+   radio de abajo lo respeta el pie, que es quien toca esas esquinas.
+   Es una variante y no un cambio a .s-card: el resto de las cards del sistema
+   siguen recortando, que es lo correcto para las que llevan imagen a sangre. */
+.s-card--globo { overflow: visible; }
+.s-card--globo > .s-pie-card:last-child {
+  border-radius: 0 0 var(--radius-card) var(--radius-card);
+}
+.s-ayuda:hover { color: var(--ink-2); }
+.s-ayuda-caja { position: relative; display: inline-flex; flex-shrink: 0; }
+.s-globo--ayuda {
+  top: calc(100% + 6px);
+  right: 0;
+  left: auto;
+  transform: none;
+  width: max-content;
+  max-width: 240px;
+  padding: 6px 9px;
+  white-space: normal;
+  opacity: 0;
+  transition: opacity var(--dur-fast) var(--ease-out);
+}
+.s-ayuda-caja:hover .s-globo--ayuda,
+.s-ayuda:focus-visible + .s-globo--ayuda { opacity: 1; }

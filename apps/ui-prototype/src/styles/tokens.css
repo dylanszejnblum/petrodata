@@ -1,0 +1,96 @@
+/* ============================================================
+   ESTRATO — tokens v0.3 · fuente: docs/design/ESTRATO.md
+   Prototipo limpio: sin capa de alias nd-* (eso es solo para
+   la migración de producción).
+   ============================================================ */
+
+:root {
+  color-scheme: light;
+
+  /* surface */
+  --canvas: #f5f5f4;
+  --surface: #ffffff;
+  --surface-raised: #f0efee;
+  --surface-inverse: #16191d;   /* fija: la oscuridad es jerarquía, no tema */
+  --surface-inverse-2: #20242a;
+
+  /* border */
+  --border-default: #e6e4e2;
+  --border-strong: #cfccc9;
+
+  /* text */
+  --text-primary: #000000;
+  --text-body: #1a1a1a;
+  --text-secondary: #5f5d5b;
+  --text-tertiary: #837f7c;
+  --on-dark: #f4f3f1;
+  --on-dark-2: rgba(244, 243, 241, 0.64);
+  --on-dark-3: rgba(244, 243, 241, 0.42);
+
+  /* data */
+  --data-oil: #3fb883;
+  --data-gas: #2382cf;
+
+  /* status */
+  --status-positive: #0aa173;
+  --status-negative: #dd4136;
+  --status-caution: #9a7420;
+
+  /* interactive */
+  --focus-ring: #007aff;
+
+  /* photo scrims */
+  --scrim-soft: rgba(22, 25, 29, 0.5);
+  --scrim-mid: rgba(22, 25, 29, 0.8);
+  --scrim-hard: rgba(12, 14, 16, 0.95);
+
+  /* shape */
+  --radius-card: 10px;
+  --radius-control: 8px;
+  --radius-pill: 999px;
+
+  /* elevation */
+  --elevation-overlay: 0 8px 24px -12px rgba(0, 0, 0, 0.4);
+
+  /* sizing */
+  --chart-sm: 240px;
+  --chart-md: 280px;
+  --chart-lg: 400px;
+
+  /* motion */
+  --duration-fast: 150ms;
+  --duration-base: 300ms;
+  --duration-slow: 700ms;
+  --duration-ambient: 2400ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* type — familias inyectadas por next/font en el layout */
+  --tracking-label: 0.08em;
+  --tracking-display: -0.02em;
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  --canvas: #0a0a0a;
+  --surface: #141414;
+  --surface-raised: #1d1d1c;
+  /* surface-inverse NO cambia */
+
+  --border-default: #262626;
+  --border-strong: #3a3a3a;
+
+  --text-primary: #ffffff;
+  --text-body: #e8e8e8;
+  --text-secondary: #a3a19f;
+  --text-tertiary: #7c7977;
+
+  --data-oil: #46c98f;
+  --data-gas: #4da3e8;
+
+  --status-positive: #2fe0a4;
+  --status-negative: #ff6d5f;
+  --status-caution: #c49a3f;
+
+  --focus-ring: #5b9bf6;
+}

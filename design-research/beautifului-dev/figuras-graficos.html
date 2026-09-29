@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bloque de figuras · disposiciones con gráfico</title>
+<style>
+/* TOKENS — copiados tal cual de apps/ui-prototype/src/app/v2/sistema.css. */
+:root {
+  --page:#fafafb; --canvas:#f1f2f3; --surface:#fff; --inset:#f7f8f9;
+  --hover:#f4f5f6; --hover-2:#e7e9eb;
+  --ink:#1f2124; --ink-2:#62656b; --ink-3:#9a9da3;
+  --line:#ecedef; --line-strong:#e0e2e5; --field:#f2f2f3;
+  --accent:#0285ff; --accent-ink:#0170dd; --accent-tint:#e9f3ff;
+  --green:#189a4d; --orange:#ef720c; --red:#e3474c;
+  --shadow-hairline:0 0 0 1px var(--line);
+  --shadow-btn:0 0 0 1px var(--line-strong), 0 1px 2px #1018280d;
+  --shadow-card:0 0 0 1px var(--line), 0 1px 2px #1018280a, 0 2px 6px #10182808;
+  --radius-chip:6px; --radius-control:8px; --radius-card:10px; --radius-window:14px;
+  --ease-in-out:cubic-bezier(.4,0,.2,1); --ease-out-strong:cubic-bezier(.23,1,.32,1);
+  --dot:#4949491a;
+  --oil:#3f78ff; --gas:#16a6c7; --mix:#9a5cff;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme=light]) {
+    --page:#17181a; --canvas:#1c1d1f; --surface:#232427; --inset:#1f2022;
+    --hover:#2a2b2e; --hover-2:#313236;
+    --ink:#f2f3f4; --ink-2:#a5a8ad; --ink-3:#6c6f75;
+    --line:#2e3033; --line-strong:#3a3c40; --field:#2b2c2f;
+    --accent:#3d9aff; --accent-ink:#7ec0ff; --accent-tint:#3d9aff29;
+    --green:#3dbb72; --orange:#f68f3c; --red:#ee5c61;
+    --shadow-btn:0 0 0 1px var(--line-strong), 0 1px 2px #0000004d;
+    --shadow-card:0 0 0 1px var(--line), 0 1px 2px #0003, 0 2px 6px #0003;
+    --dot:#ffffff0f;
+  }
+}
+* { box-sizing:border-box; }
+body {
+  margin:0; padding:40px 24px 80px;
+  background:var(--page);
+  background-image:radial-gradient(circle at 1px 1px, var(--dot) 1px, transparent 0);
+  background-size:12px 12px; background-attachment:fixed;
+  color:var(--ink);
+  font-family:"Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  font-size:14px; line-height:1.5; letter-spacing:-.01em;
+}
+a { color:inherit; text-decoration:none; }
+.cifra   { font-size:17px; font-weight:600; line-height:1.2; letter-spacing:-.01em; font-variant-numeric:tabular-nums; }
+.cifra-sm{ font-size:13px; font-weight:600; line-height:1.3; font-variant-numeric:tabular-nums; }
+.cuerpo  { font-size:13px; line-height:19.5px; }
+.desc    { font-size:12.5px; line-height:18.75px; color:var(--ink-2); }
+.micro   { font-size:11.5px; line-height:17.25px; }
+.mono    { font-family:"JetBrains Mono", ui-monospace,"SF Mono",Menlo,monospace; font-variant-numeric:tabular-nums; }
+.num     { font-variant-numeric:tabular-nums; }
+.i2 { color:var(--ink-2); } .i3 { color:var(--ink-3); }
+.trunca { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+/* Andamio (no es del sistema) */
+.hoja { max-width:760px; margin:0 auto; }
+.hoja > h1 { font-size:21px; font-weight:600; letter-spacing:-.02em; margin:0 0 6px; }
+.hoja > p.lede { color:var(--ink-2); font-size:12.5px; line-height:18.75px; margin:0 0 30px; max-width:66ch; }
+.op { margin:0 0 14px; padding-top:32px; border-top:1px dashed var(--line-strong); }
+.op:first-of-type { border-top:0; padding-top:0; }
+.op h2 { display:flex; align-items:baseline; gap:8px; flex-wrap:wrap; margin:0 0 6px; }
+.op h2 .letra { font-family:"JetBrains Mono",ui-monospace,monospace; font-size:11px; color:var(--ink-2); font-weight:400; }
+.op h2 .nom { font-size:13px; font-weight:600; }
+.op h2 .sub { font-size:12.5px; font-weight:400; color:var(--ink-2); }
+.op > p.tesis { font-size:12.5px; line-height:18.75px; color:var(--ink-2); margin:0 0 14px; max-width:72ch; }
+.op > p.tesis b { font-weight:600; color:var(--ink); }
+.marco { border-radius:var(--radius-window); background:var(--canvas); box-shadow:var(--shadow-hairline); padding:12px; }
+.pila-cards { display:flex; flex-direction:column; gap:8px; }
+
+/* ═══════════════ PIEZAS DEL SISTEMA ═══════════════ */
+.card { overflow:hidden; border-radius:var(--radius-card); background:var(--surface); box-shadow:var(--shadow-card); }
+.card-pie { display:flex; align-items:center; flex-wrap:wrap; gap:6px; padding:10px 12px;
+  border-top:1px solid var(--line); background:var(--inset); }
+.chip { display:inline-flex; align-items:center; height:19px; padding:0 6px; border-radius:5px;
+  font-size:10.5px; font-weight:500; white-space:nowrap; background:var(--field); color:var(--ink-2); }
+.adj { display:inline-flex; align-items:center; gap:6px; height:24px; padding:0 9px; border-radius:999px;
+  background:var(--inset); box-shadow:var(--shadow-btn); color:var(--ink-2); font-size:12px; font-weight:500;
+  white-space:nowrap; }
+.adj > i { display:block; flex:0 0 6px; width:6px; height:6px; border-radius:50%; }
+.adj > b { color:var(--ink); font-weight:500; }
+.delta { font-size:11.5px; font-weight:400; font-variant-numeric:tabular-nums; }
+.sube { color:var(--green); } .baja { color:var(--red); }
+.barra { height:4px; border-radius:999px; background:var(--line-strong); overflow:hidden; }
+.barra > i { display:block; height:100%; border-radius:999px; background:var(--barra-color, var(--ink-3)); }
+.pila { display:flex; align-items:center; height:8px; }
+.pila > span { display:flex; height:100%; min-width:4px; padding-right:1.5px; }
+.pila > span:last-child { padding-right:0; }
+.pila i { display:block; width:100%; height:8px; border-radius:2px; }
+
+/* ── Bloque hundido. MEDIDO en la Insight Card (§16). Dos cosas que no
+      teníamos: lleva shadow-hairline además del fondo, y su barra va a
+      10×6 con el rótulo en 11px y un chip a la derecha. ─────────────── */
+.hundido { border-radius:var(--radius-control); background:var(--inset); box-shadow:var(--shadow-hairline); overflow:hidden; }
+.hundido-bar { display:flex; align-items:center; justify-content:space-between; gap:8px;
+  padding:6px 10px; border-bottom:1px solid var(--line); }
+.hundido-bar > .rot { font-size:11px; color:var(--ink-2); }
+.hundido-bar > .pin { border-radius:999px; background:var(--field); padding:2px 8px;
+  font-size:10.5px; font-weight:500; color:var(--ink-2); }
+
+/* Figura con punto de color: MEDIDA en la Insight Card. El punto de 8px al
+   lado del rótulo, la cifra a 17/600 con tracking −0,01em y el apoyo en mono
+   de 11,5. Es la única figura del sistema que lleva marca de color. */
+.fig-pt { display:flex; align-items:center; gap:6px; font-size:11.5px; color:var(--ink-2); }
+.fig-pt > i { display:block; width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+
+/* Mini mapa. Los pozos son puntos de 2px, como en el MiniMapa del dashboard.
+   Acá va en SVG y no en MapLibre porque este archivo es standalone y no tiene
+   tiles: en localhost la pieza sería el mapa real. */
+.mapa { display:block; width:100%; height:100%; }
+.mapa circle { transition:r 120ms var(--ease-out-strong); }
+a.mapa-link { display:block; position:relative; }
+a.mapa-link:hover .mapa circle { r:2.6; }
+
+/* La composición de la card: idéntica a la de producción. */
+.comp { display:flex; align-items:flex-start; gap:12px; padding:12px; }
+.comp > .col { min-width:0; flex:1; }
+.ident { display:flex; align-items:center; gap:8px; }
+.placa { display:inline-flex; flex-shrink:0; width:var(--lado,120px); height:var(--lado,120px);
+  align-items:center; justify-content:center; padding:12px; border-radius:var(--radius-card);
+  background:#fff; box-shadow:var(--shadow-hairline); overflow:hidden; }
+.placa > img { width:auto; height:auto; max-width:100%; max-height:100%; object-fit:contain; display:block; }
+.resena { display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2; overflow:hidden; height:37.5px; }
+@media (prefers-reduced-motion: reduce) { *,*::before,*::after { transition-duration:.01ms !important; } }
+</style>
+</head>
+<body>
+<div class="hoja">
+<h1>Bloque de figuras · disposiciones con gráfico</h1>
+<p class="lede">
+  Tres disposiciones que reemplazan las tres cifras planas por paneles con visual, siguiendo la
+  receta medida de la Insight Card (§16 del catálogo): card interna, figuras con punto de color y
+  cifra a 17, y bloque hundido con barra de cabecera. El thumbnail de pozos es un enlace al mapa
+  filtrado por la empresa.
+</p>
+<section class="op">
+  <h2><span class="letra">E</span> <span class="nom">Tres paneles</span>
+      <span class="sub">cada cifra con su visual</span></h2>
+  <p class="tesis">
+    La misma fila de tres, pero cada una pasa a ser un panel hundido con su gráfico debajo de la
+    cifra: <b>el mapa de sus pozos</b> —que enlaza al mapa filtrado por la empresa—, la relación
+    producción/valor y el estado de esos pozos. Es la disposición que menos cambia y la que más
+    agrega: la fila sigue siendo una fila.
+  </p>
+  <div class="marco"><div class="pila-cards" id="E"></div></div>
+</section>
+
+<section class="op">
+  <h2><span class="letra">F</span> <span class="nom">Mapa dominante</span>
+      <span class="sub">el thumbnail manda y las cifras lo anotan</span></h2>
+  <p class="tesis">
+    Rompe la fila: el mapa de pozos ocupa una columna entera a la derecha, del alto del bloque, y
+    las tres cifras se apilan a su izquierda con su barra. <b>La card pasa a tener tres columnas</b>
+    —logo, datos, territorio— y el mapa deja de ser un adorno de 60px para ser la mitad del
+    argumento: dónde está parada la empresa.
+  </p>
+  <div class="marco"><div class="pila-cards" id="F"></div></div>
+</section>
+
+<section class="op">
+  <h2><span class="letra">G</span> <span class="nom">Insight</span>
+      <span class="sub">la receta del §16, entera</span></h2>
+  <p class="tesis">
+    La composición medida de la Insight Card, que es la única del catálogo que combina cifras y
+    gráfico: <b>card interna</b> sobre la card, dos figuras arriba con punto de color y cifra a
+    17px —el tamaño máximo del sistema, que acá se justifica porque hay dos y no seis— y el bloque
+    hundido abajo con su barra, su chip y el mapa. Los pozos bajan a la barra del hundido.
+    Es la más alta de las tres y la que más se parece a la referencia.
+  </p>
+  <div class="marco"><div class="pila-cards" id="G"></div></div>
+</section>
+
+</div>
+
+<script>
+/* Datos del fixture. Los de empresa —participación, valor, pozos— salen del
+   scrape de vacamuerta.io. Los PUNTOS del mapa salen de fixtures/wells.ts, que
+   son 220 pozos simulados alrededor de Añelo sorteados por participación: son
+   una MUESTRA con la forma correcta, no los 26.623 reales, y por eso el panel
+   lo dice. Los estados y el reparto oil/gas de esa muestra sí son sus datos. */
+const POZOS = {"ypf":{"pozos":[[-68.786,-37.744,"A"],[-69.117,-38.539,"A"],[-67.732,-38.162,"A"],[-68.259,-38.623,"X"],[-69.376,-38.471,"X"],[-68.683,-38.669,"P"],[-68.245,-37.554,"P"],[-68.008,-38.04,"A"],[-69.73,-38.106,"A"],[-68.499,-38.374,"X"],[-68.225,-38.701,"A"],[-69.329,-37.755,"P"],[-68.444,-37.814,"X"],[-67.897,-38.336,"A"],[-68.191,-38.24,"A"],[-68.628,-37.752,"A"],[-67.683,-37.68,"A"],[-69.447,-38.904,"P"],[-68.496,-38.247,"P"],[-68.331,-37.974,"A"],[-68.156,-38.075,"A"],[-69.554,-37.773,"A"],[-69.578,-38.79,"X"],[-68.799,-37.704,"X"],[-68.341,-37.9,"X"],[-69.226,-37.796,"X"],[-68.898,-37.641,"P"],[-68.038,-37.959,"A"],[-68.226,-37.656,"A"],[-68.371,-38.618,"A"],[-67.716,-38.817,"A"],[-69.779,-38.101,"A"],[-68.951,-38.709,"A"],[-68.686,-38.433,"A"],[-67.916,-37.975,"A"],[-68.674,-38.467,"X"],[-67.716,-38.827,"A"],[-69.504,-39.047,"X"],[-69.023,-37.871,"A"],[-68.843,-38.904,"A"],[-69.809,-38.034,"A"],[-69.486,-37.592,"A"],[-68.511,-37.959,"A"],[-67.803,-37.738,"A"],[-68.91,-37.796,"P"],[-68.997,-38.768,"P"],[-69.269,-38.202,"X"],[-67.934,-38.267,"A"],[-69.269,-39.118,"P"],[-69.742,-38.373,"P"],[-68.451,-38.365,"P"],[-69.484,-38.659,"A"],[-68.695,-38.101,"P"],[-68.418,-38.097,"A"],[-69.372,-38.27,"A"],[-69.752,-37.743,"X"],[-68.524,-38.074,"A"],[-69.326,-38.741,"A"],[-69.332,-39.036,"P"],[-69.429,-39.087,"A"],[-68.039,-37.698,"X"],[-68.932,-38.155,"A"],[-68.523,-38.342,"A"],[-68.065,-37.867,"A"],[-69.298,-38.922,"A"],[-69.525,-37.746,"A"],[-68.338,-38.248,"A"],[-68.639,-37.877,"X"],[-67.981,-38.857,"A"],[-67.785,-38.998,"A"],[-67.896,-38.041,"A"],[-69.248,-38.958,"X"],[-67.891,-38.268,"A"],[-69.243,-37.685,"A"],[-68.082,-37.787,"P"],[-69.587,-37.573,"A"],[-69.067,-38.486,"X"],[-67.947,-39.038,"A"],[-68.784,-38.668,"A"],[-69.502,-38.962,"A"]],"oil":6912,"gas":1039},"totalenergies":{"pozos":[[-67.806,-37.878,"X"],[-68.49,-37.835,"A"],[-68.327,-37.876,"A"],[-67.748,-39.112,"A"],[-68.012,-38.595,"A"],[-68.364,-38.085,"A"],[-69.536,-38.812,"A"],[-68.621,-38.666,"A"],[-69.378,-38.484,"P"],[-68.452,-38.371,"A"],[-69.473,-37.619,"A"],[-69.783,-38.13,"A"],[-67.812,-37.785,"X"],[-68.912,-37.574,"A"],[-67.814,-37.656,"A"],[-69.562,-38.787,"A"],[-68.306,-38.484,"A"],[-68.566,-38.761,"A"],[-69.847,-37.589,"A"],[-67.731,-38.236,"A"],[-69.706,-38.922,"A"],[-69.567,-38.882,"A"],[-69.149,-38.801,"A"],[-68.492,-38.583,"X"]],"oil":1758,"gas":500},"pae":{"pozos":[[-68.074,-38.699,"P"],[-68.883,-38.384,"P"],[-68.128,-39.049,"A"],[-69.336,-37.614,"P"],[-69.5,-38.591,"A"],[-68.311,-38.726,"P"],[-69.704,-38.916,"P"],[-69.468,-38.413,"X"],[-68.71,-38.786,"X"],[-68.041,-38.983,"X"],[-69.212,-38.777,"A"],[-69.2,-37.795,"A"],[-68.628,-38.812,"A"],[-67.911,-38.854,"A"],[-68.441,-38.873,"P"],[-68.681,-38.574,"A"],[-68.907,-37.771,"A"],[-69.004,-38.369,"P"],[-69.305,-38.581,"A"],[-68.053,-37.645,"X"],[-68.032,-39.026,"A"]],"oil":1056,"gas":237},"bbox":[-69.869,-39.138,-67.683,-37.552]};
+const POZOS_PAIS = 26623;
+
+const EMP = [
+  { slug:'ypf', n:'YPF S.A.', puesto:1, pn:34.2, pv:45.6, pozos:5725, mix:'Petróleo', color:'var(--oil)',
+    blurb:'La mayor operadora del país y ancla del desarrollo de Vaca Muerta.',
+    bolsa:'NYQ', tk:'YPF', px:48.76, ch:-1.8,
+    logo:'https://ypf.com/images/menu-principal/ypf_logoazul.svg' },
+  { slug:'totalenergies', n:'TotalEnergies', puesto:2, pn:11.7, pv:0.9, pozos:366, mix:'Gas', color:'var(--gas)',
+    blurb:'El grueso de lo que produce es gas: pesa 11,7% del volumen del país y 0,9% del valor en dólares.',
+    bolsa:'NYQ', tk:'TTE', px:88.18, ch:3.5,
+    logo:'https://totalenergies.com/themes/custom/totalenergies_com/dist/img/logo_totalenergies.png' },
+  { slug:'pae', n:'PAN AMERICAN ENERGY SL', puesto:3, pn:10.9, pv:10.9, pozos:4471, mix:'Mixto', color:'var(--mix)',
+    blurb:'Integrada privada líder, del Golfo San Jorge al gas de Vaca Muerta.',
+    bolsa:null,
+    logo:'https://www.pan-energy.com/Style%20Library/PAE/images/apple-touch-icon-114x114.png' },
+];
+
+const dec = (n,d=1) => n.toLocaleString('es-AR',{minimumFractionDigits:d,maximumFractionDigits:d});
+const num = n => n.toLocaleString('es-AR');
+const pctPozos = c => (c.pozos / POZOS_PAIS) * 100;
+const rinde = c => c.pn / pctPozos(c);
+const MAXB = Math.max(...EMP.flatMap(c => [c.pn, c.pv]));
+
+/* ── El mini mapa ───────────────────────────────────────────────────────
+   Puntos de 2px sobre --inset, la misma receta que el MiniMapa del dashboard.
+   Las tres empresas comparten el bbox de TODA la cuenca y no el suyo propio:
+   con el bbox individual, los 21 pozos de PAE llenarían el cuadro igual que
+   los 80 de YPF y el mapa mentiría sobre su tamaño relativo.
+
+   El color es el del estado y no el del fluido: acá el dato es en qué anda
+   cada pozo. Activo lleva el color de la empresa, perforación el naranja de
+   «requiere atención» y abandonado se apaga a --line-strong. */
+function mapa(slug, color, w, h) {
+  const [x0,y0,x1,y1] = POZOS.bbox;
+  const pad = 6;
+  const px = c => pad + ((c[0]-x0)/(x1-x0)) * (w - pad*2);
+  const py = c => pad + (1 - (c[1]-y0)/(y1-y0)) * (h - pad*2);
+  const col = e => e==='A' ? color : e==='P' ? 'var(--orange)' : 'var(--line-strong)';
+  /* Los abandonados se dibujan PRIMERO para que los activos queden encima:
+     con el orden del fixture, un abandonado podía tapar un activo y el mapa
+     se veía más apagado de lo que es. */
+  const orden = { X:0, P:1, A:2 };
+  const pts = POZOS[slug].pozos.slice().sort((a,b)=>orden[a[2]]-orden[b[2]])
+    .map(p => `<circle cx="${px(p).toFixed(1)}" cy="${py(p).toFixed(1)}" r="2" fill="${col(p[2])}"/>`).join('');
+  return `<svg class="mapa" viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" aria-hidden>${pts}</svg>`;
+}
+
+const estados = slug => {
+  const e = {A:0,P:0,X:0};
+  POZOS[slug].pozos.forEach(p => e[p[2]]++);
+  return e;
+};
+
+const cotiza = c => c.bolsa
+  ? `<span class="adj"><i style="background:var(--green)"></i><b>${c.tk}</b>
+       <span class="num">US$ ${dec(c.px,2)}</span>
+       <span class="delta ${c.ch>=0?'sube':'baja'}">${c.ch>=0?'+':'−'}${dec(Math.abs(c.ch))}%</span></span>`
+  : `<span class="adj"><i style="background:var(--ink-3)"></i>Privada</span>`;
+const fluido = c => `<span class="adj"><i style="background:${c.color}"></i>${c.mix}</span>`;
+const pieBase = c => `${fluido(c)}
+  <span class="adj"><b class="num">×${dec(rinde(c))}</b> por pozo</span> ${cotiza(c)}`;
+
+const card = (c, bloque, pie, lado) => `
+  <div class="card">
+    <div class="comp">
+      <span class="placa" style="--lado:${lado||120}px"><img src="${c.logo}" alt="${c.n}" loading="lazy"></span>
+      <div class="col">
+        <div class="ident">
+          <span class="cuerpo trunca" style="flex:1;font-weight:500">${c.n}</span>
+          <span class="chip num" style="flex-shrink:0">${c.puesto}.ª</span>
+        </div>
+        <p class="desc resena" style="margin:2px 0 0">${c.blurb}</p>
+        ${bloque}
+      </div>
+    </div>
+    <div class="card-pie">${pie}</div>
+  </div>`;
+
+/* ══════════════════════════════════════════════════════════════════════ E */
+const panel = (rot, pin, cuerpo) => `
+  <div class="hundido" style="flex:1;min-width:0">
+    <div class="hundido-bar"><span class="rot trunca">${rot}</span>${pin?`<span class="pin num">${pin}</span>`:''}</div>
+    ${cuerpo}
+  </div>`;
+
+document.getElementById('E').innerHTML = EMP.map(c => {
+  const e = estados(c.slug), tot = e.A+e.P+e.X;
+  return card(c, `
+    <div style="display:flex;gap:8px;margin-top:9px">
+      ${panel('Dónde perfora', `${POZOS[c.slug].pozos.length}`,
+        `<a class="mapa-link" href="#mapa-${c.slug}" title="Ver los pozos de ${c.n} en el mapa"
+            style="height:58px;overflow:hidden">${mapa(c.slug, c.color, 150, 58)}</a>`)}
+      ${panel('Volumen y valor', null, `
+        <div style="padding:8px 10px">
+          <div style="display:flex;align-items:center;gap:6px">
+            <span class="barra" style="flex:1;--barra-color:${c.color}"><i style="width:${(c.pn/MAXB*100).toFixed(1)}%"></i></span>
+            <span class="micro num" style="width:38px;text-align:right;font-weight:500">${dec(c.pn)}%</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;margin-top:8px">
+            <span class="barra" style="flex:1;--barra-color:var(--ink-3)"><i style="width:${(c.pv/MAXB*100).toFixed(1)}%"></i></span>
+            <span class="micro num" style="width:38px;text-align:right;font-weight:500">${dec(c.pv)}%</span>
+          </div>
+          <p class="micro i2" style="margin:6px 0 0;font-size:10.5px">producción · valor</p>
+        </div>`)}
+      ${panel('Sus pozos', num(c.pozos), `
+        <div style="padding:10px">
+          <span class="pila">
+            <span style="flex:${e.A}"><i style="background:${c.color}"></i></span>
+            <span style="flex:${e.P}"><i style="background:var(--orange)"></i></span>
+            <span style="flex:${e.X}"><i style="background:var(--line-strong)"></i></span>
+          </span>
+          <p class="micro i2" style="margin:7px 0 0;font-size:10.5px">
+            <b class="num" style="color:var(--ink);font-weight:500">${Math.round(e.A/tot*100)}%</b> activos</p>
+        </div>`)}
+    </div>`, pieBase(c), 120);
+}).join('');
+
+/* ══════════════════════════════════════════════════════════════════════ F */
+document.getElementById('F').innerHTML = EMP.map(c => {
+  const e = estados(c.slug), tot = e.A+e.P+e.X;
+  const fila = (rot, val, apoyo, ancho, color) => `
+    <div style="display:flex;align-items:baseline;gap:8px">
+      <span class="micro i2" style="width:64px;flex-shrink:0">${rot}</span>
+      <span class="cifra-sm" style="width:52px;text-align:right">${val}</span>
+      <span class="barra" style="flex:1;align-self:center;${color?`--barra-color:${color}`:''}">
+        <i style="width:${Math.max(3,ancho).toFixed(1)}%"></i></span>
+      <span class="micro i2" style="width:74px;text-align:right;flex-shrink:0;font-size:10.5px">${apoyo}</span>
+    </div>`;
+  return card(c, `
+    <div style="display:flex;gap:10px;margin-top:9px;align-items:stretch">
+      <div style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:9px">
+        ${fila('Producción', dec(c.pn)+'%', 'del país', c.pn, c.color)}
+        ${fila('Valor', dec(c.pv)+'%', 'en dólares', c.pv)}
+        ${fila('Pozos', num(c.pozos), dec(pctPozos(c))+'% del país', pctPozos(c))}
+      </div>
+      <a class="mapa-link hundido" href="#mapa-${c.slug}" title="Ver los pozos de ${c.n} en el mapa"
+         style="width:132px;flex-shrink:0">
+        <div class="hundido-bar"><span class="rot trunca">Dónde perfora</span></div>
+        <div style="height:62px;overflow:hidden">${mapa(c.slug, c.color, 132, 62)}</div>
+      </a>
+    </div>`, `${fluido(c)}
+      <span class="adj"><b class="num">${Math.round(e.A/tot*100)}%</b> de sus pozos activos</span>
+      <span class="adj"><b class="num">×${dec(rinde(c))}</b> por pozo</span> ${cotiza(c)}`, 120);
+}).join('');
+
+/* ══════════════════════════════════════════════════════════════════════ G */
+document.getElementById('G').innerHTML = EMP.map(c => {
+  const e = estados(c.slug), tot = e.A+e.P+e.X;
+  return card(c, `
+    <div class="card" style="margin-top:9px;padding:12px;box-shadow:var(--shadow-hairline)">
+      <div style="display:flex;gap:16px">
+        <div style="flex:1;min-width:0">
+          <span class="fig-pt"><i style="background:${c.color}"></i>Producción</span>
+          <span class="cifra" style="display:block;margin-top:1px">${dec(c.pn)}%</span>
+          <code class="mono i2" style="font-size:11.5px">${num(c.pozos)} pozos</code>
+        </div>
+        <div style="flex:1;min-width:0">
+          <span class="fig-pt"><i style="background:var(--ink-3)"></i>Valor</span>
+          <span class="cifra" style="display:block;margin-top:1px">${dec(c.pv)}%</span>
+          <code class="mono i2" style="font-size:11.5px">×${dec(rinde(c))} por pozo</code>
+        </div>
+      </div>
+      <a class="mapa-link hundido" href="#mapa-${c.slug}" title="Ver los pozos de ${c.n} en el mapa"
+         style="margin-top:10px;display:block">
+        <div class="hundido-bar">
+          <span class="rot">Dónde perfora</span>
+          <span class="pin num">${Math.round(e.A/tot*100)}% activos</span>
+        </div>
+        <div style="height:96px;overflow:hidden">${mapa(c.slug, c.color, 440, 96)}</div>
+      </a>
+    </div>`, pieBase(c), 120);
+}).join('');
+</script>
+</body>
+</html>
