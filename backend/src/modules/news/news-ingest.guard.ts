@@ -1,5 +1,6 @@
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import type { Request } from 'express';
+import { createHash, timingSafeEqual } from 'crypto';
 
 /**
  * Bearer-token guard for the internal ingest endpoint. The data pipeline holds
@@ -16,7 +17,10 @@ export class NewsIngestGuard implements CanActivate {
     const req = context.switchToHttp().getRequest<Request>();
     const auth = (req.headers['authorization'] as string) ?? '';
     const token = auth.startsWith('Bearer ') ? auth.slice(7).trim() : '';
-    if (token !== expected) {
+    // comparación en tiempo constante: se comparan digests de largo fijo, así
+    // tampoco se filtra el largo del token
+    const digest = (v: string) => createHash('sha256').update(v).digest();
+    if (!timingSafeEqual(digest(token), digest(expected))) {
       throw new UnauthorizedException('invalid ingest token');
     }
     return true;

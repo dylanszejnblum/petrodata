@@ -16,6 +16,7 @@ async function createApp(): Promise<NestExpressApplication> {
   // Behind Coolify's Traefik proxy: trust X-Forwarded-For so req.ip is the real
   // client (per-IP rate limiting buckets everyone together otherwise).
   app.set('trust proxy', 1);
+  app.disable('x-powered-by');
   app.use(compression());
   app.setGlobalPrefix('api');
   app.enableVersioning({
@@ -39,7 +40,8 @@ async function createApp(): Promise<NestExpressApplication> {
     .split(',')
     .map((o) => o.trim())
     .filter(Boolean);
-  app.enableCors({ origin: corsOrigins, credentials: true });
+  // Sin credentials: la API no usa cookies ni auth de navegador.
+  app.enableCors({ origin: corsOrigins, credentials: false });
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
