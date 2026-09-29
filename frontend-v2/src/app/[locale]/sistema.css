@@ -2464,3 +2464,179 @@
 .s-popup-prod .grid > div .s-num { overflow: hidden; text-overflow: ellipsis; }
 .s-popup-meta { display: flex; flex-direction: column; gap: 6px; padding: 13px 14px; }
 .s-popup-pie { padding: 9px 14px; background: var(--inset); border-top: 1px solid var(--line); font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; }
+
+/* ── Vacamuerta IA — el chat con los datos ─────────────────────────────
+   Tres formas de la misma pieza:
+   · ≥1400: tercera columna fija, sticky y de alto de viewport.
+   · 640–1399: cajón a la derecha sobre un velo, detrás del botón flotante.
+   · <640: hoja a pantalla completa que sube desde abajo.
+   El scroll de la página se traba con :has() y no con JS: si la ventana
+   pasa a ancha con el cajón abierto, la traba se va sola con el media. */
+.s-chat {
+  display: none;
+  flex-direction: column;
+  background: var(--panel);
+  border-left: 1px solid var(--line);
+}
+.s-chat-fab {
+  position: fixed;
+  z-index: 50;
+  right: 16px;
+  bottom: calc(16px + env(safe-area-inset-bottom));
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 40px;
+  padding: 0 16px 0 13px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--page);
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: 0 8px 24px #10182833, 0 1px 2px #0003;
+  cursor: pointer;
+  transition: transform var(--dur-fast) var(--ease-out-strong), opacity var(--dur-fast);
+}
+.s-chat-fab:active { transform: scale(0.97); }
+.s-chat-fab[data-abierto='true'] { opacity: 0; pointer-events: none; transform: translateY(8px); }
+.s-chat-velo { display: none; }
+.s-chat-cerrar {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  margin-right: -6px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ink-2);
+  cursor: pointer;
+}
+.s-chat-cerrar:hover { background: var(--hover); color: var(--ink); }
+
+@media (max-width: 1399px) {
+  .s-chat[data-abierto='true'] {
+    display: flex;
+    position: fixed;
+    z-index: 60;
+    inset: 0;
+    border-left: 0;
+    animation: s-chat-sube var(--dur-base, 220ms) var(--ease-out-strong, ease-out);
+  }
+  .s-chat-form { padding-bottom: calc(12px + env(safe-area-inset-bottom)); }
+  html:has(.s-chat[data-abierto='true']) { overflow: hidden; }
+}
+/* Teléfono: 16px en el campo, o iOS hace zoom al enfocarlo. */
+@media (max-width: 639px) {
+  .s-chat .s-buscador input { font-size: 16px; }
+}
+@media (min-width: 640px) and (max-width: 1399px) {
+  .s-chat[data-abierto='true'] {
+    left: auto;
+    width: min(440px, 100%);
+    border-left: 1px solid var(--line);
+    box-shadow: -12px 0 36px #10182829;
+    animation-name: s-chat-entra;
+  }
+  .s-chat-velo[data-abierto='true'] {
+    display: block;
+    position: fixed;
+    z-index: 59;
+    inset: 0;
+    background: #10121466;
+    animation: s-chat-velo var(--dur-base, 220ms) ease-out;
+  }
+}
+@media (min-width: 1400px) {
+  .s-chat { display: flex; position: sticky; top: 0; height: 100dvh; }
+  .s-chat-fab, .s-chat-cerrar { display: none; }
+}
+@keyframes s-chat-sube { from { transform: translateY(24px); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes s-chat-entra { from { transform: translateX(24px); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes s-chat-velo { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .s-chat, .s-chat-velo, .s-chat-fab { animation: none !important; transition: none; }
+}
+/* En el mapa la esquina de abajo a la derecha ya tiene zoom, atribución y
+   pie: el botón baja al centro del borde inferior, entre los dos textos del
+   pie. `translate` y no `transform`, que ya lo usa el :active. */
+@media (max-width: 1399px) {
+  .sistema:has(.s-map-viewport) .s-chat-fab { right: auto; left: 50%; translate: -50% 0; }
+}
+@media (min-width: 1024px) and (max-width: 1399px) {
+  /* el centro del mapa, no de la ventana: el índice ocupa 288 a la izquierda */
+  .sistema:has(.s-map-viewport) .s-chat-fab { left: calc(50% + 144px); }
+}
+
+/* ── Vacamuerta IA — movimiento ──────────────────────────────────────────
+   Cada pieza dice en qué estado está el pedido:
+   · tres puntos: el modelo está pensando, todavía no eligió herramientas;
+   · esqueleto con giro: una herramienta está trayendo su dato, con el rótulo
+     de lo que hace; la tarjeta real entra en su lugar con un fade-up;
+   · cursor al final del texto: el comentario todavía llega;
+   · punto vivo + destello: la tarjeta es en vivo y una cifra acaba de cambiar. */
+.s-spin {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  flex: none;
+  border-radius: 50%;
+  border: 1.75px solid var(--line-strong);
+  border-top-color: var(--accent);
+  animation: s-gira 700ms linear infinite;
+}
+@keyframes s-gira { to { transform: rotate(360deg); } }
+
+.s-pensando { display: inline-flex; gap: 4px; padding: 6px 0; }
+.s-pensando i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ink-3);
+  animation: s-rebota 1.1s var(--ease-out-strong) infinite;
+}
+.s-pensando i:nth-child(2) { animation-delay: 140ms; }
+.s-pensando i:nth-child(3) { animation-delay: 280ms; }
+@keyframes s-rebota { 0%, 60%, 100% { transform: none; opacity: 0.35; } 30% { transform: translateY(-4px); opacity: 1; } }
+
+.s-skel-card { animation: s-fade-up var(--dur-slow) var(--ease-out-strong) both; }
+.s-skel {
+  display: block;
+  height: 10px;
+  border-radius: 5px;
+  background: linear-gradient(90deg, var(--field) 0%, var(--hover-2) 50%, var(--field) 100%);
+  background-size: 200% 100%;
+  animation: s-brillo 1.3s ease-in-out infinite;
+}
+@keyframes s-brillo { from { background-position: 100% 0; } to { background-position: -100% 0; } }
+
+.s-entra { animation: s-fade-up var(--dur-slow) var(--ease-out-strong) both; }
+
+.s-caret::after {
+  content: '';
+  display: inline-block;
+  width: 7px;
+  height: 1em;
+  margin-left: 2px;
+  vertical-align: -0.15em;
+  border-radius: 1px;
+  background: var(--accent);
+  animation: s-parpadea 900ms steps(1) infinite;
+}
+@keyframes s-parpadea { 50% { opacity: 0; } }
+
+.s-vivo-punto { width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+.s-flash { animation: s-destella 1.2s ease-out; border-radius: 3px; }
+@keyframes s-destella { from { background: var(--accent-tint); } to { background: transparent; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .s-spin { animation-duration: 2s; }
+  .s-pensando i, .s-skel, .s-caret::after, .s-flash, .s-entra, .s-skel-card { animation: none; }
+}
+
+/* En el chat las chispas llevan un mes diario (≈21–30 puntos) en vez de doce
+   meses: a 5px fijos por punto se salían de su columna. Acá se reparten el
+   ancho que les da la tarjeta. */
+.s-chat .s-serie > span { flex: 1 1 0; min-width: 0; padding-right: 1px; }
+.s-chat .s-serie i { width: 100%; max-width: 4px; }
