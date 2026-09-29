@@ -43,7 +43,8 @@ export class HttpExceptionFilter implements ExceptionFilter {
         if (typeof b.code === 'string') code = b.code;
       }
     } else if (exception instanceof Error) {
-      message = exception.message;
+      // El detalle (Prisma, S3, stack) queda en el log; al cliente sólo le llega
+      // el mensaje genérico: nombres de tablas y rutas internas no salen.
       this.logger.error(exception.stack ?? exception.message);
     }
 

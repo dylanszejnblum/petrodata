@@ -4,7 +4,8 @@
 FROM python:3.11-slim
 
 # uv binary (no pip bootstrap needed)
-COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+# uv pinned (not :latest) so a compromised or breaking tag can't slip into a build
+COPY --from=ghcr.io/astral-sh/uv:0.8.2 /uv /uvx /bin/
 
 WORKDIR /app
 

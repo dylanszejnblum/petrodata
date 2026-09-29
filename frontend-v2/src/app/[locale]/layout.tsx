@@ -8,6 +8,7 @@ import { routing } from '@/i18n/routing'
 import { loadHeadline } from '@/lib/data/production'
 import { Indice } from './_ui/Indice'
 import { PageMotion } from './_ui/PageMotion'
+import { Chat } from './_ui/Chat'
 import { siteMetadata } from '@/lib/metadata'
 import '../globals.css'
 import './sistema.css'
@@ -92,7 +93,7 @@ export default async function LocaleLayout({
         </Script>
         <NextIntlClientProvider>
           <div className="sistema">
-            <div className="grid lg:grid-cols-[288px_1fr]">
+            <div className="grid lg:grid-cols-[288px_1fr] 2xl:grid-cols-[288px_minmax(0,1fr)_minmax(400px,32vw)]">
               <Indice periodo={`${HEADLINE.period}-01`} />
               <main id="contenido" tabIndex={-1} className="s-contenido min-w-0">
                 <PageMotion />
@@ -108,6 +109,7 @@ export default async function LocaleLayout({
                   </span>
                 </footer>
               </main>
+              <Chat />
             </div>
           </div>
         </NextIntlClientProvider>

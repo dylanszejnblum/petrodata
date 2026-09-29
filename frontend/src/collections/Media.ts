@@ -42,6 +42,9 @@ export const Media: CollectionConfig = {
   upload: {
     // Upload to the public/media directory in Next.js making them publicly accessible even outside of Payload
     staticDir: path.resolve(dirname, '../../public/media'),
+    // Sólo imágenes raster. Sin esto se podía subir un SVG o un HTML, que se
+    // sirve desde el mismo origen: XSS guardado para cualquiera que lo abra.
+    mimeTypes: ['image/png', 'image/jpeg', 'image/webp', 'image/avif', 'image/gif'],
     adminThumbnail: 'thumbnail',
     focalPoint: true,
     imageSizes: [

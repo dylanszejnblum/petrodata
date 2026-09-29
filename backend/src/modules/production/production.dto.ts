@@ -56,8 +56,8 @@ export class MonthlyQueryDto {
   @IsOptional() @IsIn(GROUP_BY_VALUES as unknown as string[])
   group_by?: GroupBy;
 
-  @ApiPropertyOptional({ example: 1, minimum: 1, default: 1 })
-  @IsOptional() @Type(() => Number) @IsInt() @Min(1)
+  @ApiPropertyOptional({ example: 1, minimum: 1, maximum: 10000, default: 1 })
+  @IsOptional() @Type(() => Number) @IsInt() @Min(1) @Max(10000)
   page?: number = 1;
 
   @ApiPropertyOptional({ example: 50, minimum: 1, maximum: 500, default: 50 })
