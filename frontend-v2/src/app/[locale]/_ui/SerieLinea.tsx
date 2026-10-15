@@ -78,6 +78,7 @@ export function SerieLinea({
   meses,
   rango,
   escala = 'propia',
+  leyenda = true,
 }: {
   series: SerieDef[]
   /** rótulo de cada mes, ya formateado */
@@ -86,7 +87,10 @@ export function SerieLinea({
   rango: string
   /** 'propia': cada línea contra su propio rango, para magnitudes que no se
       comparan. 'comun': todas contra el mismo, para magnitudes que sí. */
-  escala?: 'propia' | 'comun'
+  escala?: 'propia' | 'comun' | 'rango'
+  /** false: sin nombre sobre la cifra ni interruptores. Para cuando la card ya
+      nombra la serie en su cabecera y hay una sola línea que prender. */
+  leyenda?: boolean
 }) {
   const [mes, setMes] = useState<number | null>(null)
   const [ocultas, setOcultas] = useState<string[]>([])
@@ -97,7 +101,15 @@ export function SerieLinea({
      la razón entre los valores. Recortado al mínimo, un 11 contra 52 se dibuja
      como si fuera un 1 contra 5. */
   const todos = series.flatMap((s) => s.valores)
-  const dom = escala === 'comun' ? ([0, Math.max(...todos)] as const) : undefined
+  /* 'rango': un dominio común pero recortado a min–max, para series que ya
+     están en la misma unidad y pueden cruzar el cero —variación % desde una
+     base común—, donde anclar en cero aplastaría las curvas. */
+  const dom =
+    escala === 'comun'
+      ? ([0, Math.max(...todos)] as const)
+      : escala === 'rango'
+        ? ([Math.min(...todos), Math.max(...todos)] as const)
+        : undefined
   const geo = series.map((s) => coords(s.valores, dom))
 
   return (
@@ -109,14 +121,14 @@ export function SerieLinea({
       <div className="flex items-start gap-6">
         {series.map((s) => (
           <div key={s.nombre} className="min-w-0 flex-1">
-            <span className="s-micro flex items-center gap-1.5" style={{ color: 'var(--ink-2)' }}>
+            {leyenda && <span className="s-micro flex items-center gap-1.5" style={{ color: 'var(--ink-2)' }}>
               <i
                 aria-hidden
                 className="block size-2 shrink-0 rounded-full"
                 style={{ background: s.color }}
               />
               {s.nombre}
-            </span>
+            </span>}
             {/* 13/600 y no 17: es exactamente el tratamiento del titular de la
                 card 01 —"28.176.497 BOE"—, así las dos secciones se leen como
                 el mismo nivel de jerarquía. Entre 13 y 17 el sistema no tiene
@@ -137,7 +149,7 @@ export function SerieLinea({
             mes señalado mientras se recorre el gráfico. */}
         <div className="s-hundido-bar">
           <span className="flex gap-1.5">
-            {series.map((s) => {
+            {leyenda && series.map((s) => {
               const off = ocultas.includes(s.nombre)
               return (
                 <button

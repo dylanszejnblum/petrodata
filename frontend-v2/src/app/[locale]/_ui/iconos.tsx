@@ -28,6 +28,8 @@ export const PATH = {
   /* El tilde de confirmación. Misma rejilla de 24 y las mismas puntas
      redondeadas que el resto: dos trazos y nada de relleno. */
   tilde: 'M20 6L9 17l-5-5',
+  /* La marca de Vacamuerta IA: un destello de cuatro puntas. */
+  chispa: 'M12 3l1.9 5.6c.2.7.8 1.3 1.5 1.5L21 12l-5.6 1.9c-.7.2-1.3.8-1.5 1.5L12 21l-1.9-5.6c-.2-.7-.8-1.3-1.5-1.5L3 12l5.6-1.9c.7-.2 1.3-.8 1.5-1.5L12 3z',
   /* Los del desglose de empresas. Los cuatro primeros son los mismos que usa
      el de provincias —producción, barras, intensidad, información—: dos webs
      que dicen «producción» con dos íconos distintos son dos vocabularios. */

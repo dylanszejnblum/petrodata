@@ -645,9 +645,12 @@ def make_handler(out_dir: Path):
             return valid_session(self._cookie("sid"))
 
         def _client_ip(self) -> str:
-            # Coolify/Traefik sets X-Forwarded-For; take the left-most (client).
+            # Traefik APPENDS the connecting IP to X-Forwarded-For, so the
+            # right-most entry is the one we can trust (one proxy hop). The
+            # left-most is whatever the client sent: keying the login lock on it
+            # let a brute-forcer dodge the lock with a new header per attempt.
             xff = self.headers.get("X-Forwarded-For")
-            return xff.split(",")[0].strip() if xff else self.client_address[0]
+            return xff.split(",")[-1].strip() if xff else self.client_address[0]
 
         def _session_cookie(self) -> str:
             # Secure by default (prod is behind TLS); opt out only for http dev.

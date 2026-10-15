@@ -106,6 +106,12 @@
       "@prisma/engines",
       "@swc/core",
       "prisma"
-    ]
+    ],
+    "overrides": {
+      "qs": "^6.16.0",
+      "multer": "^2.3.0",
+      "js-yaml": "^4.3.2",
+      "body-parser": "^2.3.0"
+    }
   }
 }

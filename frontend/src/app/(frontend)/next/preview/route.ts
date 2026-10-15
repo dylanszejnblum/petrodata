@@ -25,7 +25,9 @@ export async function GET(req: NextRequest): Promise<Response> {
     return new Response('Insufficient search params', { status: 404 })
   }
 
-  if (!path.startsWith('/')) {
+  // `//host` y `/\host` también empiezan con '/', pero el navegador los lee
+  // como otra dirección: sin este chequeo la ruta era una redirección abierta.
+  if (!path.startsWith('/') || path.startsWith('//') || path.startsWith('/\\')) {
     return new Response('This endpoint can only be used for relative previews', { status: 500 })
   }
 

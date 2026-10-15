@@ -19,6 +19,10 @@ fixtures/
 companies/
 provinces/
 
+# Secrets: never bake a local .env into the image
+.env
+.env.*
+
 # Local / VCS noise
 .git
 .gitignore

@@ -62,6 +62,8 @@ export default buildConfig({
   },
   plugins,
   secret: process.env.PAYLOAD_SECRET,
+  // tope por archivo: 10 MB alcanza para cualquier foto del sitio
+  upload: { limits: { fileSize: 10_000_000 } },
   sharp,
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),

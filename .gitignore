@@ -76,3 +76,10 @@ pids/
 # news ingest output (shipped to backend via HTTP, never committed)
 out_news/
 data-pipeline/out_news/
+
+# notas locales de traspaso (describen gaps de seguridad abiertos)
+sep6-handoff.md
+
+# cualquier variante de .env (.env.production, .env.staging…), salvo los ejemplos
+.env.*
+!.env.example

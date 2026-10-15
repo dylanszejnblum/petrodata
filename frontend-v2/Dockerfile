@@ -44,10 +44,14 @@ ENV PORT=3200
 
 # output: 'standalone' deja en .next/standalone un server.js con sus deps ya
 # adentro; static/ y public/ van aparte porque el trace no los incluye.
-COPY --from=builder /app/.next/standalone ./
-COPY --from=builder /app/.next/static ./.next/static
-COPY --from=builder /app/public ./public
+# Del usuario `node` y no de root: el server escribe .next/cache (ISR, imágenes)
+# y tiene que poder, pero el proceso no necesita más privilegios que eso.
+COPY --from=builder --chown=node:node /app/.next/standalone ./
+COPY --from=builder --chown=node:node /app/.next/static ./.next/static
+COPY --from=builder --chown=node:node /app/public ./public
 
 EXPOSE 3200
+
+USER node
 
 CMD ["node", "server.js"]

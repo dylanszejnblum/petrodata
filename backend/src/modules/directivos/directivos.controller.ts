@@ -8,13 +8,12 @@ import { VotarDto } from './directivos.dto';
 import { DirectivosResponseDto, VotoEstadoDto } from './directivos.response';
 import { DirectivosService } from './directivos.service';
 
-/* La IP viene del proxy, igual que en newsletter: se lee del header y no de un
-   parámetro, así que no entra en el contrato de OpenAPI. `trust proxy` está
-   puesto en main.ts, si no req.ip sería la del Traefik y votaría uno solo por
-   todos. */
+/* La IP es req.ip y NO el primer valor de X-Forwarded-For. Con `trust proxy 1`
+   (main.ts) Express toma la entrada que agregó Traefik, que es la IP que se
+   conectó de verdad; la primera la escribe el cliente, así que leerla dejaba
+   votar infinitas veces mandando un header distinto en cada pedido. */
 function clientIp(req: Request): string {
-  const xff = (req.headers['x-forwarded-for'] as string) ?? '';
-  return xff.split(',')[0]?.trim() || req.ip || 'unknown';
+  return req.ip || 'unknown';
 }
 
 @ApiTags('directivos')

@@ -18,7 +18,8 @@ services:
   mongo:
     image: mongo:latest
     ports:
-      - '27017:27017'
+      # sólo localhost: Mongo sin auth no se publica en todas las interfaces
+      - '127.0.0.1:27017:27017'
     command:
       - --storageEngine=wiredTiger
     volumes:

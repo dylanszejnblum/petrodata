@@ -6,6 +6,7 @@ export class PaginationDto {
   @Type(() => Number)
   @IsInt()
   @Min(1)
+  @Max(10000) // un OFFSET gigante no rompe nada, pero hace trabajar a la base de gusto
   page?: number = 1;
 
   @IsOptional()

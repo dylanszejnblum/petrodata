@@ -35,18 +35,21 @@ FROM node:22-alpine AS production
 WORKDIR /app
 
 # Copy built artifacts (dist/src/main.js)
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/package.json ./
+# Todo del usuario sin privilegios `node` (viene en la imagen): el proceso no corre como root.
+COPY --from=builder --chown=node:node /app/dist ./dist
+COPY --from=builder --chown=node:node /app/package.json ./
 
 # Copy full node_modules (includes prisma + generated client)
-COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder --chown=node:node /app/node_modules ./node_modules
 
 # Prisma schema + migrations needed for prisma migrate deploy
-COPY --from=builder /app/prisma ./prisma
+COPY --from=builder --chown=node:node /app/prisma ./prisma
 
 RUN test -f /app/dist/src/main.js && echo "dist/src/main.js OK" || (echo "dist/src/main.js MISSING" && exit 1)
 
 EXPOSE 3001
+
+USER node
 
 # Use local prisma binary, then start app (nest build outputs to dist/src/)
 CMD ["sh", "-c", "./node_modules/.bin/prisma migrate deploy && node dist/src/main"]

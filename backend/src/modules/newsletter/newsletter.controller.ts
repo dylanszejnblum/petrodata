@@ -28,10 +28,10 @@ export class NewsletterController {
     @Body() dto: SubscribeNewsletterDto,
     @Req() req: Request,
   ): Promise<SubscribeResponseDto> {
-    // Read the client IP from the proxy header (not a request-body/param), so it
-    // stays out of the OpenAPI contract. Used only for in-memory rate limiting.
-    const xff = (req.headers['x-forwarded-for'] as string) ?? '';
-    const ip = xff.split(',')[0]?.trim() || req.ip || 'unknown';
+    // req.ip, not the left-most X-Forwarded-For: with `trust proxy 1` Express
+    // resolves the hop Traefik appended. The left-most value is client-supplied,
+    // so reading it let anyone reset this rate limit by sending a new header.
+    const ip = req.ip || 'unknown';
     await this.service.subscribe(dto.email, dto.source ?? 'newsletter-modal', ip);
     return { status: 'subscribed' };
   }
