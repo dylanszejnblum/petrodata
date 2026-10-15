@@ -13,6 +13,17 @@ import { buildSwaggerConfig } from './swagger.config';
 async function createApp(): Promise<NestExpressApplication> {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
+  // El pipeline de noticias POSTea lotes de hasta 200 documentos a
+  // /api/v1/news/ingest; con el texto completo cada documento pesa ~7 KB, así que
+  // un lote real ronda los 700 KB. El parser JSON por defecto de Express corta en
+  // 100 KB y desde mediados de septiembre el ingest venía devolviendo 500
+  // (PayloadTooLargeError) — o sea que el pipeline no publicaba nada y el cron
+  // sólo anotaba "run FAILED". 8 MB cubre el tope de 500 documentos del DTO con
+  // margen. Registrarlo acá reemplaza al default: Nest no instala el suyo porque
+  // `isMiddlewareApplied('jsonParser')` ya lo encuentra (express.json() devuelve
+  // una función con ese nombre).
+  app.useBodyParser('json', { limit: '8mb' });
+
   // Behind Coolify's Traefik proxy: trust X-Forwarded-For so req.ip is the real
   // client (per-IP rate limiting buckets everyone together otherwise).
   app.set('trust proxy', 1);
