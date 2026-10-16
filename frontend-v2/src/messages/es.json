@@ -881,7 +881,6 @@
       "verMapa": "Ver el mapa",
       "newsletter": {
         "titulo": "El informe, cada lunes",
-        "bajada": "La producción de la semana en el correo.",
         "placeholder": "tu@correo.com",
         "accion": "Suscribirme",
         "enviando": "…",
