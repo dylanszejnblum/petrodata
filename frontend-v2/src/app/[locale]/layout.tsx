@@ -64,6 +64,14 @@ const themeInit = `try{var t=localStorage.getItem('estrato-theme');if(!t)t=match
    contenido se tope en 672: así la trama de puntos llega hasta el borde en
    monitores anchos. El índice cumple el papel de tabla de contenidos e
    indexa las secciones del sitio, que son páginas. */
+/* Google Analytics: sólo si hay ID, y sólo si tiene forma de ID (va dentro de
+   un script inline). Se inlinea en el build, como todo NEXT_PUBLIC_*. Las
+   navegaciones del App Router las cuenta la medición mejorada de GA4
+   (cambios de historial), que viene prendida por defecto. */
+const GA_ID = /^G-[A-Z0-9]+$/.test(process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID ?? '')
+  ? process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
+  : null
+
 export default async function LocaleLayout({
   children,
   params,
@@ -113,6 +121,14 @@ export default async function LocaleLayout({
             </div>
           </div>
         </NextIntlClientProvider>
+        {GA_ID && (
+          <>
+            <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />
+            <Script id="ga" strategy="afterInteractive">
+              {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','${GA_ID}')`}
+            </Script>
+          </>
+        )}
       </body>
     </html>
   )
