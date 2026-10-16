@@ -2478,6 +2478,13 @@
   background: var(--panel);
   border-left: 1px solid var(--line);
 }
+/* El cuerpo del chat va sobre --canvas, como el .s-marco de las secciones:
+   las tarjetas blancas se recortan igual que en el resto del sitio. Sobre
+   blanco quedaban sin borde visible. Los botones (sugerencias) pasan a
+   --surface porque --field sobre --canvas desaparece. */
+.s-chat-cuerpo { background: var(--canvas); }
+.s-chat-cuerpo .s-boton { background: var(--surface); box-shadow: var(--shadow-hairline); }
+.s-chat-cuerpo .s-boton:hover { background: var(--hover); }
 .s-chat-fab {
   position: fixed;
   z-index: 50;

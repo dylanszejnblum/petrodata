@@ -881,7 +881,6 @@
       "verMapa": "View the map",
       "newsletter": {
         "titulo": "The Monday brief",
-        "bajada": "The week's production, in your inbox.",
         "placeholder": "you@email.com",
         "accion": "Subscribe",
         "enviando": "…",
