@@ -17,6 +17,9 @@ RUN corepack enable && corepack prepare pnpm@10 --activate
 # el build: cambiar esto en runtime no cambia a dónde pega el navegador.
 ARG NEXT_PUBLIC_API_BASE_URL=https://api.petrodata.dylansz.com
 ENV NEXT_PUBLIC_API_BASE_URL=$NEXT_PUBLIC_API_BASE_URL
+# Google Analytics (G-XXXXXXX). Vacío = sin GA. También se inlinea en el build.
+ARG NEXT_PUBLIC_GA_MEASUREMENT_ID=
+ENV NEXT_PUBLIC_GA_MEASUREMENT_ID=$NEXT_PUBLIC_GA_MEASUREMENT_ID
 ENV NEXT_TELEMETRY_DISABLED=1
 
 COPY package.json pnpm-lock.yaml ./
