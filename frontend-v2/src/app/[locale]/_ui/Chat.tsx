@@ -531,7 +531,7 @@ export function Chat() {
         </button>
       </header>
 
-      <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto px-5 py-4">
+      <div className="s-chat-cuerpo flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto px-5 py-4">
         {!turnos.length && (
           <div className="flex flex-col gap-2">
             <p className="s-desc m-0">
@@ -548,7 +548,7 @@ export function Chat() {
         )}
         {turnos.map((t, i) =>
           t.role === 'user' ? (
-            <p key={i} className="s-cuerpo m-0 self-end rounded-[10px] px-3 py-2" style={{ background: 'var(--field)', color: 'var(--ink)', maxWidth: '85%' }}>
+            <p key={i} className="s-cuerpo m-0 self-end rounded-[10px] px-3 py-2" style={{ background: 'var(--surface)', boxShadow: 'var(--shadow-card)', color: 'var(--ink)', maxWidth: '85%' }}>
               {t.content}
             </p>
           ) : (
