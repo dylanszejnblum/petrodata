@@ -101,6 +101,37 @@
 @media (max-width: 639px) { .s-map-viewport { height: 100dvh; min-height: 560px; } }
 @media (prefers-reduced-motion: reduce) { .s-map-viewport .maplibregl-map, .s-map-panel { animation: none; } }
 
+/* ── Mapa en el teléfono ────────────────────────────────────────────────
+   Apilados, los paneles tapaban el mapa entero y se salían por abajo. Bajo
+   640 hay una fila de chips arriba y se abre UN panel por vez, a todo el
+   ancho y con scroll propio; el resto del alto queda para el mapa. En sm+
+   los chips no existen y los grupos son cajas transparentes. */
+.s-map-chips { display: none; }
+.s-map-chip-marca { width: 6px; height: 6px; border-radius: 99px; background: var(--accent); }
+@media (max-width: 639px) {
+  .s-map-capas { padding: 12px; justify-content: flex-start; }
+  .s-map-chips { display: flex; gap: 6px; width: 100%; overflow-x: auto; scrollbar-width: none; }
+  .s-map-chips .s-map-reopen { flex: none; }
+  .s-map-chips .s-map-reopen[aria-pressed='true'] { background: var(--ink); color: var(--surface); border-color: var(--ink); }
+  .s-map-grupo, .s-map-grupo-der { display: none; }
+  .s-map-capas[data-hoja='filtros'] .s-map-grupo-der,
+  .s-map-capas[data-hoja='cobertura'] .s-map-grupo-der { display: block; width: 100%; align-self: stretch; }
+  .s-map-capas[data-hoja='operadores'] [data-grupo='operadores'],
+  .s-map-capas[data-hoja='filtros'] [data-grupo='filtros'],
+  .s-map-capas[data-hoja='cobertura'] [data-grupo='cobertura'] {
+    display: flex; flex-direction: column; gap: 12px; width: 100%;
+    /* deja libre abajo el zoom y el botón del chat */
+    max-height: calc(100dvh - 220px); overflow-y: auto; pointer-events: auto;
+    border-radius: var(--radius-card);
+  }
+  .s-map-grupo .s-map-panel { width: 100%; max-width: none; flex: none; }
+  /* el chip ya abre y cierra: sin botones de contraer dentro del panel */
+  .s-map-grupo .s-panel-close, .s-map-grupo .s-map-reopen { display: none; }
+  /* el pie flotante se pisaba con los paneles y el zoom */
+  .s-contenido:has(> .s-map-viewport) > .s-pie { display: none; }
+  .s-contenido:has(> .s-map-viewport) .maplibregl-ctrl-bottom-right { bottom: 0; }
+}
+
 [data-theme='dark'] .sistema {
   --page: #17181a;
   --canvas: #1c1d1f;

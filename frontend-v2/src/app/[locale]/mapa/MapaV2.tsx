@@ -76,6 +76,9 @@ export function MapaV2({
   const [listo, setListo] = useState(false)
   const [mostrarCobertura, setMostrarCobertura] = useState(true)
   const [mostrarOperadores, setMostrarOperadores] = useState(true)
+  /* En el teléfono los paneles tapaban el mapa entero: ahí se abre uno por
+     vez desde una fila de chips. En sm+ esto no cambia nada (lo resuelve el CSS). */
+  const [hoja, setHoja] = useState<'operadores' | 'filtros' | 'cobertura' | null>(null)
 
   /* Al elegir una operadora se piden SUS pozos completos —no sólo los que
      cayeron en la muestra— con el mismo ?operator= de la API que usa la v1.
@@ -397,8 +400,30 @@ export function MapaV2({
           `items-start` es necesario: sin él los paneles heredan el stretch
           del flex y se estiran a todo el alto del mapa, dejando un bloque
           blanco vacío debajo del pie. */}
-      <div className="pointer-events-none absolute inset-0 z-10 flex flex-col items-start justify-between gap-3 p-4 lg:flex-row lg:items-start lg:justify-between">
-        <div className="pointer-events-none flex min-w-0 flex-col gap-3">
+      <div className="s-map-capas pointer-events-none absolute inset-0 z-10 flex flex-col items-start justify-between gap-3 p-4 lg:flex-row lg:items-start lg:justify-between" data-hoja={hoja ?? ''}>
+        <div className="s-map-chips pointer-events-auto" role="group" aria-label="Paneles del mapa">
+          {([
+            ['operadores', 'Operadores', !!operadora],
+            ['filtros', 'Filtros', recurso !== 'todos' || !ocultar || !!cuenca || !!provincia || formacion !== 'vaca_muerta' || !!estado],
+            ['cobertura', cobertura.etiquetas.titulo, false],
+          ] as const).map(([clave, rotulo, marca]) => (
+            <button
+              key={clave}
+              type="button"
+              className="s-map-reopen"
+              aria-pressed={hoja === clave}
+              onClick={() => {
+                setHoja(hoja === clave ? null : clave)
+                if (clave === 'operadores') setMostrarOperadores(true)
+                if (clave === 'cobertura') setMostrarCobertura(true)
+              }}
+            >
+              {rotulo}
+              {marca && <i className="s-map-chip-marca" aria-label="con filtro" />}
+            </button>
+          ))}
+        </div>
+        <div className="s-map-grupo pointer-events-none flex min-w-0 flex-col gap-3" data-grupo="operadores">
           {mostrarOperadores ? (
             <>
               <PanelOperadores
@@ -415,8 +440,9 @@ export function MapaV2({
             </button>
           )}
         </div>
-        <div className="pointer-events-none self-end lg:self-start">
+        <div className="s-map-grupo-der pointer-events-none self-end lg:self-start">
           <div className="flex flex-col items-end gap-3">
+            <div className="s-map-grupo" data-grupo="filtros">
             <PanelFiltros
               recurso={recurso}
               onRecurso={setRecurso}
@@ -433,7 +459,10 @@ export function MapaV2({
               estado={estado}
               onEstado={setEstado}
             />
-            <PanelCobertura datos={cobertura} abierto={mostrarCobertura} onCambiar={setMostrarCobertura} />
+            </div>
+            <div className="s-map-grupo" data-grupo="cobertura">
+              <PanelCobertura datos={cobertura} abierto={mostrarCobertura} onCambiar={setMostrarCobertura} />
+            </div>
           </div>
         </div>
       </div>
