@@ -36,7 +36,9 @@ export const LIMITE = 5
 /* ── EL CORTE DIARIO ─────────────────────────────────────────────────────
 
    La lista NO se reordena al votar. Los votos se acumulan y el orden se
-   recalcula una vez por día, a medianoche.
+   recalcula una vez por día, a medianoche UTC —las 21 en Argentina—, que es
+   el día con el que el backend corta (diaDe() en voto-reglas del backend). La
+   cuenta regresiva iba a la medianoche LOCAL y le erraba por tres horas.
 
    Es una decisión de producto, no una limitación: reordenando en vivo, el que
    vota ve su propio clic mover la tabla y el ranking se lee como un juguete.
@@ -48,17 +50,10 @@ export const LIMITE = 5
    muestra «entra mañana» y la cabecera tiene la cuenta regresiva. */
 export const CORTE_HORA = 0
 
-/** El día al que pertenece un voto, en ISO. Es la unidad del corte. */
-export function dia(d: Date = new Date()): string {
-  const x = new Date(d)
-  x.setHours(x.getHours() - CORTE_HORA)
-  return x.toISOString().slice(0, 10)
-}
-
 /** Cuándo se recalcula el orden. */
 export function proximoCorte(desde: Date = new Date()): Date {
   const d = new Date(desde)
-  d.setHours(CORTE_HORA, 0, 0, 0)
-  if (d <= desde) d.setDate(d.getDate() + 1)
+  d.setUTCHours(CORTE_HORA, 0, 0, 0)
+  if (d <= desde) d.setUTCDate(d.getUTCDate() + 1)
   return d
 }

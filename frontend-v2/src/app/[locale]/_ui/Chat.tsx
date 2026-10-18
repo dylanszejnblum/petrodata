@@ -439,6 +439,9 @@ export function Chat() {
      640. Arriba de 1400 `abierto` no cambia nada: la columna siempre está. */
   const [abierto, setAbierto] = useState(false)
   const fin = useRef<HTMLDivElement>(null)
+  /* Para cortar una respuesta a mitad: el abort llega al fetch, la ruta lo ve
+     en req.signal y deja de llamar a DeepSeek. */
+  const corte = useRef<AbortController | null>(null)
   const campo = useRef<HTMLInputElement>(null)
   useEffect(() => {
     if (!abierto) return
@@ -458,7 +461,10 @@ export function Chat() {
     setCargando(true)
     /* El turno del asistente se arma a medida que llegan los eventos. */
     let turno: Turno = { role: 'assistant', content: '', blocks: [], pasos: [], escribiendo: true }
+    const ctl = (corte.current = new AbortController())
     const pintar = (cambio: Partial<Turno>) => {
+      // «Nueva consulta» suelta el controlador: lo que llegue tarde no revive la charla borrada
+      if (corte.current !== ctl) return
       turno = { ...turno, ...cambio }
       setTurnos([...hist, turno])
     }
@@ -466,6 +472,7 @@ export function Chat() {
     try {
       const r = await fetch('/api/chat', {
         method: 'POST',
+        signal: ctl.signal,
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ locale: l, messages: hist.filter((t) => !t.error).map(({ role, content }) => ({ role, content })) }),
       })
@@ -490,8 +497,11 @@ export function Chat() {
       }
       pintar({ escribiendo: false, pasos: [] })
     } catch (e) {
-      pintar({ content: (e as Error).message || 'Error', error: true, escribiendo: false, pasos: [] })
+      // cortado a mano: queda lo que alcanzó a llegar, sin marcarlo como error
+      if (ctl.signal.aborted) pintar({ escribiendo: false, pasos: [] })
+      else pintar({ content: (e as Error).message || 'Error', error: true, escribiendo: false, pasos: [] })
     } finally {
+      if (corte.current === ctl) corte.current = null
       setCargando(false)
     }
   }
@@ -521,6 +531,20 @@ export function Chat() {
       <header className="flex items-center gap-2 border-b px-5 py-3.5" style={{ borderColor: 'var(--line)' }}>
         <Icono d={PATH.chispa} size={15} grosor={2} style={{ color: 'var(--accent)' }} />
         <h2 className="s-titulo m-0 flex-1">{nombre}</h2>
+        {turnos.length > 0 && (
+          <button
+            type="button"
+            className="s-accion"
+            onClick={() => {
+              const c = corte.current
+              corte.current = null
+              c?.abort()
+              setTurnos([])
+            }}
+          >
+            {l === 'en' ? 'New chat' : 'Nueva consulta'}
+          </button>
+        )}
         <button
           type="button"
           className="s-chat-cerrar"
@@ -595,9 +619,16 @@ export function Chat() {
             aria-label={l === 'en' ? 'Question' : 'Pregunta'}
             className="h-7 text-[13px]"
           />
-          <button type="submit" className="s-boton" disabled={cargando || !texto.trim()} aria-label={l === 'en' ? 'Send' : 'Enviar'}>
-            {cargando ? <span className="s-spin" /> : <Icono d={PATH.enlace} size={13} />}
-          </button>
+          {cargando ? (
+            /* Mientras responde, el mismo lugar corta la respuesta. */
+            <button type="button" className="s-boton" onClick={() => corte.current?.abort()} aria-label={l === 'en' ? 'Stop' : 'Detener'} title={l === 'en' ? 'Stop' : 'Detener'}>
+              <span aria-hidden className="block size-2.5 rounded-[2px]" style={{ background: 'currentColor' }} />
+            </button>
+          ) : (
+            <button type="submit" className="s-boton" disabled={!texto.trim()} aria-label={l === 'en' ? 'Send' : 'Enviar'}>
+              <Icono d={PATH.enlace} size={13} />
+            </button>
+          )}
         </div>
       </form>
     </aside>

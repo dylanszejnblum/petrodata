@@ -2684,6 +2684,17 @@ export interface components {
              */
             rank_change: number;
         };
+        MasVotadoDto: {
+            /** @example vista */
+            company_slug: string;
+            /** @example Miguel Galuccio */
+            name: string;
+            /**
+             * @description Votos a favor recibidos esta semana.
+             * @example 12
+             */
+            votes: number;
+        };
         VotacionResumenDto: {
             /**
              * @description Lunes de la semana en curso.
@@ -2702,6 +2713,8 @@ export interface components {
             voters: number;
             /** @example 5 */
             weekly_limit: number;
+            /** @description Hasta tres, por votos a favor de la semana. Vacío si nadie votó a favor. */
+            top_voted: components["schemas"]["MasVotadoDto"][];
         };
         DirectivosSourceDto: {
             /** @example 2025-06-01 */
@@ -2755,6 +2768,8 @@ export interface components {
              * @enum {number}
              */
             value: 1 | -1;
+            /** @description Token de Cloudflare Turnstile. Obligatorio sólo si el servidor tiene TURNSTILE_SECRET. */
+            turnstile_token?: string;
         };
     };
     responses: never;
@@ -4373,6 +4388,15 @@ export interface operations {
                         data: components["schemas"]["VotoEstadoDto"];
                         meta: components["schemas"]["MetaDto"];
                     };
+                };
+            };
+            /** @description Falta o falló la verificación de Turnstile (sólo con TURNSTILE_SECRET). */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto"];
                 };
             };
             /** @description No hay directivo cargado para esa empresa. */

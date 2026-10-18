@@ -1,39 +1,38 @@
 'use client'
 
 import { Fragment, useCallback, useMemo, useState } from 'react'
+import { useLocale, useTranslations } from 'next-intl'
+import { routing } from '@/i18n/routing'
 import { AvisoDato } from './AvisoDato'
 import { Icono, PATH } from './iconos'
-import { LIMITE, proximoCorte } from './voto-reglas'
+import { LIMITE } from './voto-reglas'
 import { useVotos } from './votos'
 import type { PersonaFila } from '@/fixtures/personas'
 import { formatDecimal } from '@/lib/format'
 
 /* LA LISTA DE PERSONALIDADES — el índice, y el voto por fila.
 
-   El voto acá es una MAQUETA. En producción tiene que vivir en el servidor: el
-   enunciado es «un voto por semana por IP», y eso no se puede sostener desde el
-   navegador —quien vota puede borrar el storage y volver a votar—. Se guarda en
-   localStorage para poder ver la interacción, y la card lo dice.
+   El voto vive en el servidor (ver votos.ts). Lo que una IP no resuelve sigue
+   siendo cierto: una oficina o una operadora móvil son miles de personas
+   detrás de UNA IP, y cualquiera con VPN vota lo que quiera. Turnstile, si
+   está configurado, frena a los scripts; no convierte una IP en una persona. */
 
-   Y conviene dejar escrito lo que una IP no resuelve, porque es la parte que se
-   descubre tarde: una oficina, una universidad o una operadora móvil son miles
-   de personas detrás de UNA IP, así que el límite semanal bloquea a todos menos
-   al primero; y cualquiera con una VPN vota las veces que quiera. Sirve como
-   fricción, no como control. Si el ranking va a significar algo, el voto
-   necesita una cuenta.
+/* EL TOP Y EL RESTO. Treinta de las cuarenta y ocho filas están entre 0 y 5
+   puntos: se leen como ruido debajo de los que de verdad mueven la cuenca. Se
+   muestran las primeras TOP y el resto detrás de un botón. */
+const TOP = 20
 
-   La semana arranca el lunes, que es lo que dice la cabecera. El identificador
-   de semana se calcula del lado del cliente y con eso se descartan los votos
-   viejos: sin eso, «se renueva cada lunes» sería una frase y no un
-   comportamiento. */
-
-export function ListaPersonas({ personas }: { personas: PersonaFila[] }) {
+export function ListaPersonas({ personas, abierta: inicial }: { personas: PersonaFila[]; abierta?: string }) {
+  const t = useTranslations('v2.directivos')
   const { votos, votar, restantes } = useVotos()
   /* UNA SOLA FILA ABIERTA A LA VEZ. Con varias abiertas la lista deja de ser
      una tabla de posiciones —los puestos quedan a cuarenta píxeles unos de
      otros y a trescientos otros— y el orden, que es lo único que la fila tiene
      que comunicar, se pierde. */
-  const [abierta, setAbierta] = useState<string | null>(null)
+  const [abierta, setAbierta] = useState<string | null>(inicial ?? null)
+  /* Si el enlace compartido abre a alguien de más abajo del top, la lista
+     arranca entera: si no, la ficha pedida quedaría escondida. */
+  const [todas, setTodas] = useState(() => personas.findIndex((p) => p.slug === inicial) >= TOP)
 
   /* EL ORDEN, EL ÍNDICE Y EL MOVIMIENTO LOS DA EL SERVIDOR. Antes la lista se
      reordenaba acá, sumándole PESO_VOTO al índice del fixture: era la única
@@ -71,9 +70,10 @@ export function ListaPersonas({ personas }: { personas: PersonaFila[] }) {
     return m
   }, [filas])
 
-  const sinCredito = `Ya usaste tus ${LIMITE} votos de esta semana`
-  const yaVoto = 'Ya votaste a esta persona; el voto no se edita hasta el lunes'
-  const enCorte = 'Tu voto quedó registrado y entra en el próximo corte'
+  const sinCredito = t('sinCredito', { n: LIMITE })
+  const yaVoto = t('yaVoto')
+  const enCorte = t('enCorte')
+  const visibles = todas ? filas : filas.slice(0, TOP)
 
   return (
     <>
@@ -89,11 +89,11 @@ export function ListaPersonas({ personas }: { personas: PersonaFila[] }) {
         {/* «Persona» arranca en la FOTO y no en el nombre: la columna que
             rotula empieza ahí. Ocupando sólo la del nombre, el rótulo quedaba
             60px corrido a la derecha del bloque que describe. */}
-        <span style={{ gridColumn: '2 / 4' }}>Persona</span>
-        <span className="text-right">Puntos</span>
-        <span className="text-center">Voto semanal</span>
+        <span style={{ gridColumn: '2 / 4' }}>{t('colPersona')}</span>
+        <span className="text-right">{t('colPuntos')}</span>
+        <span className="text-center">{t('colVoto')}</span>
       </div>
-      {filas.map((p, i) => {
+      {visibles.map((p) => {
         const mio = votos[p.slug]?.v
         const votado = mio !== undefined
         const agotado = !votado && restantes === 0
@@ -248,7 +248,7 @@ export function ListaPersonas({ personas }: { personas: PersonaFila[] }) {
                     size={11}
                     grosor={p.pendiente ? 2.2 : 2.6}
                   />
-                  {mio === 1 ? 'A favor' : 'En contra'}
+                  {mio === 1 ? t('aFavor') : t('enContra')}
                 </span>
               ) : (
               <span className="par">
@@ -260,7 +260,7 @@ export function ListaPersonas({ personas }: { personas: PersonaFila[] }) {
                 <button
                   type="button"
                   className="arriba"
-                  aria-label={`Votar a favor de ${p.nombre}`}
+                  aria-label={t('votarAFavor', { nombre: p.nombre })}
                   disabled={agotado}
                   title={agotado ? sinCredito : undefined}
                   onClick={() => votar(p.slug, 1)}
@@ -270,7 +270,7 @@ export function ListaPersonas({ personas }: { personas: PersonaFila[] }) {
                 <button
                   type="button"
                   className="abajo"
-                  aria-label={`Votar en contra de ${p.nombre}`}
+                  aria-label={t('votarEnContra', { nombre: p.nombre })}
                   disabled={agotado}
                   title={agotado ? sinCredito : undefined}
                   onClick={() => votar(p.slug, -1)}
@@ -286,6 +286,13 @@ export function ListaPersonas({ personas }: { personas: PersonaFila[] }) {
           </Fragment>
         )
       })}
+      {filas.length > TOP && (
+        <div className="flex justify-center border-t px-3 py-2" style={{ borderColor: 'var(--line)' }}>
+          <button type="button" className="s-boton" aria-expanded={todas} onClick={() => setTodas(!todas)}>
+            {todas ? t('verMenos', { n: TOP }) : t('verTodos', { n: filas.length })}
+          </button>
+        </div>
+      )}
     </>
   )
 }
@@ -324,7 +331,7 @@ export function ListaPersonas({ personas }: { personas: PersonaFila[] }) {
     se trunca, que es como se lee «años en el cargo»: quien lleva dos años y
     nueve meses lleva dos años, no tres. El arranque exacto queda en el title,
     así que redondear no esconde nada. */
-function calcularAntiguedad(desde?: string) {
+function calcularAntiguedad(desde: string | undefined, t: ReturnType<typeof useTranslations>, locale: string) {
   if (!desde) return null
   const [a, m] = desde.split('-').map(Number)
   const inicio = new Date(a, (m || 1) - 1, 1)
@@ -333,10 +340,12 @@ function calcularAntiguedad(desde?: string) {
   const meses = (hoy.getFullYear() - a) * 12 + (hoy.getMonth() - ((m || 1) - 1))
   if (meses < 0) return null
   const años = Math.floor(meses / 12)
-  const MES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre']
+  const fecha = m
+    ? inicio.toLocaleDateString(locale === 'en' ? 'en-US' : 'es-AR', { month: 'long', year: 'numeric' })
+    : String(a)
   return {
-    txt: años >= 1 ? `${años} ${años === 1 ? 'año' : 'años'}` : `${meses} ${meses === 1 ? 'mes' : 'meses'}`,
-    desde: m ? `En el cargo desde ${MES[m - 1]} de ${a}` : `En el cargo desde ${a}`,
+    txt: años >= 1 ? t('anios', { n: años }) : t('meses', { n: meses }),
+    desde: t('cargoDesde', { fecha }),
   }
 }
 
@@ -352,7 +361,9 @@ function Ficha({
   /** puestos ganados desde el orden sin votos. Positivo = subió. */
   salto: number
 }) {
-  const antiguedad = calcularAntiguedad(p.enElCargoDesde)
+  const t = useTranslations('v2.directivos')
+  const locale = useLocale()
+  const antiguedad = calcularAntiguedad(p.enElCargoDesde, t, locale)
   return (
     <div className="s-ficha s-entra" id={`ficha-${p.slug}`}>
       <CaraGrande nombre={p.nombre} hay={p.foto} hay2x={p.foto2x} />
@@ -392,14 +403,14 @@ function Ficha({
             sin ella. */}
         <div className="s-ficha-datos">
           <div className="s-ficha-fila">
-            <span style={{ color: 'var(--ink-2)' }}>Puesto</span>
+            <span style={{ color: 'var(--ink-2)' }}>{t('puesto')}</span>
             <span className="s-ficha-valor ml-auto">
               {String(puesto).padStart(2, '0')}
               {/* «de 48» en ink-3 medía 2,56. Es la mitad de la frase —sin eso
                   el 02 no dice de cuántos— así que sube a ink-2: 5,5. */}
               <span className="font-normal" style={{ color: 'var(--ink-2)' }}>
                 {' '}
-                de {total}
+                {t('de', { total })}
               </span>
             </span>
           </div>
@@ -418,10 +429,10 @@ function Ficha({
               que no pasó nada. */}
           {salto !== 0 && (
             <div className="s-ficha-fila">
-              <span style={{ color: 'var(--ink-2)' }}>Movimiento</span>
+              <span style={{ color: 'var(--ink-2)' }}>{t('movimiento')}</span>
               <span className={`s-delta ml-auto ${salto > 0 ? 's-delta--sube' : 's-delta--baja'}`}>
                 {salto > 0 ? '+' : '\u2212'}
-                {Math.abs(salto)} {Math.abs(salto) === 1 ? 'puesto' : 'puestos'}
+                {t('puestos', { n: Math.abs(salto) })}
               </span>
             </div>
           )}
@@ -436,7 +447,7 @@ function Ficha({
               en vez de calcular sobre un dato que no es. */}
           {antiguedad && (
             <div className="s-ficha-fila">
-              <span style={{ color: 'var(--ink-2)' }}>Años en el cargo</span>
+              <span style={{ color: 'var(--ink-2)' }}>{t('aniosCargo')}</span>
               <span className="s-ficha-valor ml-auto" title={antiguedad.desde}>
                 {antiguedad.txt}
               </span>
@@ -449,14 +460,46 @@ function Ficha({
               confirmar —justo lo que se sacó con el chip—. El aviso va en las
               cuarenta y ocho por igual. */}
           <div className="s-ficha-fila">
-            <span style={{ color: 'var(--ink-2)' }}>Correcciones</span>
+            <span style={{ color: 'var(--ink-2)' }}>{t('correcciones')}</span>
             <span className="ml-auto">
               <AvisoDato nombre={p.nombre} empresa={p.empresa} />
+            </span>
+          </div>
+          {/* El enlace a /directivos/<slug>, que lleva su propia imagen al
+              pegarse en LinkedIn o WhatsApp. En el teléfono abre el menú de
+              compartir del sistema; en el escritorio lo copia. */}
+          <div className="s-ficha-fila">
+            <span style={{ color: 'var(--ink-2)' }}>{t('compartir')}</span>
+            <span className="ml-auto">
+              <Compartir slug={p.slug} titulo={p.nombre} />
             </span>
           </div>
         </div>
       </div>
     </div>
+  )
+}
+
+function Compartir({ slug, titulo }: { slug: string; titulo: string }) {
+  const t = useTranslations('v2.directivos')
+  const locale = useLocale()
+  const [copiado, setCopiado] = useState(false)
+  async function compartir(e: React.MouseEvent) {
+    e.stopPropagation()
+    const url = `${location.origin}${locale === routing.defaultLocale ? '' : `/${locale}`}/directivos/${slug}`
+    if (navigator.share && matchMedia('(pointer: coarse)').matches) {
+      await navigator.share({ title: titulo, url }).catch(() => {})
+      return
+    }
+    await navigator.clipboard?.writeText(url).catch(() => {})
+    setCopiado(true)
+    setTimeout(() => setCopiado(false), 2000)
+  }
+  return (
+    <button type="button" className="s-accion" onClick={compartir} aria-live="polite">
+      <Icono d={copiado ? PATH.tilde : PATH.enlace} size={11} grosor={2.2} />
+      {copiado ? t('copiado') : t('compartir')}
+    </button>
   )
 }
 

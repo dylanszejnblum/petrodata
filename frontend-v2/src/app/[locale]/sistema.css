@@ -1793,44 +1793,6 @@
   }
 }
 
-/* ── Panel del voto ────────────────────────────────────────────────────
-   Dos bloques lado a lado: el presupuesto de quien mira —real, del storage— y
-   la actividad de la semana —simulada, y rotulada como tal—. La divisoria
-   entre los dos es el filete de 1px del sistema, que es como separa dos cosas
-   que conviven sin jerarquía entre ellas.
-
-   A 640 se apilan y la divisoria pasa de vertical a horizontal: dos bloques de
-   texto uno al lado del otro en 287px no entran. */
-.s-pvoto { display: grid; grid-template-columns: repeat(3, 1fr); }
-.s-pvoto-col { padding: 12px; }
-.s-pvoto-col + .s-pvoto-col { border-left: 1px solid var(--line); }
-/* A 640 se apilan y la divisoria gira: tres bloques de cifra en 287px no
-   entran, y a dos columnas la tercera quedaría sola en un renglón. */
-@media (max-width: 639px) {
-  .s-pvoto { grid-template-columns: 1fr; }
-  .s-pvoto-col + .s-pvoto-col { border-left: 0; border-top: 1px solid var(--line); }
-}
-
-/* Fila de «más votados»: puesto, apellido y votos. Es la fila de ranking del
-   sistema apretada a 18 de alto, que es lo que permite meter tres adentro de
-   una columna que las otras dos resuelven con una sola cifra: las tres
-   columnas del panel tienen que medir lo mismo. */
-.s-mvotado { display: flex; align-items: baseline; gap: 6px; height: 18px; }
-
-/* Los créditos: un punto por voto. Cinco marcas se cuentan de un vistazo y un
-   «3 de 5» hay que leerlo. El gastado se llena con la tinta media y el que
-   queda es el riel vacío, que es la misma gramática de .s-medidor. */
-.s-creditos { display: inline-flex; align-items: center; gap: 4px; }
-.s-creditos > i {
-  display: block;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--line-strong);
-  transition: background-color var(--dur-base) var(--ease-out);
-}
-.s-creditos > i.usado { background: var(--ink-2); }
-
 /* Sin crédito, los chevrones de las filas que no votaste se apagan. No se
    esconden: una columna que desaparece a mitad de la lista es peor que una
    apagada, porque no se entiende qué pasó. */

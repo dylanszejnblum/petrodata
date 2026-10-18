@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react'
 
 import { api } from '@/api/client'
 import { LIMITE } from './voto-reglas'
+import { tokenTurnstile } from './turnstile'
 
 /* EL VOTO — ahora contra el servidor.
 
@@ -82,11 +83,13 @@ export function useVotos() {
         usados: e.usados + 1,
         restantes: Math.max(0, e.restantes - 1),
       }))
-      api
-        .POST('/api/v2/directivos/{slug}/voto', {
-          params: { path: { slug } },
-          body: { value: v },
-        })
+      tokenTurnstile()
+        .then((turnstile_token) =>
+          api.POST('/api/v2/directivos/{slug}/voto', {
+            params: { path: { slug } },
+            body: { value: v, turnstile_token },
+          }),
+        )
         .then(({ data }) => data?.data ?? Promise.reject())
         .catch(() => api.GET('/api/v2/directivos/voto', {}).then(({ data }) => data?.data ?? VACIO_API))
         .then((d) => setEstado(aEstado(d)))

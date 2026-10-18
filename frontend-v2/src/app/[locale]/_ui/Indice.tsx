@@ -107,8 +107,10 @@ export function Indice({ periodo }: { periodo: string }) {
             Vacamuerta.io
           </span>
         </Link>
+        {/* El último mes de producción cargado, para todo el sitio: es el dato
+            más lento de todos (el resto se actualiza todos los días). */}
         <span className="s-chip s-chip--neutro s-mono shrink-0 !px-2 !text-[10.5px]">
-          {formatMonth(periodo)}
+          {t('datosA')} {formatMonth(periodo, locale === 'en' ? 'en' : 'es')}
         </span>
       </div>
 

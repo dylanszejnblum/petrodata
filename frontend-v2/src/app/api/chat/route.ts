@@ -326,7 +326,7 @@ export async function POST(req: NextRequest) {
           emit({ t: 'error', msg: locale === 'en' ? 'Service unavailable, try again' : 'No disponible, probá de nuevo' })
         }
       }
-      ctrl.close()
+      try { ctrl.close() } catch {} // el cliente cortó: el stream ya está cerrado
     },
   })
   return new Response(stream, { headers: { 'content-type': 'application/x-ndjson; charset=utf-8', 'cache-control': 'no-store' } })
