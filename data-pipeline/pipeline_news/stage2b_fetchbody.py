@@ -22,10 +22,12 @@ just title + deck.
 from __future__ import annotations
 
 import argparse
+import ipaddress
 import json
 import re
+import socket
 from pathlib import Path
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlsplit
 
 import fitz  # PyMuPDF — already a dependency
 import httpx
@@ -37,6 +39,8 @@ _FETCHABLE_MODES = {"fulltext_internal", "licensed_fulltext"}
 # Guardrails: skip absurdly short extractions (nav/boilerplate) and cap storage.
 _MIN_BODY_CHARS = 200
 _MAX_BODY_CHARS = 40_000
+_MAX_BYTES = 25 * 1024 * 1024  # un PDF de la CNV entra holgado
+_MAX_REDIRECTS = 5
 
 # JS-rendered viewers (e.g. CNV's publicview SPA) serve a loading shell to plain
 # HTTP — extracting that yields placeholder chrome, not the document. Reject it
@@ -56,11 +60,44 @@ _OG_IMAGE_RE = re.compile(
 )
 
 
-def _fetch(url: str) -> httpx.Response | None:
+def _public(url: str) -> bool:
+    """Sólo http(s) a hosts que resuelven a IPs públicas. Las URLs salen de
+    feeds de terceros: sin esto un link (o un redirect) podía hacer que el
+    contenedor leyera servicios internos (http://backend:3001, 169.254.169.254)
+    y guardara la respuesta como body_text."""
+    parts = urlsplit(url)
+    if parts.scheme not in ("http", "https") or not parts.hostname:
+        return False
     try:
-        resp = httpx.get(url, timeout=40, follow_redirects=True, headers=_HEADERS)
-        resp.raise_for_status()
-        return resp
+        infos = socket.getaddrinfo(parts.hostname, None)
+    except OSError:
+        return False
+    return all(ipaddress.ip_address(i[4][0].split("%")[0]).is_global for i in infos)
+
+
+def _fetch(url: str) -> httpx.Response | None:
+    # Redirects a mano para validar cada salto; el body se corta en _MAX_BYTES.
+    # ponytail: resuelve DNS antes que httpx (DNS rebinding sigue posible); fijar la IP si importa
+    try:
+        with httpx.Client(timeout=40, headers=_HEADERS) as client:
+            for _ in range(_MAX_REDIRECTS + 1):
+                if not _public(url):
+                    raise ValueError("host no público")
+                with client.stream("GET", url) as resp:
+                    if resp.is_redirect:
+                        url = urljoin(url, resp.headers["location"])
+                        continue
+                    resp.raise_for_status()
+                    body = bytearray()
+                    for chunk in resp.iter_bytes():
+                        body += chunk
+                        if len(body) > _MAX_BYTES:
+                            raise ValueError("respuesta demasiado grande")
+                    headers = {k: v for k, v in resp.headers.items()
+                               if k.lower() not in ("content-encoding", "content-length", "transfer-encoding")}
+                    return httpx.Response(resp.status_code, headers=headers,
+                                          content=bytes(body), request=resp.request)
+            raise ValueError("demasiados redirects")
     except Exception as exc:  # one bad URL must not sink the run
         print(f"[stage2b]   ✕ fetch failed {url}: {exc!r}")
         return None

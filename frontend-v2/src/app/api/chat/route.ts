@@ -90,10 +90,22 @@ function ipDe(req: NextRequest) {
   return req.headers.get('cf-connecting-ip') ?? req.headers.get('x-real-ip') ?? xff?.at(-1) ?? 'local'
 }
 
-function rechazo(req: NextRequest, cupo: number): Response | null {
+function mismoHost(origen: string, host: string | null) {
+  try {
+    return new URL(origen).host === host
+  } catch {
+    return false
+  }
+}
+
+/* estricto (POST, el que gasta DeepSeek): sin sec-fetch-site no es un
+   navegador —curl o un script no lo mandan— y se rechaza. */
+function rechazo(req: NextRequest, cupo: number, estricto = false): Response | null {
   const sitio = req.headers.get('sec-fetch-site')
   const origen = req.headers.get('origin')
-  const ajeno = sitio ? sitio !== 'same-origin' : origen != null && new URL(origen).host !== req.headers.get('host')
+  const ajeno = sitio
+    ? sitio !== 'same-origin'
+    : estricto || (origen != null && !mismoHost(origen, req.headers.get('host')))
   if (ajeno) return Response.json({ error: 'origen no permitido' }, { status: 403 })
 
   const ahora = Date.now()
@@ -200,9 +212,21 @@ async function* deepseek(key: string, messages: unknown[], signal: AbortSignal, 
   }
 }
 
+/* Tope diario global: aunque alguien falsee la IP y esquive el cupo por IP,
+   el gasto en DeepSeek queda acotado. Cada consulta son hasta 4 vueltas.
+   ponytail: contador en memoria de una instancia, se reinicia con el deploy. */
+const TOPE_DIA = Number(process.env.CHAT_DAILY_CAP ?? 2000)
+const dia = { fecha: '', n: 0 }
+
 export async function POST(req: NextRequest) {
-  const no = rechazo(req, 10)
+  const no = rechazo(req, 10, true)
   if (no) return no
+  const hoy = new Date().toISOString().slice(0, 10)
+  if (dia.fecha !== hoy) Object.assign(dia, { fecha: hoy, n: 0 })
+  if (++dia.n > TOPE_DIA) {
+    console.error(`[chat] tope diario alcanzado (${TOPE_DIA})`)
+    return Response.json({ error: 'el chat llegó a su límite por hoy, probá mañana' }, { status: 429 })
+  }
   const key = process.env.DEEPSEEK_API_KEY
   if (!key) {
     console.error('[chat] falta DEEPSEEK_API_KEY')

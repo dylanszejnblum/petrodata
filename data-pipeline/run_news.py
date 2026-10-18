@@ -16,12 +16,13 @@ Usage:
 
     # production cron: full chain + ship to backend
     uv run run_news.py --out out_news/ \
-        --post-to "$BACKEND_INGEST_URL" --token "$NEWS_INGEST_TOKEN"
+        --post-to "$BACKEND_INGEST_URL"   # token: env NEWS_INGEST_TOKEN
 """
 
 from __future__ import annotations
 
 import argparse
+import os
 import sys
 from pathlib import Path
 
@@ -47,7 +48,8 @@ def main() -> int:
                     help="skip stage 1; re-run 2→5 on existing raw")
     ap.add_argument("--post-to", default=None,
                     help="backend ingest URL; if set, POST the result")
-    ap.add_argument("--token", default=None, help="bearer token for --post-to")
+    ap.add_argument("--token", default=os.environ.get("NEWS_INGEST_TOKEN"),
+                    help="bearer token for --post-to (default: env NEWS_INGEST_TOKEN, keeps it out of ps)")
     args = ap.parse_args()
 
     args.out.mkdir(parents=True, exist_ok=True)
@@ -62,7 +64,7 @@ def main() -> int:
 
     if args.post_to:
         if not args.token:
-            print("[run_news] --post-to requires --token", file=sys.stderr)
+            print("[run_news] --post-to requires --token or NEWS_INGEST_TOKEN", file=sys.stderr)
             return 2
         post_mod.post(artifact, args.post_to, args.token)
 

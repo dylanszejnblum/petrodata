@@ -7,3 +7,6 @@ node_modules
 *.md
 scripts
 tsconfig.tsbuildinfo
+
+# zips sueltos (p.ej. public/images/ceos.zip) no se publican
+*.zip
