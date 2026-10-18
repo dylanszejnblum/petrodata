@@ -37,15 +37,16 @@ The CSVs above came from `petroldata.ar/`, which no longer exists. Refreshes now
 read the public sources directly:
 
 ```bash
-pnpm db:refresh:production  # well production (datos.energia.gob.ar, Cap. IV): reloads the last 3 loaded months + new ones
-pnpm db:refresh:market      # Brent/WTI/HH (FRED), FX (argentinadatos), A3500 (BCRA), CPI/fiscal/energy trade (datos.gob.ar), fuel prices, gas PIST, GDP
+pnpm db:refresh:energia     # datos.energia.gob.ar: well production (last 3 loaded months + new), gas PIST, fuel prices
+pnpm db:refresh:market      # Brent/WTI/HH (FRED), FX (argentinadatos), A3500 (BCRA), CPI/fiscal/energy trade (datos.gob.ar), GDP
 pnpm db:refresh             # both
 # SINCE=2026-01 reloads production from that month; DRY_RUN=1 writes nothing
 ```
 
-In production this runs as a Coolify Scheduled Task on the backend container
-(`npm run db:refresh`, daily). The image ships `node_modules` + `prisma/`, so no
-extra setup is needed.
+`db:refresh:market` runs daily as a Coolify Scheduled Task on the backend
+container (`npm run db:refresh:market`). datos.energia.gob.ar doesn't answer
+the VPS IP, so `db:refresh:energia` has to run from somewhere that reaches it
+(e.g. a machine in Argentina) with `DATABASE_URL` pointed at prod.
 
 Not automated: the rig count (Baker Hughes blocks automated downloads) and the
 annual energy-trade rows (agro vs energy crossover).
