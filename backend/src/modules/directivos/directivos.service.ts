@@ -204,7 +204,10 @@ export class DirectivosService {
     const directivos = ordenar(puntos).map(
       ({ escala: _e, valorUsd: _v, pozos: _p, conVoto, ...d }, i): DirectivoDto => ({
         ...d,
-        index: Math.round(conVoto * 10) / 10,
+        /* Se ordena por conVoto crudo pero se publica recortado a 0–100: el
+           líder del índice con votos a favor daba 102,4 en una escala que la
+           página presenta como de 0 a 100. */
+        index: Math.round(Math.min(100, Math.max(0, conVoto)) * 10) / 10,
         rank: i + 1,
         /* Positivo = subió. Cero cuando nadie se movió, que es el caso normal:
            el frontend no dibuja el renglón. */
