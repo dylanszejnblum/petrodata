@@ -409,6 +409,8 @@ model CompanyExecutive {
 model ExecutiveVote {
   id          Int      @id @default(autoincrement())
   voterHash   String   @map("voter_hash")
+  /// HMAC de la IP. El votante es el navegador; esto sólo sostiene el techo por IP.
+  ipHash      String?  @map("ip_hash")
   companySlug String   @map("company_slug")
   value       Int // 1 | -1
   weekStart   DateTime @map("week_start") @db.Date
@@ -419,6 +421,7 @@ model ExecutiveVote {
   @@index([weekStart])
   @@index([voteDay])
   @@index([companySlug])
+  @@index([ipHash, weekStart])
   @@map("executive_vote")
 }
 

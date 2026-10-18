@@ -1,6 +1,8 @@
 import {
   ConflictException,
   ForbiddenException,
+  HttpException,
+  HttpStatus,
   Injectable,
   NotFoundException,
   ServiceUnavailableException,
@@ -15,6 +17,7 @@ import {
   LIMITE_SEMANAL,
   puntosPorVoto,
   semanaDe,
+  topeSemanalIp,
 } from './voto-reglas';
 
 /* ── EL ÍNDICE ────────────────────────────────────────────────────────────
@@ -111,16 +114,33 @@ export class DirectivosService {
     private readonly operators: OperatorsService,
   ) {}
 
-  /* El votante es un HMAC de la IP con un secreto del servidor. Sin el secreto
-     no se vota: ver el comentario de hashVotante(). */
-  private votante(ip: string): string {
+  /* El votante es un HMAC del id de navegador (`x-votante`) con un secreto del
+     servidor; sin id cae a la IP, que es como votaban los clientes viejos. La
+     IP se guarda aparte, también como HMAC, sólo para el techo semanal por IP.
+     Sin el secreto no se vota: ver el comentario de hashVotante(). */
+  private votante(ip: string, navegador: string | null): { voterHash: string; ipHash: string } {
     const salt = process.env.VOTE_SALT;
     if (!salt) {
       throw new ServiceUnavailableException(
         'La votación está deshabilitada: falta VOTE_SALT en el servidor.',
       );
     }
-    return hashVotante(ip, salt);
+    const ipHash = hashVotante(ip, salt);
+    // el prefijo separa los dos espacios: un id de navegador nunca choca con una IP
+    return { voterHash: navegador ? hashVotante(`b:${navegador}`, salt) : ipHash, ipHash };
+  }
+
+  /* ponytail: caché de una instancia, 30 s. El orden sólo cambia con el corte
+     diario; lo que se mueve en vivo son los contadores, y medio minuto de
+     atraso ahí no se nota. Sin esto, cada pedido eran siete consultas. */
+  private cacheLista: { hasta: number; valor: Promise<DirectivosResponseDto | null> } | null = null
+
+  list(): Promise<DirectivosResponseDto | null> {
+    if (this.cacheLista && this.cacheLista.hasta > Date.now()) return this.cacheLista.valor;
+    const valor = this.calcularLista();
+    this.cacheLista = { hasta: Date.now() + 30_000, valor };
+    valor.catch(() => (this.cacheLista = null));
+    return valor;
   }
 
   /** Voto neto por empresa, sólo de días anteriores a `corte`. */
@@ -133,7 +153,7 @@ export class DirectivosService {
     return new Map(rows.map((r) => [r.companySlug, r._sum.value ?? 0]));
   }
 
-  async list(): Promise<DirectivosResponseDto | null> {
+  private async calcularLista(): Promise<DirectivosResponseDto | null> {
     const semana = semanaDe();
     /* Dos cortes: el de hoy y el de ayer. El segundo es lo único que hace
        verdadera la frase del pie —«la flecha dice cuántos lugares se movió cada
@@ -150,11 +170,10 @@ export class DirectivosService {
       this.netoHasta(semana, hoy),
       this.netoHasta(semana, ayer),
       this.prisma.executiveVote.count({ where: { weekStart: semana } }),
-      this.prisma.executiveVote.findMany({
-        where: { weekStart: semana },
-        distinct: ['voterHash'],
-        select: { voterHash: true },
-      }),
+      /* COUNT(DISTINCT) en la base: el findMany con `distinct` traía un renglón
+         por votante a Node para contarlos, cien mil filas con cien mil votantes. */
+      this.prisma.$queryRaw<{ n: number }[]>`
+        SELECT COUNT(DISTINCT voter_hash)::int AS n FROM executive_vote WHERE week_start = ${semana}`,
       this.prisma.executiveVote.groupBy({
         by: ['companySlug'],
         where: { weekStart: semana, value: 1 },
@@ -250,7 +269,7 @@ export class DirectivosService {
       votacion: {
         week_start: semana.toISOString().slice(0, 10),
         votes: votos,
-        voters: votantes.length,
+        voters: votantes[0]?.n ?? 0,
         weekly_limit: LIMITE_SEMANAL,
         /* Cuenta TODA la semana, hoy incluido, igual que los dos contadores de
            arriba: es actividad, no el orden, así que no espera al corte. */
@@ -271,10 +290,10 @@ export class DirectivosService {
   }
 
   /** Lo que este votante ya usó esta semana. No se cachea: es por IP. */
-  async estadoVoto(ip: string): Promise<VotoEstadoDto> {
+  async estadoVoto(ip: string, navegador: string | null): Promise<VotoEstadoDto> {
     const semana = semanaDe();
     const mios = await this.prisma.executiveVote.findMany({
-      where: { voterHash: this.votante(ip), weekStart: semana },
+      where: { voterHash: this.votante(ip, navegador).voterHash, weekStart: semana },
       select: { companySlug: true, value: true, voteDay: true },
     });
     const hoy = diaDe().getTime();
@@ -324,8 +343,14 @@ export class DirectivosService {
     return obj;
   }
 
-  async votar(slug: string, value: 1 | -1, ip: string, token?: string): Promise<VotoEstadoDto> {
-    const voterHash = this.votante(ip);
+  async votar(
+    slug: string,
+    value: 1 | -1,
+    ip: string,
+    navegador: string | null,
+    token?: string,
+  ): Promise<VotoEstadoDto> {
+    const { voterHash, ipHash } = this.votante(ip, navegador);
     await verificarTurnstile(token, ip);
     const semana = semanaDe();
 
@@ -335,22 +360,37 @@ export class DirectivosService {
     });
     if (!existe) throw new NotFoundException(`No hay directivo cargado para ${slug}.`);
 
-    const usados = await this.prisma.executiveVote.count({
-      where: { voterHash, weekStart: semana },
-    });
-    if (usados >= LIMITE_SEMANAL) {
-      throw new ConflictException(
-        `Se acabaron los ${LIMITE_SEMANAL} votos de la semana. Vuelven el lunes.`,
-      );
-    }
+    /* CONTAR E INSERTAR VAN JUNTOS, bajo un lock por votante. Separados, cinco
+       pedidos simultáneos a cinco personas distintas veían los cinco «usados <
+       5» y entraban todos: un script sacaba diez votos o veinte. El lock es de
+       transacción (se suelta solo al terminar) y es por votante, así que dos
+       personas distintas no se esperan entre sí.
 
-    /* EL VOTO NO SE EDITA: el índice único (votante, empresa, semana) es quien
-       lo hace cumplir, no este chequeo. Se atrapa la colisión en vez de mirar
-       antes porque dos pedidos simultáneos del mismo votante pasarían los dos
-       por un `findFirst` previo. */
+       EL VOTO NO SE EDITA: eso lo sigue haciendo cumplir el índice único
+       (votante, empresa, semana); la colisión se atrapa afuera. */
     try {
-      await this.prisma.executiveVote.create({
-        data: { voterHash, companySlug: slug, value, weekStart: semana, voteDay: diaDe() },
+      await this.prisma.$transaction(async (tx) => {
+        await tx.$queryRaw`SELECT pg_advisory_xact_lock(hashtext(${voterHash}))::text`;
+        const usados = await tx.executiveVote.count({ where: { voterHash, weekStart: semana } });
+        if (usados >= LIMITE_SEMANAL) {
+          throw new ConflictException(
+            `Se acabaron los ${LIMITE_SEMANAL} votos de la semana. Vuelven el lunes.`,
+          );
+        }
+        /* El techo por IP es blando —sin lock por IP, dos pedidos pueden pasarlo
+           por uno o dos votos— y está bien: es contra el volumen de un script
+           que rota ids, no un presupuesto exacto. */
+        const tope = topeSemanalIp();
+        const desdeIp = await tx.executiveVote.count({ where: { ipHash, weekStart: semana } });
+        if (desdeIp >= tope) {
+          throw new HttpException(
+            'Demasiados votos desde esta conexión esta semana.',
+            HttpStatus.TOO_MANY_REQUESTS,
+          );
+        }
+        await tx.executiveVote.create({
+          data: { voterHash, ipHash, companySlug: slug, value, weekStart: semana, voteDay: diaDe() },
+        });
       });
     } catch (e) {
       const code = (e as { code?: string }).code;
@@ -360,6 +400,6 @@ export class DirectivosService {
       throw e;
     }
 
-    return this.estadoVoto(ip);
+    return this.estadoVoto(ip, navegador);
   }
 }

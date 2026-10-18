@@ -59,6 +59,28 @@ const suscribir = (f: () => void) => {
   return () => oyentes.delete(f)
 }
 
+/* EL VOTANTE ES ESTE NAVEGADOR: un UUID al azar, guardado en localStorage y
+   mandado en `x-votante`. En un evento cientos de personas votan desde el mismo
+   wifi, y con la IP como votante el presupuesto se lo llevaba el primero. No es
+   una identidad —una ventana privada es otro votante— y el backend lo sabe:
+   le pone un techo semanal por IP y, si está configurado, Turnstile.
+   Sin storage (modo privado estricto) el id vive lo que dura la pestaña. */
+const CLAVE_VOTANTE = 'vm-votante'
+let votanteMemoria: string | null = null
+export function votanteId(): string {
+  if (votanteMemoria) return votanteMemoria
+  try {
+    votanteMemoria = localStorage.getItem(CLAVE_VOTANTE)
+  } catch {}
+  if (!votanteMemoria || !/^[0-9a-f-]{36}$/i.test(votanteMemoria)) {
+    votanteMemoria = crypto.randomUUID()
+    try {
+      localStorage.setItem(CLAVE_VOTANTE, votanteMemoria)
+    } catch {}
+  }
+  return votanteMemoria
+}
+
 /* `cache: 'no-store'`: el presupuesto es por IP y cambia con cada voto. El
    backend respondía con `public, max-age=60` y el navegador devolvía «te
    quedan 5» un minuto después de haber votado: los chevrones se encendían de
@@ -69,7 +91,7 @@ const suscribir = (f: () => void) => {
 let pedido: Promise<void> | null = null
 function cargar(): Promise<void> {
   pedido ??= api
-    .GET('/api/v2/directivos/voto', { cache: 'no-store' })
+    .GET('/api/v2/directivos/voto', { cache: 'no-store', headers: { 'x-votante': votanteId() } })
     .then(({ data }) => {
       if (data?.data) poner({ estado: aEstado(data.data), listo: true })
       else poner({ listo: false })
@@ -84,12 +106,14 @@ function cargar(): Promise<void> {
 export function useVotos() {
   const { estado, listo } = useSyncExternalStore(suscribir, () => store, () => SERVIDOR)
 
-  /* El presupuesto es POR IP y no se puede renderizar en el servidor: el HTML
-     de la página está cacheado y compartido entre visitantes. Por eso se pide
-     después de hidratar; varios componentes montando a la vez comparten un
-     solo pedido. */
+  /* El presupuesto es POR NAVEGADOR y no se puede renderizar en el servidor:
+     el HTML de la página está cacheado y compartido entre visitantes. Por eso
+     se pide después de hidratar, y en CADA montaje y no sólo el primero: una
+     pestaña que quedó abierta del domingo al lunes, o que volvió a /directivos
+     desde otra sección, mostraba el presupuesto viejo. Los componentes que
+     montan juntos comparten un solo pedido. */
   useEffect(() => {
-    if (!store.listo) cargar()
+    cargar()
   }, [])
 
   const votar = useCallback(
@@ -111,6 +135,7 @@ export function useVotos() {
         .then((turnstile_token) =>
           api.POST('/api/v2/directivos/{slug}/voto', {
             params: { path: { slug } },
+            headers: { 'x-votante': votanteId() },
             body: { value: v, turnstile_token },
           }),
         )

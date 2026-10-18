@@ -58,3 +58,26 @@ export function puntosPorVoto(netoPorEmpresa: Map<string, number>): Map<string, 
   }
   return out;
 }
+
+/* EL VOTANTE ES EL NAVEGADOR, no la IP. En un evento cientos de personas votan
+   desde el mismo wifi —la misma IP— y con la IP como votante el presupuesto de
+   la semana se lo llevaba el primero; con las operadoras móviles (CGNAT) pasa
+   lo mismo todos los días. El navegador genera un UUID al azar, lo guarda y lo
+   manda en `x-votante`.
+
+   Lo que esto NO es: una identidad. Una ventana privada o un segundo navegador
+   son otro votante. Contra eso hay dos frenos y ninguno es perfecto: Turnstile
+   (que frena scripts, no personas) y un techo semanal de votos por IP, alto
+   para que un evento entero quepa detrás de una sola. */
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+/** El id de navegador si viene bien formado; si no, null. */
+export function votanteDe(header: unknown): string | null {
+  return typeof header === 'string' && UUID.test(header) ? header.toLowerCase() : null;
+}
+
+/** Votos por semana desde una misma IP, sumando todos sus navegadores. 5.000 =
+    mil personas votando las cinco veces detrás del mismo wifi. */
+export function topeSemanalIp(): number {
+  return Number(process.env.VOTE_IP_WEEKLY_CAP) || 5000;
+}
