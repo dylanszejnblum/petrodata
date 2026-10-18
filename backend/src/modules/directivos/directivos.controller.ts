@@ -47,7 +47,13 @@ export class DirectivosController {
       'Respuesta por cliente: no la cachees.',
   })
   @ApiOkEnvelope(VotoEstadoDto)
-  estado(@Req() req: Request) {
+  estado(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+    /* Pisa el `public, max-age=60` que el interceptor pone a todo GET. Con él,
+       el navegador devolvía «te quedan 5» durante un minuto después de votar:
+       los botones volvían a encenderse y cada clic era un 409. Y `public`
+       dejaba que un caché compartido le sirviera el presupuesto de una IP a
+       otra. El handler corre después del interceptor, así que esto gana. */
+    res.setHeader('Cache-Control', 'private, no-store');
     return this.service.estadoVoto(clientIp(req));
   }
 

@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useSyncExternalStore } from 'react'
 
 import { api } from '@/api/client'
 import { LIMITE } from './voto-reglas'
@@ -31,7 +31,6 @@ export type Emitido = { v: Voto; contado: boolean }
 export type Estado = { votos: Record<string, Emitido>; restantes: number; usados: number }
 
 const VACIO: Estado = { votos: {}, restantes: LIMITE, usados: 0 }
-const VACIO_API = { used: 0, remaining: LIMITE, votes: [] }
 
 function aEstado(d: {
   used: number
@@ -43,46 +42,71 @@ function aEstado(d: {
   return { votos, usados: d.used, restantes: d.remaining }
 }
 
+/* UN SOLO ESTADO PARA TODA LA PÁGINA. La lista y el chip de «votos
+   disponibles» llamaban cada uno a useVotos() con su propio useState: votabas
+   en la lista y el chip seguía diciendo 5 hasta recargar. Ahora es un store de
+   módulo y los dos leen el mismo. */
+type Store = { estado: Estado; listo: boolean }
+let store: Store = { estado: VACIO, listo: false }
+const SERVIDOR: Store = { estado: VACIO, listo: false }
+const oyentes = new Set<() => void>()
+const poner = (cambio: Partial<Store>) => {
+  store = { ...store, ...cambio }
+  oyentes.forEach((f) => f())
+}
+const suscribir = (f: () => void) => {
+  oyentes.add(f)
+  return () => oyentes.delete(f)
+}
+
+/* `cache: 'no-store'`: el presupuesto es por IP y cambia con cada voto. El
+   backend respondía con `public, max-age=60` y el navegador devolvía «te
+   quedan 5» un minuto después de haber votado: los chevrones se encendían de
+   nuevo y cada clic era un 409. Esto lo saltea aunque haya una copia vieja.
+
+   Si el GET falla, la lista queda BLOQUEADA y no con cinco votos inventados:
+   sin saber qué votó esta IP, cualquier clic es un voto que puede rebotar. */
+let pedido: Promise<void> | null = null
+function cargar(): Promise<void> {
+  pedido ??= api
+    .GET('/api/v2/directivos/voto', { cache: 'no-store' })
+    .then(({ data }) => {
+      if (data?.data) poner({ estado: aEstado(data.data), listo: true })
+      else poner({ listo: false })
+    })
+    .catch(() => poner({ listo: false }))
+    .finally(() => {
+      pedido = null
+    })
+  return pedido
+}
+
 export function useVotos() {
-  const [estado, setEstado] = useState<Estado>(VACIO)
-  /* Hasta que vuelve el primer GET no se sabe qué votó esta IP, y con el
-     presupuesto en 5 los chevrones nacen habilitados: un clic en ese hueco
-     manda un voto que el servidor puede rechazar. Se bloquean hasta saber. */
-  const [listo, setListo] = useState(false)
+  const { estado, listo } = useSyncExternalStore(suscribir, () => store, () => SERVIDOR)
 
   /* El presupuesto es POR IP y no se puede renderizar en el servidor: el HTML
-     de la página está cacheado y compartido entre visitantes. Por eso va en un
-     efecto, después de hidratar, y el primer render sale sin votos — igual que
-     antes salía sin lo que hubiera en localStorage. */
+     de la página está cacheado y compartido entre visitantes. Por eso se pide
+     después de hidratar; varios componentes montando a la vez comparten un
+     solo pedido. */
   useEffect(() => {
-    let vivo = true
-    api
-      .GET('/api/v2/directivos/voto', {})
-      .then(({ data, error }) => {
-        if (!vivo || error || !data?.data) return
-        setEstado(aEstado(data.data))
-      })
-      .catch(() => {})
-      .finally(() => {
-        if (vivo) setListo(true)
-      })
-    return () => {
-      vivo = false
-    }
+    if (!store.listo) cargar()
   }, [])
 
   const votar = useCallback(
     (slug: string, v: Voto) => {
-      if (!listo || estado.votos[slug] || estado.restantes <= 0) return
+      const { estado: e, listo: ok } = store
+      if (!ok || e.votos[slug] || e.restantes <= 0) return
       /* Optimista: el voto se dibuja antes de que vuelva el POST. Si el
-         servidor lo rechaza —409 por repetido o sin crédito, 429, 503— el
-         error no trae el presupuesto, así que se vuelve a pedir y lo pisa:
-         sin eso el voto rechazado quedaba dibujado como emitido. */
-      setEstado((e) => ({
-        votos: { ...e.votos, [slug]: { v, contado: false } },
-        usados: e.usados + 1,
-        restantes: Math.max(0, e.restantes - 1),
-      }))
+         servidor lo rechaza —409 por repetido o sin crédito, 403, 429, 503—
+         el error no trae el presupuesto, así que se vuelve a pedir (sin
+         caché) y pisa lo optimista. */
+      poner({
+        estado: {
+          votos: { ...e.votos, [slug]: { v, contado: false } },
+          usados: e.usados + 1,
+          restantes: Math.max(0, e.restantes - 1),
+        },
+      })
       tokenTurnstile()
         .then((turnstile_token) =>
           api.POST('/api/v2/directivos/{slug}/voto', {
@@ -90,12 +114,13 @@ export function useVotos() {
             body: { value: v, turnstile_token },
           }),
         )
-        .then(({ data }) => data?.data ?? Promise.reject())
-        .catch(() => api.GET('/api/v2/directivos/voto', {}).then(({ data }) => data?.data ?? VACIO_API))
-        .then((d) => setEstado(aEstado(d)))
-        .catch(() => setEstado(VACIO))
+        .then(({ data }) => {
+          if (data?.data) poner({ estado: aEstado(data.data) })
+          else return cargar()
+        })
+        .catch(() => cargar())
     },
-    [listo, estado.votos, estado.restantes],
+    [],
   )
 
   return { votos: estado.votos, votar, usados: estado.usados, restantes: estado.restantes, listo }
