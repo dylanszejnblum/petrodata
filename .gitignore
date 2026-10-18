@@ -83,3 +83,6 @@ sep6-handoff.md
 # cualquier variante de .env (.env.production, .env.staging…), salvo los ejemplos
 .env.*
 !.env.example
+
+# zips sueltos (p.ej. public/images/ceos.zip)
+frontend-v2/public/**/*.zip

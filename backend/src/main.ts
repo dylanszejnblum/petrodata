@@ -22,6 +22,17 @@ async function createApp(): Promise<NestExpressApplication> {
   // margen. Registrarlo acá reemplaza al default: Nest no instala el suyo porque
   // `isMiddlewareApplied('jsonParser')` ya lo encuentra (express.json() devuelve
   // una función con ese nombre).
+  // Los 8 MB son sólo para el ingest (que exige token): el resto corta en 100 KB
+  // antes de parsear, para que nadie haga leer 8 MB a la API desde una ruta pública.
+  // ponytail: mira Content-Length; un body chunked sin largo sigue topado en 8 MB
+  app.use((req: IncomingMessage & { path: string }, res: ServerResponse, next: () => void) => {
+    if (Number(req.headers['content-length'] ?? 0) > 100_000 && req.path !== '/api/v1/news/ingest') {
+      res.writeHead(413, { 'content-type': 'application/json' });
+      res.end(JSON.stringify({ error: { code: 'PAYLOAD_TOO_LARGE', message: 'Body too large' } }));
+      return;
+    }
+    next();
+  });
   app.useBodyParser('json', { limit: '8mb' });
 
   // Behind Coolify's Traefik proxy: trust X-Forwarded-For so req.ip is the real

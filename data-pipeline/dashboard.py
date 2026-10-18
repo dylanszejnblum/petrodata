@@ -74,9 +74,15 @@ def _read_json(path: Path, default):
     return json.loads(path.read_text(encoding="utf-8")) if path.exists() else default
 
 
+def _http(u) -> bool:
+    # Las URLs vienen de feeds de terceros: un javascript: en un href corre en
+    # la sesión logueada del backoffice. html.escape no lo frena.
+    return isinstance(u, str) and urlsplit(u).scheme in ("http", "https")
+
+
 def _images(doc: dict) -> list[str]:
     return [a["url"] for a in (doc.get("attachments") or [])
-            if a.get("type") == "image" and a.get("url")]
+            if a.get("type") == "image" and _http(a.get("url"))]
 
 
 def load(out_dir: Path) -> dict:
@@ -156,8 +162,8 @@ def _run_worker(out_dir: Path, source: str | None) -> None:
     display = " ".join(cmd)  # before the token is appended — never log secrets
     url, tok = os.environ.get("BACKEND_INGEST_URL"), os.environ.get("NEWS_INGEST_TOKEN")
     if url and tok:
-        cmd += ["--post-to", url, "--token", tok]
-        display += f" --post-to {url} --token ***"
+        cmd += ["--post-to", url]  # el token va por env (hereda NEWS_INGEST_TOKEN), no por argv
+        display += f" --post-to {url}"
 
     rec = {"source": source or "all", "started": _now_iso(),
            "finished": None, "ok": None, "returncode": None}
@@ -539,10 +545,11 @@ def render_doc(data: dict, doc_id: str) -> str | None:
     body = doc.get("body_text") or doc.get("deck") or "(no body — metadata only)"
     meta = (f"{_esc(doc.get('source_name'))} · {_esc(doc.get('source_family'))} · "
             f"{_fmt_dt(doc.get('published_at'))} · {_legal_pill(doc.get('legal_mode'))}")
+    u = doc.get("source_url")
+    link = f" · <a href='{_esc(u)}' target=_blank rel=noopener>source ↗</a>" if _http(u) else ""
     return (f"<p><a href='/'>← back</a></p>"
             f"<h1 style='max-width:760px'>{_esc(doc.get('title'))}</h1>"
-            f"<div class=m style='margin:-6px 0 16px;color:var(--mut)'>{meta} · "
-            f"<a href='{_esc(doc.get('source_url'))}' target=_blank>source ↗</a></div>"
+            f"<div class=m style='margin:-6px 0 16px;color:var(--mut)'>{meta}{link}</div>"
             f"<div style='margin-bottom:10px'>{topics}</div>"
             f"{img_html}<div class=body>{_esc(body)}</div>"
             + (f"<h2>Entities</h2>{ent_html}" if ent_html else ""))
@@ -659,7 +666,10 @@ def make_handler(out_dir: Path):
                     f"{secure} Max-Age={7 * 86400}")
 
         def _form(self) -> dict:
+            # Tope antes de leer: /login es público y leía cualquier Content-Length.
             n = int(self.headers.get("Content-Length") or 0)
+            if n > 64 * 1024:
+                return {}
             return parse_qs(self.rfile.read(n).decode("utf-8")) if n else {}
 
         def _flash(self) -> tuple[str, str] | None:

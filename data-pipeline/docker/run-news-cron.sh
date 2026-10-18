@@ -21,7 +21,7 @@ echo "[news-cron] interval=${INTERVAL}s out=${OUT_DIR} target=${BACKEND_INGEST_U
 while true; do
   echo "[news-cron] $(date -u +%Y-%m-%dT%H:%M:%SZ) run start"
   if python run_news.py --out "${OUT_DIR}" ${LIMIT_ARG} \
-       --post-to "${BACKEND_INGEST_URL}" --token "${NEWS_INGEST_TOKEN}"; then
+       --post-to "${BACKEND_INGEST_URL}"; then
     echo "[news-cron] run ok"
   else
     echo "[news-cron] run FAILED (continuing; will retry next tick)"
