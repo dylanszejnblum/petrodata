@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { Icono, PATH } from './iconos'
 import { LIMITE, proximoCorte } from './voto-reglas'
 import { useVotos } from './votos'
@@ -34,10 +35,10 @@ import { useVotos } from './votos'
    votaron, cuánta gente— y estos dos describen el estado del voto: uno es de
    quien mira y el otro es del reloj. Colgados del rótulo dicen de qué hablan.
 
-   El presupuesto sale del storage: en el servidor son cinco y el gastado
-   aparece al hidratar. `useVotos` tiene su snapshot de servidor para que el
-   HTML servido y el primer render coincidan. */
+   El presupuesto sale de /api/v2/directivos/voto: en el HTML son cinco y el
+   gastado aparece al hidratar. */
 export function EstadoVoto() {
+  const t = useTranslations('v2.directivos')
   const { restantes } = useVotos()
   const [corte, setCorte] = useState<string | null>(null)
 
@@ -57,13 +58,15 @@ export function EstadoVoto() {
     <span className="flex flex-col items-end gap-1.5">
       <span
         className="s-chip s-chip--neutro s-chip--mini"
-        title={`${restantes} de ${LIMITE} votos. Se renuevan el lunes.`}
+        title={t('disponiblesTitle', { n: restantes, limite: LIMITE })}
       >
         <Icono d="M18 15l-6-6-6 6" size={11} grosor={2.2} />
-        Votos disponibles{' '}
+        {t('disponibles')}{' '}
         {/* tabular-nums aunque sea un dígito: al bajar de 5 a 4 el ancho no
             cambia y el chip de al lado no se corre. */}
-        <span className="s-mono">{restantes}</span>
+        <span className="s-mono">
+          {restantes}/{LIMITE}
+        </span>
       </span>
 
       {/* El chip del corte aparece recién con el reloj del cliente: en el
@@ -72,12 +75,12 @@ export function EstadoVoto() {
       {corte && (
         <span
           className="s-chip s-chip--neutro s-chip--mini"
-          title="El orden del ranking se recalcula una vez por día"
+          title={t('corteTitle')}
         >
           <Icono d={PATH.reloj} size={11} grosor={2.2} />
           {/* Sin estas dos palabras el chip es un reloj y una hora: nadie sabe
               qué pasa dentro de 13 horas. */}
-          se actualiza en <span className="s-mono">{corte}</span>
+          {t('seActualiza')} <span className="s-mono">{corte}</span>
         </span>
       )}
     </span>

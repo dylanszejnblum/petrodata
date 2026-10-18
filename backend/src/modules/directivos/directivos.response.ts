@@ -64,6 +64,12 @@ export class DirectivosSourceDto {
   inputs!: string[];
 }
 
+export class MasVotadoDto {
+  @ApiProperty({ example: 'vista' }) company_slug!: string;
+  @ApiProperty({ example: 'Miguel Galuccio' }) name!: string;
+  @ApiProperty({ example: 12, description: 'Votos a favor recibidos esta semana.' }) votes!: number;
+}
+
 export class VotacionResumenDto {
   @ApiProperty({ example: '2026-08-31', description: 'Lunes de la semana en curso.' })
   week_start!: string;
@@ -75,6 +81,12 @@ export class VotacionResumenDto {
   voters!: number;
 
   @ApiProperty({ example: 5 }) weekly_limit!: number;
+
+  @ApiProperty({
+    type: [MasVotadoDto],
+    description: 'Hasta tres, por votos a favor de la semana. Vacío si nadie votó a favor.',
+  })
+  top_voted!: MasVotadoDto[];
 }
 
 export class DirectivosResponseDto {

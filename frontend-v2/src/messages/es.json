@@ -886,7 +886,8 @@
         "enviando": "…",
         "ok": "Listo: quedó anotado.",
         "error": "No se pudo anotar. Probá de nuevo."
-      }
+      },
+      "datosA": "Datos"
     },
     "footer": {
       "nota": "Datos públicos · cifras de referencia"
@@ -1001,7 +1002,52 @@
       "s01t": "Directivos",
       "s01d": "Las 48 personas que hacen crecer la producción de energía del país.",
       "cardRanking": "El ranking",
-      "sinDatos": "El ranking no está disponible en este momento. Vuelve a intentarlo en un rato."
+      "sinDatos": "El ranking no está disponible en este momento. Vuelve a intentarlo en un rato.",
+      "colPersona": "Persona",
+      "colPuntos": "Puntos",
+      "colVoto": "Voto semanal",
+      "aFavor": "A favor",
+      "enContra": "En contra",
+      "votarAFavor": "Votar a favor de {nombre}",
+      "votarEnContra": "Votar en contra de {nombre}",
+      "sinCredito": "Ya usaste tus {n} votos de esta semana",
+      "yaVoto": "Ya votaste a esta persona; el voto no se edita hasta el lunes",
+      "enCorte": "Tu voto quedó registrado y entra en el próximo corte",
+      "puesto": "Puesto",
+      "de": "de {total}",
+      "movimiento": "Movimiento",
+      "puestos": "{n, plural, one {# puesto} other {# puestos}}",
+      "aniosCargo": "Años en el cargo",
+      "anios": "{n, plural, one {# año} other {# años}}",
+      "meses": "{n, plural, one {# mes} other {# meses}}",
+      "cargoDesde": "En el cargo desde {fecha}",
+      "correcciones": "Correcciones",
+      "compartir": "Compartir",
+      "copiado": "Enlace copiado",
+      "verTodos": "Ver los {n}",
+      "verMenos": "Ver sólo el top {n}",
+      "votos": "{n, plural, one {voto} other {votos}}",
+      "personas": "{n, plural, one {persona} other {personas}}",
+      "masVotados": "Más votados esta semana",
+      "disponibles": "Votos disponibles",
+      "disponiblesTitle": "{n} de {limite} votos. Se renuevan el lunes.",
+      "seActualiza": "se actualiza en",
+      "corteTitle": "El orden del ranking se recalcula una vez por día",
+      "pie": "<b>Puntos</b> combina lo que maneja cada uno —cuánto produce su empresa, cuánto saca por pozo, cuánto vale lo que produce— con los votos. El orden se recalcula una vez por día: tu voto de hoy entra en el próximo corte, y la flecha al lado del puesto dice cuántos lugares se movió cada uno.",
+      "ogTitulo": "{nombre}, puesto {puesto} de {total}",
+      "ogDesc": "{cargo} · {empresa}. Ranking de directivos de la energía argentina en vacamuerta.io.",
+      "reportar": "Reportar",
+      "reportarDato": "Reportar dato",
+      "reporteEnviado": "Reporte enviado",
+      "cerrar": "Cerrar",
+      "cancelar": "Cancelar",
+      "enviar": "Enviar",
+      "correo": "Correo",
+      "detalle": "Detalle",
+      "detallePlaceholder": "Dejó el cargo en marzo. El actual es…",
+      "requeridos": "Correo y detalle requeridos",
+      "avisoDesc": "Corrección sobre el cargo, el nombre o la foto de <b>{nombre}</b>, de {empresa}. El correo queda para responder el reporte.",
+      "avisoOk": "Reporte sobre <b>{nombre}</b> registrado. Respuesta a <mono>{correo}</mono>."
     }
   }
 }

@@ -1,7 +1,7 @@
 import { Body, Controller, Get, HttpCode, NotFoundException, Param, Post, Query, Req, Res } from '@nestjs/common';
 import type { Request, Response } from 'express';
 import { Throttle } from '@nestjs/throttler';
-import { ApiConflictResponse, ApiNotFoundResponse, ApiOperation, ApiParam, ApiProduces, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiConflictResponse, ApiForbiddenResponse, ApiNotFoundResponse, ApiOperation, ApiParam, ApiProduces, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { ResponseMeta } from '../../common/response-meta.decorator';
 import { ApiErrorDto, ApiOkEnvelope } from '../../common/swagger';
 import { VotarDto } from './directivos.dto';
@@ -91,7 +91,8 @@ export class DirectivosController {
   @ApiOkEnvelope(VotoEstadoDto)
   @ApiNotFoundResponse({ type: ApiErrorDto, description: 'No hay directivo cargado para esa empresa.' })
   @ApiConflictResponse({ type: ApiErrorDto, description: 'Ya votó a esa persona esta semana, o se quedó sin votos.' })
+  @ApiForbiddenResponse({ type: ApiErrorDto, description: 'Falta o falló la verificación de Turnstile (sólo con TURNSTILE_SECRET).' })
   votar(@Param('slug') slug: string, @Body() dto: VotarDto, @Req() req: Request) {
-    return this.service.votar(slug, dto.value, clientIp(req));
+    return this.service.votar(slug, dto.value, clientIp(req), dto.turnstile_token);
   }
 }

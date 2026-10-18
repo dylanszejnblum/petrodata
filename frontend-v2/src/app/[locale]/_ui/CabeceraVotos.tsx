@@ -1,5 +1,7 @@
 'use client'
 
+import { useLocale, useTranslations } from 'next-intl'
+
 /* LA NOTA DE LA CARD DEL RANKING: cuántos votos y cuánta gente.
 
    Era una línea de texto plano —«1.284 votos de 377 personas · se reordena en
@@ -19,7 +21,9 @@
    mirando. Los dos chips de estado —el presupuesto y el corte— se fueron a la
    nota, contra el borde derecho, en `EstadoVoto`. */
 export function CabeceraVotos({ votos, personas }: { votos: number; personas: number }) {
-  const n = (v: number) => v.toLocaleString('es-AR')
+  const t = useTranslations('v2.directivos')
+  const locale = useLocale()
+  const n = (v: number) => v.toLocaleString(locale === 'en' ? 'en-US' : 'es-AR')
   return (
     <span className="flex items-center gap-1.5">
       <i
@@ -31,11 +35,11 @@ export function CabeceraVotos({ votos, personas }: { votos: number; personas: nu
         <b className="s-mono font-medium" style={{ color: 'var(--ink)' }}>
           {n(votos)}
         </b>{' '}
-        votos ·{' '}
+        {t('votos', { n: votos })} ·{' '}
         <b className="s-mono font-medium" style={{ color: 'var(--ink)' }}>
           {n(personas)}
         </b>{' '}
-        personas
+        {t('personas', { n: personas })}
       </span>
     </span>
   )

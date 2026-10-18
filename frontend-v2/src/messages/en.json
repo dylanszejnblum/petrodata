@@ -886,7 +886,8 @@
         "enviando": "…",
         "ok": "Done: you're in.",
         "error": "Couldn't subscribe. Try again."
-      }
+      },
+      "datosA": "Data"
     },
     "footer": {
       "nota": "Public data · reference figures"
@@ -1001,7 +1002,52 @@
       "s01t": "Executives",
       "s01d": "The 48 people growing the country's energy production.",
       "cardRanking": "The ranking",
-      "sinDatos": "The ranking is unavailable right now. Try again in a little while."
+      "sinDatos": "The ranking is unavailable right now. Try again in a little while.",
+      "colPersona": "Person",
+      "colPuntos": "Points",
+      "colVoto": "Weekly vote",
+      "aFavor": "For",
+      "enContra": "Against",
+      "votarAFavor": "Vote for {nombre}",
+      "votarEnContra": "Vote against {nombre}",
+      "sinCredito": "You've used your {n} votes this week",
+      "yaVoto": "You already voted for this person; votes can't be changed until Monday",
+      "enCorte": "Your vote is in and counts in the next daily update",
+      "puesto": "Rank",
+      "de": "of {total}",
+      "movimiento": "Movement",
+      "puestos": "{n, plural, one {# place} other {# places}}",
+      "aniosCargo": "Time in role",
+      "anios": "{n, plural, one {# year} other {# years}}",
+      "meses": "{n, plural, one {# month} other {# months}}",
+      "cargoDesde": "In the role since {fecha}",
+      "correcciones": "Corrections",
+      "compartir": "Share",
+      "copiado": "Link copied",
+      "verTodos": "Show all {n}",
+      "verMenos": "Show top {n} only",
+      "votos": "{n, plural, one {vote} other {votes}}",
+      "personas": "{n, plural, one {person} other {people}}",
+      "masVotados": "Most voted this week",
+      "disponibles": "Votes left",
+      "disponiblesTitle": "{n} of {limite} votes. They reset on Monday.",
+      "seActualiza": "updates in",
+      "corteTitle": "The ranking order is recalculated once a day",
+      "pie": "<b>Points</b> combines what each person runs —how much their company produces, how much it gets per well, how much its output is worth— with the votes. The order is recalculated once a day: today's vote counts in the next update, and the arrow next to the rank shows how many places each person moved.",
+      "ogTitulo": "{nombre}, rank {puesto} of {total}",
+      "ogDesc": "{cargo} · {empresa}. Ranking of Argentina's energy executives on vacamuerta.io.",
+      "reportar": "Report",
+      "reportarDato": "Report data",
+      "reporteEnviado": "Report sent",
+      "cerrar": "Close",
+      "cancelar": "Cancel",
+      "enviar": "Send",
+      "correo": "Email",
+      "detalle": "Details",
+      "detallePlaceholder": "Left the role in March. The current one is…",
+      "requeridos": "Email and details required",
+      "avisoDesc": "Correction to the role, name or photo of <b>{nombre}</b>, at {empresa}. The email is used to reply to the report.",
+      "avisoOk": "Report about <b>{nombre}</b> recorded. Reply to <mono>{correo}</mono>."
     }
   }
 }

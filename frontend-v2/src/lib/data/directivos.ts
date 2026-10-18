@@ -2,6 +2,7 @@
    Reemplaza a fixtures/personas.ts: el índice, el orden, los contadores de
    votos y quién tiene cara los decide el backend. */
 
+import { cache } from 'react'
 import { api } from '@/api/client'
 import type { PersonaFila } from '@/fixtures/personas'
 import { str, withFallback } from './fallback'
@@ -23,12 +24,16 @@ export type Directivos = {
   votos: number
   votantes: number
   limiteSemanal: number
+  /** Hasta tres, por votos a favor de la semana. Es un COUNT, como los otros dos. */
+  masVotados: { slug: string; nombre: string; votos: number }[]
 }
 
-const VACIO: Directivos = { filas: [], votos: 0, votantes: 0, limiteSemanal: 5 }
+const VACIO: Directivos = { filas: [], votos: 0, votantes: 0, limiteSemanal: 5, masVotados: [] }
 
-export async function loadDirectivos(): Promise<Directivos> {
-  return withFallback(
+/* cache(): la ficha compartible pide lo mismo para el metadata, la imagen y la
+   página, y así sale un solo GET por render. */
+export const loadDirectivos = cache(async (): Promise<Directivos> =>
+  withFallback(
     'directivos',
     async () => {
       const { data, error } = await api.GET('/api/v2/directivos', {
@@ -57,6 +62,11 @@ export async function loadDirectivos(): Promise<Directivos> {
         votos: d.votacion.votes,
         votantes: d.votacion.voters,
         limiteSemanal: d.votacion.weekly_limit,
+        masVotados: (d.votacion.top_voted ?? []).map((m) => ({
+          slug: m.company_slug,
+          nombre: m.name,
+          votos: m.votes,
+        })),
       }
     },
     /* Sin fallback a fixture, y a propósito: son personas con nombre y apellido
@@ -64,5 +74,5 @@ export async function loadDirectivos(): Promise<Directivos> {
        —con un índice que ya no se corresponde con la producción— es peor que no
        publicar la sección. La página muestra el aviso y no la lista. */
     () => VACIO,
-  )
-}
+  ),
+)
