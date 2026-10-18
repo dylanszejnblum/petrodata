@@ -70,8 +70,8 @@ export function Indice({ periodo }: { periodo: string }) {
       className="s-indice flex flex-col border-b px-6 py-4 lg:sticky lg:top-0 lg:h-dvh lg:border-r lg:border-b-0"
       style={{ borderColor: 'var(--line)', background: 'var(--panel)' }}
     >
-      {/* La marca de vacamuerta.io, la misma de Estrato: rombo monocromo más
-          la palabra. Usa el marco, igual que la card de la cuenca: mismo
+      {/* La marca de vacamuerta.io: el logo monocromo chico más la palabra,
+          sin mayúsculas. Usa el marco, igual que la card de la cuenca: mismo
           fondo de canvas y mismo anillo de 1px.
 
           El radio SÍ cambia: 10 y no los 14 del marco. La regla del sistema
@@ -93,15 +93,17 @@ export function Indice({ periodo }: { periodo: string }) {
         style={{ padding: '10px', borderRadius: 'var(--radius-card)' }}
       >
         <Link href="/" className="flex min-w-0 items-center gap-2 no-underline">
-          <span
-            aria-hidden
-            className="size-2 shrink-0 rotate-45"
-            style={{ background: 'var(--ink)' }}
-          />
-          <span
-            className="s-micro truncate font-medium uppercase"
-            style={{ color: 'var(--ink-2)', letterSpacing: '0.10em' }}
-          >
+          {/* El logo va inline y pinta con var(--ink): un solo path sirve
+              para el tema claro y el oscuro, sin las dos versiones en svg. */}
+          <svg aria-hidden viewBox="0 0 372 416" className="h-3 w-auto shrink-0">
+            <path
+              transform="translate(0 416) scale(1 -1)"
+              fill="var(--ink)"
+              fillRule="evenodd"
+              d="M164 6C178-2 194-2 208 6L348 88C364 97 372 109 372 128V288C372 306 365 318 350 327L208 410C194 418 178 418 164 410L22 327C7 318 0 306 0 288V128C0 109 8 97 24 88L164 6ZM166 65C166 38 206 38 206 65V145C206 181 219 206 249 224L323 270C346 284 326 316 303 302L230 258C202 239 170 239 142 258L66 302C43 316 24 284 47 270L124 223C153 205 166 181 166 145V65Z"
+            />
+          </svg>
+          <span className="s-micro truncate font-medium" style={{ color: 'var(--ink-2)' }}>
             Vacamuerta.io
           </span>
         </Link>
