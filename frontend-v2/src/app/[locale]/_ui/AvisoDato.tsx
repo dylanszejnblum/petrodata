@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { Icono, PATH } from './iconos'
 
 /* AVISAR QUE UN DATO ESTÁ MAL.
@@ -40,6 +41,7 @@ const CLAVE = 'v2-directivos-avisos'
 const CORREO_OK = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
 
 export function AvisoDato({ nombre, empresa }: { nombre: string; empresa: string }) {
+  const t = useTranslations('v2.directivos')
   const [abierto, setAbierto] = useState(false)
   const [correo, setCorreo] = useState('')
   const [texto, setTexto] = useState('')
@@ -111,7 +113,7 @@ export function AvisoDato({ nombre, empresa }: { nombre: string; empresa: string
         }}
       >
         <Icono d={PATH.info} size={11} grosor={2.2} />
-        Reportar
+        {t('reportar')}
       </button>
 
       <dialog
@@ -140,17 +142,21 @@ export function AvisoDato({ nombre, empresa }: { nombre: string; empresa: string
                 className="shrink-0"
                 style={{ color: enviado ? 'var(--green)' : 'var(--ink-3)' }}
               />
-              {enviado ? 'Reporte enviado' : 'Reportar dato'}
+              {enviado ? t('reporteEnviado') : t('reportarDato')}
             </span>
-            <button type="button" className="s-modal-x" onClick={cerrar} aria-label="Cerrar">
+            <button type="button" className="s-modal-x" onClick={cerrar} aria-label={t('cerrar')}>
               <Icono d={PATH.cerrar} size={14} grosor={2} />
             </button>
           </div>
 
           {enviado ? (
             <p className="s-modal-desc s-cuerpo" style={{ color: 'var(--ink-2)' }}>
-              Reporte sobre <b style={{ color: 'var(--ink)' }}>{nombre}</b> registrado.
-              Respuesta a <span className="s-mono">{correo.trim()}</span>.
+              {t.rich('avisoOk', {
+                nombre,
+                correo: correo.trim(),
+                b: (c) => <b style={{ color: 'var(--ink)' }}>{c}</b>,
+                mono: (c) => <span className="s-mono">{c}</span>,
+              })}
             </p>
           ) : (
             <>
@@ -158,9 +164,11 @@ export function AvisoDato({ nombre, empresa }: { nombre: string; empresa: string
                   lector. Se lleva adentro para qué sirve el correo, que antes
                   era un renglón de ayuda aparte debajo del campo. */}
               <p className="s-modal-desc s-desc">
-                Corrección sobre el cargo, el nombre o la foto de{' '}
-                <b style={{ color: 'var(--ink)' }}>{nombre}</b>, de {empresa}
-                {empresa.endsWith('.') ? '' : '.'} El correo queda para responder el reporte.
+                {t.rich('avisoDesc', {
+                  nombre,
+                  empresa: empresa.replace(/\.$/, ''),
+                  b: (c) => <b style={{ color: 'var(--ink)' }}>{c}</b>,
+                })}
               </p>
 
               {/* Cada campo es una FILA con su rótulo a la izquierda: la misma
@@ -168,7 +176,7 @@ export function AvisoDato({ nombre, empresa }: { nombre: string; empresa: string
                   este diálogo. Sin cajas, sin etiquetas flotando arriba y sin
                   aire entre bloques: lo que separa es el filete. */}
               <label className="s-fcampo">
-                <span className="rot">Correo</span>
+                <span className="rot">{t('correo')}</span>
                 <input
                   type="email"
                   value={correo}
@@ -183,12 +191,12 @@ export function AvisoDato({ nombre, empresa }: { nombre: string; empresa: string
                   control crece. Alineado arriba para que el rótulo quede a la
                   altura del primer renglón y no centrado contra tres. */}
               <label className="s-fcampo" style={{ alignItems: 'flex-start' }}>
-                <span className="rot">Detalle</span>
+                <span className="rot">{t('detalle')}</span>
                 <textarea
                   value={texto}
                   onChange={(e) => setTexto(e.target.value)}
                   rows={3}
-                  placeholder="Dejó el cargo en marzo. El actual es…"
+                  placeholder={t('detallePlaceholder')}
                   required
                 />
               </label>
@@ -203,12 +211,12 @@ export function AvisoDato({ nombre, empresa }: { nombre: string; empresa: string
                 lo reserva para navegar. */}
             {enviado ? (
               <button type="button" className="s-boton ml-auto" onClick={cerrar}>
-                Cerrar
+                {t('cerrar')}
               </button>
             ) : (
               <>
                 <button type="button" className="s-modal-cancel" onClick={cerrar}>
-                  Cancelar
+                  {t('cancelar')}
                 </button>
                 {/* Apagado hasta que haya correo Y detalle. Pierde el acento y
                     baja a ink-2: se lee inactivo sin volverse ilegible, que es
@@ -219,9 +227,9 @@ export function AvisoDato({ nombre, empresa }: { nombre: string; empresa: string
                   type="submit"
                   className="s-boton"
                   disabled={!valido}
-                  title={valido ? undefined : 'Correo y detalle requeridos'}
+                  title={valido ? undefined : t('requeridos')}
                 >
-                  Enviar
+                  {t('enviar')}
                 </button>
               </>
             )}

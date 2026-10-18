@@ -114,6 +114,7 @@
             "in": "query",
             "schema": {
               "minimum": 1,
+              "maximum": 10000,
               "default": 1,
               "example": 1,
               "type": "number"
@@ -3262,6 +3263,16 @@
                     "data",
                     "meta"
                   ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Falta o falló la verificación de Turnstile (sólo con TURNSTILE_SECRET).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
                 }
               }
             }
@@ -7184,6 +7195,29 @@
           "rank_change"
         ]
       },
+      "MasVotadoDto": {
+        "type": "object",
+        "properties": {
+          "company_slug": {
+            "type": "string",
+            "example": "vista"
+          },
+          "name": {
+            "type": "string",
+            "example": "Miguel Galuccio"
+          },
+          "votes": {
+            "type": "number",
+            "example": 12,
+            "description": "Votos a favor recibidos esta semana."
+          }
+        },
+        "required": [
+          "company_slug",
+          "name",
+          "votes"
+        ]
+      },
       "VotacionResumenDto": {
         "type": "object",
         "properties": {
@@ -7205,13 +7239,21 @@
           "weekly_limit": {
             "type": "number",
             "example": 5
+          },
+          "top_voted": {
+            "description": "Hasta tres, por votos a favor de la semana. Vacío si nadie votó a favor.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MasVotadoDto"
+            }
           }
         },
         "required": [
           "week_start",
           "votes",
           "voters",
-          "weekly_limit"
+          "weekly_limit",
+          "top_voted"
         ]
       },
       "DirectivosSourceDto": {
@@ -7338,6 +7380,10 @@
             ],
             "example": 1,
             "description": "+1 sube, -1 baja. No hay otro valor."
+          },
+          "turnstile_token": {
+            "type": "string",
+            "description": "Token de Cloudflare Turnstile. Obligatorio sólo si el servidor tiene TURNSTILE_SECRET."
           }
         },
         "required": [

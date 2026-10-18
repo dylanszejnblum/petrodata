@@ -1,5 +1,6 @@
 import {
   ConflictException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
   ServiceUnavailableException,
@@ -85,6 +86,24 @@ export function calcularIndices<T>(
   }));
 }
 
+/* TURNSTILE, opcional. Con TURNSTILE_SECRET seteada cada voto trae un token del
+   widget de Cloudflare y se verifica acá; sin ella el voto sigue como antes.
+   No cambia que una IP no es una persona, pero deja afuera al script que
+   recorre la lista votando desde un pool de IPs. */
+async function verificarTurnstile(token: string | undefined, ip: string): Promise<void> {
+  const secret = process.env.TURNSTILE_SECRET;
+  if (!secret) return;
+  if (!token) throw new ForbiddenException('Falta la verificación anti-bot.');
+  const r = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+    method: 'POST',
+    body: new URLSearchParams({ secret, response: token, remoteip: ip }),
+    signal: AbortSignal.timeout(5000),
+  }).catch(() => null);
+  if (!r?.ok) throw new ServiceUnavailableException('No se pudo verificar el voto, probá de nuevo.');
+  const { success } = (await r.json()) as { success?: boolean };
+  if (!success) throw new ForbiddenException('La verificación anti-bot falló.');
+}
+
 @Injectable()
 export class DirectivosService {
   constructor(
@@ -125,7 +144,7 @@ export class DirectivosService {
     const ayer = new Date(hoy);
     ayer.setUTCDate(ayer.getUTCDate() - 1);
 
-    const [execs, contribution, neto, netoAyer, votos, votantes] = await Promise.all([
+    const [execs, contribution, neto, netoAyer, votos, votantes, aFavor] = await Promise.all([
       this.prisma.companyExecutive.findMany(),
       this.operators.contribution(),
       this.netoHasta(semana, hoy),
@@ -135,6 +154,13 @@ export class DirectivosService {
         where: { weekStart: semana },
         distinct: ['voterHash'],
         select: { voterHash: true },
+      }),
+      this.prisma.executiveVote.groupBy({
+        by: ['companySlug'],
+        where: { weekStart: semana, value: 1 },
+        _count: { _all: true },
+        orderBy: [{ _count: { companySlug: 'desc' } }, { companySlug: 'asc' }],
+        take: 3,
       }),
     ]);
     if (!execs.length || !contribution) return null;
@@ -204,7 +230,10 @@ export class DirectivosService {
     const directivos = ordenar(puntos).map(
       ({ escala: _e, valorUsd: _v, pozos: _p, conVoto, ...d }, i): DirectivoDto => ({
         ...d,
-        index: Math.round(conVoto * 10) / 10,
+        /* Se ordena por conVoto crudo pero se publica recortado a 0–100: el
+           líder del índice con votos a favor daba 102,4 en una escala que la
+           página presenta como de 0 a 100. */
+        index: Math.round(Math.min(100, Math.max(0, conVoto)) * 10) / 10,
         rank: i + 1,
         /* Positivo = subió. Cero cuando nadie se movió, que es el caso normal:
            el frontend no dibuja el renglón. */
@@ -223,6 +252,13 @@ export class DirectivosService {
         votes: votos,
         voters: votantes.length,
         weekly_limit: LIMITE_SEMANAL,
+        /* Cuenta TODA la semana, hoy incluido, igual que los dos contadores de
+           arriba: es actividad, no el orden, así que no espera al corte. */
+        top_voted: aFavor.map((v) => ({
+          company_slug: v.companySlug,
+          name: execs.find((e) => e.companySlug === v.companySlug)?.name ?? v.companySlug,
+          votes: v._count._all,
+        })),
       },
       source: {
         window_from: contribution.window.from,
@@ -288,8 +324,9 @@ export class DirectivosService {
     return obj;
   }
 
-  async votar(slug: string, value: 1 | -1, ip: string): Promise<VotoEstadoDto> {
+  async votar(slug: string, value: 1 | -1, ip: string, token?: string): Promise<VotoEstadoDto> {
     const voterHash = this.votante(ip);
+    await verificarTurnstile(token, ip);
     const semana = semanaDe();
 
     const existe = await this.prisma.companyExecutive.findUnique({

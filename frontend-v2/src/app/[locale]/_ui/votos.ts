@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react'
 
 import { api } from '@/api/client'
 import { LIMITE } from './voto-reglas'
+import { tokenTurnstile } from './turnstile'
 
 /* EL VOTO — ahora contra el servidor.
 
@@ -30,6 +31,7 @@ export type Emitido = { v: Voto; contado: boolean }
 export type Estado = { votos: Record<string, Emitido>; restantes: number; usados: number }
 
 const VACIO: Estado = { votos: {}, restantes: LIMITE, usados: 0 }
+const VACIO_API = { used: 0, remaining: LIMITE, votes: [] }
 
 function aEstado(d: {
   used: number
@@ -73,22 +75,25 @@ export function useVotos() {
     (slug: string, v: Voto) => {
       if (!listo || estado.votos[slug] || estado.restantes <= 0) return
       /* Optimista: el voto se dibuja antes de que vuelva el POST. Si el
-         servidor lo rechaza —409 por repetido o sin crédito— la respuesta trae
-         el presupuesto real y lo pisa. */
+         servidor lo rechaza —409 por repetido o sin crédito, 429, 503— el
+         error no trae el presupuesto, así que se vuelve a pedir y lo pisa:
+         sin eso el voto rechazado quedaba dibujado como emitido. */
       setEstado((e) => ({
         votos: { ...e.votos, [slug]: { v, contado: false } },
         usados: e.usados + 1,
         restantes: Math.max(0, e.restantes - 1),
       }))
-      api
-        .POST('/api/v2/directivos/{slug}/voto', {
-          params: { path: { slug } },
-          body: { value: v },
-        })
-        .then(({ data }) => {
-          if (data?.data) setEstado(aEstado(data.data))
-        })
-        .catch(() => {})
+      tokenTurnstile()
+        .then((turnstile_token) =>
+          api.POST('/api/v2/directivos/{slug}/voto', {
+            params: { path: { slug } },
+            body: { value: v, turnstile_token },
+          }),
+        )
+        .then(({ data }) => data?.data ?? Promise.reject())
+        .catch(() => api.GET('/api/v2/directivos/voto', {}).then(({ data }) => data?.data ?? VACIO_API))
+        .then((d) => setEstado(aEstado(d)))
+        .catch(() => setEstado(VACIO))
     },
     [listo, estado.votos, estado.restantes],
   )
