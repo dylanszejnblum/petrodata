@@ -206,14 +206,21 @@ async function fuelPrices() {
 async function main() {
   const t0 = Date.now();
   // Cada bloque es independiente: si una fuente se cae, las demás se cargan igual.
+  // Sin argumentos corren todos; con argumentos, sólo esos (`refresh-market.ts combustibles`).
+  // datos.energia.gob.ar no responde desde el VPS, por eso combustibles va aparte.
+  const only = process.argv.slice(2);
+  const blocks = [
+    ['precios', 'precios energía (FRED/EIA)', energyPrices],
+    ['dolar', 'dólar (argentinadatos)', fx],
+    ['macro', 'macro (BCRA + datos.gob.ar)', macro],
+    ['intercambio', 'intercambio energético (INDEC)', energyTrade],
+    ['combustibles', 'combustibles en surtidor (datos.energia.gob.ar)', fuelPrices],
+  ] as const;
+  const unknown = only.filter((k) => !blocks.some(([key]) => key === k));
+  if (unknown.length) throw new Error(`bloques desconocidos: ${unknown.join(', ')}`);
   let failed = 0;
-  for (const [name, fn] of [
-    ['precios energía (FRED/EIA)', energyPrices],
-    ['dólar (argentinadatos)', fx],
-    ['macro (datos.gob.ar)', macro],
-    ['intercambio energético (INDEC)', energyTrade],
-    ['combustibles en surtidor', fuelPrices],
-  ] as const) {
+  for (const [key, name, fn] of blocks) {
+    if (only.length && !only.includes(key)) continue;
     console.log(name);
     try {
       await fn();

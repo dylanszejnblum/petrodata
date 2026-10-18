@@ -45,6 +45,10 @@ COPY --from=builder --chown=node:node /app/node_modules ./node_modules
 # Prisma schema + migrations needed for prisma migrate deploy
 COPY --from=builder --chown=node:node /app/prisma ./prisma
 
+# ts-node necesita las opciones de compilación para correr prisma/refresh-*.ts
+# desde la tarea programada de Coolify (sin esto: TS5109 al arrancar).
+COPY --from=builder --chown=node:node /app/tsconfig.json ./
+
 RUN test -f /app/dist/src/main.js && echo "dist/src/main.js OK" || (echo "dist/src/main.js MISSING" && exit 1)
 
 EXPOSE 3001
