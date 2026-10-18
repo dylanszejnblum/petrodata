@@ -123,12 +123,15 @@ export class CompaniesService {
   }
 
   async priceHistory(ticker: string, range: string, interval: string) {
-    // Resolve the exchange from our company table (for the Yahoo suffix); fall
-    // back to the bare ticker so arbitrary symbols still work.
+    // Only tickers from our company table: otherwise this is an open Yahoo
+    // proxy whose history cache grows with every symbol someone invents.
     const company = await this.prisma.company.findFirst({
       where: { stockTicker: { equals: ticker, mode: 'insensitive' } },
     });
-    const symbol = yahooSymbol(ticker.toUpperCase(), company?.stockExchange ?? null);
+    if (!company) {
+      throw new NotFoundException({ code: 'NOT_FOUND', message: `Unknown ticker "${ticker}".` });
+    }
+    const symbol = yahooSymbol(ticker.toUpperCase(), company.stockExchange);
 
     const data = await this.stocks.history(symbol, range, interval);
     if (!data || data.history.length === 0) {
@@ -138,7 +141,7 @@ export class CompaniesService {
       });
     }
     // Echo back the caller's display ticker rather than the suffixed symbol.
-    return { ...data, ticker: company?.stockTicker ?? ticker.toUpperCase() };
+    return { ...data, ticker: company.stockTicker };
   }
 
   async detail(slug: string) {
