@@ -31,19 +31,32 @@ npx prisma migrate dev --name init
 npx prisma db seed
 ```
 
+### Keeping data current
+
+The CSVs above came from `petroldata.ar/`, which no longer exists. Refreshes now
+read the public sources directly:
+
+```bash
+pnpm db:refresh:production  # well production (datos.energia.gob.ar, Cap. IV): reloads the last 3 loaded months + new ones
+pnpm db:refresh:market      # Brent/WTI/HH (FRED), FX (argentinadatos), A3500 (BCRA), CPI/fiscal/energy trade (datos.gob.ar), fuel prices, gas PIST, GDP
+pnpm db:refresh             # both
+# SINCE=2026-01 reloads production from that month; DRY_RUN=1 writes nothing
+```
+
+In production this runs as a Coolify Scheduled Task on the backend container
+(`npm run db:refresh`, daily). The image ships `node_modules` + `prisma/`, so no
+extra setup is needed.
+
+Not automated: the rig count (Baker Hughes blocks automated downloads) and the
+annual energy-trade rows (agro vs energy crossover).
+
 ### Energy trade (INDEC ICA)
 
 The `/inversiones` surplus + agro-vs-energy crossover are backed by `fact_energy_trade`,
 seeded from INDEC's Intercambio Comercial Argentino (ICA) via the Series de Tiempo API.
 
-```bash
-# 1. Fetch + normalize (writes market-data/out/fact_energy_trade.csv)
-cd ../../petroldata.ar/market-data && uv run python fetch_energy_trade.py
-
-# 2. Seed (idempotent upsert by [period, granularity]; no TRUNCATE)
-cd -                    # back to backend/
-pnpm db:seed:energy-trade
-```
+Monthly rows are refreshed by `pnpm db:refresh:market`. The annual rows were
+seeded once from the old `petroldata.ar/` CSVs (`pnpm db:seed:energy-trade`).
 
 Monthly rows carry energy exports/imports → surplus; annual rows add agro
 (Productos primarios + MOA) for the crossover. Values are USD (INDEC publishes
