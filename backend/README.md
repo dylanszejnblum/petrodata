@@ -111,11 +111,24 @@ redirect al bucket sin tocar la base: `photo_url` ya es una clave, no una URL.
 ### Votos
 
 `POST /api/v2/directivos/:slug/voto` con `{ "value": 1 | -1 }`. Cinco votos por
-semana y uno por persona; el voto **no se edita** hasta el lunes. El votante se
-identifica por IP —que no es una persona: una oficina o una operadora móvil son
-miles detrás de una sola— y la IP **no se guarda**: la tabla lleva
-`HMAC(ip, VOTE_SALT)`. Sin `VOTE_SALT` el endpoint devuelve 503 en vez de
-arrancar con un secreto vacío; rotarlo resetea los presupuestos de la semana.
+semana y uno por persona; el voto **no se edita** hasta el lunes. El votante es
+el **navegador**: un UUID al azar que el frontend guarda y manda en `x-votante`
+(sin el header cae a la IP). Por IP no se podía: en un evento cientos de
+personas votan desde el mismo wifi, y en el celular la operadora pone miles
+detrás de una IP. Un id de navegador no es una identidad —una ventana privada es
+otro votante—; los frenos son un techo semanal por IP (`VOTE_IP_WEEKLY_CAP`,
+5000 por defecto) y Turnstile si está configurado. Nada de eso se guarda en
+claro: la tabla lleva `HMAC(id, VOTE_SALT)` y `HMAC(ip, VOTE_SALT)`. Sin
+`VOTE_SALT` el endpoint devuelve 503 en vez de arrancar con un secreto vacío;
+rotarlo resetea los presupuestos de la semana.
+
+Contar los votos usados e insertar el nuevo van en una transacción con un lock
+por votante (`pg_advisory_xact_lock`): separados, cinco pedidos en paralelo
+pasaban todos el chequeo de «menos de cinco».
+
+El rate limit global (120/min por IP) usa `AppThrottlerGuard`: en `/directivos`
+la clave es IP + `x-votante`, y el servidor del frontend no se limita si manda
+`x-internal-key` igual a `INTERNAL_API_KEY`.
 
 `GET /api/v2/directivos/voto` devuelve el presupuesto de quien pregunta — es por
 IP, no se cachea.

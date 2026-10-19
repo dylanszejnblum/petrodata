@@ -110,7 +110,12 @@ function rechazo(req: NextRequest, cupo: number, estricto = false): Response | n
 
   const ahora = Date.now()
   if (cubos.size > 10_000) for (const [k, v] of cubos) if (ahora - v.desde > VENTANA) cubos.delete(k)
-  const clave = `${cupo}:${ipDe(req)}`
+  /* En un evento cientos de personas comparten el wifi, o sea la IP: el cupo
+     por IP se lo comían entre todos. Con el id de navegador del voto el cupo es
+     por persona. Rotar el id saltea este cupo, no el tope diario de abajo, que
+     es el que acota el gasto. */
+  const id = req.headers.get('x-votante')
+  const clave = `${cupo}:${ipDe(req)}:${id && /^[0-9a-f-]{36}$/i.test(id) ? id : ''}`
   const c = cubos.get(clave)
   if (!c || ahora - c.desde > VENTANA) cubos.set(clave, { n: 1, desde: ahora })
   else if (++c.n > cupo)

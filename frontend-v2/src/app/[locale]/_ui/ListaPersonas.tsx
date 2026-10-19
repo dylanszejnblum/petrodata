@@ -24,7 +24,7 @@ const TOP = 20
 
 export function ListaPersonas({ personas, abierta: inicial }: { personas: PersonaFila[]; abierta?: string }) {
   const t = useTranslations('v2.directivos')
-  const { votos, votar, restantes } = useVotos()
+  const { votos, votar, restantes, listo } = useVotos()
   /* UNA SOLA FILA ABIERTA A LA VEZ. Con varias abiertas la lista deja de ser
      una tabla de posiciones —los puestos quedan a cuarenta píxeles unos de
      otros y a trescientos otros— y el orden, que es lo único que la fila tiene
@@ -97,6 +97,8 @@ export function ListaPersonas({ personas, abierta: inicial }: { personas: Person
         const mio = votos[p.slug]?.v
         const votado = mio !== undefined
         const agotado = !votado && restantes === 0
+        // sin el presupuesto cargado no se sabe qué votó esta IP: apagados, sin title
+        const apagado = agotado || !listo
         /* Cuántos puestos se movió respecto del orden sin votos. Positivo =
            subió.
 
@@ -261,7 +263,7 @@ export function ListaPersonas({ personas, abierta: inicial }: { personas: Person
                   type="button"
                   className="arriba"
                   aria-label={t('votarAFavor', { nombre: p.nombre })}
-                  disabled={agotado}
+                  disabled={apagado}
                   title={agotado ? sinCredito : undefined}
                   onClick={() => votar(p.slug, 1)}
                 >
@@ -271,7 +273,7 @@ export function ListaPersonas({ personas, abierta: inicial }: { personas: Person
                   type="button"
                   className="abajo"
                   aria-label={t('votarEnContra', { nombre: p.nombre })}
-                  disabled={agotado}
+                  disabled={apagado}
                   title={agotado ? sinCredito : undefined}
                   onClick={() => votar(p.slug, -1)}
                 >

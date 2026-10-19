@@ -7,6 +7,7 @@ import { ApiErrorDto, ApiOkEnvelope } from '../../common/swagger';
 import { VotarDto } from './directivos.dto';
 import { DirectivosResponseDto, VotoEstadoDto } from './directivos.response';
 import { DirectivosService } from './directivos.service';
+import { votanteDe } from './voto-reglas';
 
 /* La IP es req.ip y NO el primer valor de X-Forwarded-For. Con `trust proxy 1`
    (main.ts) Express toma la entrada que agregó Traefik, que es la IP que se
@@ -47,8 +48,14 @@ export class DirectivosController {
       'Respuesta por cliente: no la cachees.',
   })
   @ApiOkEnvelope(VotoEstadoDto)
-  estado(@Req() req: Request) {
-    return this.service.estadoVoto(clientIp(req));
+  estado(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+    /* Pisa el `public, max-age=60` que el interceptor pone a todo GET. Con él,
+       el navegador devolvía «te quedan 5» durante un minuto después de votar:
+       los botones volvían a encenderse y cada clic era un 409. Y `public`
+       dejaba que un caché compartido le sirviera el presupuesto de una IP a
+       otra. El handler corre después del interceptor, así que esto gana. */
+    res.setHeader('Cache-Control', 'private, no-store');
+    return this.service.estadoVoto(clientIp(req), votanteDe(req.headers['x-votante']));
   }
 
   @Get(':slug/foto')
@@ -93,6 +100,6 @@ export class DirectivosController {
   @ApiConflictResponse({ type: ApiErrorDto, description: 'Ya votó a esa persona esta semana, o se quedó sin votos.' })
   @ApiForbiddenResponse({ type: ApiErrorDto, description: 'Falta o falló la verificación de Turnstile (sólo con TURNSTILE_SECRET).' })
   votar(@Param('slug') slug: string, @Body() dto: VotarDto, @Req() req: Request) {
-    return this.service.votar(slug, dto.value, clientIp(req), dto.turnstile_token);
+    return this.service.votar(slug, dto.value, clientIp(req), votanteDe(req.headers['x-votante']), dto.turnstile_token);
   }
 }

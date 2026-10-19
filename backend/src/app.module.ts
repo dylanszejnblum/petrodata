@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
-import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { ThrottlerModule } from '@nestjs/throttler';
+import { AppThrottlerGuard } from './common/app-throttler.guard';
 import { AppController } from './app.controller';
 import { ApiKeyGuard } from './common/api-key.guard';
 import { PrismaModule } from './prisma/prisma.module';
@@ -22,7 +23,8 @@ import { DirectivosModule } from './modules/directivos/directivos.module';
 
 @Module({
   imports: [
-    // Global rate limit: 120 req/min per IP. Tighter caps on the external-API
+    // Global rate limit: 120 req/min per IP (AppThrottlerGuard: frontend exempt,
+    // per-browser on /directivos). Tighter caps on the external-API
     // proxy routes live on their controllers via @Throttle.
     // ponytail: in-memory store — fine for a single Coolify container. If you
     // scale to >1 replica, each holds its own counters (effective limit ×N);
@@ -48,7 +50,7 @@ import { DirectivosModule } from './modules/directivos/directivos.module';
   ],
   controllers: [AppController],
   providers: [
-    { provide: APP_GUARD, useClass: ThrottlerGuard },
+    { provide: APP_GUARD, useClass: AppThrottlerGuard },
     { provide: APP_GUARD, useClass: ApiKeyGuard },
   ],
 })
