@@ -103,3 +103,35 @@ export class ListNewsQueryDto {
   @Max(200)
   pageSize?: number;
 }
+
+export class NewsDigestQueryDto {
+  @ApiPropertyOptional({
+    description: 'Lower bound on publishedAt (ISO). Default: 24 h ago.',
+  })
+  @IsOptional()
+  @IsISO8601()
+  from?: string;
+
+  @ApiPropertyOptional({ description: 'Upper bound on publishedAt (ISO). Default: now.' })
+  @IsOptional()
+  @IsISO8601()
+  to?: string;
+
+  @ApiPropertyOptional({ description: 'Filter by topic tag, e.g. "GNL"' })
+  @IsOptional()
+  @IsString()
+  topic?: string;
+
+  @ApiPropertyOptional({ description: 'Filter by entity (company or regulator), e.g. "YPF"' })
+  @IsOptional()
+  @IsString()
+  entity?: string;
+
+  @ApiPropertyOptional({ description: 'Max stories returned (1–50).', default: 10 })
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  @Max(50)
+  limit?: number;
+}
