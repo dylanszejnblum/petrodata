@@ -1,4 +1,4 @@
-import { diaDe, hashVotante, puntosPorVoto, PUNTOS_MAX_VOTO, semanaDe } from './voto-reglas';
+import { diaDe, hashVotante, puntosPorVoto, PUNTOS_MAX_VOTO, semanaDe, votanteDe } from './voto-reglas';
 
 describe('semanaDe', () => {
   it('devuelve el lunes, y el mismo para todos los días de la semana', () => {
@@ -48,5 +48,16 @@ describe('puntosPorVoto', () => {
   it('sin votos no reparte nada', () => {
     expect(puntosPorVoto(new Map()).size).toBe(0);
     expect(puntosPorVoto(new Map([['a', 0]])).size).toBe(0);
+  });
+});
+
+describe('votanteDe', () => {
+  it('acepta un UUID y lo normaliza', () => {
+    expect(votanteDe('3F2504E0-4F89-11D3-9A0C-0305E82C3301')).toBe('3f2504e0-4f89-11d3-9a0c-0305e82c3301');
+  });
+  it('rechaza lo que no es un UUID', () => {
+    for (const x of [undefined, '', 'abc', ['3f2504e0-4f89-11d3-9a0c-0305e82c3301'], '3f2504e0-4f89-11d3-9a0c-0305e82c3301x']) {
+      expect(votanteDe(x)).toBeNull();
+    }
   });
 });

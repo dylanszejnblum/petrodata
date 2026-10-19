@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { votanteId } from './votos'
 import { useLocale } from 'next-intl'
 import { Link } from '@/i18n/navigation'
 import { Card, CardHead, Dato, FLUIDO, PALETA_TAGS } from './kit'
@@ -473,7 +474,8 @@ export function Chat() {
       const r = await fetch('/api/chat', {
         method: 'POST',
         signal: ctl.signal,
-        headers: { 'content-type': 'application/json' },
+        // el mismo id que el voto: en un evento, el cupo por minuto es por navegador y no por wifi
+        headers: { 'content-type': 'application/json', 'x-votante': votanteId() },
         body: JSON.stringify({ locale: l, messages: hist.filter((t) => !t.error).map(({ role, content }) => ({ role, content })) }),
       })
       if (!r.ok || !r.body) throw new Error((await r.json().catch(() => null))?.error ?? `HTTP ${r.status}`)

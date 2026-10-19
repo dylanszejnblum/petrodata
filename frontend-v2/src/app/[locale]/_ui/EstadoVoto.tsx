@@ -39,7 +39,7 @@ import { useVotos } from './votos'
    gastado aparece al hidratar. */
 export function EstadoVoto() {
   const t = useTranslations('v2.directivos')
-  const { restantes } = useVotos()
+  const { restantes, listo } = useVotos()
   const [corte, setCorte] = useState<string | null>(null)
 
   useEffect(() => {
@@ -65,7 +65,7 @@ export function EstadoVoto() {
         {/* tabular-nums aunque sea un dígito: al bajar de 5 a 4 el ancho no
             cambia y el chip de al lado no se corre. */}
         <span className="s-mono">
-          {restantes}/{LIMITE}
+          {listo ? restantes : '–'}/{LIMITE}
         </span>
       </span>
 
