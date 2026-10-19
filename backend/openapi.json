@@ -2945,6 +2945,74 @@
         ]
       }
     },
+    "/api/v1/news/digest": {
+      "get": {
+        "description": "Top stories in a publishedAt window (default: last 24 h), one per cluster, ranked by importance. Full documents — body_text, numbers, signals, entities — plus `sources`: every outlet in the cluster, for on-screen citations. Filter by topic / entity.",
+        "operationId": "NewsController_digest_v1",
+        "parameters": [
+          {
+            "name": "from",
+            "required": false,
+            "in": "query",
+            "description": "Lower bound on publishedAt (ISO). Default: 24 h ago.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "to",
+            "required": false,
+            "in": "query",
+            "description": "Upper bound on publishedAt (ISO). Default: now.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "topic",
+            "required": false,
+            "in": "query",
+            "description": "Filter by topic tag, e.g. \"GNL\"",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "entity",
+            "required": false,
+            "in": "query",
+            "description": "Filter by entity (company or regulator), e.g. \"YPF\"",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Max stories returned (1–50).",
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "api-key": []
+          }
+        ],
+        "summary": "News digest for the content agent (API key)",
+        "tags": [
+          "news"
+        ]
+      }
+    },
     "/api/v1/news/{docId}": {
       "get": {
         "description": "Returns the document and its cluster siblings (other docs sharing cluster_id).",
@@ -3133,6 +3201,66 @@
           }
         },
         "summary": "Quién dirige la cuenca",
+        "tags": [
+          "directivos"
+        ]
+      }
+    },
+    "/api/v2/directivos/movimientos": {
+      "get": {
+        "description": "El top de hoy y, para día, semana, mes y año, los que más subieron, los que más bajaron y la tabla entera contra el corte de entonces. Los cortes viejos se recalculan con la producción conocida hasta esa fecha y los votos de esa semana: el día y la semana se mueven casi sólo por votos, el mes y el año por producción. Pensado para el agente que arma videos y carruseles.",
+        "operationId": "DirectivosController_movimientos_v2",
+        "parameters": [
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Largo de top, risers y fallers (1–50).",
+            "schema": {
+              "example": 5
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/MovimientosDto"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/MetaDto"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Falta la API key o no es válida.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api-key": []
+          }
+        ],
+        "summary": "Quién subió y quién bajó (con API key)",
         "tags": [
           "directivos"
         ]
@@ -3364,6 +3492,13 @@
     }
   ],
   "components": {
+    "securitySchemes": {
+      "api-key": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-api-key"
+      }
+    },
     "schemas": {
       "HealthDto": {
         "type": "object",
@@ -7306,6 +7441,193 @@
           "directivos",
           "votacion",
           "source"
+        ]
+      },
+      "DirectivoMovimientoDto": {
+        "type": "object",
+        "properties": {
+          "company_slug": {
+            "type": "string",
+            "example": "ypf"
+          },
+          "company_name": {
+            "type": "string",
+            "example": "YPF S.A."
+          },
+          "name": {
+            "type": "string",
+            "example": "Horacio Daniel Marín"
+          },
+          "role": {
+            "type": "string",
+            "example": "Presidente & CEO"
+          },
+          "photo_url": {
+            "type": "object",
+            "example": "/api/v2/directivos/ypf/foto",
+            "nullable": true
+          },
+          "photo_url_2x": {
+            "type": "object",
+            "example": "/api/v2/directivos/ypf/foto?size=2x",
+            "nullable": true
+          },
+          "rank": {
+            "type": "number",
+            "example": 1,
+            "description": "Puesto en el corte de hoy."
+          },
+          "index": {
+            "type": "number",
+            "example": 96.5,
+            "description": "Índice publicado hoy (0–100, votos incluidos)."
+          },
+          "rank_before": {
+            "type": "object",
+            "example": 3,
+            "nullable": true,
+            "description": "Puesto al inicio del período. null en `top`."
+          },
+          "rank_change": {
+            "type": "object",
+            "example": 2,
+            "nullable": true,
+            "description": "Puestos ganados en el período. Positivo = subió."
+          },
+          "index_before": {
+            "type": "object",
+            "example": 91.2,
+            "nullable": true
+          },
+          "index_change": {
+            "type": "object",
+            "example": 5.3,
+            "nullable": true
+          }
+        },
+        "required": [
+          "company_slug",
+          "company_name",
+          "name",
+          "role",
+          "photo_url",
+          "photo_url_2x",
+          "rank",
+          "index",
+          "rank_before",
+          "rank_change",
+          "index_before",
+          "index_change"
+        ]
+      },
+      "PeriodoMovimientosDto": {
+        "type": "object",
+        "properties": {
+          "since": {
+            "type": "string",
+            "example": "2026-10-12",
+            "description": "Corte contra el que se compara."
+          },
+          "risers": {
+            "description": "Los que más subieron, de mayor a menor. Sólo rank_change > 0.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DirectivoMovimientoDto"
+            }
+          },
+          "fallers": {
+            "description": "Los que más bajaron. Sólo rank_change < 0.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DirectivoMovimientoDto"
+            }
+          },
+          "all": {
+            "description": "La tabla entera, en el orden de hoy.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DirectivoMovimientoDto"
+            }
+          }
+        },
+        "required": [
+          "since",
+          "risers",
+          "fallers",
+          "all"
+        ]
+      },
+      "PeriodosMovimientosDto": {
+        "type": "object",
+        "properties": {
+          "day": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PeriodoMovimientosDto"
+              }
+            ]
+          },
+          "week": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PeriodoMovimientosDto"
+              }
+            ]
+          },
+          "month": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PeriodoMovimientosDto"
+              }
+            ]
+          },
+          "year": {
+            "nullable": true,
+            "description": "null si no hay producción cargada para esa fecha.",
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PeriodoMovimientosDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "day",
+          "week",
+          "month",
+          "year"
+        ]
+      },
+      "MovimientosDto": {
+        "type": "object",
+        "properties": {
+          "as_of": {
+            "type": "string",
+            "example": "2026-10-19",
+            "description": "Día del corte (UTC)."
+          },
+          "top": {
+            "description": "Los primeros `limit` de hoy.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DirectivoMovimientoDto"
+            }
+          },
+          "periods": {
+            "$ref": "#/components/schemas/PeriodosMovimientosDto"
+          }
+        },
+        "required": [
+          "as_of",
+          "top",
+          "periods"
         ]
       },
       "VotoEmitidoDto": {

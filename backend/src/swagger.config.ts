@@ -53,6 +53,7 @@ export function buildSwaggerConfig() {
     .setVersion('1.0')
     .setContact('Petroldata.ar', 'https://petroldata.ar', '')
     .setLicense('CC-BY-4.0', 'https://creativecommons.org/licenses/by/4.0/')
+    .addApiKey({ type: 'apiKey', in: 'header', name: 'x-api-key' }, 'api-key')
     .addServer(`http://localhost:${process.env.PORT || 3001}`, 'Local dev')
     .addTag('production', 'Monthly production facts and summaries')
     .addTag('operators', 'Operator catalog, detail, and time series')

@@ -1,7 +1,9 @@
-import { Body, Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, Res, UseGuards } from '@nestjs/common';
+import type { Response } from 'express';
 import { ApiOperation, ApiParam, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { ResponseMeta } from '../../common/response-meta.decorator';
-import { IngestNewsBodyDto, ListNewsQueryDto } from './news.dto';
+import { Premium } from '../../common/premium.decorator';
+import { IngestNewsBodyDto, ListNewsQueryDto, NewsDigestQueryDto } from './news.dto';
 import { NewsIngestGuard } from './news-ingest.guard';
 import { NewsService } from './news.service';
 
@@ -48,6 +50,22 @@ export class NewsController {
   })
   facets() {
     return this.service.getFacets();
+  }
+
+  // Declared before :docId so "digest" isn't read as a document id.
+  @Get('digest')
+  @Premium()
+  @ApiSecurity('api-key')
+  @ApiOperation({
+    summary: 'News digest for the content agent (API key)',
+    description:
+      'Top stories in a publishedAt window (default: last 24 h), one per cluster, ranked by ' +
+      'importance. Full documents — body_text, numbers, signals, entities — plus `sources`: every ' +
+      'outlet in the cluster, for on-screen citations. Filter by topic / entity.',
+  })
+  digest(@Query() q: NewsDigestQueryDto, @Res({ passthrough: true }) res: Response) {
+    res.setHeader('Cache-Control', 'private, max-age=60'); // behind a key: no shared caches
+    return this.service.digest(q);
   }
 
   @Get(':docId')

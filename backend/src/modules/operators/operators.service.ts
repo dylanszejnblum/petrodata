@@ -88,10 +88,15 @@ export class OperatorsService {
    * Economic contribution per operator over the trailing (up to) 12 months of data.
    * Gross value = oil_bbl × (Brent − discount) + gas MMBtu × PIST, priced month by month.
    * Exports are attributed pro-rata by BOE share; royalties at the statutory 12%.
+   * `upTo` caps the window at months <= that date (the executives ranking replays
+   * past cuts with it); omitted = the latest 12 months on file.
    */
-  async contribution() {
+  async contribution(upTo?: Date) {
     const monthRows = await this.prisma.$queryRawUnsafe<{ date_month: Date }[]>(
-      `SELECT DISTINCT date_month FROM agg_monthly_by_operator ORDER BY date_month DESC LIMIT 12`,
+      `SELECT DISTINCT date_month FROM agg_monthly_by_operator
+       WHERE $1::date IS NULL OR date_month <= $1::date
+       ORDER BY date_month DESC LIMIT 12`,
+      upTo ?? null,
     );
     if (!monthRows.length) return null;
     const windowMonths = monthRows.map((r) => r.date_month).reverse();
@@ -106,10 +111,11 @@ export class OperatorsService {
           SUM(gas_mcf)::float AS gas_mcf,
           (SUM(oil_bbl) + SUM(gas_mcf) / 5.8)::float AS boe
         FROM agg_monthly_by_operator
-        WHERE date_month >= $1
+        WHERE date_month >= $1 AND date_month <= $2
         GROUP BY operator_slug, date_month
         `,
         from,
+        to,
       ),
       this.prisma.factPrice.findMany({
         where: { series: { in: ['brent', 'gas_pist'] }, date: { lte: to } },
