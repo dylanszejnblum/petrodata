@@ -1,11 +1,12 @@
 import { Body, Controller, Get, HttpCode, NotFoundException, Param, Post, Query, Req, Res } from '@nestjs/common';
 import type { Request, Response } from 'express';
 import { Throttle } from '@nestjs/throttler';
-import { ApiConflictResponse, ApiForbiddenResponse, ApiNotFoundResponse, ApiOperation, ApiParam, ApiProduces, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiConflictResponse, ApiForbiddenResponse, ApiSecurity, ApiUnauthorizedResponse, ApiNotFoundResponse, ApiOperation, ApiParam, ApiProduces, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { ResponseMeta } from '../../common/response-meta.decorator';
 import { ApiErrorDto, ApiOkEnvelope } from '../../common/swagger';
 import { VotarDto } from './directivos.dto';
-import { DirectivosResponseDto, VotoEstadoDto } from './directivos.response';
+import { Premium } from '../../common/premium.decorator';
+import { DirectivosResponseDto, MovimientosDto, VotoEstadoDto } from './directivos.response';
 import { DirectivosService } from './directivos.service';
 import { votanteDe } from './voto-reglas';
 
@@ -38,6 +39,27 @@ export class DirectivosController {
     const res = await this.service.list();
     if (!res) throw new NotFoundException('No hay directivos cargados todavía.');
     return res;
+  }
+
+  @Get('movimientos')
+  @Premium()
+  @ApiSecurity('api-key')
+  @ApiOperation({
+    summary: 'Quién subió y quién bajó (con API key)',
+    description:
+      'El top de hoy y, para día, semana, mes y año, los que más subieron, los que más bajaron y la ' +
+      'tabla entera contra el corte de entonces. Los cortes viejos se recalculan con la producción ' +
+      'conocida hasta esa fecha y los votos de esa semana: el día y la semana se mueven casi sólo ' +
+      'por votos, el mes y el año por producción. Pensado para el agente que arma videos y carruseles.',
+  })
+  @ApiQuery({ name: 'limit', required: false, example: 5, description: 'Largo de top, risers y fallers (1–50).' })
+  @ApiOkEnvelope(MovimientosDto)
+  @ApiUnauthorizedResponse({ type: ApiErrorDto, description: 'Falta la API key o no es válida.' })
+  async movimientos(@Query('limit') limit: string | undefined, @Res({ passthrough: true }) res: Response) {
+    res.setHeader('Cache-Control', 'private, max-age=60'); // detrás de una key: nada de cachés compartidos
+    const r = await this.service.movimientos(Math.min(50, Math.max(1, Number(limit) || 5)));
+    if (!r) throw new NotFoundException('No hay directivos cargados todavía.');
+    return r;
   }
 
   @Get('voto')

@@ -114,3 +114,51 @@ export class VotoEstadoDto {
   @ApiProperty({ example: 3 }) remaining!: number;
   @ApiProperty({ type: [VotoEmitidoDto] }) votes!: VotoEmitidoDto[];
 }
+
+/* ── MOVIMIENTOS (para el agente de contenido, con API key) ─────────────── */
+
+export class DirectivoMovimientoDto {
+  @ApiProperty({ example: 'ypf' }) company_slug!: string;
+  @ApiProperty({ example: 'YPF S.A.' }) company_name!: string;
+  @ApiProperty({ example: 'Horacio Daniel Marín' }) name!: string;
+  @ApiProperty({ example: 'Presidente & CEO' }) role!: string;
+  @ApiProperty({ example: '/api/v2/directivos/ypf/foto', nullable: true }) photo_url!: string | null;
+  @ApiProperty({ example: '/api/v2/directivos/ypf/foto?size=2x', nullable: true }) photo_url_2x!: string | null;
+  @ApiProperty({ example: 1, description: 'Puesto en el corte de hoy.' }) rank!: number;
+  @ApiProperty({ example: 96.5, description: 'Índice publicado hoy (0–100, votos incluidos).' }) index!: number;
+  @ApiProperty({ example: 3, nullable: true, description: 'Puesto al inicio del período. null en `top`.' })
+  rank_before!: number | null;
+  @ApiProperty({ example: 2, nullable: true, description: 'Puestos ganados en el período. Positivo = subió.' })
+  rank_change!: number | null;
+  @ApiProperty({ example: 91.2, nullable: true }) index_before!: number | null;
+  @ApiProperty({ example: 5.3, nullable: true }) index_change!: number | null;
+}
+
+export class PeriodoMovimientosDto {
+  @ApiProperty({ example: '2026-10-12', description: 'Corte contra el que se compara.' }) since!: string;
+  @ApiProperty({ type: [DirectivoMovimientoDto], description: 'Los que más subieron, de mayor a menor. Sólo rank_change > 0.' })
+  risers!: DirectivoMovimientoDto[];
+  @ApiProperty({ type: [DirectivoMovimientoDto], description: 'Los que más bajaron. Sólo rank_change < 0.' })
+  fallers!: DirectivoMovimientoDto[];
+  @ApiProperty({ type: [DirectivoMovimientoDto], description: 'La tabla entera, en el orden de hoy.' })
+  all!: DirectivoMovimientoDto[];
+}
+
+export class PeriodosMovimientosDto {
+  @ApiProperty({ type: PeriodoMovimientosDto, nullable: true }) day!: PeriodoMovimientosDto | null;
+  @ApiProperty({ type: PeriodoMovimientosDto, nullable: true }) week!: PeriodoMovimientosDto | null;
+  @ApiProperty({ type: PeriodoMovimientosDto, nullable: true }) month!: PeriodoMovimientosDto | null;
+  @ApiProperty({
+    type: PeriodoMovimientosDto,
+    nullable: true,
+    description: 'null si no hay producción cargada para esa fecha.',
+  })
+  year!: PeriodoMovimientosDto | null;
+}
+
+export class MovimientosDto {
+  @ApiProperty({ example: '2026-10-19', description: 'Día del corte (UTC).' }) as_of!: string;
+  @ApiProperty({ type: [DirectivoMovimientoDto], description: 'Los primeros `limit` de hoy.' })
+  top!: DirectivoMovimientoDto[];
+  @ApiProperty({ type: PeriodosMovimientosDto }) periods!: PeriodosMovimientosDto;
+}

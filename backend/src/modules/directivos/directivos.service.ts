@@ -7,10 +7,19 @@ import {
   NotFoundException,
   ServiceUnavailableException,
 } from '@nestjs/common';
+import type { CompanyExecutive } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { getObject, s3ConfigFromEnv } from '../../common/s3';
 import { OperatorsService } from '../operators/operators.service';
-import type { DirectivoDto, DirectivosResponseDto, VotoEstadoDto } from './directivos.response';
+import { cached, TTL } from '../../common/cache';
+import type {
+  DirectivoDto,
+  DirectivoMovimientoDto,
+  DirectivosResponseDto,
+  MovimientosDto,
+  PeriodoMovimientosDto,
+  VotoEstadoDto,
+} from './directivos.response';
 import {
   diaDe,
   hashVotante,
@@ -89,6 +98,78 @@ export function calcularIndices<T>(
   }));
 }
 
+type Contribucion = NonNullable<Awaited<ReturnType<OperatorsService['contribution']>>>;
+type EmpresaRanking = { slug: string; name: string; projectCountOilGas: number | null };
+
+/* La fila de cada directivo con los insumos de su empresa. `pozos` es el conteo
+   de HOY también cuando se recalcula un corte viejo: la base no guarda la
+   historia de pozos por empresa, y el que pesa de verdad es la escala. */
+function filasDe(
+  execs: CompanyExecutive[],
+  companyBySlug: Map<string, EmpresaRanking>,
+  contribution: Contribucion,
+) {
+  const contribBySlug = new Map(contribution.operators.map((o) => [o.operator_slug, o]));
+  /* Los tres insumos, todos públicos y todos de la EMPRESA:
+     · escala   — cuánto produce, como parte del BOE nacional
+     · rinde    — cuánto saca por pozo (valor / (pozos + piso))
+     · prima    — cuánto vale lo que produce, como parte del valor del país
+     Una empresa sin producción en la ventana no tiene índice calculable: va
+     con los tres en cero y queda al final, que es lo honesto. Inventarle un
+     número para que la lista quede completa es exactamente lo que la página
+     promete no hacer. */
+  return execs.map((e) => {
+    const company = companyBySlug.get(e.companySlug);
+    const c = contribBySlug.get(e.companySlug);
+    return {
+      company_slug: e.companySlug,
+      company_name: company?.name ?? e.companySlug,
+      name: e.name,
+      role: e.role,
+      in_role_since: e.inRoleSince,
+      bio: e.bio,
+      /* `photoUrl` guarda la CLAVE del objeto en el bucket, no una URL: el
+         bucket es privado y las fotos salen por esta misma API. Guardar una
+         URL pública ataba la fila a un hostname que no existe. */
+      photo_url: e.photoUrl ? `/api/v2/directivos/${e.companySlug}/foto` : null,
+      photo_url_2x: e.photoUrl ? `/api/v2/directivos/${e.companySlug}/foto?size=2x` : null,
+      escala: c?.share_boe ?? 0,
+      valorUsd: c?.gross_value_usd ?? 0,
+      pozos: company?.projectCountOilGas ?? 0,
+    };
+  });
+}
+
+/* EL DESEMPATE ES EXPLÍCITO y no el que regala el sort: veinticinco de las
+   cuarenta y ocho empatan —dieciséis en el mismo valor— y dejarlo librado a
+   la implementación es dejar librado el puesto de media lista. Se cae al
+   índice sin votos y después al slug, que es estable entre pedidos: sin eso
+   dos llamadas seguidas podían devolver órdenes distintos para los mismos
+   datos. */
+function ordenar<T extends { index: number; company_slug: string }>(
+  base: T[],
+  puntosDelCorte: Map<string, number>,
+) {
+  return base
+    .map((d) => ({ ...d, conVoto: d.index + (puntosDelCorte.get(d.company_slug) ?? 0) }))
+    .sort(
+      (a, b) =>
+        b.conVoto - a.conVoto || b.index - a.index || a.company_slug.localeCompare(b.company_slug),
+    );
+}
+
+/** El índice como se publica: recortado a 0–100, un decimal. */
+const indicePublicado = (conVoto: number) => Math.round(Math.min(100, Math.max(0, conVoto)) * 10) / 10;
+
+/** Cuánto mira hacia atrás cada período de `movimientos()`. */
+export const PERIODOS = {
+  day: (d: Date) => d.setUTCDate(d.getUTCDate() - 1),
+  week: (d: Date) => d.setUTCDate(d.getUTCDate() - 7),
+  month: (d: Date) => d.setUTCMonth(d.getUTCMonth() - 1),
+  year: (d: Date) => d.setUTCFullYear(d.getUTCFullYear() - 1),
+} as const;
+export type Periodo = keyof typeof PERIODOS;
+
 /* TURNSTILE, opcional. Con TURNSTILE_SECRET seteada cada voto trae un token del
    widget de Cloudflare y se verifica acá; sin ella el voto sigue como antes.
    No cambia que una IP no es una persona, pero deja afuera al script que
@@ -143,6 +224,116 @@ export class DirectivosService {
     return valor;
   }
 
+  /** El orden al corte de `dia`: producción conocida hasta ese día y votos de su
+      semana emitidos antes de ese día — la misma regla que la lista pública. */
+  private async corte(dia: Date, execs: CompanyExecutive[], companyBySlug: Map<string, EmpresaRanking>) {
+    const [contribution, neto] = await Promise.all([
+      this.operators.contribution(dia),
+      this.netoHasta(semanaDe(dia), dia),
+    ]);
+    if (!contribution) return null;
+    const base = calcularIndices(filasDe(execs, companyBySlug, contribution), contribution.totals.gross_value_usd);
+    return ordenar(base, puntosPorVoto(neto)).map((d, i) => ({ ...d, rank: i + 1, index: indicePublicado(d.conVoto) }));
+  }
+
+  /* EL HISTORIAL NO SE GUARDA, SE RECALCULA. Cada corte viejo se rearma con la
+     ventana de producción que terminaba ese día y los votos que había entonces,
+     así que el año entero existe desde el primer pedido y no hace falta un cron
+     de fotos diarias. Dos consecuencias para quien lo lee:
+     · el día y la semana se mueven casi sólo por votos —la producción es
+       mensual— y el lunes los votos vuelven a cero, así que el `day` del lunes
+       suele mostrar el efecto de ese reinicio;
+     · un mes de producción cuenta desde el día 1 de ese mes, aunque la
+       Secretaría lo publique semanas después.
+     ponytail: cinco ventanas de doce meses por pedido, cacheadas cinco minutos. */
+  async movimientos(limit = 5): Promise<MovimientosDto | null> {
+    const r = await cached(`directivos:movimientos:${diaDe().toISOString()}`, TTL.SHORT, () =>
+      this.calcularMovimientos(),
+    );
+    if (!r) return null;
+    const recorte = (p: PeriodoMovimientosDto | null) =>
+      p && { ...p, risers: p.risers.slice(0, limit), fallers: p.fallers.slice(0, limit) };
+    return {
+      ...r,
+      top: r.top.slice(0, limit),
+      periods: {
+        day: recorte(r.periods.day),
+        week: recorte(r.periods.week),
+        month: recorte(r.periods.month),
+        year: recorte(r.periods.year),
+      },
+    };
+  }
+
+  private async calcularMovimientos(): Promise<MovimientosDto | null> {
+    const hoy = diaDe();
+    const execs = await this.prisma.companyExecutive.findMany();
+    if (!execs.length) return null;
+    const companies = await this.prisma.company.findMany({
+      where: { slug: { in: execs.map((e) => e.companySlug) } },
+      select: { slug: true, name: true, projectCountOilGas: true },
+    });
+    const companyBySlug = new Map(companies.map((c) => [c.slug, c]));
+
+    const periodos = Object.keys(PERIODOS) as Periodo[];
+    const desde = periodos.map((p) => {
+      const d = new Date(hoy);
+      PERIODOS[p](d);
+      return d;
+    });
+    const [actual, ...previos] = await Promise.all(
+      [hoy, ...desde].map((d) => this.corte(d, execs, companyBySlug)),
+    );
+    if (!actual) return null;
+
+    const ficha = (d: (typeof actual)[number]): DirectivoMovimientoDto => ({
+      company_slug: d.company_slug,
+      company_name: d.company_name,
+      name: d.name,
+      role: d.role,
+      photo_url: d.photo_url,
+      photo_url_2x: d.photo_url_2x,
+      rank: d.rank,
+      index: d.index,
+      rank_before: null,
+      rank_change: null,
+      index_before: null,
+      index_change: null,
+    });
+
+    const cambio = (i: number): PeriodoMovimientosDto | null => {
+      const antes = previos[i];
+      if (!antes) return null;
+      const porSlug = new Map(antes.map((d) => [d.company_slug, d]));
+      const filas = actual.map((d) => {
+        const a = porSlug.get(d.company_slug)!; // mismos execs en todos los cortes
+        return {
+          ...ficha(d),
+          rank_before: a.rank,
+          rank_change: a.rank - d.rank,
+          index_before: a.index,
+          index_change: Math.round((d.index - a.index) * 10) / 10,
+        };
+      });
+      return {
+        since: desde[i].toISOString().slice(0, 10),
+        risers: filas
+          .filter((f) => f.rank_change > 0)
+          .sort((x, y) => y.rank_change - x.rank_change || y.index_change - x.index_change || x.rank - y.rank),
+        fallers: filas
+          .filter((f) => f.rank_change < 0)
+          .sort((x, y) => x.rank_change - y.rank_change || x.index_change - y.index_change || x.rank - y.rank),
+        all: filas,
+      };
+    };
+    const cambios = Object.fromEntries(periodos.map((p, i) => [p, cambio(i)])) as Record<
+      Periodo,
+      PeriodoMovimientosDto | null
+    >;
+
+    return { as_of: hoy.toISOString().slice(0, 10), top: actual.map(ficha), periods: cambios };
+  }
+
   /** Voto neto por empresa, sólo de días anteriores a `corte`. */
   private async netoHasta(semana: Date, corte: Date): Promise<Map<string, number>> {
     const rows = await this.prisma.executiveVote.groupBy({
@@ -192,67 +383,23 @@ export class DirectivosService {
     });
     const companyBySlug = new Map(companies.map((c) => [c.slug, c]));
 
-    const totalGross = contribution.totals.gross_value_usd || 1;
-    const contribBySlug = new Map(contribution.operators.map((o) => [o.operator_slug, o]));
-
-    /* Los tres insumos, todos públicos y todos de la EMPRESA:
-       · escala   — cuánto produce, como parte del BOE nacional
-       · rinde    — cuánto saca por pozo (valor / (pozos + piso))
-       · prima    — cuánto vale lo que produce, como parte del valor del país
-       Una empresa sin producción en la ventana no tiene índice calculable: va
-       con los tres en cero y queda al final, que es lo honesto. Inventarle un
-       número para que la lista quede completa es exactamente lo que la página
-       promete no hacer. */
-    const filas = execs.map((e) => {
-      const company = companyBySlug.get(e.companySlug);
-      const c = contribBySlug.get(e.companySlug);
-      return {
-        company_slug: e.companySlug,
-        company_name: company?.name ?? e.companySlug,
-        name: e.name,
-        role: e.role,
-        in_role_since: e.inRoleSince,
-        bio: e.bio,
-        /* `photoUrl` guarda la CLAVE del objeto en el bucket, no una URL: el
-           bucket es privado y las fotos salen por esta misma API. Guardar una
-           URL pública ataba la fila a un hostname que no existe. */
-        photo_url: e.photoUrl ? `/api/v2/directivos/${e.companySlug}/foto` : null,
-        photo_url_2x: e.photoUrl ? `/api/v2/directivos/${e.companySlug}/foto?size=2x` : null,
-        escala: c?.share_boe ?? 0,
-        valorUsd: c?.gross_value_usd ?? 0,
-        pozos: company?.projectCountOilGas ?? 0,
-      };
-    });
+    const filas = filasDe(execs, companyBySlug, contribution);
 
     /* El voto se suma DESPUÉS de normalizar el índice de la empresa, y con su
        propio presupuesto de puntos: así el aporte de la gente es legible
        —«hasta seis puntos»— y no se mezcla con la ponderación de los insumos,
        que es la que no se publica. */
-    const base = calcularIndices(filas, totalGross);
+    const base = calcularIndices(filas, contribution.totals.gross_value_usd);
 
-    /* EL DESEMPATE ES EXPLÍCITO y no el que regala el sort: veinticinco de las
-       cuarenta y ocho empatan —dieciséis en el mismo valor— y dejarlo librado a
-       la implementación es dejar librado el puesto de media lista. Se cae al
-       índice sin votos y después al slug, que es estable entre pedidos: sin eso
-       dos llamadas seguidas podían devolver órdenes distintos para los mismos
-       datos. */
-    const ordenar = (puntosDelCorte: Map<string, number>) =>
-      base
-        .map((d) => ({ ...d, conVoto: d.index + (puntosDelCorte.get(d.company_slug) ?? 0) }))
-        .sort(
-          (a, b) =>
-            b.conVoto - a.conVoto || b.index - a.index || a.company_slug.localeCompare(b.company_slug),
-        );
+    const puestosAyer = new Map(ordenar(base, puntosAyer).map((d, i) => [d.company_slug, i + 1]));
 
-    const puestosAyer = new Map(ordenar(puntosAyer).map((d, i) => [d.company_slug, i + 1]));
-
-    const directivos = ordenar(puntos).map(
+    const directivos = ordenar(base, puntos).map(
       ({ escala: _e, valorUsd: _v, pozos: _p, conVoto, ...d }, i): DirectivoDto => ({
         ...d,
         /* Se ordena por conVoto crudo pero se publica recortado a 0–100: el
            líder del índice con votos a favor daba 102,4 en una escala que la
            página presenta como de 0 a 100. */
-        index: Math.round(Math.min(100, Math.max(0, conVoto)) * 10) / 10,
+        index: indicePublicado(conVoto),
         rank: i + 1,
         /* Positivo = subió. Cero cuando nadie se movió, que es el caso normal:
            el frontend no dibuja el renglón. */

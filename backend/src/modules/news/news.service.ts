@@ -1,7 +1,7 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
-import { ListNewsQueryDto, NewsDocumentInput } from './news.dto';
+import { ListNewsQueryDto, NewsDigestQueryDto, NewsDocumentInput } from './news.dto';
 
 const REQUIRED = [
   'doc_id', 'source_name', 'source_family', 'source_type',
@@ -150,6 +150,38 @@ export class NewsService {
     return { data: rows.map((r) => this.toCard(r)), pagination: { page, limit, total } };
   }
 
+  /** Full documents for the content agent (API key): one story per cluster, the
+   *  most important doc of each, with body_text, numbers and signals, plus every
+   *  other outlet that covered it as `sources` for citations. Defaults to the
+   *  last 24 h. ponytail: clusters folded in memory over ≤500 rows — a day of news
+   *  is a few dozen; move to SQL DISTINCT ON if windows grow past that. */
+  async digest(q: NewsDigestQueryDto) {
+    const to = q.to ?? new Date().toISOString();
+    const from = q.from ?? new Date(Date.parse(to) - 24 * 3600_000).toISOString();
+    const rows = await this.prisma.newsDocument.findMany({
+      where: this.buildWhere({ from, to, topic: q.topic, entity: q.entity }),
+      orderBy: [
+        { importanceScore: { sort: 'desc', nulls: 'last' } },
+        { publishedAt: { sort: 'desc', nulls: 'last' } },
+      ],
+      take: 500,
+    });
+
+    const stories = new Map<string, { doc: (typeof rows)[number]; sources: { source_name: string; source_url: string }[] }>();
+    for (const r of rows) {
+      const key = r.clusterId ?? r.docId;
+      const s = stories.get(key);
+      if (s) s.sources.push({ source_name: r.sourceName, source_url: r.sourceUrl });
+      else stories.set(key, { doc: r, sources: [{ source_name: r.sourceName, source_url: r.sourceUrl }] });
+    }
+
+    const data = [...stories.values()].slice(0, q.limit ?? 10).map(({ doc, sources }) => {
+      const { createdAt: _c, updatedAt: _u, editorNotes: _e, ...rest } = doc;
+      return { ...rest, image: doc.legalMode === 'fulltext_internal' ? firstImageUrl(doc.attachments) : null, sources };
+    });
+    return { from, to, stories: data };
+  }
+
   /** Single document + its cluster siblings (other docs sharing `clusterId`). */
   async getOne(docId: string) {
     const document = await this.prisma.newsDocument.findUnique({ where: { docId } });
@@ -204,7 +236,7 @@ export class NewsService {
     return { topics, families, regions, entities };
   }
 
-  private buildWhere(q: ListNewsQueryDto): Prisma.NewsDocumentWhereInput {
+  private buildWhere(q: Pick<ListNewsQueryDto, 'family' | 'topic' | 'region' | 'entity' | 'q' | 'from' | 'to'>): Prisma.NewsDocumentWhereInput {
     const and: Prisma.NewsDocumentWhereInput[] = [];
 
     if (q.family) and.push({ sourceFamily: q.family });
