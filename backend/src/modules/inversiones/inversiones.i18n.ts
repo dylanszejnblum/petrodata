@@ -29,8 +29,8 @@ export function sources(lang: Lang) {
       url: 'https://datos.energia.gob.ar/dataset/produccion-de-petroleo-y-gas-por-pozo',
     },
     EXPORT: {
-      label: en ? 'Exports by sector (provinces)' : 'Exportaciones por sector (provincias)',
-      url: 'https://datos.energia.gob.ar/',
+      label: en ? 'INDEC — crude oil and gas exports, last 12 months' : 'INDEC — exportaciones de petróleo crudo y gas, últimos 12 meses',
+      url: 'https://www.indec.gob.ar/indec/web/Nivel4-Tema-3-2-40',
     },
     BRENT: { label: 'EIA (Brent)', url: 'https://www.eia.gov/dnav/pet/hist/RBRTEM.htm' },
     BRENT_LIVE: { label: en ? 'Yahoo Finance — Brent (BZ=F), real-time' : 'Yahoo Finance — Brent (BZ=F), tiempo real', url: 'https://finance.yahoo.com/quote/BZ=F' },

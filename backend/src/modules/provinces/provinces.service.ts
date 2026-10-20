@@ -13,20 +13,18 @@ interface ProvinceRegistryEntry {
   mining: NormalizedProject[];
 }
 
-/* Las "exportaciones por provincia" NO son exportaciones registradas: las armó
-   pipeline_company_enrichment.py (2026-05-31) sobre la producción, con precio y
-   porcentaje exportado fijos, y el total nacional está escrito a mano. Hasta
-   reemplazarlas por una fuente real (INDEC/SIACAM), el meta lo dice para que
-   nadie las publique como dato. */
-export const EXPORTS_ESTIMATE = {
-  kind: 'estimate',
-  method:
-    'Not recorded exports. Oil: provincial production × US$65/bbl × 85% assumed exported. ' +
-    'Gas: production × US$3.5/mcf × 50% assumed exported. National totals are hand-entered round figures.',
-  computed_at: '2026-05-31',
-  period: 'Production window not recorded; values are a static snapshot, not updated monthly.',
-  publishable: false,
+/* Exportaciones por provincia = las REGISTRADAS por INDEC (OPEX mensual), en
+   fact_province_export. Los totales anuales son el último año calendario
+   completo (los doce meses cargados); el año en curso va aparte como acumulado.
+   «Extranjero y Plataforma Continental» e «Indeterminado» suman al total
+   nacional pero no son provincias. */
+const NO_PROVINCIA = new Set(['extranjero-y-plataforma-continental', 'indeterminado']);
+export const EXPORTS_SOURCE = {
+  source: 'INDEC — Origen provincial de las exportaciones (OPEX), serie mensual',
+  source_url: 'https://comex.indec.gob.ar/',
+  note: 'FOB in US$. INDEC marks 2024 onward as provisional.',
 } as const;
+
 @Injectable()
 export class ProvincesService {
   constructor(
@@ -143,43 +141,104 @@ export class ProvincesService {
     return this.exportsForSlug(slug.toLowerCase());
   }
 
+  /** Último año con los 12 meses y meses cargados del año siguiente (acumulado). */
+  private async exportPeriods() {
+    const [{ last }] = await this.prisma.$queryRaw<{ last: Date | null }[]>`SELECT MAX(date) AS last FROM fact_province_export`;
+    if (!last) return null;
+    const year = last.getUTCMonth() === 11 ? last.getUTCFullYear() : last.getUTCFullYear() - 1;
+    return {
+      year,
+      from: new Date(Date.UTC(year, 0, 1)),
+      to: new Date(Date.UTC(year, 11, 1)),
+      ytdFrom: new Date(Date.UTC(year + 1, 0, 1)),
+      last,
+    };
+  }
+
   async exportSummary() {
-    const rows = await this.prisma.provinceExport.findMany();
+    const per = await this.exportPeriods();
+    if (!per) return { provinces: [], national_total_usd: 0, national_by_sector: {}, period: null, ytd: null, ...EXPORTS_SOURCE };
+    const [annual, ytd] = await Promise.all(
+      [
+        [per.from, per.to],
+        [per.ytdFrom, per.last],
+      ].map(([from, to]) =>
+        this.prisma.factProvinceExport.groupBy({
+          by: ['provinceSlug', 'provinceName', 'rubro'],
+          where: { date: { gte: from, lte: to } },
+          _sum: { usd: true },
+        }),
+      ),
+    );
     const provinces = new Map<string, { slug: string; name: string; total: number; by_sector: Record<string, number> }>();
     const nationalBySector: Record<string, number> = {};
     let nationalTotal = 0;
-
-    for (const r of rows) {
-      if (r.slug === 'nacional') {
-        nationalBySector[r.sector] = (nationalBySector[r.sector] ?? 0) + r.valueAnnualUsd;
-        nationalTotal += r.valueAnnualUsd;
-        continue;
-      }
-      let p = provinces.get(r.slug);
-      if (!p) {
-        p = { slug: r.slug, name: r.provinceName, total: 0, by_sector: {} };
-        provinces.set(r.slug, p);
-      }
-      p.total += r.valueAnnualUsd;
-      p.by_sector[r.sector] = (p.by_sector[r.sector] ?? 0) + r.valueAnnualUsd;
+    for (const r of annual) {
+      const usd = r._sum.usd ?? 0;
+      nationalBySector[r.rubro] = (nationalBySector[r.rubro] ?? 0) + usd;
+      nationalTotal += usd;
+      if (NO_PROVINCIA.has(r.provinceSlug)) continue;
+      const p = provinces.get(r.provinceSlug) ?? { slug: r.provinceSlug, name: r.provinceName, total: 0, by_sector: {} };
+      p.total += usd;
+      p.by_sector[r.rubro] = (p.by_sector[r.rubro] ?? 0) + usd;
+      provinces.set(r.provinceSlug, p);
     }
-
+    const ytdBySlug = new Map<string, number>();
+    for (const r of ytd) ytdBySlug.set(r.provinceSlug, (ytdBySlug.get(r.provinceSlug) ?? 0) + (r._sum.usd ?? 0));
+    const ymd = (d: Date) => d.toISOString().slice(0, 7);
     return {
+      period: { year: per.year, from: ymd(per.from), to: ymd(per.to) },
       provinces: [...provinces.values()]
-        .map((p) => ({ slug: p.slug, name: p.name, total_export_usd: p.total, by_sector: p.by_sector }))
+        .map((p) => ({
+          slug: p.slug,
+          name: p.name,
+          total_export_usd: p.total,
+          by_sector: p.by_sector,
+          ytd_export_usd: ytdBySlug.get(p.slug) ?? 0,
+        }))
         .sort((a, b) => b.total_export_usd - a.total_export_usd),
       national_total_usd: nationalTotal,
       national_by_sector: nationalBySector,
-      estimate: EXPORTS_ESTIMATE,
+      ytd: per.last >= per.ytdFrom ? { from: ymd(per.ytdFrom), to: ymd(per.last), national_total_usd: [...ytdBySlug.values()].reduce((a, b) => a + b, 0) } : null,
+      ...EXPORTS_SOURCE,
     };
   }
 
   private async exportsForSlug(slug: string) {
-    const rows = await this.prisma.provinceExport.findMany({
-      where: { slug },
-      orderBy: { valueAnnualUsd: 'desc' },
+    const per = await this.exportPeriods();
+    if (!per) return [];
+    const rows = await this.prisma.factProvinceExport.groupBy({
+      by: ['rubro'],
+      where: { provinceSlug: slug, date: { gte: per.from, lte: per.to } },
+      _sum: { usd: true },
     });
-    return rows.map((r) => ({ sector: r.sector, product: r.productName, value_annual_usd: r.valueAnnualUsd }));
+    return rows
+      .map((r) => ({ sector: r.rubro, product: r.rubro, value_annual_usd: r._sum.usd ?? 0, year: per.year }))
+      .sort((a, b) => b.value_annual_usd - a.value_annual_usd);
+  }
+
+  /** Serie mensual de exportaciones de una provincia, total y por rubro. */
+  async exportsMonthly(slug: string, from?: string) {
+    const registry = await this.buildRegistry();
+    if (!registry.has(slug.toLowerCase())) {
+      throw new NotFoundException({ code: 'NOT_FOUND', message: `Province not found: ${slug}` });
+    }
+    const rows = await this.prisma.factProvinceExport.findMany({
+      where: {
+        provinceSlug: slug.toLowerCase(),
+        ...(from ? { date: { gte: new Date(`${from.slice(0, 7)}-01T00:00:00Z`) } } : {}),
+      },
+      orderBy: { date: 'asc' },
+    });
+    const byMonth = new Map<string, { date: string; total_usd: number; by_sector: Record<string, number> }>();
+    for (const r of rows) {
+      const date = r.date.toISOString().slice(0, 7);
+      const m = byMonth.get(date) ?? { date, total_usd: 0, by_sector: {} };
+      m.total_usd += r.usd;
+      m.by_sector[r.rubro] = r.usd;
+      byMonth.set(date, m);
+    }
+    return [...byMonth.values()];
   }
 
   private miningBlock(projects: NormalizedProject[]) {

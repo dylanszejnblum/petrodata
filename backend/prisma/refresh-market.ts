@@ -15,6 +15,7 @@
  *   fact_wells_drilling ← «Pozos en perforación» (datos.energia.gob.ar), por mes y provincia
  *   se/medanito|medanito_mi|escalante|brent ← Informe de Regalías de CRUDO (Secretaría de Energía)
  *   eia_steo/<cuenca>_{oil,gas,rigs} ← EIA STEO (Permian, Eagle Ford, Bakken, Haynesville, Appalachia); pide EIA_API_KEY
+ *   fact_province_export ← INDEC OPEX mensual (comex.indec.gob.ar), provincia × rubro
  *   rigi_project ← planilla pública que alimenta argentina.gob.ar/economia/rigi
  *     + la página de cada resolución (número y fecha de publicación en el BO)
  *
@@ -26,6 +27,7 @@
 import { PrismaClient, Prisma } from '@prisma/client';
 import { parse } from 'csv-parse/sync';
 import { strFromU8, unzipSync } from 'fflate';
+import * as ExcelJS from 'exceljs';
 
 const prisma = new PrismaClient();
 const DRY_RUN = process.env.DRY_RUN === '1';
@@ -34,6 +36,10 @@ const SERIES_API = 'https://apis.datos.gob.ar/series/api/series/';
 const FUEL_CSV =
   'http://datos.energia.gob.ar/dataset/1c181390-5045-475e-94dc-410429be4b17/resource/80ac25de-a44a-4445-9215-090cf55cfda5/download/precios-en-surtidor-resolucin-3142016.csv';
 
+const ICA_CSV =
+  'https://infra.datos.gob.ar/catalog/sspm/dataset/74/distribution/74.3/download/intercambio-comercial-argentino-mensual.csv';
+const EXPORT_PRODUCTOS_CSV =
+  'https://infra.datos.gob.ar/catalog/sspm/dataset/75/distribution/75.3/download/exportaciones-mensual.csv';
 const PERFORACION_CSV =
   'http://datos.energia.gob.ar/dataset/7ea2ac77-d7a0-4129-9fbf-6f1a25d94e21/resource/af6838ef-f675-4409-ac6a-e7c391a5dbab/download/pozos-en-perforacin.csv';
 const REGALIAS_CRUDO_ZIP =
@@ -137,21 +143,33 @@ async function macro() {
 }
 
 async function energyTrade() {
-  // Las dos series en un mismo pedido: 74.3_IECE sola devuelve un CSV vacío
-  // (reproducible en oct-2026), junto con IICL viene completa.
-  const desde = `${new Date().getUTCFullYear() - 2}-01-01`;
-  const csv = await (
-    await get(`${SERIES_API}?ids=74.3_IECE_0_M_35,74.3_IICL_0_M_42&start_date=${desde}&limit=1000&format=csv`)
-  ).text();
+  // El CSV de distribución del dataset 74.3 y no la API de series: desde oct-2026
+  // la API devuelve vacío para 74.3_IECE / 74.3_IICL, solas o juntas, en CSV y JSON.
+  const rows = parse(await (await get(ICA_CSV)).text(), { columns: true, skip_empty_lines: true }) as Record<string, string>[];
+  const desde = `${new Date().getUTCFullYear() - 2}-01`;
   const exp = new Map<string, number>();
   const imp = new Map<string, number>();
-  for (const [d, e, i] of parse(csv, { from_line: 2, skip_empty_lines: true }) as string[][]) {
+  for (const r of rows) {
+    const [d, e, i] = [r.indice_tiempo, r.ica_exportacion_combustible_energia, r.ica_importaciones_combustibles_lubricantes];
+    if (!d || d.slice(0, 7) < desde) continue;
     // Sólo meses con los dos lados: un superávit con un lado viejo y otro nuevo no vale.
     if (e !== '' && i !== '') {
       exp.set(d.slice(0, 7), Number(e));
       imp.set(d.slice(0, 7), Number(i));
     }
   }
+  // El reparto petróleo crudo / gas de las exportaciones de energía (INDEC, MUSD).
+  const prod = parse(await (await get(EXPORT_PRODUCTOS_CSV)).text(), { columns: true, skip_empty_lines: true }) as Record<string, string>[];
+  for (const [col, series, name] of [
+    ['ica_petroleo_crudo', 'expo_petroleo_crudo', 'Exportaciones de petróleo crudo'],
+    ['gas_petroleo_otros_hidrocarburos', 'expo_gas', 'Exportaciones de gas de petróleo y otros hidrocarburos gaseosos'],
+  ]) {
+    const points = prod
+      .filter((r) => r.indice_tiempo?.slice(0, 7) >= desde && r[col] !== '' && Number.isFinite(Number(r[col])))
+      .map((r) => ({ date: day(r.indice_tiempo), value: Number(r[col]) }));
+    await replacePoints('indec', series, name, 'MUSD', points);
+  }
+
   const months = [...exp.keys()].sort();
   const asOf = months.at(-1) ?? null;
   console.log(`  fact_energy_trade mensual: ${months.length} meses, último ${asOf ?? '—'}`);
@@ -315,6 +333,63 @@ async function cuencasEeuu() {
   }
 }
 
+/* EXPORTACIONES POR PROVINCIA, las registradas. INDEC publica la serie mensual
+   de origen provincial (OPEX) dentro del ZIP de exportaciones del año
+   (/files/zips/exports_{AAAA}_M.zip, mismo nombre todo el año); el xlsx trae
+   2002 → último mes, una fila por mes × provincia × gran rubro, FOB en dólares.
+   En enero el ZIP del año nuevo todavía no existe: se cae al del año anterior.
+   La hoja cambia de nombre cada mes: se lee la primera. Foto completa: INDEC
+   revisa los meses provisorios. */
+async function exportacionesProvincia() {
+  const anio = new Date().getUTCFullYear();
+  let r = await fetch(`https://comex.indec.gob.ar/files/zips/exports_${anio}_M.zip`);
+  if (r.status === 404) r = await fetch(`https://comex.indec.gob.ar/files/zips/exports_${anio - 1}_M.zip`);
+  if (!r.ok) throw new Error(`comex.indec.gob.ar HTTP ${r.status}`);
+  const zip = unzipSync(new Uint8Array(await r.arrayBuffer()));
+  const name = Object.keys(zip).find((n) => /opex_mensual/i.test(n));
+  if (!name) throw new Error('el ZIP de INDEC no trae la serie OPEX mensual');
+  const wb = new ExcelJS.Workbook();
+  await wb.xlsx.load(Buffer.from(zip[name]) as unknown as ExcelJS.Buffer);
+  const ws = wb.worksheets[0];
+
+  const slug = (s: string) =>
+    s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+  let col: Record<string, number> | null = null;
+  const data: Prisma.FactProvinceExportCreateManyInput[] = [];
+  ws.eachRow((row) => {
+    const v = Array.from(row.values as ExcelJS.CellValue[], (x) => (x == null ? '' : String(x).trim()));
+    if (!col) {
+      if (v.includes('Nombre Prov')) col = Object.fromEntries(v.map((t, i) => [t, i]));
+      return;
+    }
+    const c = col;
+    const usd = Number(v[c['FOB_dólar']]);
+    if (!/^\d{4}$/.test(v[c['Año']]) || !Number.isFinite(usd)) return;
+    data.push({
+      date: day(`${v[c['Año']]}-${v[c['Mes']].padStart(2, '0')}-01`),
+      provinceSlug: slug(v[c['Nombre Prov']]),
+      provinceName: v[c['Nombre Prov']],
+      rubro: v[c['Rubro']].replace(/\s*\([^)]*\)\s*$/, ''), // "Combustibles y energía (CyE)" → sin sigla
+      usd,
+      kg: Number(v[c['Peso neto']]) || null,
+    });
+  });
+  if (data.length < 10_000) throw new Error(`la serie trajo ${data.length} filas; no reemplazo`);
+  const ultimo = data.reduce((a, b) => (a.date > b.date ? a : b)).date as Date;
+  const nqn = data
+    .filter((d) => (d.date as Date).getTime() === ultimo.getTime() && d.provinceSlug === 'neuquen')
+    .reduce((a, d) => a + d.usd, 0);
+  console.log(`  ${data.length} filas, último ${monthKey(ultimo)} (Neuquén: US$ ${(nqn / 1e6).toFixed(1)} M)`);
+  if (DRY_RUN) return;
+  await prisma.$transaction(
+    async (tx) => {
+      await tx.factProvinceExport.deleteMany({});
+      for (let i = 0; i < data.length; i += 5000) await tx.factProvinceExport.createMany({ data: data.slice(i, i + 5000) });
+    },
+    { timeout: 5 * 60_000 },
+  );
+}
+
 /* Pozos en perforación: el CSV trae una fila por empresa × área × yacimiento ×
    concepto (exploración, explotación…) y pesa ~70 MB; acá se suma por mes y
    provincia. La foto entera se reemplaza: la Secretaría corrige meses viejos. */
@@ -412,6 +487,7 @@ async function main() {
     ['perforacion', 'pozos en perforación (datos.energia.gob.ar)', perforacion],
     ['crudo', 'precio del crudo local: Medanito y Escalante (SE, regalías)', crudoLocal],
     ['cuencas', 'cuencas de EE.UU.: Permian y otras (EIA STEO)', cuencasEeuu],
+    ['exportaciones', 'exportaciones por provincia (INDEC OPEX)', exportacionesProvincia],
   ] as const;
   const unknown = only.filter((k) => !blocks.some(([key]) => key === k));
   if (unknown.length) throw new Error(`bloques desconocidos: ${unknown.join(', ')}`);

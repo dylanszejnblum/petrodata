@@ -441,18 +441,21 @@ model ExecutiveVote {
   @@map("executive_vote")
 }
 
-model ProvinceExport {
-  id             Int      @id @default(autoincrement())
-  slug           String
-  provinceName   String   @map("province_name")
-  sector         String // "petroleo" | "gas" | "mineria" | "agro"
-  productName    String   @map("product_name")
-  valueAnnualUsd Float    @map("value_annual_usd")
-  ingestedAt     DateTime @default(now()) @map("ingested_at")
+/// Exportaciones por provincia de origen, mensual (INDEC, «Serie OPEX mensual»):
+/// FOB en dólares por provincia × gran rubro. Incluye «Extranjero y Plataforma
+/// Continental» e «Indeterminado», que suman al total nacional pero no son
+/// provincias. 2024 en adelante es provisorio para INDEC.
+model FactProvinceExport {
+  date         DateTime @db.Date
+  provinceSlug String   @map("province_slug")
+  provinceName String   @map("province_name")
+  rubro        String // Combustibles y energía | Productos primarios | Manufacturas de origen agropecuario | … industrial
+  usd          Float
+  kg           Float?
 
-  @@unique([slug, sector, productName])
-  @@index([slug])
-  @@map("province_export")
+  @@id([date, provinceSlug, rubro])
+  @@index([provinceSlug, date])
+  @@map("fact_province_export")
 }
 
 model NewsDocument {

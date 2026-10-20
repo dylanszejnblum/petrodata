@@ -87,10 +87,11 @@ export class InversionesService {
         orderBy: { _sum: { boe: 'desc' } },
         take: 8,
       }),
-      this.prisma.provinceExport.groupBy({
-        by: ['sector'],
-        where: { sector: { in: ['petróleo', 'gas'] } },
-        _sum: { valueAnnualUsd: true },
+      // crudo vs gas, últimos 12 meses de INDEC (MUSD)
+      this.prisma.factPrice.findMany({
+        where: { source: 'indec', series: { in: ['expo_petroleo_crudo', 'expo_gas'] } },
+        orderBy: { date: 'desc' },
+        take: 24,
       }),
       this.breakeven(lang),
       this.actividad(asOf, lang),
@@ -112,7 +113,10 @@ export class InversionesService {
 
     // INDEC energy trade (real, computed) replaces the province-derived placeholder
     // where available; the province sum is the fallback when no INDEC rows exist.
-    const provinceEnergyUsd = exportRows.reduce((a, r) => a + (r._sum.valueAnnualUsd ?? 0), 0);
+    const SECTOR = { expo_petroleo_crudo: 'petróleo', expo_gas: 'gas' } as Record<string, string>;
+    const exportBySector = new Map<string, number>();
+    for (const r of exportRows) exportBySector.set(SECTOR[r.series], (exportBySector.get(SECTOR[r.series]) ?? 0) + r.value * 1e6);
+    const provinceEnergyUsd = [...exportBySector.values()].reduce((a, b) => a + b, 0);
     const latestTrade = tradeAnnual.length ? tradeAnnual[tradeAnnual.length - 1] : null;
     const priorTrade = tradeAnnual.length > 1 ? tradeAnnual[tradeAnnual.length - 2] : null;
     const tradeSource = latestTrade
@@ -205,8 +209,8 @@ export class InversionesService {
       exportaciones: {
         energiaUsd: exportEnergyUsd, // INDEC where available, province fallback
         source: energySource,
-        porSector: exportRows.map((r) => ({ sector: r.sector, usd: r._sum.valueAnnualUsd ?? 0 })),
-        porSectorSource: source(src.EXPORT), // the petróleo/gas split is province-reported
+        porSector: [...exportBySector].map(([sector, usd]) => ({ sector, usd })), // last 12 months
+        porSectorSource: source(src.EXPORT),
       },
       ...(breakeven ? { breakeven } : {}), // omitted when no Brent rows — never fabricated
       actividad,
