@@ -1900,6 +1900,55 @@
         ]
       }
     },
+    "/api/v1/prices/crude-local": {
+      "get": {
+        "description": "Monthly USD/bbl since 2006: Medanito (Neuquén basin, incl. Vaca Muerta) total and domestic-market price, Escalante (Golfo San Jorge) and Brent — all from the Secretaría de Energía royalties report, so the gap is computed on one basis. Prices are volume-weighted royalty declarations, not posted prices. `provisional` = the last two months, revised next release. Updated monthly (~1.5 months lag).",
+        "operationId": "PricesController_crudeLocal_v1",
+        "parameters": [
+          {
+            "name": "from",
+            "required": false,
+            "in": "query",
+            "description": "First month (YYYY-MM).",
+            "schema": {
+              "example": "2024-01",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/CrudeLocalPointDto"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/MetaDto"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "summary": "Local crude (Medanito, Escalante) vs Brent",
+        "tags": [
+          "prices"
+        ]
+      }
+    },
     "/api/v1/prices/fuel": {
       "get": {
         "description": "Filterable list of station-level fuel prices (current snapshot). Use `provincia`, `producto`, `bandera`, `from`, `to`.",
@@ -2256,6 +2305,48 @@
           }
         },
         "summary": "Wells being drilled per month (official)",
+        "tags": [
+          "macro"
+        ]
+      }
+    },
+    "/api/v1/world/basins": {
+      "get": {
+        "description": "Monthly, same units: crude kb/d, gas Bcf/d and MMm3/d, rigs. Basins: permian, eagle_ford, bakken, haynesville, appalachia (EIA STEO) and vaca_muerta (SE production, `preliminary` on the month still being filed). `argentina_rigs` is the whole country (Baker Hughes): there is no VM-only rig count.",
+        "operationId": "MacroController_basins_v1",
+        "parameters": [
+          {
+            "name": "from",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": "2024-01",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Vaca Muerta vs Permian and other US shale basins",
+        "tags": [
+          "macro"
+        ]
+      }
+    },
+    "/api/v1/world/shale-resources": {
+      "get": {
+        "description": "Unproved technically recoverable shale gas (Tcf) and tight oil (billion bbl): top 10 countries each, world total and Argentina by formation. Static: EIA has not updated this assessment since Sept 2015 — cite it with its date.",
+        "operationId": "MacroController_shaleResources_v1",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Shale resources by country (EIA 2015)",
         "tags": [
           "macro"
         ]
@@ -2668,7 +2759,7 @@
     },
     "/api/v2/provinces/export-summary": {
       "get": {
-        "description": "ESTIMATE, not recorded exports (see `meta.method` / `estimate`): provinces ranked by an annual value derived from production with fixed price and export-share assumptions. Do not publish as export data.",
+        "description": "Recorded exports by province of origin (INDEC OPEX), FOB US$, for the last complete calendar year (`period`), by gran rubro (Combustibles y energía, Productos primarios, MOA, MOI), plus the current year to date (`ytd_export_usd`, `ytd`).",
         "operationId": "ProvincesController_exportSummary_v2",
         "parameters": [],
         "responses": {
@@ -2834,9 +2925,51 @@
         ]
       }
     },
+    "/api/v2/provinces/{slug}/exports/monthly": {
+      "get": {
+        "description": "Monthly recorded exports (INDEC OPEX, FOB US$) since 2002: total and by gran rubro. Use `from` to trim. For Neuquén, «Combustibles y energía» is ~97% of the total.",
+        "operationId": "ProvincesController_exportsMonthly_v2",
+        "parameters": [
+          {
+            "name": "slug",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "example": "neuquen",
+              "type": "string"
+            }
+          },
+          {
+            "name": "from",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": "2024-01",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Province slug not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Province exports, monthly",
+        "tags": [
+          "provinces"
+        ]
+      }
+    },
     "/api/v2/provinces/{slug}/exports": {
       "get": {
-        "description": "ESTIMATE, not recorded exports (see `meta.method`): annual value by sector derived from production with fixed price and export-share assumptions. Do not publish as export data.",
+        "description": "Recorded exports (INDEC OPEX) for the last complete calendar year, by gran rubro. `year` says which.",
         "operationId": "ProvincesController_exports_v2",
         "parameters": [
           {
@@ -3563,6 +3696,33 @@
         "summary": "Votar a un directivo",
         "tags": [
           "directivos"
+        ]
+      }
+    },
+    "/api/v2/transporte/evacuacion": {
+      "get": {
+        "description": "Oil pipelines leaving the basin (Oldelval to Puerto Rosales, Trasandino to Chile, YPF to Luján de Cuyo): declared design / max capacity (SE Anexo 2A, last year filed) vs monthly delivered volume (SE Planilla 20) as m3/d and bbl/d, with utilization. Gas: Centro Oeste (TGN) and Neuba I+II (TGS) received volume (ENARGAS) vs approximate capacity. Plus Vaca Muerta production for scale and the expansion projects (VMOS, Duplicar Norte, GPM expansion, San Matías, FLNG) with status and source.",
+        "operationId": "TransporteController_evacuacion_v2",
+        "parameters": [
+          {
+            "name": "months",
+            "required": false,
+            "in": "query",
+            "description": "Months of history per pipeline (default 24).",
+            "schema": {
+              "example": 24,
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Neuquén basin evacuation: capacity vs flow",
+        "tags": [
+          "transporte"
         ]
       }
     }
@@ -6279,6 +6439,63 @@
           "latest_date"
         ]
       },
+      "CrudeLocalPointDto": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "example": "2026-08"
+          },
+          "medanito": {
+            "type": "object",
+            "example": 79.06,
+            "nullable": true,
+            "description": "Medanito, total (domestic + export), USD/bbl."
+          },
+          "medanito_domestic": {
+            "type": "object",
+            "example": 79.84,
+            "nullable": true,
+            "description": "Medanito, domestic market (MI + TSP), USD/bbl."
+          },
+          "escalante": {
+            "type": "object",
+            "example": 79.99,
+            "nullable": true
+          },
+          "brent": {
+            "type": "object",
+            "example": 87.75,
+            "nullable": true,
+            "description": "Brent as reported in the same SE file."
+          },
+          "medanito_vs_brent_usd": {
+            "type": "object",
+            "example": -8.69,
+            "nullable": true
+          },
+          "medanito_vs_brent_pct": {
+            "type": "object",
+            "example": -9.9,
+            "nullable": true
+          },
+          "provisional": {
+            "type": "boolean",
+            "example": false,
+            "description": "Last two months: provisional upstream."
+          }
+        },
+        "required": [
+          "date",
+          "medanito",
+          "medanito_domestic",
+          "escalante",
+          "brent",
+          "medanito_vs_brent_usd",
+          "medanito_vs_brent_pct",
+          "provisional"
+        ]
+      },
       "FuelPriceRowDto": {
         "type": "object",
         "properties": {
@@ -7139,7 +7356,13 @@
           },
           "total_export_usd": {
             "type": "number",
-            "example": 822502694
+            "example": 6300600000,
+            "description": "FOB US$, last complete calendar year."
+          },
+          "ytd_export_usd": {
+            "type": "number",
+            "example": 6031300000,
+            "description": "FOB US$, current year to date."
           },
           "by_sector": {
             "type": "object",
@@ -7156,6 +7379,7 @@
           "slug",
           "name",
           "total_export_usd",
+          "ytd_export_usd",
           "by_sector"
         ]
       },
@@ -7182,22 +7406,36 @@
               "gas": 3200000000
             }
           },
-          "estimate": {
+          "period": {
             "type": "object",
-            "additionalProperties": true,
-            "description": "How these figures were built. They are an ESTIMATE over production, not recorded exports (`publishable: false`).",
             "example": {
-              "kind": "estimate",
-              "computed_at": "2026-05-31",
-              "publishable": false
-            }
+              "year": 2025,
+              "from": "2025-01",
+              "to": "2025-12"
+            },
+            "description": "Calendar year the totals cover."
+          },
+          "ytd": {
+            "type": "object",
+            "example": {
+              "from": "2026-01",
+              "to": "2026-08",
+              "national_total_usd": 67247800000
+            },
+            "nullable": true
+          },
+          "source": {
+            "type": "string",
+            "example": "INDEC — Origen provincial de las exportaciones (OPEX), serie mensual"
           }
         },
         "required": [
           "provinces",
           "national_total_usd",
           "national_by_sector",
-          "estimate"
+          "period",
+          "ytd",
+          "source"
         ]
       },
       "ProvinceTopOperatorDto": {
@@ -7392,13 +7630,19 @@
           },
           "value_annual_usd": {
             "type": "number",
-            "example": 781080206
+            "example": 6148700000
+          },
+          "year": {
+            "type": "number",
+            "example": 2025,
+            "description": "Calendar year."
           }
         },
         "required": [
           "sector",
           "product",
-          "value_annual_usd"
+          "value_annual_usd",
+          "year"
         ]
       },
       "ProvinceDetailDto": {

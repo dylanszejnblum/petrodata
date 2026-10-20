@@ -2,13 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { Lang, numLocale, sources, strings } from './inversiones.i18n';
 import { fetchLiveBrent } from './brent-live';
+import { OBRAS } from '../transporte/obras';
 
 /**
  * /inversiones — computed, not curated. Every figure is derived from data we
  * already ingest through the pipeline (Secretaría de Energía well production,
  * province exports), with the as-of date read from the data itself. Nothing is
  * taken at face value; if a number can't be computed from a real source, it is
- * not shown (EN MARCHA / PROYECTADO tiers are pending real citations).
+ * not shown. EN MARCHA = approved RIGI investment + evacuation works under
+ * construction (each with its source); PROYECTADO = the CEPH 2026 scenario, cited.
  */
 
 // Source attributions (PROD/EXPORT/BRENT/GDP/WORLD/SHALE/RIGI/MACRO/BREAKEVEN)
@@ -16,10 +18,14 @@ import { fetchLiveBrent } from './brent-live';
 // org names + URLs are kept. Curated, cited references (shale assessment, the
 // breakeven reference) are flagged there too.
 
-// "Si se realiza como está proyectado" — industry/government 2030 targets. These
-// are PROYECTADO, never presented as measured. Drives the rank-jump narrative.
-const OIL_TARGET_TBPD = 1500; // ~1.5 Mbbl/d — commonly-cited VM 2030 oil target
-const GAS_TARGET_BCF = 2300; //  ~180 MMm³/d — 2030 gas target, annualised
+// "Si se realiza como está proyectado" — PROYECTADO, never presented as measured.
+// Drives the rank-jump narrative. Source: CEPH (cámara de las petroleras) with
+// Economía y Energía, scenario report of April 2026, MODERATE case, Argentina
+// total (not VM-only): crude 1.0 Mbbl/d and gas 213 MMm3/d in 2030 (from 810 kbbl/d
+// and 142 MMm3/d in 2025). The old 1.5 Mbbl/d / 180 MMm3/d had no solid source:
+// 1.5 was a conditional remark at a 2024 hearing, 180 one consultancy's plateau.
+const OIL_TARGET_TBPD = 1000; // thousand bbl/d, same unit as the EIA world table
+const GAS_TARGET_BCF = 2745; // 213 MMm3/d × 365 / 28.317 = Bcf/year, same unit as the EIA table
 const TARGET_YEAR = 2030;
 // Countries below this base are excluded from "fastest growing" to stop tiny
 // producers with explosive % growth from drowning the real story.
@@ -184,6 +190,7 @@ export class InversionesService {
       note: s.note,
       headline,
       kpis,
+      enMarcha: await this.enMarcha(lang),
       serie: {
         id: 'produccion_vm',
         title: s.serieTitle,
@@ -284,6 +291,49 @@ export class InversionesService {
 
   private activeWells(m: Date): Promise<number> {
     return this.prisma.factProductionMonthly.count({ where: { dateMonth: m, vmCombined: true, boe: { gt: 0 } } });
+  }
+
+  /* EN MARCHA: lo que ya está comprometido y tiene papel atrás —inversión
+     aprobada en el RIGI (resolución en el BO) y obras de evacuación en
+     construcción con su fuente—. No incluye lo anunciado sin decisión: eso es
+     PROYECTADO y va aparte. */
+  private async enMarcha(lang: Lang) {
+    const en = lang === 'en';
+    const rigi = await this.prisma.rigiProject.aggregate({
+      where: { sector: 'Petróleo y gas' },
+      _sum: { investmentMusd: true, jobs: true },
+      _count: { _all: true },
+    });
+    const enObra = OBRAS.filter((o) => o.status === 'under_construction' || o.status === 'expansion_approved');
+    const suma = (unit: string, type?: string) =>
+      enObra.filter((o) => o.capacity_unit === unit && (!type || o.type === type)).reduce((a, o) => a + o.capacity, 0);
+    return {
+      tier: 'en_marcha' as const,
+      rigi: {
+        label: en ? 'Approved RIGI oil & gas investment' : 'Inversión aprobada en el RIGI, petróleo y gas',
+        projects: rigi._count._all,
+        investmentMusd: rigi._sum.investmentMusd ?? 0,
+        jobs: rigi._sum.jobs ?? 0,
+        source: sources(lang).RIGI,
+      },
+      evacuacion: {
+        label: en ? 'Evacuation capacity under construction' : 'Capacidad de evacuación en obra',
+        oilBblD: suma('bbl/d', 'oleoducto'),
+        gasMm3d: suma('MMm3/d', 'gasoducto'),
+        lngMtpa: suma('MTPA', 'gnl'),
+        note: en
+          ? 'Sum of projects under construction or approved; some overlap (Duplicar Norte feeds the Allen hub, Duplicar X is interruptible).'
+          : 'Suma de obras en construcción o aprobadas; hay superposición (Duplicar Norte alimenta el nodo de Allen, Duplicar X es interrumpible).',
+        projects: enObra.map((o) => ({
+          name: o.name,
+          capacity: o.capacity,
+          unit: o.capacity_unit,
+          expected: o.expected,
+          sourceKind: o.source_kind,
+          sourceUrl: o.source_url,
+        })),
+      },
+    };
   }
 
   /** The approved-RIGI registry as a list: every project with amount, companies,
@@ -517,6 +567,7 @@ export class InversionesService {
             rank: projectedRank,
             year: TARGET_YEAR,
             tier: 'proyectado' as const,
+            source: src.PROYECCION,
           },
           top,
           history,
@@ -773,6 +824,7 @@ export class InversionesService {
               priceBasis: s.impacto.priceBasis(brentWindow.length),
               todayBblD,
               targetBblD,
+              targetSource: src.PROYECCION,
               gdpUsd,
               gdpYear,
             },
