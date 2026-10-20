@@ -441,6 +441,33 @@ model ExecutiveVote {
   @@map("executive_vote")
 }
 
+/// Volumen mensual por ducto de salida de la cuenca Neuquina. Petróleo: m3
+/// entregados (SE, Planilla 20). Gas: miles de m3 de 9300 kcal recibidos (ENARGAS,
+/// GRT). `pipeline` es una clave curada (ver refresh-market.ts ductos), no el
+/// idducto de la SE: un oleoducto puede ser dos ductos (Oldelval viejo + Duplicar).
+model FactPipelineFlow {
+  date     DateTime @db.Date
+  pipeline String
+  product  String // petroleo | gas
+  volume   Float
+  unit     String // m3 | miles m3
+
+  @@id([date, pipeline])
+  @@map("fact_pipeline_flow")
+}
+
+/// Capacidad anual declarada de los oleoductos de salida (SE, Anexo 2A), m3/d.
+model FactPipelineCapacity {
+  year      Int
+  pipeline  String
+  maxM3d    Float? @map("max_m3d") // capacidad operativa máxima
+  designM3d Float? @map("design_m3d")
+  usedM3d   Float? @map("used_m3d") // capacidad empleada (promedio del año)
+
+  @@id([year, pipeline])
+  @@map("fact_pipeline_capacity")
+}
+
 /// Exportaciones por provincia de origen, mensual (INDEC, «Serie OPEX mensual»):
 /// FOB en dólares por provincia × gran rubro. Incluye «Extranjero y Plataforma
 /// Continental» e «Indeterminado», que suman al total nacional pero no son

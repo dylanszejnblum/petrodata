@@ -16,6 +16,7 @@
  *   se/medanito|medanito_mi|escalante|brent ← Informe de Regalías de CRUDO (Secretaría de Energía)
  *   eia_steo/<cuenca>_{oil,gas,rigs} ← EIA STEO (Permian, Eagle Ford, Bakken, Haynesville, Appalachia); pide EIA_API_KEY
  *   fact_province_export ← INDEC OPEX mensual (comex.indec.gob.ar), provincia × rubro
+ *   fact_pipeline_flow / fact_pipeline_capacity ← SE (Planilla 20, Anexo 2A) y ENARGAS (GRT)
  *   rigi_project ← planilla pública que alimenta argentina.gob.ar/economia/rigi
  *     + la página de cada resolución (número y fecha de publicación en el BO)
  *
@@ -40,6 +41,10 @@ const ICA_CSV =
   'https://infra.datos.gob.ar/catalog/sspm/dataset/74/distribution/74.3/download/intercambio-comercial-argentino-mensual.csv';
 const EXPORT_PRODUCTOS_CSV =
   'https://infra.datos.gob.ar/catalog/sspm/dataset/75/distribution/75.3/download/exportaciones-mensual.csv';
+const SE_TRANSPORTE = 'http://datos.energia.gob.ar/dataset/25a691da-fc1d-4ae3-bee5-ec5c5f9aa08b/resource';
+const PLANILLA20_CSV = `${SE_TRANSPORTE}/f1d13dac-fca5-4464-940d-ce86c16cbff3/download/volumnenes-de-transporte-de-hidrocarburos-planilla-20.csv`;
+const ANEXO2A_CSV = `${SE_TRANSPORTE}/2a93eec0-32a1-48f9-bcf7-614f203b1918/download/anexo-2a-capacidad-de-transporte-de-hidrocarburos-a-travs-de-ductos.csv`;
+const ENARGAS_GRT = 'https://www.enargas.gob.ar/secciones/transporte-y-distribucion/datos-estadisticos/GRT/GRT.xlsx';
 const PERFORACION_CSV =
   'http://datos.energia.gob.ar/dataset/7ea2ac77-d7a0-4129-9fbf-6f1a25d94e21/resource/af6838ef-f675-4409-ac6a-e7c391a5dbab/download/pozos-en-perforacin.csv';
 const REGALIAS_CRUDO_ZIP =
@@ -390,6 +395,100 @@ async function exportacionesProvincia() {
   );
 }
 
+/* DUCTOS DE SALIDA DE LA CUENCA NEUQUINA. Las planillas de la SE vienen por
+   tramo y por cargador: sumar todo cuenta dos veces el mismo barril (un tramo
+   aguas arriba y otro aguas abajo). Por eso se toman sólo los ductos que SACAN
+   petróleo de la cuenca, por su idducto, y en la Planilla 20 cada fila ya es
+   origen → destino final, así que sumar por ducto y mes da lo entregado.
+   Gas: ENARGAS publica el gas recibido por gasoducto (hoja «Gasoducto»); de la
+   cuenca salen Centro Oeste (TGN) y Neuba I+II (TGS), que según todo indica ya
+   incluye lo que entra por el Perito Moreno. */
+const OLEODUCTOS_SALIDA: Record<string, string> = {
+  '216': 'oldelval_allen_rosales', // Allen – Puerto Rosales (línea original)
+  '511': 'oldelval_allen_rosales', // Allen – Puerto Rosales (Duplicar)
+  '379': 'otasa', // Puesto Hernández – Buta Mallín (Chile)
+  '46': 'ypf_ph_lujan', // Puesto Hernández – Luján de Cuyo (refinería)
+};
+const GASODUCTOS_SALIDA: Record<string, string> = { 'Centro Oeste': 'tgn_centro_oeste', 'Neuba I+II': 'tgs_neuba' };
+
+async function ductos() {
+  const csv = async (url: string) =>
+    parse(await (await get(url)).text(), { columns: true, bom: true, skip_empty_lines: true }) as Record<string, string>[];
+
+  const flujo = new Map<string, { date: Date; pipeline: string; product: string; volume: number; unit: string }>();
+  for (const r of await csv(PLANILLA20_CSV)) {
+    const pipeline = OLEODUCTOS_SALIDA[r.idducto];
+    if (!pipeline || !r.anio || !r.mes) continue;
+    const date = day(`${r.anio}-${r.mes.padStart(2, '0')}-01`);
+    const k = `${monthKey(date)}|${pipeline}`;
+    const f = flujo.get(k) ?? { date, pipeline, product: 'petroleo', volume: 0, unit: 'm3' };
+    f.volume += Number(r.volumen) || 0;
+    flujo.set(k, f);
+  }
+
+  // capacidad: una fila por tramo × cargador con los mismos números → máximo por (ducto, año), suma por clave
+  const porDucto = new Map<string, { year: number; pipeline: string; max: number; design: number; used: number }>();
+  for (const r of await csv(ANEXO2A_CSV)) {
+    const pipeline = OLEODUCTOS_SALIDA[r.idducto];
+    if (!pipeline || !r.anio) continue;
+    const k = `${r.anio}|${r.idducto}`;
+    const c = porDucto.get(k) ?? { year: Number(r.anio), pipeline, max: 0, design: 0, used: 0 };
+    c.max = Math.max(c.max, Number(r.capacidad_operativa_maxima) || 0);
+    c.design = Math.max(c.design, Number(r.capacidad_disenio) || 0);
+    c.used = Math.max(c.used, Number(r.capacidad_empleada) || 0);
+    porDucto.set(k, c);
+  }
+  const capacidad = new Map<string, { year: number; pipeline: string; maxM3d: number; designM3d: number; usedM3d: number }>();
+  for (const c of porDucto.values()) {
+    const k = `${c.year}|${c.pipeline}`;
+    const t = capacidad.get(k) ?? { year: c.year, pipeline: c.pipeline, maxM3d: 0, designM3d: 0, usedM3d: 0 };
+    t.maxM3d += c.max;
+    t.designM3d += c.design;
+    t.usedM3d += c.used;
+    capacidad.set(k, t);
+  }
+
+  const wb = new ExcelJS.Workbook();
+  await wb.xlsx.load(Buffer.from(await (await get(ENARGAS_GRT)).arrayBuffer()) as unknown as ExcelJS.Buffer);
+  const ws = wb.getWorksheet('Gasoducto');
+  if (!ws) throw new Error('GRT.xlsx sin hoja «Gasoducto»');
+  let cols: [number, string][] | null = null;
+  ws.eachRow((row) => {
+    const v = row.values as ExcelJS.CellValue[];
+    if (!cols) {
+      const found = v.map((x, i) => [i, GASODUCTOS_SALIDA[String(x ?? '').trim()]] as [number, string]).filter(([, p]) => p);
+      if (found.length === Object.keys(GASODUCTOS_SALIDA).length) cols = found;
+      return;
+    }
+    const date = v[1] instanceof Date ? v[1] : null;
+    if (!date) return;
+    for (const [i, pipeline] of cols) {
+      const volume = Number(v[i]);
+      if (!Number.isFinite(volume)) continue;
+      const d = day(date.toISOString());
+      flujo.set(`${monthKey(d)}|${pipeline}`, { date: d, pipeline, product: 'gas', volume, unit: 'miles m3' });
+    }
+  });
+  if (!cols) throw new Error('GRT.xlsx: no encontré las columnas Centro Oeste / Neuba I+II');
+
+  const flows = [...flujo.values()];
+  const caps = [...capacidad.values()];
+  for (const p of [...new Set(flows.map((f) => f.pipeline))]) {
+    const last = flows.filter((f) => f.pipeline === p).reduce((a, b) => (a.date > b.date ? a : b));
+    const perDay = last.volume / new Date(Date.UTC(last.date.getUTCFullYear(), last.date.getUTCMonth() + 1, 0)).getUTCDate();
+    console.log(`  ${p}: último ${monthKey(last.date)} = ${Math.round(perDay).toLocaleString('es-AR')} ${last.unit}/d`);
+  }
+  console.log(`  capacidad: ${caps.map((c) => `${c.pipeline} ${c.year} máx ${c.maxM3d} / diseño ${c.designM3d} m3/d`).filter((s) => / 202[4-6] /.test(s)).join(' · ')}`);
+  if (flows.length < 100 || caps.length < 3) throw new Error(`pocos datos (${flows.length} flujos, ${caps.length} capacidades); no reemplazo`);
+  if (DRY_RUN) return;
+  await prisma.$transaction([
+    prisma.factPipelineFlow.deleteMany({}),
+    prisma.factPipelineFlow.createMany({ data: flows }),
+    prisma.factPipelineCapacity.deleteMany({}),
+    prisma.factPipelineCapacity.createMany({ data: caps }),
+  ]);
+}
+
 /* Pozos en perforación: el CSV trae una fila por empresa × área × yacimiento ×
    concepto (exploración, explotación…) y pesa ~70 MB; acá se suma por mes y
    provincia. La foto entera se reemplaza: la Secretaría corrige meses viejos. */
@@ -475,7 +574,7 @@ async function main() {
   const t0 = Date.now();
   // Cada bloque es independiente: si una fuente se cae, las demás se cargan igual.
   // Sin argumentos corren todos; con argumentos, sólo esos (`refresh-market.ts combustibles`).
-  // datos.energia.gob.ar no responde desde el VPS, por eso combustibles y perforacion van aparte.
+  // datos.energia.gob.ar no responde desde el VPS, por eso combustibles, perforacion y ductos van aparte.
   const only = process.argv.slice(2);
   const blocks = [
     ['precios', 'precios energía (FRED/EIA)', energyPrices],
@@ -488,6 +587,7 @@ async function main() {
     ['crudo', 'precio del crudo local: Medanito y Escalante (SE, regalías)', crudoLocal],
     ['cuencas', 'cuencas de EE.UU.: Permian y otras (EIA STEO)', cuencasEeuu],
     ['exportaciones', 'exportaciones por provincia (INDEC OPEX)', exportacionesProvincia],
+    ['ductos', 'ductos de salida de la cuenca Neuquina (SE + ENARGAS)', ductos],
   ] as const;
   const unknown = only.filter((k) => !blocks.some(([key]) => key === k));
   if (unknown.length) throw new Error(`bloques desconocidos: ${unknown.join(', ')}`);

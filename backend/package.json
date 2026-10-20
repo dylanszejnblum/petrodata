@@ -31,7 +31,7 @@
     "db:load:rigs": "ts-node --transpile-only prisma/load-rig-count.ts",
     "db:refresh:rigi": "ts-node --transpile-only prisma/refresh-market.ts rigi",
     "db:refresh:production": "ts-node --transpile-only prisma/refresh-production.ts",
-    "db:refresh:energia": "ts-node --transpile-only prisma/refresh-production.ts && ts-node --transpile-only prisma/seed-gas-pist.ts && ts-node --transpile-only prisma/refresh-market.ts combustibles perforacion",
+    "db:refresh:energia": "ts-node --transpile-only prisma/refresh-production.ts && ts-node --transpile-only prisma/seed-gas-pist.ts && ts-node --transpile-only prisma/refresh-market.ts combustibles perforacion ductos",
     "db:refresh:market": "ts-node --transpile-only prisma/seed-gdp.ts; ts-node --transpile-only prisma/refresh-market.ts precios dolar macro intercambio rigi crudo cuencas exportaciones",
     "db:refresh": "npm run db:refresh:energia; npm run db:refresh:market",
     "openapi:export": "ts-node --transpile-only scripts/export-openapi.ts",
