@@ -14,6 +14,7 @@
  *   fact_fuel_price ← "Precios vigentes en surtidor" (Res. 314/2016), foto completa
  *   fact_wells_drilling ← «Pozos en perforación» (datos.energia.gob.ar), por mes y provincia
  *   se/medanito|medanito_mi|escalante|brent ← Informe de Regalías de CRUDO (Secretaría de Energía)
+ *   eia_steo/<cuenca>_{oil,gas,rigs} ← EIA STEO (Permian, Eagle Ford, Bakken, Haynesville, Appalachia); pide EIA_API_KEY
  *   rigi_project ← planilla pública que alimenta argentina.gob.ar/economia/rigi
  *     + la página de cada resolución (número y fecha de publicación en el BO)
  *
@@ -273,6 +274,47 @@ async function crudoLocal() {
   }
 }
 
+/* CUENCAS DE EE.UU., para comparar con Vaca Muerta. El Drilling Productivity
+   Report murió en 2024 (el xlsx sigue en línea, congelado en jun-2024); sus
+   regiones viven ahora en las tablas 4a/5a/10a del STEO. La API mezcla historia
+   y pronóstico sin marcarlos: se corta en el último mes histórico, que es el
+   anterior al mes de publicación (sale entre el 6 y el 10). Los últimos meses
+   «históricos» son estimaciones que la EIA revisa cada mes: se pisan.
+   Unidades: petróleo crudo (sin condensado ni LGN) en miles de b/d; gas
+   comercializado en Bcf/d (× 28,317 = MMm3/d). */
+async function cuencasEeuu() {
+  const key = process.env.EIA_API_KEY;
+  if (!key) throw new Error('falta EIA_API_KEY');
+  const CUENCAS = { PM: 'permian', EF: 'eagle_ford', BK: 'bakken', HA: 'haynesville', AP: 'appalachia' };
+  const SERIES = Object.entries(CUENCAS).flatMap(([code, slug]) => [
+    { id: `COPR${code}`, series: `${slug}_oil`, unit: 'kb/d', scale: 1000, what: 'crude oil production' },
+    { id: `NGMP${code}`, series: `${slug}_gas`, unit: 'Bcf/d', scale: 1, what: 'marketed natural gas production' },
+    { id: `RIGS${code}`, series: `${slug}_rigs`, unit: 'rigs', scale: 1, what: 'active rigs' },
+  ]);
+  const hoy = new Date();
+  // ponytail: corte por fecha de publicación aproximada (día 10); leer «Last Historical Month» del xlsx si molesta
+  const ultimo = new Date(Date.UTC(hoy.getUTCFullYear(), hoy.getUTCMonth() - (hoy.getUTCDate() >= 10 ? 1 : 2), 1));
+  // de a una serie: pedidas juntas, la API del STEO se va a 504
+  for (const s of SERIES) {
+    const params = new URLSearchParams({ api_key: key, frequency: 'monthly', 'data[0]': 'value', length: '5000' });
+    params.append('facets[seriesId][]', s.id);
+    params.append('start', '2015-01');
+    params.append('end', monthKey(ultimo));
+    const body = (await (await get(`https://api.eia.gov/v2/steo/data/?${params}`)).json()) as {
+      response?: { data?: { seriesId: string; period: string; value: string | null }[] };
+    };
+    const rows = body.response?.data ?? [];
+    if (!rows.length) throw new Error(`${s.id}: la API del STEO no devolvió datos`);
+    const points = rows
+      .filter((r) => r.seriesId === s.id && r.value != null)
+      .map((r) => ({ date: day(`${r.period}-01`), value: Math.round(parseFloat(r.value!) * s.scale * 1000) / 1000 }))
+      .filter((p) => Number.isFinite(p.value))
+      .sort((a, b) => a.date.getTime() - b.date.getTime());
+    const nombre = s.series.split('_').slice(0, -1).join(' ');
+    await replacePoints('eia_steo', s.series, `${nombre}: ${s.what} (EIA STEO)`, s.unit, points);
+  }
+}
+
 /* Pozos en perforación: el CSV trae una fila por empresa × área × yacimiento ×
    concepto (exploración, explotación…) y pesa ~70 MB; acá se suma por mes y
    provincia. La foto entera se reemplaza: la Secretaría corrige meses viejos. */
@@ -369,6 +411,7 @@ async function main() {
     ['rigi', 'proyectos RIGI aprobados (Ministerio de Economía)', rigi],
     ['perforacion', 'pozos en perforación (datos.energia.gob.ar)', perforacion],
     ['crudo', 'precio del crudo local: Medanito y Escalante (SE, regalías)', crudoLocal],
+    ['cuencas', 'cuencas de EE.UU.: Permian y otras (EIA STEO)', cuencasEeuu],
   ] as const;
   const unknown = only.filter((k) => !blocks.some(([key]) => key === k));
   if (unknown.length) throw new Error(`bloques desconocidos: ${unknown.join(', ')}`);

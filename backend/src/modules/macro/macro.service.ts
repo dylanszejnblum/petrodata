@@ -1,6 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { isPreliminary, latestCompleteMonth } from '../../common/complete-month';
+
+const MMM3_PER_BCF = 28.317; // 1 Bcf = 28,317 millones de m3
 import { FxQueryDto } from './macro.dto';
 
 const FX_SERIES = ['fx_oficial_sell', 'fx_oficial_buy', 'fx_blue_sell', 'fx_blue_buy'] as const;
@@ -50,6 +53,52 @@ export class MacroService {
       gas_rigs: r.gasRigs,
       total_rigs: r.totalRigs,
     }));
+  }
+
+  /** Vaca Muerta next to the US shale basins, month by month, in the same units:
+   *  crude kb/d, gas Bcf/d (and MMm3/d), rigs. VM = vm_combined production (SE);
+   *  US basins = EIA STEO; rigs for Argentina are the whole country (Baker Hughes),
+   *  there is no VM-only rig count. */
+  async basins(from = '2023-01') {
+    const since = new Date(`${from.slice(0, 7)}-01T00:00:00Z`);
+    const [steo, vm, rigs, complete] = await Promise.all([
+      this.prisma.factPrice.findMany({ where: { source: 'eia_steo', date: { gte: since } }, orderBy: { date: 'asc' } }),
+      this.prisma.$queryRaw<{ month: Date; oil_bbl_d: number; gas_mm3_d: number }[]>`
+        SELECT date_month AS month, SUM(oil_bbl_d)::float AS oil_bbl_d, SUM(gas_mm3_d)::float AS gas_mm3_d
+        FROM agg_monthly_by_operator
+        WHERE vm_combined AND date_month >= ${since}
+        GROUP BY date_month`,
+      this.prisma.factRigCount.findMany({ where: { date: { gte: since } } }),
+      latestCompleteMonth(this.prisma),
+    ]);
+    const r1 = (v: number) => Math.round(v * 10) / 10;
+    const months = new Map<string, Record<string, unknown>>();
+    const at = (d: Date) => {
+      const k = d.toISOString().slice(0, 7);
+      if (!months.has(k)) months.set(k, { date: k });
+      return months.get(k)!;
+    };
+    for (const v of vm) {
+      at(v.month).vaca_muerta = {
+        oil_kbd: r1(v.oil_bbl_d / 1000),
+        gas_bcfd: Math.round((v.gas_mm3_d / MMM3_PER_BCF) * 100) / 100,
+        gas_mm3d: r1(v.gas_mm3_d),
+        preliminary: isPreliminary(v.month, complete),
+      };
+    }
+    for (const r of rigs) at(r.date).argentina_rigs = r.totalRigs;
+    for (const p of steo) {
+      const [basin, metric] = [p.series.slice(0, p.series.lastIndexOf('_')), p.series.slice(p.series.lastIndexOf('_') + 1)];
+      const m = at(p.date);
+      const b = ((m[basin] as Record<string, number>) ??= {});
+      if (metric === 'oil') b.oil_kbd = r1(p.value);
+      if (metric === 'gas') {
+        b.gas_bcfd = p.value;
+        b.gas_mm3d = r1(p.value * MMM3_PER_BCF);
+      }
+      if (metric === 'rigs') b.rigs = Math.round(p.value);
+    }
+    return [...months.values()].sort((a, b) => String(a.date).localeCompare(String(b.date)));
   }
 
   /** Pozos en perforación por mes: total nacional y por provincia (o una sola). */
