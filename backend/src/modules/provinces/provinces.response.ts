@@ -76,6 +76,8 @@ export class ProvinceProductionPointDto {
   @ApiProperty({ example: 98765.4 }) gas_thousand_m3!: number;
   @ApiProperty({ example: 567890.1 }) boe!: number;
   @ApiProperty({ example: 6714 }) active_wells!: number;
+  @ApiProperty({ example: false, description: 'true = month still being filed by operators; totals will rise. See /data-freshness latest_complete_month.' })
+  preliminary!: boolean;
 }
 
 export class ProvinceExportSummaryRowDto {
@@ -91,4 +93,12 @@ export class ProvinceExportSummaryDto {
   @ApiProperty({ example: 17050000000 }) national_total_usd!: number;
   @ApiProperty({ type: 'object', additionalProperties: { type: 'number' }, example: { 'petróleo': 8500000000, gas: 3200000000 } })
   national_by_sector!: Record<string, number>;
+
+  @ApiProperty({
+    type: 'object',
+    additionalProperties: true,
+    description: 'How these figures were built. They are an ESTIMATE over production, not recorded exports (`publishable: false`).',
+    example: { kind: 'estimate', computed_at: '2026-05-31', publishable: false },
+  })
+  estimate!: Record<string, unknown>;
 }

@@ -109,6 +109,8 @@ export class OperatorTimeSeriesPointDto {
   @ApiProperty({ example: 984.46 }) gas_mmcf_d!: number;
   @ApiProperty({ example: 42633610.05 }) boe!: number;
   @ApiProperty({ example: 5087 }) active_wells!: number;
+  @ApiProperty({ example: false, description: 'true = month still being filed by operators; totals will rise. See /data-freshness latest_complete_month.' })
+  preliminary!: boolean;
 }
 
 export class OperatorSeriesDto {

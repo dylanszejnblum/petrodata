@@ -3,6 +3,7 @@ import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { paginated, skipTake } from '../../common/pagination.dto';
 import { cached, TTL } from '../../common/cache';
+import { isPreliminary, latestCompleteMonth } from '../../common/complete-month';
 import { GroupBy, MonthlyQueryDto, parseMonthInput, parseVmFlag } from './production.dto';
 
 const GROUP_BY_COLUMN: Record<GroupBy, string> = {
@@ -38,6 +39,7 @@ export class ProductionService {
       if (to) (where.dateMonth as Prisma.DateTimeFilter).lte = to;
     }
 
+    const complete = await latestCompleteMonth(this.prisma);
     const [total, rows] = await this.prisma.$transaction([
       this.prisma.factProductionMonthly.count({ where }),
       this.prisma.factProductionMonthly.findMany({
@@ -47,7 +49,12 @@ export class ProductionService {
       }),
     ]);
 
-    return paginated(rows.map(this.shapeFact), total, page, limit);
+    return paginated(
+      rows.map((r) => ({ ...this.shapeFact(r), preliminary: isPreliminary(r.dateMonth, complete) })),
+      total,
+      page,
+      limit,
+    );
   }
 
   private async groupedMonthly(
@@ -92,7 +99,8 @@ export class ProductionService {
         SUM(gas_mcf)::float AS gas_mcf,
         SUM(gas_mmcf_d)::float AS gas_mmcf_d,
         SUM(boe)::float AS boe,
-        COUNT(DISTINCT well_id)::int AS active_wells
+        -- producing wells only: a well that filed a zero month is not active
+        COUNT(DISTINCT well_id) FILTER (WHERE boe > 0)::int AS active_wells
       FROM fact_production_monthly
       ${whereSql}
       GROUP BY date_month, ${column}
@@ -100,9 +108,10 @@ export class ProductionService {
       LIMIT ${limit} OFFSET ${offset}
     `;
 
-    const [countRows, rows] = await Promise.all([
+    const [countRows, rows, complete] = await Promise.all([
       this.prisma.$queryRawUnsafe<{ total: number }[]>(countSql, ...params),
       this.prisma.$queryRawUnsafe<any[]>(dataSql, ...params),
+      latestCompleteMonth(this.prisma),
     ]);
 
     const total = countRows[0]?.total ?? 0;
@@ -118,6 +127,7 @@ export class ProductionService {
       gas_mmcf_d: r.gas_mmcf_d,
       boe: r.boe,
       active_wells: r.active_wells,
+      preliminary: isPreliminary(r.date_month, complete),
     }));
 
     return paginated(shaped, total, page, limit);
@@ -148,7 +158,7 @@ export class ProductionService {
 
     const month = latestRow.dateMonth;
 
-    const [totalsAgg, activeWellsRows, vmAgg, topRows] = await Promise.all([
+    const [totalsAgg, activeWellsRows, vmAgg, topRows, complete] = await Promise.all([
       this.prisma.factProductionMonthly.aggregate({
         where: { dateMonth: month },
         _sum: { oilM3: true, oilBblD: true, gasThousandM3: true, gasMmcfD: true, boe: true },
@@ -169,6 +179,7 @@ export class ProductionService {
         orderBy: { _sum: { boe: 'desc' } },
         take: 5,
       }),
+      latestCompleteMonth(this.prisma),
     ]);
     const operatorNames = await this.prisma.dimOperator.findMany({
       where: { operatorSlug: { in: topRows.map((r) => r.operatorSlug) } },
@@ -182,6 +193,9 @@ export class ProductionService {
 
     return {
       date_month: this.formatMonth(month),
+      // newest month on file; when true its totals are still incomplete
+      preliminary: isPreliminary(month, complete),
+      latest_complete_month: complete ? this.formatMonth(complete) : null,
       oil_m3: totalOil,
       oil_bbl_d: totalsAgg._sum.oilBblD ?? 0,
       gas_thousand_m3: totalGas,

@@ -22,6 +22,12 @@ export class DataFreshnessDto {
   @ApiProperty({ example: 'Producción de petróleo y gas por pozo' }) dataset!: string;
   @ApiProperty({ example: 'CC-BY-4.0' }) license!: string;
   @ApiProperty({ example: '2026-04-01', nullable: true }) latest_month!: string | null;
+  @ApiProperty({
+    example: '2026-03-01',
+    nullable: true,
+    description: 'Newest fully reported month. Months after it are still being filed (preliminary): don\'t read their drops as real.',
+  })
+  latest_complete_month!: string | null;
   @ApiProperty({ example: '2026-01-01', nullable: true }) earliest_month!: string | null;
   @ApiProperty({ type: DataFreshnessTablesDto }) tables!: DataFreshnessTablesDto;
 }

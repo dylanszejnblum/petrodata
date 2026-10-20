@@ -30,6 +30,8 @@ export class ProductionFactDto {
   @ApiProperty({ example: true }) formation_vaca_muerta!: boolean;
   @ApiProperty({ example: true }) unconventional!: boolean;
   @ApiProperty({ example: true }) vm_combined!: boolean;
+  @ApiProperty({ example: false, description: 'true = month still being filed by operators; totals will rise. See /data-freshness latest_complete_month.' })
+  preliminary!: boolean;
 }
 
 export class GroupedProductionRowDto {
@@ -49,7 +51,9 @@ export class GroupedProductionRowDto {
   @ApiProperty({ example: 24384809.66 }) gas_mcf!: number;
   @ApiProperty({ example: 812.82 }) gas_mmcf_d!: number;
   @ApiProperty({ example: 34491371.36 }) boe!: number;
-  @ApiProperty({ example: 2465 }) active_wells!: number;
+  @ApiProperty({ example: 2465, description: 'Wells with production > 0 that month.' }) active_wells!: number;
+  @ApiProperty({ example: false, description: 'true = month still being filed by operators; totals will rise. See /data-freshness latest_complete_month.' })
+  preliminary!: boolean;
 }
 
 export class VmShareDto {
@@ -67,7 +71,11 @@ export class TopOperatorDto {
 }
 
 export class LatestSummaryDto {
-  @ApiProperty({ example: '2026-04-01', nullable: true }) date_month!: string | null;
+  @ApiProperty({ example: '2026-04-01', nullable: true, description: 'Newest month on file (may be preliminary).' }) date_month!: string | null;
+  @ApiProperty({ example: false, description: 'true = month still being filed by operators; totals will rise. See /data-freshness latest_complete_month.' })
+  preliminary!: boolean;
+  @ApiProperty({ example: '2026-03-01', nullable: true, description: 'Newest fully reported month.' })
+  latest_complete_month!: string | null;
   @ApiProperty({ example: 3962125.07 }) oil_m3!: number;
   @ApiProperty({ example: 830700.44 }) oil_bbl_d!: number;
   @ApiProperty({ example: 4049482.51 }) gas_thousand_m3!: number;

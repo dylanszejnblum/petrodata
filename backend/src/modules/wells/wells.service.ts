@@ -2,8 +2,16 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { paginated, skipTake } from '../../common/pagination.dto';
-import { ListWellsQueryDto, WellProductionQueryDto } from './wells.dto';
-import { parseMonthInput } from '../production/production.dto';
+import { ListWellsQueryDto, WellProductionQueryDto, WellSummaryGroup, WellSummaryQueryDto } from './wells.dto';
+import { parseMonthInput, parseVmFlag } from '../production/production.dto';
+import { cached, TTL } from '../../common/cache';
+import { latestCompleteMonth } from '../../common/complete-month';
+
+const SUMMARY_COLUMN: Record<WellSummaryGroup, string> = {
+  province: 'province',
+  formation: 'formation_slug',
+  operator: 'operator_slug',
+};
 
 @Injectable()
 export class WellsService {
@@ -31,6 +39,42 @@ export class WellsService {
     ]);
 
     return paginated(rows.map(this.shapeWell), total, page, limit);
+  }
+
+  /** Well counts per group for one month: `producing` (boe > 0, what "active"
+   *  means everywhere in this API) and `reporting` (filed that month, zeros
+   *  included). Defaults to the newest complete month, so a half-filed month
+   *  never shows up as a collapse in well counts. */
+  async summary(q: WellSummaryQueryDto) {
+    const group = q.group_by ?? 'province';
+    const vm = parseVmFlag(q.vm);
+    const month = parseMonthInput(q.month) ?? (await latestCompleteMonth(this.prisma));
+    if (!month) return { month: null, group_by: group, totals: { producing: 0, reporting: 0 }, groups: [] };
+
+    return cached(`wells:summary:${group}:${q.vm ?? ''}:${month.toISOString()}`, TTL.LONG, async () => {
+      const column = SUMMARY_COLUMN[group]; // whitelisted above
+      const vmSql = vm === undefined ? '' : `AND vm_combined = ${vm ? 'true' : 'false'}`;
+      const rows = await this.prisma.$queryRawUnsafe<{ key: string; producing: number; reporting: number }[]>(
+        `SELECT ${column} AS key,
+                COUNT(DISTINCT well_id) FILTER (WHERE boe > 0)::int AS producing,
+                COUNT(DISTINCT well_id)::int AS reporting
+         FROM fact_production_monthly
+         WHERE date_month = $1 ${vmSql}
+         GROUP BY 1
+         ORDER BY producing DESC, key ASC`,
+        month,
+      );
+      return {
+        month: month.toISOString().slice(0, 10),
+        group_by: group,
+        // a well belongs to one province/formation/operator per month, so group sums are exact
+        totals: {
+          producing: rows.reduce((a, r) => a + r.producing, 0),
+          reporting: rows.reduce((a, r) => a + r.reporting, 0),
+        },
+        groups: rows,
+      };
+    });
   }
 
   async detail(wellId: string) {

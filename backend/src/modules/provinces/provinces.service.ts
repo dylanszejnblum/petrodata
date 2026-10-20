@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { isPreliminary, latestCompleteMonth } from '../../common/complete-month';
 import { PrismaService } from '../../prisma/prisma.service';
 import { MineralProjectsService, NormalizedProject } from '../shared/mineral-projects.service';
 import { provinceCode, slugify } from '../shared/mineral-entities.util';
@@ -12,6 +13,20 @@ interface ProvinceRegistryEntry {
   mining: NormalizedProject[];
 }
 
+/* Las "exportaciones por provincia" NO son exportaciones registradas: las armó
+   pipeline_company_enrichment.py (2026-05-31) sobre la producción, con precio y
+   porcentaje exportado fijos, y el total nacional está escrito a mano. Hasta
+   reemplazarlas por una fuente real (INDEC/SIACAM), el meta lo dice para que
+   nadie las publique como dato. */
+export const EXPORTS_ESTIMATE = {
+  kind: 'estimate',
+  method:
+    'Not recorded exports. Oil: provincial production × US$65/bbl × 85% assumed exported. ' +
+    'Gas: production × US$3.5/mcf × 50% assumed exported. National totals are hand-entered round figures.',
+  computed_at: '2026-05-31',
+  period: 'Production window not recorded; values are a static snapshot, not updated monthly.',
+  publishable: false,
+} as const;
 @Injectable()
 export class ProvincesService {
   constructor(
@@ -92,6 +107,7 @@ export class ProvincesService {
       dateClause += ` AND date_month <= $${params.length}`;
     }
 
+    const complete = await latestCompleteMonth(this.prisma);
     const rows = await this.prisma.$queryRawUnsafe<Array<Record<string, unknown>>>(
       `SELECT date_month,
               SUM(oil_bbl_d)::float        AS oil_bbl_d,
@@ -115,6 +131,7 @@ export class ProvincesService {
       gas_thousand_m3: num(r.gas_thousand_m3),
       boe: num(r.boe),
       active_wells: num(r.active_wells),
+      preliminary: isPreliminary(r.date_month as Date, complete),
     }));
   }
 
@@ -153,6 +170,7 @@ export class ProvincesService {
         .sort((a, b) => b.total_export_usd - a.total_export_usd),
       national_total_usd: nationalTotal,
       national_by_sector: nationalBySector,
+      estimate: EXPORTS_ESTIMATE,
     };
   }
 
