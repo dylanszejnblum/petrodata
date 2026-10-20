@@ -7,6 +7,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { ApiErrorDto, ApiOkEnvelope } from '../../common/swagger';
+import { ResponseMeta } from '../../common/response-meta.decorator';
 import {
   CommoditySeriesQueryDto,
   FuelPricesQueryDto,
@@ -14,6 +15,7 @@ import {
 import {
   CommodityLatestDto,
   CommoditySeriesPointDto,
+  CrudeLocalPointDto,
   EnergyLatestDto,
   FuelLatestEntryDto,
   FuelPriceRowDto,
@@ -55,6 +57,26 @@ export class PricesController {
   @ApiOkEnvelope(EnergyLatestDto, { isArray: true })
   energy() {
     return this.service.energySummary();
+  }
+
+  @Get('crude-local')
+  @ResponseMeta({
+    source: 'Secretaría de Energía — Informe de Regalías de Petróleo Crudo',
+    dataset: 'Precio de crudo por tipo (Medanito, Escalante) y Brent, USD/bbl',
+    note: 'Precios declarados para regalías, ponderados por volumen vendido; no es un precio de pizarra. Los dos últimos meses son provisorios.',
+  })
+  @ApiOperation({
+    summary: 'Local crude (Medanito, Escalante) vs Brent',
+    description:
+      'Monthly USD/bbl since 2006: Medanito (Neuquén basin, incl. Vaca Muerta) total and domestic-market price, Escalante ' +
+      '(Golfo San Jorge) and Brent — all from the Secretaría de Energía royalties report, so the gap is computed on one basis. ' +
+      'Prices are volume-weighted royalty declarations, not posted prices. `provisional` = the last two months, revised next release. ' +
+      'Updated monthly (~1.5 months lag).',
+  })
+  @ApiQuery({ name: 'from', required: false, example: '2024-01', description: 'First month (YYYY-MM).' })
+  @ApiOkEnvelope(CrudeLocalPointDto, { isArray: true })
+  crudeLocal(@Query('from') from?: string) {
+    return this.service.crudeLocal(from);
   }
 
   @Get('fuel')

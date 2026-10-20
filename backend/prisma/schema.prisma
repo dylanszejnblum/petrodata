@@ -441,18 +441,48 @@ model ExecutiveVote {
   @@map("executive_vote")
 }
 
-model ProvinceExport {
-  id             Int      @id @default(autoincrement())
-  slug           String
-  provinceName   String   @map("province_name")
-  sector         String // "petroleo" | "gas" | "mineria" | "agro"
-  productName    String   @map("product_name")
-  valueAnnualUsd Float    @map("value_annual_usd")
-  ingestedAt     DateTime @default(now()) @map("ingested_at")
+/// Volumen mensual por ducto de salida de la cuenca Neuquina. Petróleo: m3
+/// entregados (SE, Planilla 20). Gas: miles de m3 de 9300 kcal recibidos (ENARGAS,
+/// GRT). `pipeline` es una clave curada (ver refresh-market.ts ductos), no el
+/// idducto de la SE: un oleoducto puede ser dos ductos (Oldelval viejo + Duplicar).
+model FactPipelineFlow {
+  date     DateTime @db.Date
+  pipeline String
+  product  String // petroleo | gas
+  volume   Float
+  unit     String // m3 | miles m3
 
-  @@unique([slug, sector, productName])
-  @@index([slug])
-  @@map("province_export")
+  @@id([date, pipeline])
+  @@map("fact_pipeline_flow")
+}
+
+/// Capacidad anual declarada de los oleoductos de salida (SE, Anexo 2A), m3/d.
+model FactPipelineCapacity {
+  year      Int
+  pipeline  String
+  maxM3d    Float? @map("max_m3d") // capacidad operativa máxima
+  designM3d Float? @map("design_m3d")
+  usedM3d   Float? @map("used_m3d") // capacidad empleada (promedio del año)
+
+  @@id([year, pipeline])
+  @@map("fact_pipeline_capacity")
+}
+
+/// Exportaciones por provincia de origen, mensual (INDEC, «Serie OPEX mensual»):
+/// FOB en dólares por provincia × gran rubro. Incluye «Extranjero y Plataforma
+/// Continental» e «Indeterminado», que suman al total nacional pero no son
+/// provincias. 2024 en adelante es provisorio para INDEC.
+model FactProvinceExport {
+  date         DateTime @db.Date
+  provinceSlug String   @map("province_slug")
+  provinceName String   @map("province_name")
+  rubro        String // Combustibles y energía | Productos primarios | Manufacturas de origen agropecuario | … industrial
+  usd          Float
+  kg           Float?
+
+  @@id([date, provinceSlug, rubro])
+  @@index([provinceSlug, date])
+  @@map("fact_province_export")
 }
 
 model NewsDocument {

@@ -13,6 +13,10 @@
  *   fact_energy_trade mensual ← INDEC ICA vía apis.datos.gob.ar
  *   fact_fuel_price ← "Precios vigentes en surtidor" (Res. 314/2016), foto completa
  *   fact_wells_drilling ← «Pozos en perforación» (datos.energia.gob.ar), por mes y provincia
+ *   se/medanito|medanito_mi|escalante|brent ← Informe de Regalías de CRUDO (Secretaría de Energía)
+ *   eia_steo/<cuenca>_{oil,gas,rigs} ← EIA STEO (Permian, Eagle Ford, Bakken, Haynesville, Appalachia); pide EIA_API_KEY
+ *   fact_province_export ← INDEC OPEX mensual (comex.indec.gob.ar), provincia × rubro
+ *   fact_pipeline_flow / fact_pipeline_capacity ← SE (Planilla 20, Anexo 2A) y ENARGAS (GRT)
  *   rigi_project ← planilla pública que alimenta argentina.gob.ar/economia/rigi
  *     + la página de cada resolución (número y fecha de publicación en el BO)
  *
@@ -23,6 +27,8 @@
  */
 import { PrismaClient, Prisma } from '@prisma/client';
 import { parse } from 'csv-parse/sync';
+import { strFromU8, unzipSync } from 'fflate';
+import * as ExcelJS from 'exceljs';
 
 const prisma = new PrismaClient();
 const DRY_RUN = process.env.DRY_RUN === '1';
@@ -31,8 +37,18 @@ const SERIES_API = 'https://apis.datos.gob.ar/series/api/series/';
 const FUEL_CSV =
   'http://datos.energia.gob.ar/dataset/1c181390-5045-475e-94dc-410429be4b17/resource/80ac25de-a44a-4445-9215-090cf55cfda5/download/precios-en-surtidor-resolucin-3142016.csv';
 
+const ICA_CSV =
+  'https://infra.datos.gob.ar/catalog/sspm/dataset/74/distribution/74.3/download/intercambio-comercial-argentino-mensual.csv';
+const EXPORT_PRODUCTOS_CSV =
+  'https://infra.datos.gob.ar/catalog/sspm/dataset/75/distribution/75.3/download/exportaciones-mensual.csv';
+const SE_TRANSPORTE = 'http://datos.energia.gob.ar/dataset/25a691da-fc1d-4ae3-bee5-ec5c5f9aa08b/resource';
+const PLANILLA20_CSV = `${SE_TRANSPORTE}/f1d13dac-fca5-4464-940d-ce86c16cbff3/download/volumnenes-de-transporte-de-hidrocarburos-planilla-20.csv`;
+const ANEXO2A_CSV = `${SE_TRANSPORTE}/2a93eec0-32a1-48f9-bcf7-614f203b1918/download/anexo-2a-capacidad-de-transporte-de-hidrocarburos-a-travs-de-ductos.csv`;
+const ENARGAS_GRT = 'https://www.enargas.gob.ar/secciones/transporte-y-distribucion/datos-estadisticos/GRT/GRT.xlsx';
 const PERFORACION_CSV =
   'http://datos.energia.gob.ar/dataset/7ea2ac77-d7a0-4129-9fbf-6f1a25d94e21/resource/af6838ef-f675-4409-ac6a-e7c391a5dbab/download/pozos-en-perforacin.csv';
+const REGALIAS_CRUDO_ZIP =
+  'http://www.energia.gob.ar/contenidos/archivos/Reorganizacion/informacion_del_mercado/mercado_hidrocarburos/informacion_estadistica/regalias/Regalias_CRUDO.zip';
 const RIGI_SHEET =
   'https://docs.google.com/spreadsheets/d/1eytHJrzUjIFOXI-P1Hx_wbmZiSqPxVle059Djdos6u8/gviz/tq?tqx=out:csv&sheet=dataset';
 
@@ -50,7 +66,7 @@ async function get(url: string): Promise<Response> {
 
 async function replacePoints(source: string, series: string, name: string, unit: string, points: Point[]) {
   const last = points.at(-1);
-  console.log(`  ${source}/${series}: ${points.length} puntos, último ${last ? last.date.toISOString().slice(0, 10) : '—'}`);
+  console.log(`  ${source}/${series}: ${points.length} puntos, último ${last ? `${last.date.toISOString().slice(0, 10)} = ${last.value}` : '—'}`);
   if (DRY_RUN || !points.length) return;
   await prisma.$transaction([
     prisma.factPrice.deleteMany({ where: { source, series, date: { in: points.map((p) => p.date) } } }),
@@ -132,21 +148,33 @@ async function macro() {
 }
 
 async function energyTrade() {
-  // Las dos series en un mismo pedido: 74.3_IECE sola devuelve un CSV vacío
-  // (reproducible en oct-2026), junto con IICL viene completa.
-  const desde = `${new Date().getUTCFullYear() - 2}-01-01`;
-  const csv = await (
-    await get(`${SERIES_API}?ids=74.3_IECE_0_M_35,74.3_IICL_0_M_42&start_date=${desde}&limit=1000&format=csv`)
-  ).text();
+  // El CSV de distribución del dataset 74.3 y no la API de series: desde oct-2026
+  // la API devuelve vacío para 74.3_IECE / 74.3_IICL, solas o juntas, en CSV y JSON.
+  const rows = parse(await (await get(ICA_CSV)).text(), { columns: true, skip_empty_lines: true }) as Record<string, string>[];
+  const desde = `${new Date().getUTCFullYear() - 2}-01`;
   const exp = new Map<string, number>();
   const imp = new Map<string, number>();
-  for (const [d, e, i] of parse(csv, { from_line: 2, skip_empty_lines: true }) as string[][]) {
+  for (const r of rows) {
+    const [d, e, i] = [r.indice_tiempo, r.ica_exportacion_combustible_energia, r.ica_importaciones_combustibles_lubricantes];
+    if (!d || d.slice(0, 7) < desde) continue;
     // Sólo meses con los dos lados: un superávit con un lado viejo y otro nuevo no vale.
     if (e !== '' && i !== '') {
       exp.set(d.slice(0, 7), Number(e));
       imp.set(d.slice(0, 7), Number(i));
     }
   }
+  // El reparto petróleo crudo / gas de las exportaciones de energía (INDEC, MUSD).
+  const prod = parse(await (await get(EXPORT_PRODUCTOS_CSV)).text(), { columns: true, skip_empty_lines: true }) as Record<string, string>[];
+  for (const [col, series, name] of [
+    ['ica_petroleo_crudo', 'expo_petroleo_crudo', 'Exportaciones de petróleo crudo'],
+    ['gas_petroleo_otros_hidrocarburos', 'expo_gas', 'Exportaciones de gas de petróleo y otros hidrocarburos gaseosos'],
+  ]) {
+    const points = prod
+      .filter((r) => r.indice_tiempo?.slice(0, 7) >= desde && r[col] !== '' && Number.isFinite(Number(r[col])))
+      .map((r) => ({ date: day(r.indice_tiempo), value: Number(r[col]) }));
+    await replacePoints('indec', series, name, 'MUSD', points);
+  }
+
   const months = [...exp.keys()].sort();
   const asOf = months.at(-1) ?? null;
   console.log(`  fact_energy_trade mensual: ${months.length} meses, último ${asOf ?? '—'}`);
@@ -209,6 +237,256 @@ async function fuelPrices() {
     },
     { timeout: 10 * 60_000 },
   );
+}
+
+/* PRECIO DEL CRUDO LOCAL. La única serie pública mensual de Medanito y
+   Escalante vive dentro del Excel de regalías de la Secretaría: un ZIP con un
+   xlsx cuya hoja visible está filtrada por provincia. El dato por TIPO de crudo
+   está en el caché de la tabla dinámica (pivotCacheRecords): cada registro son
+   cinco índices a los ítems compartidos —concepto, zona, tipo, año, mes— y el
+   valor en USD/m3. El caché se reconoce por su último campo, «USD/m3»; el número
+   de archivo no es fijo.
+   · Son precios declarados para regalías, ponderados por volumen vendido —no
+     un precio de pizarra— y el Medanito cubre toda la cuenca Neuquina.
+   · MI + TSP = mercado interno; TOTAL = interno y exportación mezclados.
+   · Cero = sin dato (los meses futuros vienen en 0). Los dos últimos meses son
+     provisorios: cada corrida los pisa.
+   · El Brent sale del mismo archivo para que la comparación sea contra la misma
+     cuenta; el de FRED/EIA sigue en eia/brent. */
+async function crudoLocal() {
+  const outer = unzipSync(new Uint8Array(await (await get(REGALIAS_CRUDO_ZIP)).arrayBuffer()));
+  const xlsxName = Object.keys(outer).find((n) => n.toLowerCase().endsWith('.xlsx'));
+  if (!xlsxName) throw new Error('el ZIP de regalías no trae un xlsx');
+  const xlsx = unzipSync(outer[xlsxName], { filter: (f) => f.name.startsWith('xl/pivotCache/pivotCache') });
+
+  const items = (xml: string) =>
+    [...xml.matchAll(/<cacheField name="([^"]*)"[^>]*>([\s\S]*?)<\/cacheField>/g)].map((m) => ({
+      name: m[1],
+      values: [...m[2].matchAll(/<[sn] v="([^"]*)"/g)].map((v) => v[1]),
+    }));
+  const defName = Object.keys(xlsx).find(
+    (n) => /pivotCacheDefinition\d+\.xml$/.test(n) && items(strFromU8(xlsx[n])).at(-1)?.name === 'USD/m3',
+  );
+  if (!defName) throw new Error('no encontré el caché de precios (USD/m3) en el xlsx');
+  const fields = items(strFromU8(xlsx[defName]));
+  const records = strFromU8(xlsx[defName.replace('Definition', 'Records')]);
+  const idx = (field: string) => fields.findIndex((f) => f.name === field);
+  const [fConcepto, fTipo, fAnio, fMes] = ['CONCEPTO', 'CUENCA/PROVINCIA/TIPO DE CRUDO', 'AÑO', 'MES'].map(idx);
+
+  const QUIERO: Record<string, { series: string; name: string }> = {
+    'PRECIO TOTAL|MEDANITO': { series: 'medanito', name: 'Medanito (Cuenca Neuquina), precio total' },
+    'PRECIO MI + TSP|MEDANITO': { series: 'medanito_mi', name: 'Medanito, mercado interno' },
+    'PRECIO TOTAL|ESCALANTE': { series: 'escalante', name: 'Escalante (Golfo San Jorge), precio total' },
+    'PRECIO TOTAL|BRENT': { series: 'brent', name: 'Brent (Informe de Regalías SE)' },
+  };
+  const puntos = new Map<string, Point[]>();
+  for (const r of records.matchAll(/<r>([\s\S]*?)<\/r>/g)) {
+    const toks = [...r[1].matchAll(/<([xnm])(?: v="([^"]*)")?\/>/g)].map((t) => ({ kind: t[1], v: t[2] }));
+    const val = (i: number) => (toks[i].kind === 'x' ? fields[i].values[Number(toks[i].v)] : toks[i].v);
+    const q = QUIERO[`${val(fConcepto)}|${val(fTipo)}`];
+    const usdM3 = Number(toks.at(-1)?.v);
+    if (!q || !positive(usdM3)) continue; // 0 = sin dato
+    const list = puntos.get(q.series) ?? [];
+    list.push({ date: day(`${val(fAnio)}-${String(val(fMes)).padStart(2, '0')}-01`), value: Math.round((usdM3 / 6.2898) * 100) / 100 });
+    puntos.set(q.series, list);
+  }
+  if (!puntos.get('medanito')?.length) throw new Error('el caché no trajo Medanito');
+  for (const { series, name } of Object.values(QUIERO)) {
+    const pts = (puntos.get(series) ?? []).sort((a, b) => a.date.getTime() - b.date.getTime());
+    await replacePoints('se', series, name, 'USD/bbl', pts);
+  }
+}
+
+/* CUENCAS DE EE.UU., para comparar con Vaca Muerta. El Drilling Productivity
+   Report murió en 2024 (el xlsx sigue en línea, congelado en jun-2024); sus
+   regiones viven ahora en las tablas 4a/5a/10a del STEO. La API mezcla historia
+   y pronóstico sin marcarlos: se corta en el último mes histórico, que es el
+   anterior al mes de publicación (sale entre el 6 y el 10). Los últimos meses
+   «históricos» son estimaciones que la EIA revisa cada mes: se pisan.
+   Unidades: petróleo crudo (sin condensado ni LGN) en miles de b/d; gas
+   comercializado en Bcf/d (× 28,317 = MMm3/d). */
+async function cuencasEeuu() {
+  const key = process.env.EIA_API_KEY;
+  if (!key) throw new Error('falta EIA_API_KEY');
+  const CUENCAS = { PM: 'permian', EF: 'eagle_ford', BK: 'bakken', HA: 'haynesville', AP: 'appalachia' };
+  const SERIES = Object.entries(CUENCAS).flatMap(([code, slug]) => [
+    { id: `COPR${code}`, series: `${slug}_oil`, unit: 'kb/d', scale: 1000, what: 'crude oil production' },
+    { id: `NGMP${code}`, series: `${slug}_gas`, unit: 'Bcf/d', scale: 1, what: 'marketed natural gas production' },
+    { id: `RIGS${code}`, series: `${slug}_rigs`, unit: 'rigs', scale: 1, what: 'active rigs' },
+  ]);
+  const hoy = new Date();
+  // ponytail: corte por fecha de publicación aproximada (día 10); leer «Last Historical Month» del xlsx si molesta
+  const ultimo = new Date(Date.UTC(hoy.getUTCFullYear(), hoy.getUTCMonth() - (hoy.getUTCDate() >= 10 ? 1 : 2), 1));
+  // de a una serie: pedidas juntas, la API del STEO se va a 504
+  for (const s of SERIES) {
+    const params = new URLSearchParams({ api_key: key, frequency: 'monthly', 'data[0]': 'value', length: '5000' });
+    params.append('facets[seriesId][]', s.id);
+    params.append('start', '2015-01');
+    params.append('end', monthKey(ultimo));
+    const body = (await (await get(`https://api.eia.gov/v2/steo/data/?${params}`)).json()) as {
+      response?: { data?: { seriesId: string; period: string; value: string | null }[] };
+    };
+    const rows = body.response?.data ?? [];
+    if (!rows.length) throw new Error(`${s.id}: la API del STEO no devolvió datos`);
+    const points = rows
+      .filter((r) => r.seriesId === s.id && r.value != null)
+      .map((r) => ({ date: day(`${r.period}-01`), value: Math.round(parseFloat(r.value!) * s.scale * 1000) / 1000 }))
+      .filter((p) => Number.isFinite(p.value))
+      .sort((a, b) => a.date.getTime() - b.date.getTime());
+    const nombre = s.series.split('_').slice(0, -1).join(' ');
+    await replacePoints('eia_steo', s.series, `${nombre}: ${s.what} (EIA STEO)`, s.unit, points);
+  }
+}
+
+/* EXPORTACIONES POR PROVINCIA, las registradas. INDEC publica la serie mensual
+   de origen provincial (OPEX) dentro del ZIP de exportaciones del año
+   (/files/zips/exports_{AAAA}_M.zip, mismo nombre todo el año); el xlsx trae
+   2002 → último mes, una fila por mes × provincia × gran rubro, FOB en dólares.
+   En enero el ZIP del año nuevo todavía no existe: se cae al del año anterior.
+   La hoja cambia de nombre cada mes: se lee la primera. Foto completa: INDEC
+   revisa los meses provisorios. */
+async function exportacionesProvincia() {
+  const anio = new Date().getUTCFullYear();
+  let r = await fetch(`https://comex.indec.gob.ar/files/zips/exports_${anio}_M.zip`);
+  if (r.status === 404) r = await fetch(`https://comex.indec.gob.ar/files/zips/exports_${anio - 1}_M.zip`);
+  if (!r.ok) throw new Error(`comex.indec.gob.ar HTTP ${r.status}`);
+  const zip = unzipSync(new Uint8Array(await r.arrayBuffer()));
+  const name = Object.keys(zip).find((n) => /opex_mensual/i.test(n));
+  if (!name) throw new Error('el ZIP de INDEC no trae la serie OPEX mensual');
+  const wb = new ExcelJS.Workbook();
+  await wb.xlsx.load(Buffer.from(zip[name]) as unknown as ExcelJS.Buffer);
+  const ws = wb.worksheets[0];
+
+  const slug = (s: string) =>
+    s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+  let col: Record<string, number> | null = null;
+  const data: Prisma.FactProvinceExportCreateManyInput[] = [];
+  ws.eachRow((row) => {
+    const v = Array.from(row.values as ExcelJS.CellValue[], (x) => (x == null ? '' : String(x).trim()));
+    if (!col) {
+      if (v.includes('Nombre Prov')) col = Object.fromEntries(v.map((t, i) => [t, i]));
+      return;
+    }
+    const c = col;
+    const usd = Number(v[c['FOB_dólar']]);
+    if (!/^\d{4}$/.test(v[c['Año']]) || !Number.isFinite(usd)) return;
+    data.push({
+      date: day(`${v[c['Año']]}-${v[c['Mes']].padStart(2, '0')}-01`),
+      provinceSlug: slug(v[c['Nombre Prov']]),
+      provinceName: v[c['Nombre Prov']],
+      rubro: v[c['Rubro']].replace(/\s*\([^)]*\)\s*$/, ''), // "Combustibles y energía (CyE)" → sin sigla
+      usd,
+      kg: Number(v[c['Peso neto']]) || null,
+    });
+  });
+  if (data.length < 10_000) throw new Error(`la serie trajo ${data.length} filas; no reemplazo`);
+  const ultimo = data.reduce((a, b) => (a.date > b.date ? a : b)).date as Date;
+  const nqn = data
+    .filter((d) => (d.date as Date).getTime() === ultimo.getTime() && d.provinceSlug === 'neuquen')
+    .reduce((a, d) => a + d.usd, 0);
+  console.log(`  ${data.length} filas, último ${monthKey(ultimo)} (Neuquén: US$ ${(nqn / 1e6).toFixed(1)} M)`);
+  if (DRY_RUN) return;
+  await prisma.$transaction(
+    async (tx) => {
+      await tx.factProvinceExport.deleteMany({});
+      for (let i = 0; i < data.length; i += 5000) await tx.factProvinceExport.createMany({ data: data.slice(i, i + 5000) });
+    },
+    { timeout: 5 * 60_000 },
+  );
+}
+
+/* DUCTOS DE SALIDA DE LA CUENCA NEUQUINA. Las planillas de la SE vienen por
+   tramo y por cargador: sumar todo cuenta dos veces el mismo barril (un tramo
+   aguas arriba y otro aguas abajo). Por eso se toman sólo los ductos que SACAN
+   petróleo de la cuenca, por su idducto, y en la Planilla 20 cada fila ya es
+   origen → destino final, así que sumar por ducto y mes da lo entregado.
+   Gas: ENARGAS publica el gas recibido por gasoducto (hoja «Gasoducto»); de la
+   cuenca salen Centro Oeste (TGN) y Neuba I+II (TGS), que según todo indica ya
+   incluye lo que entra por el Perito Moreno. */
+const OLEODUCTOS_SALIDA: Record<string, string> = {
+  '216': 'oldelval_allen_rosales', // Allen – Puerto Rosales (línea original)
+  '511': 'oldelval_allen_rosales', // Allen – Puerto Rosales (Duplicar)
+  '379': 'otasa', // Puesto Hernández – Buta Mallín (Chile)
+  '46': 'ypf_ph_lujan', // Puesto Hernández – Luján de Cuyo (refinería)
+};
+const GASODUCTOS_SALIDA: Record<string, string> = { 'Centro Oeste': 'tgn_centro_oeste', 'Neuba I+II': 'tgs_neuba' };
+
+async function ductos() {
+  const csv = async (url: string) =>
+    parse(await (await get(url)).text(), { columns: true, bom: true, skip_empty_lines: true }) as Record<string, string>[];
+
+  const flujo = new Map<string, { date: Date; pipeline: string; product: string; volume: number; unit: string }>();
+  for (const r of await csv(PLANILLA20_CSV)) {
+    const pipeline = OLEODUCTOS_SALIDA[r.idducto];
+    if (!pipeline || !r.anio || !r.mes) continue;
+    const date = day(`${r.anio}-${r.mes.padStart(2, '0')}-01`);
+    const k = `${monthKey(date)}|${pipeline}`;
+    const f = flujo.get(k) ?? { date, pipeline, product: 'petroleo', volume: 0, unit: 'm3' };
+    f.volume += Number(r.volumen) || 0;
+    flujo.set(k, f);
+  }
+
+  // capacidad: una fila por tramo × cargador con los mismos números → máximo por (ducto, año), suma por clave
+  const porDucto = new Map<string, { year: number; pipeline: string; max: number; design: number; used: number }>();
+  for (const r of await csv(ANEXO2A_CSV)) {
+    const pipeline = OLEODUCTOS_SALIDA[r.idducto];
+    if (!pipeline || !r.anio) continue;
+    const k = `${r.anio}|${r.idducto}`;
+    const c = porDucto.get(k) ?? { year: Number(r.anio), pipeline, max: 0, design: 0, used: 0 };
+    c.max = Math.max(c.max, Number(r.capacidad_operativa_maxima) || 0);
+    c.design = Math.max(c.design, Number(r.capacidad_disenio) || 0);
+    c.used = Math.max(c.used, Number(r.capacidad_empleada) || 0);
+    porDucto.set(k, c);
+  }
+  const capacidad = new Map<string, { year: number; pipeline: string; maxM3d: number; designM3d: number; usedM3d: number }>();
+  for (const c of porDucto.values()) {
+    const k = `${c.year}|${c.pipeline}`;
+    const t = capacidad.get(k) ?? { year: c.year, pipeline: c.pipeline, maxM3d: 0, designM3d: 0, usedM3d: 0 };
+    t.maxM3d += c.max;
+    t.designM3d += c.design;
+    t.usedM3d += c.used;
+    capacidad.set(k, t);
+  }
+
+  const wb = new ExcelJS.Workbook();
+  await wb.xlsx.load(Buffer.from(await (await get(ENARGAS_GRT)).arrayBuffer()) as unknown as ExcelJS.Buffer);
+  const ws = wb.getWorksheet('Gasoducto');
+  if (!ws) throw new Error('GRT.xlsx sin hoja «Gasoducto»');
+  let cols: [number, string][] | null = null;
+  ws.eachRow((row) => {
+    const v = row.values as ExcelJS.CellValue[];
+    if (!cols) {
+      const found = v.map((x, i) => [i, GASODUCTOS_SALIDA[String(x ?? '').trim()]] as [number, string]).filter(([, p]) => p);
+      if (found.length === Object.keys(GASODUCTOS_SALIDA).length) cols = found;
+      return;
+    }
+    const date = v[1] instanceof Date ? v[1] : null;
+    if (!date) return;
+    for (const [i, pipeline] of cols) {
+      const volume = Number(v[i]);
+      if (!Number.isFinite(volume)) continue;
+      const d = day(date.toISOString());
+      flujo.set(`${monthKey(d)}|${pipeline}`, { date: d, pipeline, product: 'gas', volume, unit: 'miles m3' });
+    }
+  });
+  if (!cols) throw new Error('GRT.xlsx: no encontré las columnas Centro Oeste / Neuba I+II');
+
+  const flows = [...flujo.values()];
+  const caps = [...capacidad.values()];
+  for (const p of [...new Set(flows.map((f) => f.pipeline))]) {
+    const last = flows.filter((f) => f.pipeline === p).reduce((a, b) => (a.date > b.date ? a : b));
+    const perDay = last.volume / new Date(Date.UTC(last.date.getUTCFullYear(), last.date.getUTCMonth() + 1, 0)).getUTCDate();
+    console.log(`  ${p}: último ${monthKey(last.date)} = ${Math.round(perDay).toLocaleString('es-AR')} ${last.unit}/d`);
+  }
+  console.log(`  capacidad: ${caps.map((c) => `${c.pipeline} ${c.year} máx ${c.maxM3d} / diseño ${c.designM3d} m3/d`).filter((s) => / 202[4-6] /.test(s)).join(' · ')}`);
+  if (flows.length < 100 || caps.length < 3) throw new Error(`pocos datos (${flows.length} flujos, ${caps.length} capacidades); no reemplazo`);
+  if (DRY_RUN) return;
+  await prisma.$transaction([
+    prisma.factPipelineFlow.deleteMany({}),
+    prisma.factPipelineFlow.createMany({ data: flows }),
+    prisma.factPipelineCapacity.deleteMany({}),
+    prisma.factPipelineCapacity.createMany({ data: caps }),
+  ]);
 }
 
 /* Pozos en perforación: el CSV trae una fila por empresa × área × yacimiento ×
@@ -296,7 +574,7 @@ async function main() {
   const t0 = Date.now();
   // Cada bloque es independiente: si una fuente se cae, las demás se cargan igual.
   // Sin argumentos corren todos; con argumentos, sólo esos (`refresh-market.ts combustibles`).
-  // datos.energia.gob.ar no responde desde el VPS, por eso combustibles y perforacion van aparte.
+  // datos.energia.gob.ar no responde desde el VPS, por eso combustibles, perforacion y ductos van aparte.
   const only = process.argv.slice(2);
   const blocks = [
     ['precios', 'precios energía (FRED/EIA)', energyPrices],
@@ -306,6 +584,10 @@ async function main() {
     ['combustibles', 'combustibles en surtidor (datos.energia.gob.ar)', fuelPrices],
     ['rigi', 'proyectos RIGI aprobados (Ministerio de Economía)', rigi],
     ['perforacion', 'pozos en perforación (datos.energia.gob.ar)', perforacion],
+    ['crudo', 'precio del crudo local: Medanito y Escalante (SE, regalías)', crudoLocal],
+    ['cuencas', 'cuencas de EE.UU.: Permian y otras (EIA STEO)', cuencasEeuu],
+    ['exportaciones', 'exportaciones por provincia (INDEC OPEX)', exportacionesProvincia],
+    ['ductos', 'ductos de salida de la cuenca Neuquina (SE + ENARGAS)', ductos],
   ] as const;
   const unknown = only.filter((k) => !blocks.some(([key]) => key === k));
   if (unknown.length) throw new Error(`bloques desconocidos: ${unknown.join(', ')}`);

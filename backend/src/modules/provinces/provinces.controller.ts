@@ -1,5 +1,5 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
-import { ApiNotFoundResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
+import { ApiNotFoundResponse, ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { ApiErrorDto, ApiOkEnvelope } from '../../common/swagger';
 import { ResponseMeta } from '../../common/response-meta.decorator';
 import { ListProvincesQueryDto, ProvinceProductionQueryDto } from './provinces.dto';
@@ -10,14 +10,9 @@ import {
   ProvinceListItemDto,
   ProvinceProductionPointDto,
 } from './provinces.response';
-import { EXPORTS_ESTIMATE, ProvincesService } from './provinces.service';
+import { EXPORTS_SOURCE, ProvincesService } from './provinces.service';
 
-// meta de los dos endpoints de exportaciones: ver EXPORTS_ESTIMATE
-const EXPORTS_META = {
-  source: 'vacamuerta.io estimate over Secretaría de Energía production — NOT an export record',
-  dataset: 'Estimated provincial export value',
-  ...EXPORTS_ESTIMATE,
-};
+const EXPORTS_META = { source: EXPORTS_SOURCE.source, dataset: 'Exportaciones por provincia de origen', note: EXPORTS_SOURCE.note };
 
 @ApiTags('provinces')
 @Controller({ path: 'provinces', version: '2' })
@@ -39,8 +34,8 @@ export class ProvincesController {
   @ApiOperation({
     summary: 'Province export ranking',
     description:
-      'ESTIMATE, not recorded exports (see `meta.method` / `estimate`): provinces ranked by an annual value ' +
-      'derived from production with fixed price and export-share assumptions. Do not publish as export data.',
+      'Recorded exports by province of origin (INDEC OPEX), FOB US$, for the last complete calendar year (`period`), by ' +
+      'gran rubro (Combustibles y energía, Productos primarios, MOA, MOI), plus the current year to date (`ytd_export_usd`, `ytd`).',
   })
   @ApiOkEnvelope(ProvinceExportSummaryDto)
   exportSummary() {
@@ -71,13 +66,26 @@ export class ProvincesController {
     return this.service.production(slug, q);
   }
 
+  @Get(':slug/exports/monthly')
+  @ResponseMeta(EXPORTS_META)
+  @ApiOperation({
+    summary: 'Province exports, monthly',
+    description:
+      'Monthly recorded exports (INDEC OPEX, FOB US$) since 2002: total and by gran rubro. Use `from` to trim. ' +
+      'For Neuquén, «Combustibles y energía» is ~97% of the total.',
+  })
+  @ApiParam({ name: 'slug', example: 'neuquen' })
+  @ApiQuery({ name: 'from', required: false, example: '2024-01' })
+  @ApiNotFoundResponse({ type: ApiErrorDto, description: 'Province slug not found.' })
+  exportsMonthly(@Param('slug') slug: string, @Query('from') from?: string) {
+    return this.service.exportsMonthly(slug, from);
+  }
+
   @Get(':slug/exports')
   @ResponseMeta(EXPORTS_META)
   @ApiOperation({
     summary: 'Province exports by sector',
-    description:
-      'ESTIMATE, not recorded exports (see `meta.method`): annual value by sector derived from production ' +
-      'with fixed price and export-share assumptions. Do not publish as export data.',
+    description: 'Recorded exports (INDEC OPEX) for the last complete calendar year, by gran rubro. `year` says which.',
   })
   @ApiParam({ name: 'slug', example: 'chubut' })
   @ApiOkEnvelope(ProvinceExportRowDto, { isArray: true })
