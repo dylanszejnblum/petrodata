@@ -182,7 +182,10 @@ model RigiProject {
   operator       String?
   province       String?
   investmentMusd Float?    @map("investment_musd")
-  approvalDate   DateTime? @map("approval_date") @db.Date
+  approvalDate   DateTime? @map("approval_date") @db.Date // publicación en el BO
+  resolution     String? // "Res. 1808/2026"
+  jobs           Int? // empleos directos e indirectos declarados
+  description    String?
   sourceLabel    String?   @map("source_label")
   sourceUrl      String?   @map("source_url")
 
@@ -197,6 +200,19 @@ model FactRigCount {
   totalRigs Int?     @map("total_rigs")
 
   @@map("fact_rig_count")
+}
+
+/// Pozos en perforación por mes y provincia (Secretaría de Energía, dataset
+/// «Perforación de pozos de petróleo y gas»). Cuenta POZOS, no equipos, y no
+/// separa petróleo de gas: es el indicador oficial de actividad que se actualiza
+/// solo; los equipos (fact_rig_count) son Baker Hughes y se cargan a mano.
+model FactWellsDrilling {
+  date     DateTime @db.Date
+  province String
+  wells    Int
+
+  @@id([date, province])
+  @@map("fact_wells_drilling")
 }
 
 model FactEnergyBalance {

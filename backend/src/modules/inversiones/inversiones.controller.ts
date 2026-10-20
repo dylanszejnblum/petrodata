@@ -32,6 +32,23 @@ export class InversionesController {
     return this.service.getPage(pickLang(lang ?? acceptLanguage));
   }
 
+  @Get('rigi')
+  @ResponseMeta({
+    source: 'Boletín Oficial / Ministerio de Economía — Registro RIGI',
+    dataset: 'Proyectos aprobados bajo el RIGI',
+    note: 'Lista curada a mano desde las resoluciones de adhesión; cada proyecto trae su resolución y link. Sólo aprobados.',
+  })
+  @ApiOperation({
+    summary: 'Approved RIGI projects',
+    description:
+      'Every project approved under the RIGI (Régimen de Incentivo para Grandes Inversiones): name, sector, companies, ' +
+      'province, approved investment (US$ M), approval date and the resolution / source link, plus totals by sector and ' +
+      'province. `as_of` is the newest approval date on file.',
+  })
+  rigi() {
+    return this.service.rigi();
+  }
+
   @Get('trimestre')
   @ApiOperation({
     summary: 'Same investment page, filtered to a quarter',
