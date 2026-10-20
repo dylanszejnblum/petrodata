@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { cached, TTL } from '../../common/cache';
+import { isPreliminary, latestCompleteMonth } from '../../common/complete-month';
 import { ListOperatorsQueryDto, OperatorProductionQueryDto, OperatorSort } from './operators.dto';
 import { parseMonthInput } from '../production/production.dto';
 
@@ -20,6 +21,8 @@ export interface SeriesPoint {
   gas_mmcf_d: number;
   boe: number;
   active_wells: number;
+  /** month still being reported by operators (see common/complete-month) */
+  preliminary: boolean;
 }
 
 // Economic-contribution assumptions. Volumes are official (Secretaría de Energía);
@@ -367,6 +370,7 @@ export class OperatorsService {
     }
     const where = Prisma.join(conds, ' AND ');
 
+    const complete = await latestCompleteMonth(this.prisma);
     const rows = await this.prisma.$queryRaw<any[]>`
       SELECT
         operator_slug,
@@ -394,6 +398,7 @@ export class OperatorsService {
         gas_mmcf_d: r.gas_mmcf_d,
         boe: r.boe,
         active_wells: r.active_wells,
+        preliminary: isPreliminary(r.date_month, complete),
       });
       bySlug.set(r.operator_slug, list);
     }

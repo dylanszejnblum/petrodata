@@ -1,6 +1,7 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ApiNotFoundResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { ApiErrorDto, ApiOkEnvelope } from '../../common/swagger';
+import { ResponseMeta } from '../../common/response-meta.decorator';
 import { ListProvincesQueryDto, ProvinceProductionQueryDto } from './provinces.dto';
 import {
   ProvinceDetailDto,
@@ -9,7 +10,14 @@ import {
   ProvinceListItemDto,
   ProvinceProductionPointDto,
 } from './provinces.response';
-import { ProvincesService } from './provinces.service';
+import { EXPORTS_ESTIMATE, ProvincesService } from './provinces.service';
+
+// meta de los dos endpoints de exportaciones: ver EXPORTS_ESTIMATE
+const EXPORTS_META = {
+  source: 'vacamuerta.io estimate over Secretaría de Energía production — NOT an export record',
+  dataset: 'Estimated provincial export value',
+  ...EXPORTS_ESTIMATE,
+};
 
 @ApiTags('provinces')
 @Controller({ path: 'provinces', version: '2' })
@@ -27,9 +35,12 @@ export class ProvincesController {
   }
 
   @Get('export-summary')
+  @ResponseMeta(EXPORTS_META)
   @ApiOperation({
     summary: 'Province export ranking',
-    description: 'All provinces ranked by annual export value across petróleo / gas / minería, plus the national totals.',
+    description:
+      'ESTIMATE, not recorded exports (see `meta.method` / `estimate`): provinces ranked by an annual value ' +
+      'derived from production with fixed price and export-share assumptions. Do not publish as export data.',
   })
   @ApiOkEnvelope(ProvinceExportSummaryDto)
   exportSummary() {
@@ -61,9 +72,12 @@ export class ProvincesController {
   }
 
   @Get(':slug/exports')
+  @ResponseMeta(EXPORTS_META)
   @ApiOperation({
     summary: 'Province exports by sector',
-    description: 'Annual export values for the province, by sector and product.',
+    description:
+      'ESTIMATE, not recorded exports (see `meta.method`): annual value by sector derived from production ' +
+      'with fixed price and export-share assumptions. Do not publish as export data.',
   })
   @ApiParam({ name: 'slug', example: 'chubut' })
   @ApiOkEnvelope(ProvinceExportRowDto, { isArray: true })

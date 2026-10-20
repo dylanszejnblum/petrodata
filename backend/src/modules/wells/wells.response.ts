@@ -46,3 +46,21 @@ export class WellTimeSeriesPointDto {
   @ApiProperty({ example: 1212.7 }) boe!: number;
   @ApiProperty({ example: true }) vm_combined!: boolean;
 }
+
+export class WellSummaryGroupDto {
+  @ApiProperty({ example: 'Neuquén', description: 'Province, formation slug or operator slug.' }) key!: string;
+  @ApiProperty({ example: 4206, description: 'Wells with production > 0 that month.' }) producing!: number;
+  @ApiProperty({ example: 5337, description: 'Wells that filed that month, zero-production included.' }) reporting!: number;
+}
+
+export class WellSummaryTotalsDto {
+  @ApiProperty({ example: 4206 }) producing!: number;
+  @ApiProperty({ example: 5337 }) reporting!: number;
+}
+
+export class WellSummaryDto {
+  @ApiProperty({ example: '2026-08-01', nullable: true }) month!: string | null;
+  @ApiProperty({ example: 'province', enum: ['province', 'formation', 'operator'] }) group_by!: string;
+  @ApiProperty({ type: WellSummaryTotalsDto }) totals!: WellSummaryTotalsDto;
+  @ApiProperty({ type: [WellSummaryGroupDto] }) groups!: WellSummaryGroupDto[];
+}

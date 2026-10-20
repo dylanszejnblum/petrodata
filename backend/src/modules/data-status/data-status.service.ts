@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { cached, TTL } from '../../common/cache';
+import { latestCompleteMonth } from '../../common/complete-month';
 
 @Injectable()
 export class DataStatusService {
@@ -31,6 +32,7 @@ export class DataStatusService {
       this.prisma.aggMonthlyByOperator.findFirst({ orderBy: { dateMonth: 'desc' }, select: { dateMonth: true } }),
     ]);
 
+    const complete = await latestCompleteMonth(this.prisma);
     const fmt = (d: Date | null | undefined) => (d ? d.toISOString().slice(0, 10) : null);
 
     return {
@@ -38,6 +40,8 @@ export class DataStatusService {
       dataset: 'Producción de petróleo y gas por pozo',
       license: 'CC-BY-4.0',
       latest_month: fmt(latestFact?.dateMonth),
+      // months after this one are still being filed by operators: treat as preliminary
+      latest_complete_month: fmt(complete),
       earliest_month: fmt(earliestFact?.dateMonth),
       tables: {
         dim_operator: { rows: operatorCount },

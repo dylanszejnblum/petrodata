@@ -1,8 +1,8 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ApiNotFoundResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { ApiErrorDto, ApiOkEnvelope } from '../../common/swagger';
-import { ListWellsQueryDto, WellProductionQueryDto } from './wells.dto';
-import { WellDetailDto, WellDto, WellTimeSeriesPointDto } from './wells.response';
+import { ListWellsQueryDto, WellProductionQueryDto, WellSummaryQueryDto } from './wells.dto';
+import { WellDetailDto, WellDto, WellSummaryDto, WellTimeSeriesPointDto } from './wells.response';
 import { WellsService } from './wells.service';
 
 @ApiTags('wells')
@@ -13,11 +13,24 @@ export class WellsController {
   @Get()
   @ApiOperation({
     summary: 'List wells',
-    description: 'Paginated well catalog. Supports filters by operator/formation/basin/province/concession and a substring search on `sigla`.',
+    description: 'Paginated well catalog (every well ever registered, incl. abandoned; `pagination.total` is the catalog count — for active wells use /wells/summary). Supports filters by operator/formation/basin/province/concession and a substring search on `sigla`.',
   })
   @ApiOkEnvelope(WellDto, { isArray: true, paginated: true })
   list(@Query() q: ListWellsQueryDto) {
     return this.service.list(q);
+  }
+
+  // Declared before :id so "summary" isn't read as a well id.
+  @Get('summary')
+  @ApiOperation({
+    summary: 'Well counts by province, formation or operator',
+    description:
+      'Producing wells (boe > 0, the API-wide meaning of "active") and reporting wells (filed that month, ' +
+      'zero months included) per group, for one month. Defaults to latest_complete_month. `vm=true` for Vaca Muerta only.',
+  })
+  @ApiOkEnvelope(WellSummaryDto)
+  summary(@Query() q: WellSummaryQueryDto) {
+    return this.service.summary(q);
   }
 
   @Get(':id')
