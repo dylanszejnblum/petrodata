@@ -5,6 +5,7 @@ import { ApiErrorDto, ApiOkEnvelope } from '../../common/swagger';
 import { FxQueryDto } from './macro.dto';
 import { FxLatestDto, FxPointDto, RigCountPointDto, WellsDrillingPointDto } from './macro.response';
 import { MacroService } from './macro.service';
+import { SHALE_RESOURCES } from './shale-resources';
 
 const RIG_META = {
   source: 'Baker Hughes — Worldwide Rig Count (rigcount.bakerhughes.com)',
@@ -68,6 +69,36 @@ export class MacroController {
   @ApiOkEnvelope(WellsDrillingPointDto, { isArray: true })
   wellsDrilling(@Query('province') province?: string) {
     return this.service.wellsDrilling(province);
+  }
+
+  @Get('world/basins')
+  @ResponseMeta({
+    source: 'EIA Short-Term Energy Outlook (US basins) · Secretaría de Energía (Vaca Muerta) · Baker Hughes (Argentina rigs)',
+    dataset: 'Vaca Muerta vs US shale basins, monthly',
+    note: 'US: crude oil only (no condensate/NGL) and marketed gas; recent months are EIA estimates, revised monthly.',
+  })
+  @ApiOperation({
+    summary: 'Vaca Muerta vs Permian and other US shale basins',
+    description:
+      'Monthly, same units: crude kb/d, gas Bcf/d and MMm3/d, rigs. Basins: permian, eagle_ford, bakken, haynesville, ' +
+      'appalachia (EIA STEO) and vaca_muerta (SE production, `preliminary` on the month still being filed). ' +
+      '`argentina_rigs` is the whole country (Baker Hughes): there is no VM-only rig count.',
+  })
+  @ApiQuery({ name: 'from', required: false, example: '2024-01' })
+  basins(@Query('from') from?: string) {
+    return this.service.basins(from);
+  }
+
+  @Get('world/shale-resources')
+  @ResponseMeta({ source: SHALE_RESOURCES.source, dataset: 'Technically recoverable shale resources by country' })
+  @ApiOperation({
+    summary: 'Shale resources by country (EIA 2015)',
+    description:
+      'Unproved technically recoverable shale gas (Tcf) and tight oil (billion bbl): top 10 countries each, world total and ' +
+      'Argentina by formation. Static: EIA has not updated this assessment since Sept 2015 — cite it with its date.',
+  })
+  shaleResources() {
+    return SHALE_RESOURCES;
   }
 
   @Get('rig-count/latest')

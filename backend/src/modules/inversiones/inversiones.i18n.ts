@@ -29,8 +29,8 @@ export function sources(lang: Lang) {
       url: 'https://datos.energia.gob.ar/dataset/produccion-de-petroleo-y-gas-por-pozo',
     },
     EXPORT: {
-      label: en ? 'Exports by sector (provinces)' : 'Exportaciones por sector (provincias)',
-      url: 'https://datos.energia.gob.ar/',
+      label: en ? 'INDEC — crude oil and gas exports, last 12 months' : 'INDEC — exportaciones de petróleo crudo y gas, últimos 12 meses',
+      url: 'https://www.indec.gob.ar/indec/web/Nivel4-Tema-3-2-40',
     },
     BRENT: { label: 'EIA (Brent)', url: 'https://www.eia.gov/dnav/pet/hist/RBRTEM.htm' },
     BRENT_LIVE: { label: en ? 'Yahoo Finance — Brent (BZ=F), real-time' : 'Yahoo Finance — Brent (BZ=F), tiempo real', url: 'https://finance.yahoo.com/quote/BZ=F' },
@@ -51,6 +51,12 @@ export function sources(lang: Lang) {
     RIGI: {
       label: en ? 'Ministry of Economy — RIGI Registry (Law 27.742)' : 'Ministerio de Economía — Registro RIGI (Ley 27.742)',
       url: 'https://www.argentina.gob.ar/economia/rigi',
+    },
+    PROYECCION: {
+      label: en
+        ? 'CEPH (oil & gas producers chamber) with Economía y Energía — moderate scenario, Apr 2026 (Argentina total)'
+        : 'CEPH (cámara de petroleras) con Economía y Energía — escenario moderado, abr-2026 (total país)',
+      url: 'https://econojournal.com.ar/oilgas/las-petroleras-proyectan-que-el-superavit-de-la-balanza-comercial-energetica-podria-llegar-casi-a-quintuplicarse-hasta-2030/',
     },
     BREAKEVEN_REFERENCE: {
       label: en ? 'YPF (Vaca Muerta breakeven ~US$45/bbl)' : 'YPF (breakeven Vaca Muerta ~US$45/bbl)',
@@ -82,8 +88,8 @@ export function strings(lang: Lang) {
   const en = lang === 'en';
   return {
     note: en
-      ? 'All figures are computed from official data already ingested by the pipeline. UNDERWAY / PROJECTED figures will be added with their verifiable source.'
-      : 'Todas las cifras se computan a partir de datos oficiales ya ingeridos por el pipeline. Las cifras EN MARCHA / PROYECTADO se agregarán con su fuente verificable.',
+      ? 'CONFIRMED figures are computed from official data. UNDERWAY = approved RIGI investment and evacuation works under construction, each with its source. PROJECTED = the industry chamber (CEPH) moderate scenario for 2030, cited: a projection, not a measurement.'
+      : 'Las cifras CONFIRMADAS se computan desde datos oficiales. EN MARCHA = inversión aprobada en el RIGI y obras de evacuación en construcción, cada una con su fuente. PROYECTADO = escenario moderado 2030 de la cámara de petroleras (CEPH), citado: es una proyección, no una medición.',
 
     headline: (sharePct: string, bblD: string, asOf: string) =>
       en

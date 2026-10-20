@@ -20,6 +20,7 @@ import { NewsModule } from './modules/news/news.module';
 import { InversionesModule } from './modules/inversiones/inversiones.module';
 import { NewsletterModule } from './modules/newsletter/newsletter.module';
 import { DirectivosModule } from './modules/directivos/directivos.module';
+import { TransporteModule } from './modules/transporte/transporte.module';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { DirectivosModule } from './modules/directivos/directivos.module';
     InversionesModule,
     NewsletterModule,
     DirectivosModule,
+    TransporteModule,
   ],
   controllers: [AppController],
   providers: [

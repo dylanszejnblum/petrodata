@@ -43,3 +43,15 @@ export class FuelLatestEntryDto {
   @ApiProperty({ example: 142 }) sample_size!: number;
   @ApiProperty({ example: '2026-05-29' }) fecha_vigencia!: string;
 }
+
+export class CrudeLocalPointDto {
+  @ApiProperty({ example: '2026-08' }) date!: string;
+  @ApiProperty({ example: 79.06, nullable: true, description: 'Medanito, total (domestic + export), USD/bbl.' }) medanito!: number | null;
+  @ApiProperty({ example: 79.84, nullable: true, description: 'Medanito, domestic market (MI + TSP), USD/bbl.' })
+  medanito_domestic!: number | null;
+  @ApiProperty({ example: 79.99, nullable: true }) escalante!: number | null;
+  @ApiProperty({ example: 87.75, nullable: true, description: 'Brent as reported in the same SE file.' }) brent!: number | null;
+  @ApiProperty({ example: -8.69, nullable: true }) medanito_vs_brent_usd!: number | null;
+  @ApiProperty({ example: -9.9, nullable: true }) medanito_vs_brent_pct!: number | null;
+  @ApiProperty({ example: false, description: 'Last two months: provisional upstream.' }) provisional!: boolean;
+}

@@ -55,7 +55,8 @@ export class ProvinceMiningDto {
 export class ProvinceExportRowDto {
   @ApiProperty({ example: 'petróleo' }) sector!: string;
   @ApiProperty({ example: 'Petróleo crudo' }) product!: string;
-  @ApiProperty({ example: 781080206 }) value_annual_usd!: number;
+  @ApiProperty({ example: 6148700000 }) value_annual_usd!: number;
+  @ApiProperty({ example: 2025, description: 'Calendar year.' }) year!: number;
 }
 
 export class ProvinceDetailDto {
@@ -83,7 +84,8 @@ export class ProvinceProductionPointDto {
 export class ProvinceExportSummaryRowDto {
   @ApiProperty({ example: 'chubut' }) slug!: string;
   @ApiProperty({ example: 'Chubut' }) name!: string;
-  @ApiProperty({ example: 822502694 }) total_export_usd!: number;
+  @ApiProperty({ example: 6300600000, description: 'FOB US$, last complete calendar year.' }) total_export_usd!: number;
+  @ApiProperty({ example: 6031300000, description: 'FOB US$, current year to date.' }) ytd_export_usd!: number;
   @ApiProperty({ type: 'object', additionalProperties: { type: 'number' }, example: { 'petróleo': 781080206, gas: 41422488 } })
   by_sector!: Record<string, number>;
 }
@@ -94,11 +96,11 @@ export class ProvinceExportSummaryDto {
   @ApiProperty({ type: 'object', additionalProperties: { type: 'number' }, example: { 'petróleo': 8500000000, gas: 3200000000 } })
   national_by_sector!: Record<string, number>;
 
-  @ApiProperty({
-    type: 'object',
-    additionalProperties: true,
-    description: 'How these figures were built. They are an ESTIMATE over production, not recorded exports (`publishable: false`).',
-    example: { kind: 'estimate', computed_at: '2026-05-31', publishable: false },
-  })
-  estimate!: Record<string, unknown>;
+  @ApiProperty({ example: { year: 2025, from: '2025-01', to: '2025-12' }, description: 'Calendar year the totals cover.' })
+  period!: { year: number; from: string; to: string } | null;
+
+  @ApiProperty({ example: { from: '2026-01', to: '2026-08', national_total_usd: 67247800000 }, nullable: true })
+  ytd!: { from: string; to: string; national_total_usd: number } | null;
+
+  @ApiProperty({ example: 'INDEC — Origen provincial de las exportaciones (OPEX), serie mensual' }) source!: string;
 }

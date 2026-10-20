@@ -77,6 +77,41 @@ export class PricesService {
     }));
   }
 
+  /** Medanito / Escalante vs Brent, monthly, all from the SE royalties report so the
+   *  comparison is apples to apples. The last two months are provisional upstream. */
+  async crudeLocal(from?: string) {
+    const rows = await this.prisma.factPrice.findMany({
+      where: {
+        source: 'se',
+        series: { in: ['medanito', 'medanito_mi', 'escalante', 'brent'] },
+        ...(from ? { date: { gte: new Date(`${from.slice(0, 7)}-01T00:00:00Z`) } } : {}),
+      },
+      orderBy: { date: 'asc' },
+    });
+    const byMonth = new Map<string, Record<string, number>>();
+    for (const r of rows) {
+      const m = byMonth.get(monthString(r.date)) ?? {};
+      m[r.series] = r.value;
+      byMonth.set(monthString(r.date), m);
+    }
+    const months = [...byMonth.keys()].filter((k) => byMonth.get(k)!.medanito != null);
+    const provisional = new Set(months.slice(-2));
+    return months.map((date) => {
+      const m = byMonth.get(date)!;
+      const round = (v: number) => Math.round(v * 100) / 100;
+      return {
+        date,
+        medanito: m.medanito ?? null,
+        medanito_domestic: m.medanito_mi ?? null,
+        escalante: m.escalante ?? null,
+        brent: m.brent ?? null,
+        medanito_vs_brent_usd: m.brent != null ? round(m.medanito - m.brent) : null,
+        medanito_vs_brent_pct: m.brent ? round(((m.medanito - m.brent) / m.brent) * 100) : null,
+        provisional: provisional.has(date),
+      };
+    });
+  }
+
   async fuelPrices(q: FuelPricesQueryDto) {
     const page = q.page ?? 1;
     const limit = q.limit ?? 100;
