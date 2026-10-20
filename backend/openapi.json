@@ -512,7 +512,7 @@
     },
     "/api/v1/wells": {
       "get": {
-        "description": "Paginated well catalog. Supports filters by operator/formation/basin/province/concession and a substring search on `sigla`.",
+        "description": "Paginated well catalog (every well ever registered, incl. abandoned; `pagination.total` is the catalog count — for active wells use /wells/summary). Supports filters by operator/formation/basin/province/concession and a substring search on `sigla`.",
         "operationId": "WellsController_list_v1",
         "parameters": [
           {
@@ -631,6 +631,76 @@
           }
         },
         "summary": "List wells",
+        "tags": [
+          "wells"
+        ]
+      }
+    },
+    "/api/v1/wells/summary": {
+      "get": {
+        "description": "Producing wells (boe > 0, the API-wide meaning of \"active\") and reporting wells (filed that month, zero months included) per group, for one month. Defaults to latest_complete_month. `vm=true` for Vaca Muerta only.",
+        "operationId": "WellsController_summary_v1",
+        "parameters": [
+          {
+            "name": "group_by",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": "province",
+              "type": "string",
+              "enum": [
+                "province",
+                "formation",
+                "operator"
+              ]
+            }
+          },
+          {
+            "name": "vm",
+            "required": false,
+            "in": "query",
+            "description": "Vaca Muerta only (`vm_combined`).",
+            "schema": {
+              "example": "true",
+              "type": "string"
+            }
+          },
+          {
+            "name": "month",
+            "required": false,
+            "in": "query",
+            "description": "Month (YYYY-MM). Default: latest_complete_month, never a preliminary one.",
+            "schema": {
+              "example": "2026-08",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/WellSummaryDto"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/MetaDto"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "summary": "Well counts by province, formation or operator",
         "tags": [
           "wells"
         ]
@@ -2550,7 +2620,7 @@
     },
     "/api/v2/provinces/export-summary": {
       "get": {
-        "description": "All provinces ranked by annual export value across petróleo / gas / minería, plus the national totals.",
+        "description": "ESTIMATE, not recorded exports (see `meta.method` / `estimate`): provinces ranked by an annual value derived from production with fixed price and export-share assumptions. Do not publish as export data.",
         "operationId": "ProvincesController_exportSummary_v2",
         "parameters": [],
         "responses": {
@@ -2718,7 +2788,7 @@
     },
     "/api/v2/provinces/{slug}/exports": {
       "get": {
-        "description": "Annual export values for the province, by sector and product.",
+        "description": "ESTIMATE, not recorded exports (see `meta.method`): annual value by sector derived from production with fixed price and export-share assumptions. Do not publish as export data.",
         "operationId": "ProvincesController_exports_v2",
         "parameters": [
           {
@@ -3563,7 +3633,13 @@
           },
           "active_wells": {
             "type": "number",
-            "example": 2465
+            "example": 2465,
+            "description": "Wells with production > 0 that month."
+          },
+          "preliminary": {
+            "type": "boolean",
+            "example": false,
+            "description": "true = month still being filed by operators; totals will rise. See /data-freshness latest_complete_month."
           }
         },
         "required": [
@@ -3577,7 +3653,8 @@
           "gas_mcf",
           "gas_mmcf_d",
           "boe",
-          "active_wells"
+          "active_wells",
+          "preliminary"
         ]
       },
       "MetaDto": {
@@ -3761,6 +3838,11 @@
           "vm_combined": {
             "type": "boolean",
             "example": true
+          },
+          "preliminary": {
+            "type": "boolean",
+            "example": false,
+            "description": "true = month still being filed by operators; totals will rise. See /data-freshness latest_complete_month."
           }
         },
         "required": [
@@ -3792,7 +3874,8 @@
           "boe",
           "formation_vaca_muerta",
           "unconventional",
-          "vm_combined"
+          "vm_combined",
+          "preliminary"
         ]
       },
       "VmShareDto": {
@@ -3855,7 +3938,19 @@
           "date_month": {
             "type": "object",
             "example": "2026-04-01",
-            "nullable": true
+            "nullable": true,
+            "description": "Newest month on file (may be preliminary)."
+          },
+          "preliminary": {
+            "type": "boolean",
+            "example": false,
+            "description": "true = month still being filed by operators; totals will rise. See /data-freshness latest_complete_month."
+          },
+          "latest_complete_month": {
+            "type": "object",
+            "example": "2026-03-01",
+            "nullable": true,
+            "description": "Newest fully reported month."
           },
           "oil_m3": {
             "type": "number",
@@ -3893,6 +3988,8 @@
         },
         "required": [
           "date_month",
+          "preliminary",
+          "latest_complete_month",
           "oil_m3",
           "oil_bbl_d",
           "gas_thousand_m3",
@@ -4222,6 +4319,11 @@
           "active_wells": {
             "type": "number",
             "example": 5087
+          },
+          "preliminary": {
+            "type": "boolean",
+            "example": false,
+            "description": "true = month still being filed by operators; totals will rise. See /data-freshness latest_complete_month."
           }
         },
         "required": [
@@ -4231,7 +4333,8 @@
           "gas_thousand_m3",
           "gas_mmcf_d",
           "boe",
-          "active_wells"
+          "active_wells",
+          "preliminary"
         ]
       },
       "OperatorSeriesDto": {
@@ -4501,6 +4604,82 @@
           "depth_m",
           "latitude",
           "longitude"
+        ]
+      },
+      "WellSummaryTotalsDto": {
+        "type": "object",
+        "properties": {
+          "producing": {
+            "type": "number",
+            "example": 4206
+          },
+          "reporting": {
+            "type": "number",
+            "example": 5337
+          }
+        },
+        "required": [
+          "producing",
+          "reporting"
+        ]
+      },
+      "WellSummaryGroupDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "example": "Neuquén",
+            "description": "Province, formation slug or operator slug."
+          },
+          "producing": {
+            "type": "number",
+            "example": 4206,
+            "description": "Wells with production > 0 that month."
+          },
+          "reporting": {
+            "type": "number",
+            "example": 5337,
+            "description": "Wells that filed that month, zero-production included."
+          }
+        },
+        "required": [
+          "key",
+          "producing",
+          "reporting"
+        ]
+      },
+      "WellSummaryDto": {
+        "type": "object",
+        "properties": {
+          "month": {
+            "type": "object",
+            "example": "2026-08-01",
+            "nullable": true
+          },
+          "group_by": {
+            "type": "string",
+            "example": "province",
+            "enum": [
+              "province",
+              "formation",
+              "operator"
+            ]
+          },
+          "totals": {
+            "$ref": "#/components/schemas/WellSummaryTotalsDto"
+          },
+          "groups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WellSummaryGroupDto"
+            }
+          }
+        },
+        "required": [
+          "month",
+          "group_by",
+          "totals",
+          "groups"
         ]
       },
       "WellLatestProductionDto": {
@@ -4910,6 +5089,12 @@
             "example": "2026-04-01",
             "nullable": true
           },
+          "latest_complete_month": {
+            "type": "object",
+            "example": "2026-03-01",
+            "nullable": true,
+            "description": "Newest fully reported month. Months after it are still being filed (preliminary): don't read their drops as real."
+          },
           "earliest_month": {
             "type": "object",
             "example": "2026-01-01",
@@ -4924,6 +5109,7 @@
           "dataset",
           "license",
           "latest_month",
+          "latest_complete_month",
           "earliest_month",
           "tables"
         ]
@@ -6901,12 +7087,23 @@
               "petróleo": 8500000000,
               "gas": 3200000000
             }
+          },
+          "estimate": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "How these figures were built. They are an ESTIMATE over production, not recorded exports (`publishable: false`).",
+            "example": {
+              "kind": "estimate",
+              "computed_at": "2026-05-31",
+              "publishable": false
+            }
           }
         },
         "required": [
           "provinces",
           "national_total_usd",
-          "national_by_sector"
+          "national_by_sector",
+          "estimate"
         ]
       },
       "ProvinceTopOperatorDto": {
@@ -7195,6 +7392,11 @@
           "active_wells": {
             "type": "number",
             "example": 6714
+          },
+          "preliminary": {
+            "type": "boolean",
+            "example": false,
+            "description": "true = month still being filed by operators; totals will rise. See /data-freshness latest_complete_month."
           }
         },
         "required": [
@@ -7204,7 +7406,8 @@
           "oil_m3",
           "gas_thousand_m3",
           "boe",
-          "active_wells"
+          "active_wells",
+          "preliminary"
         ]
       },
       "IngestNewsBodyDto": {

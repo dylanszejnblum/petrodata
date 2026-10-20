@@ -1,6 +1,6 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsInt, IsOptional, IsString, Matches, Max, Min } from 'class-validator';
+import { IsIn, IsInt, IsOptional, IsString, Matches, Max, Min } from 'class-validator';
 
 export class ListWellsQueryDto {
   @ApiPropertyOptional({ example: 'ypf', description: 'Filter by operator slug.' })
@@ -41,4 +41,24 @@ export class WellProductionQueryDto {
   @ApiPropertyOptional({ example: '2026-04' })
   @IsOptional() @IsString() @Matches(/^\d{4}-\d{2}(-\d{2})?$/)
   to?: string;
+}
+
+export const WELL_SUMMARY_GROUPS = ['province', 'formation', 'operator'] as const;
+export type WellSummaryGroup = (typeof WELL_SUMMARY_GROUPS)[number];
+
+export class WellSummaryQueryDto {
+  @ApiPropertyOptional({ enum: WELL_SUMMARY_GROUPS, default: 'province' })
+  @IsOptional() @IsIn(WELL_SUMMARY_GROUPS as unknown as string[])
+  group_by?: WellSummaryGroup;
+
+  @ApiPropertyOptional({ example: 'true', description: 'Vaca Muerta only (`vm_combined`).' })
+  @IsOptional() @IsIn(['true', 'false', '1', '0'])
+  vm?: string;
+
+  @ApiPropertyOptional({
+    example: '2026-08',
+    description: 'Month (YYYY-MM). Default: latest_complete_month, never a preliminary one.',
+  })
+  @IsOptional() @Matches(/^\d{4}-\d{2}$/)
+  month?: string;
 }
