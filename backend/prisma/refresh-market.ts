@@ -12,6 +12,7 @@
  *   bcra/fx_a3500, indec/ipc_mensual, mecon/fiscal_primario ← apis.datos.gob.ar
  *   fact_energy_trade mensual ← INDEC ICA vía apis.datos.gob.ar
  *   fact_fuel_price ← "Precios vigentes en surtidor" (Res. 314/2016), foto completa
+ *   fact_wells_drilling ← «Pozos en perforación» (datos.energia.gob.ar), por mes y provincia
  *   rigi_project ← planilla pública que alimenta argentina.gob.ar/economia/rigi
  *     + la página de cada resolución (número y fecha de publicación en el BO)
  *
@@ -30,6 +31,8 @@ const SERIES_API = 'https://apis.datos.gob.ar/series/api/series/';
 const FUEL_CSV =
   'http://datos.energia.gob.ar/dataset/1c181390-5045-475e-94dc-410429be4b17/resource/80ac25de-a44a-4445-9215-090cf55cfda5/download/precios-en-surtidor-resolucin-3142016.csv';
 
+const PERFORACION_CSV =
+  'http://datos.energia.gob.ar/dataset/7ea2ac77-d7a0-4129-9fbf-6f1a25d94e21/resource/af6838ef-f675-4409-ac6a-e7c391a5dbab/download/pozos-en-perforacin.csv';
 const RIGI_SHEET =
   'https://docs.google.com/spreadsheets/d/1eytHJrzUjIFOXI-P1Hx_wbmZiSqPxVle059Djdos6u8/gviz/tq?tqx=out:csv&sheet=dataset';
 
@@ -208,6 +211,33 @@ async function fuelPrices() {
   );
 }
 
+/* Pozos en perforación: el CSV trae una fila por empresa × área × yacimiento ×
+   concepto (exploración, explotación…) y pesa ~70 MB; acá se suma por mes y
+   provincia. La foto entera se reemplaza: la Secretaría corrige meses viejos. */
+async function perforacion() {
+  const rows = parse(await (await get(PERFORACION_CSV)).text(), {
+    columns: true,
+    bom: true,
+    skip_empty_lines: true,
+  }) as Record<string, string>[];
+  const suma = new Map<string, number>();
+  for (const r of rows) {
+    if (!/^\d{4}-\d{2}/.test(r.indice_tiempo)) continue;
+    const k = `${r.indice_tiempo.slice(0, 7)}|${r.provincia.trim()}`;
+    suma.set(k, (suma.get(k) ?? 0) + (Number(r.cantidad) || 0));
+  }
+  const data = [...suma].map(([k, wells]) => {
+    const [mes, province] = k.split('|');
+    return { date: day(`${mes}-01`), province, wells: Math.round(wells) };
+  });
+  if (data.length < 100) throw new Error(`el CSV trajo ${data.length} filas; no reemplazo la serie`);
+  const ultimo = data.reduce((a, b) => (a.date > b.date ? a : b)).date;
+  const totalUltimo = data.filter((d) => d.date.getTime() === ultimo.getTime()).reduce((a, d) => a + d.wells, 0);
+  console.log(`  ${data.length} filas mes × provincia, último ${monthKey(ultimo)}: ${totalUltimo} pozos`);
+  if (DRY_RUN) return;
+  await prisma.$transaction([prisma.factWellsDrilling.deleteMany({}), prisma.factWellsDrilling.createMany({ data })]);
+}
+
 /* EL RIGI. La página del Ministerio se dibuja desde una planilla pública: una
    fila por PROVINCIA, así que un proyecto que cruza tres provincias viene tres
    veces. La clave es el link a la resolución, que es único por proyecto. La
@@ -266,7 +296,7 @@ async function main() {
   const t0 = Date.now();
   // Cada bloque es independiente: si una fuente se cae, las demás se cargan igual.
   // Sin argumentos corren todos; con argumentos, sólo esos (`refresh-market.ts combustibles`).
-  // datos.energia.gob.ar no responde desde el VPS, por eso combustibles va aparte.
+  // datos.energia.gob.ar no responde desde el VPS, por eso combustibles y perforacion van aparte.
   const only = process.argv.slice(2);
   const blocks = [
     ['precios', 'precios energía (FRED/EIA)', energyPrices],
@@ -275,6 +305,7 @@ async function main() {
     ['intercambio', 'intercambio energético (INDEC)', energyTrade],
     ['combustibles', 'combustibles en surtidor (datos.energia.gob.ar)', fuelPrices],
     ['rigi', 'proyectos RIGI aprobados (Ministerio de Economía)', rigi],
+    ['perforacion', 'pozos en perforación (datos.energia.gob.ar)', perforacion],
   ] as const;
   const unknown = only.filter((k) => !blocks.some(([key]) => key === k));
   if (unknown.length) throw new Error(`bloques desconocidos: ${unknown.join(', ')}`);

@@ -18,7 +18,14 @@ export class FxLatestDto {
 
 export class RigCountPointDto {
   @ApiProperty({ example: '2026-04' }) date!: string;
-  @ApiProperty({ example: 71, nullable: true }) oil_rigs!: number | null;
+  @ApiProperty({ example: 38, nullable: true }) oil_rigs!: number | null;
   @ApiProperty({ example: 14, nullable: true }) gas_rigs!: number | null;
-  @ApiProperty({ example: 85, nullable: true }) total_rigs!: number | null;
+  @ApiProperty({ example: 52, nullable: true }) total_rigs!: number | null;
+}
+
+export class WellsDrillingPointDto {
+  @ApiProperty({ example: '2026-09' }) date!: string;
+  @ApiProperty({ example: 106, description: 'Wells in drilling that month (sum of the provinces returned).' }) total!: number;
+  @ApiProperty({ type: 'object', additionalProperties: { type: 'number' }, example: { 'Neuquén': 78, Chubut: 22, 'Santa Cruz': 5 } })
+  by_province!: Record<string, number>;
 }

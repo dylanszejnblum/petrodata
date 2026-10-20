@@ -202,6 +202,19 @@ model FactRigCount {
   @@map("fact_rig_count")
 }
 
+/// Pozos en perforación por mes y provincia (Secretaría de Energía, dataset
+/// «Perforación de pozos de petróleo y gas»). Cuenta POZOS, no equipos, y no
+/// separa petróleo de gas: es el indicador oficial de actividad que se actualiza
+/// solo; los equipos (fact_rig_count) son Baker Hughes y se cargan a mano.
+model FactWellsDrilling {
+  date     DateTime @db.Date
+  province String
+  wells    Int
+
+  @@id([date, province])
+  @@map("fact_wells_drilling")
+}
+
 model FactEnergyBalance {
   id             Int    @id @default(autoincrement())
   ano            Int
