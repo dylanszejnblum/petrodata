@@ -12,6 +12,9 @@
  *   bcra/fx_a3500, indec/ipc_mensual, mecon/fiscal_primario ← apis.datos.gob.ar
  *   fact_energy_trade mensual ← INDEC ICA vía apis.datos.gob.ar
  *   fact_fuel_price ← "Precios vigentes en surtidor" (Res. 314/2016), foto completa
+ *   fact_wells_drilling ← «Pozos en perforación» (datos.energia.gob.ar), por mes y provincia
+ *   rigi_project ← planilla pública que alimenta argentina.gob.ar/economia/rigi
+ *     + la página de cada resolución (número y fecha de publicación en el BO)
  *
  * Cada punto que llega reemplaza al de la misma fecha; los que faltan en la
  * fuente (datos.gob.ar tiene huecos) no borran lo que ya había.
@@ -27,6 +30,11 @@ const FROM = '2019-01-01';
 const SERIES_API = 'https://apis.datos.gob.ar/series/api/series/';
 const FUEL_CSV =
   'http://datos.energia.gob.ar/dataset/1c181390-5045-475e-94dc-410429be4b17/resource/80ac25de-a44a-4445-9215-090cf55cfda5/download/precios-en-surtidor-resolucin-3142016.csv';
+
+const PERFORACION_CSV =
+  'http://datos.energia.gob.ar/dataset/7ea2ac77-d7a0-4129-9fbf-6f1a25d94e21/resource/af6838ef-f675-4409-ac6a-e7c391a5dbab/download/pozos-en-perforacin.csv';
+const RIGI_SHEET =
+  'https://docs.google.com/spreadsheets/d/1eytHJrzUjIFOXI-P1Hx_wbmZiSqPxVle059Djdos6u8/gviz/tq?tqx=out:csv&sheet=dataset';
 
 type Point = { date: Date; value: number };
 
@@ -203,11 +211,92 @@ async function fuelPrices() {
   );
 }
 
+/* Pozos en perforación: el CSV trae una fila por empresa × área × yacimiento ×
+   concepto (exploración, explotación…) y pesa ~70 MB; acá se suma por mes y
+   provincia. La foto entera se reemplaza: la Secretaría corrige meses viejos. */
+async function perforacion() {
+  const rows = parse(await (await get(PERFORACION_CSV)).text(), {
+    columns: true,
+    bom: true,
+    skip_empty_lines: true,
+  }) as Record<string, string>[];
+  const suma = new Map<string, number>();
+  for (const r of rows) {
+    if (!/^\d{4}-\d{2}/.test(r.indice_tiempo)) continue;
+    const k = `${r.indice_tiempo.slice(0, 7)}|${r.provincia.trim()}`;
+    suma.set(k, (suma.get(k) ?? 0) + (Number(r.cantidad) || 0));
+  }
+  const data = [...suma].map(([k, wells]) => {
+    const [mes, province] = k.split('|');
+    return { date: day(`${mes}-01`), province, wells: Math.round(wells) };
+  });
+  if (data.length < 100) throw new Error(`el CSV trajo ${data.length} filas; no reemplazo la serie`);
+  const ultimo = data.reduce((a, b) => (a.date > b.date ? a : b)).date;
+  const totalUltimo = data.filter((d) => d.date.getTime() === ultimo.getTime()).reduce((a, d) => a + d.wells, 0);
+  console.log(`  ${data.length} filas mes × provincia, último ${monthKey(ultimo)}: ${totalUltimo} pozos`);
+  if (DRY_RUN) return;
+  await prisma.$transaction([prisma.factWellsDrilling.deleteMany({}), prisma.factWellsDrilling.createMany({ data })]);
+}
+
+/* EL RIGI. La página del Ministerio se dibuja desde una planilla pública: una
+   fila por PROVINCIA, así que un proyecto que cruza tres provincias viene tres
+   veces. La clave es el link a la resolución, que es único por proyecto. La
+   planilla no trae fecha ni número de resolución: salen de la página de cada
+   norma (`fecha_publicacion=DD-MM-YYYY` y el <title>). Sólo están los APROBADOS;
+   un anuncio sin resolución en el BO (p. ej. TGS, oct-2026) no entra hasta que
+   el Ministerio lo cargue. La lista reemplaza a la anterior: lo que salió de la
+   planilla, sale de la base. */
+async function rigi() {
+  const rows = parse(await (await get(RIGI_SHEET)).text(), { columns: true, skip_empty_lines: true }) as Record<
+    string,
+    string
+  >[];
+  const num = (v: string) => Number(v.replace(/\./g, '').replace(',', '.')); // formato AR: 12.240
+  const porNorma = new Map<string, { name: string; provinces: string[]; r: Record<string, string> }>();
+  for (const r of rows) {
+    if (!r.enlace?.startsWith('http')) continue; // la fila 1 repite los títulos
+    const p = porNorma.get(r.enlace);
+    if (p) p.provinces.push(r.provincia);
+    else porNorma.set(r.enlace, { name: r.nombre.trim(), provinces: [r.provincia], r });
+  }
+  if (porNorma.size < 10) throw new Error(`la planilla trajo ${porNorma.size} proyectos; no reemplazo la lista`);
+
+  const projects: Prisma.RigiProjectCreateInput[] = [];
+  for (const [url, { name, provinces, r }] of porNorma) {
+    const html = await (await get(url)).text().catch(() => '');
+    const fecha = html.match(/fecha_publicacion=(\d{2})-(\d{2})-(\d{4})/);
+    const res = html.match(/<title>[^<]*?(Resoluci[oó]n \d+\/\d{4})/);
+    projects.push({
+      name,
+      sector: r.sector.trim(),
+      operator: r.empresa.trim() || null,
+      province: provinces.join(' / '),
+      investmentMusd: num(r['inv-comprometida']) || null,
+      approvalDate: fecha ? day(`${fecha[3]}-${fecha[2]}-${fecha[1]}`) : null,
+      resolution: res ? res[1].replace(/Resoluci[oó]n/, 'Res.') : null,
+      jobs: Math.round(num(r['empleos-generados'])) || null,
+      description: r.descripcion.trim() || null,
+      sourceLabel: 'Ministerio de Economía — Registro RIGI',
+      sourceUrl: url,
+    });
+  }
+  const total = projects.reduce((a, p) => a + (p.investmentMusd ?? 0), 0);
+  const sinFecha = projects.filter((p) => !p.approvalDate).map((p) => p.name);
+  console.log(`  ${projects.length} proyectos, US$ ${total.toLocaleString('es-AR')} M${sinFecha.length ? ` · sin fecha: ${sinFecha.join(', ')}` : ''}`);
+  if (DRY_RUN) return;
+  await prisma.$transaction([
+    prisma.rigiProject.deleteMany({ where: { name: { notIn: projects.map((p) => p.name) } } }),
+    ...projects.map(({ name, ...data }) =>
+      prisma.rigiProject.upsert({ where: { name }, create: { name, ...data }, update: data }),
+    ),
+  ]);
+}
+
 async function main() {
   const t0 = Date.now();
   // Cada bloque es independiente: si una fuente se cae, las demás se cargan igual.
   // Sin argumentos corren todos; con argumentos, sólo esos (`refresh-market.ts combustibles`).
-  // datos.energia.gob.ar no responde desde el VPS, por eso combustibles va aparte.
+  // datos.energia.gob.ar no responde desde el VPS, por eso combustibles y perforacion van aparte.
   const only = process.argv.slice(2);
   const blocks = [
     ['precios', 'precios energía (FRED/EIA)', energyPrices],
@@ -215,6 +304,8 @@ async function main() {
     ['macro', 'macro (BCRA + datos.gob.ar)', macro],
     ['intercambio', 'intercambio energético (INDEC)', energyTrade],
     ['combustibles', 'combustibles en surtidor (datos.energia.gob.ar)', fuelPrices],
+    ['rigi', 'proyectos RIGI aprobados (Ministerio de Economía)', rigi],
+    ['perforacion', 'pozos en perforación (datos.energia.gob.ar)', perforacion],
   ] as const;
   const unknown = only.filter((k) => !blocks.some(([key]) => key === k));
   if (unknown.length) throw new Error(`bloques desconocidos: ${unknown.join(', ')}`);

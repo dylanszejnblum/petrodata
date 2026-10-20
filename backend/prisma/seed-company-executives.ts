@@ -6,7 +6,7 @@ import { resolve } from 'path';
 const prisma = new PrismaClient();
 
 // Quien dirige cada empresa del ranking. El CSV está en el repo para que cada
-// fila lleve su fuente — mismo criterio que rigi_projects.csv: ningún dato
+// fila lleve su fuente — mismo criterio que el registro RIGI: ningún dato
 // editorial hardcodeado en código.
 //
 // De dónde salió: el pipeline de CEOS cruza las 50 primeras empresas del sitio

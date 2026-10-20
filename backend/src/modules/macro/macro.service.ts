@@ -52,10 +52,27 @@ export class MacroService {
     }));
   }
 
+  /** Pozos en perforación por mes: total nacional y por provincia (o una sola). */
+  async wellsDrilling(province?: string) {
+    const rows = await this.prisma.factWellsDrilling.findMany({
+      where: province ? { province: { equals: province, mode: 'insensitive' } } : {},
+      orderBy: [{ date: 'asc' }, { wells: 'desc' }],
+    });
+    const byMonth = new Map<string, { date: string; total: number; by_province: Record<string, number> }>();
+    for (const r of rows) {
+      const date = r.date.toISOString().slice(0, 7);
+      const m = byMonth.get(date) ?? { date, total: 0, by_province: {} };
+      m.total += r.wells;
+      m.by_province[r.province] = r.wells;
+      byMonth.set(date, m);
+    }
+    return [...byMonth.values()];
+  }
+
   async rigCountLatest() {
     const r = await this.prisma.factRigCount.findFirst({ orderBy: { date: 'desc' } });
     if (!r) {
-      throw new NotFoundException({ code: 'NOT_FOUND', message: 'No rig-count data ingested. Run seed-rig-count.ts.' });
+      throw new NotFoundException({ code: 'NOT_FOUND', message: 'No rig-count data ingested. Run pnpm db:load:rigs.' });
     }
     return {
       date: r.date.toISOString().slice(0, 7),

@@ -282,6 +282,50 @@ export class InversionesService {
     return this.prisma.factProductionMonthly.count({ where: { dateMonth: m, vmCombined: true, boe: { gt: 0 } } });
   }
 
+  /** The approved-RIGI registry as a list: every project with amount, companies,
+   *  province, approval date and its resolution/source, plus totals by sector and
+   *  province. Approved projects only — the "en evaluación" pipeline isn't
+   *  published per project. Loaded by `pnpm db:refresh:rigi` from the Ministry's sheet + each resolution page. */
+  async rigi() {
+    const projects = await this.prisma.rigiProject.findMany({ orderBy: [{ investmentMusd: 'desc' }, { name: 'asc' }] });
+    const sum = (key: (p: (typeof projects)[number]) => string | null) => {
+      const out: Record<string, { count: number; investment_musd: number; jobs: number }> = {};
+      for (const p of projects) {
+        const k = key(p) ?? 'sin dato';
+        out[k] ??= { count: 0, investment_musd: 0, jobs: 0 };
+        out[k].count++;
+        out[k].investment_musd += p.investmentMusd ?? 0;
+        out[k].jobs += p.jobs ?? 0;
+      }
+      return out;
+    };
+    const dates = projects.map((p) => p.approvalDate).filter((d): d is Date => d != null);
+    return {
+      as_of: dates.length ? new Date(Math.max(...dates.map((d) => d.getTime()))).toISOString().slice(0, 10) : null,
+      totals: {
+        count: projects.length,
+        investment_musd: projects.reduce((a, p) => a + (p.investmentMusd ?? 0), 0),
+        jobs: projects.reduce((a, p) => a + (p.jobs ?? 0), 0),
+        by_sector: sum((p) => p.sector),
+        by_province: sum((p) => p.province),
+      },
+      projects: projects.map((p) => ({
+        name: p.name,
+        sector: p.sector,
+        companies: p.operator,
+        province: p.province,
+        investment_musd: p.investmentMusd,
+        approval_date: p.approvalDate ? p.approvalDate.toISOString().slice(0, 10) : null,
+        resolution: p.resolution,
+        jobs: p.jobs,
+        description: p.description,
+        status: 'aprobado',
+        source_label: p.sourceLabel,
+        source_url: p.sourceUrl,
+      })),
+    };
+  }
+
   /**
    * Breakeven headroom: the live Brent price against a *cited* breakeven
    * reference (a constant, not computed). The margin between them is the
@@ -548,7 +592,7 @@ export class InversionesService {
     });
     // Approved RIGI oil & gas projects (sourced registry) for the RIGI chart.
     const rigiRows = await this.prisma.rigiProject.findMany({
-      where: { sector: { in: ['petroleo', 'gas'] } },
+      where: { sector: 'Petróleo y gas' }, // the Ministry's own sector label
       orderBy: { investmentMusd: 'desc' },
     });
 

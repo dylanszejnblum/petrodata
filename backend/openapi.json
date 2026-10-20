@@ -2177,7 +2177,7 @@
     },
     "/api/v1/rig-count": {
       "get": {
-        "description": "Monthly Baker Hughes rig count for Argentina (oil / gas / total). Currently a small placeholder dataset until the scraper stabilizes.",
+        "description": "Active drilling rigs in Argentina per month, oil / gas / total — Baker Hughes Worldwide Rig Count (method since Aug 2025, history from 2013). Loaded by hand monthly (Baker Hughes blocks automated downloads), so it can trail by a month; for an always-current official activity series see /rig-count/wells-drilling.",
         "operationId": "MacroController_rigCount_v1",
         "parameters": [],
         "responses": {
@@ -2208,6 +2208,54 @@
           }
         },
         "summary": "Argentina rig-count time series",
+        "tags": [
+          "macro"
+        ]
+      }
+    },
+    "/api/v1/rig-count/wells-drilling": {
+      "get": {
+        "description": "Wells in drilling per month, national total and by province (Secretaría de Energía). Counts WELLS, not rigs, and does not split oil from gas. Refreshed automatically by db:refresh. Filter with `province` (e.g. Neuquén).",
+        "operationId": "MacroController_wellsDrilling_v1",
+        "parameters": [
+          {
+            "name": "province",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": "Neuquén",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/WellsDrillingPointDto"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/MetaDto"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "summary": "Wells being drilled per month (official)",
         "tags": [
           "macro"
         ]
@@ -3143,6 +3191,22 @@
           }
         },
         "summary": "Investment indicators (computed from official data)",
+        "tags": [
+          "inversiones"
+        ]
+      }
+    },
+    "/api/v2/inversiones/rigi": {
+      "get": {
+        "description": "Every project approved under the RIGI (Régimen de Incentivo para Grandes Inversiones): name, sector, companies, province, approved investment (US$ M), approval date and the resolution / source link, plus totals by sector and province. `as_of` is the newest approval date on file.",
+        "operationId": "InversionesController_rigi_v2",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Approved RIGI projects",
         "tags": [
           "inversiones"
         ]
@@ -6401,7 +6465,7 @@
           },
           "oil_rigs": {
             "type": "object",
-            "example": 71,
+            "example": 38,
             "nullable": true
           },
           "gas_rigs": {
@@ -6411,7 +6475,7 @@
           },
           "total_rigs": {
             "type": "object",
-            "example": 85,
+            "example": 52,
             "nullable": true
           }
         },
@@ -6420,6 +6484,36 @@
           "oil_rigs",
           "gas_rigs",
           "total_rigs"
+        ]
+      },
+      "WellsDrillingPointDto": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "example": "2026-09"
+          },
+          "total": {
+            "type": "number",
+            "example": 106,
+            "description": "Wells in drilling that month (sum of the provinces returned)."
+          },
+          "by_province": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number"
+            },
+            "example": {
+              "Neuquén": 78,
+              "Chubut": 22,
+              "Santa Cruz": 5
+            }
+          }
+        },
+        "required": [
+          "date",
+          "total",
+          "by_province"
         ]
       },
       "CompanyListItemDto": {
