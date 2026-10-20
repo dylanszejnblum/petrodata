@@ -13,6 +13,7 @@
  *   fact_energy_trade mensual ← INDEC ICA vía apis.datos.gob.ar
  *   fact_fuel_price ← "Precios vigentes en surtidor" (Res. 314/2016), foto completa
  *   fact_wells_drilling ← «Pozos en perforación» (datos.energia.gob.ar), por mes y provincia
+ *   se/medanito|medanito_mi|escalante|brent ← Informe de Regalías de CRUDO (Secretaría de Energía)
  *   rigi_project ← planilla pública que alimenta argentina.gob.ar/economia/rigi
  *     + la página de cada resolución (número y fecha de publicación en el BO)
  *
@@ -23,6 +24,7 @@
  */
 import { PrismaClient, Prisma } from '@prisma/client';
 import { parse } from 'csv-parse/sync';
+import { strFromU8, unzipSync } from 'fflate';
 
 const prisma = new PrismaClient();
 const DRY_RUN = process.env.DRY_RUN === '1';
@@ -33,6 +35,8 @@ const FUEL_CSV =
 
 const PERFORACION_CSV =
   'http://datos.energia.gob.ar/dataset/7ea2ac77-d7a0-4129-9fbf-6f1a25d94e21/resource/af6838ef-f675-4409-ac6a-e7c391a5dbab/download/pozos-en-perforacin.csv';
+const REGALIAS_CRUDO_ZIP =
+  'http://www.energia.gob.ar/contenidos/archivos/Reorganizacion/informacion_del_mercado/mercado_hidrocarburos/informacion_estadistica/regalias/Regalias_CRUDO.zip';
 const RIGI_SHEET =
   'https://docs.google.com/spreadsheets/d/1eytHJrzUjIFOXI-P1Hx_wbmZiSqPxVle059Djdos6u8/gviz/tq?tqx=out:csv&sheet=dataset';
 
@@ -50,7 +54,7 @@ async function get(url: string): Promise<Response> {
 
 async function replacePoints(source: string, series: string, name: string, unit: string, points: Point[]) {
   const last = points.at(-1);
-  console.log(`  ${source}/${series}: ${points.length} puntos, último ${last ? last.date.toISOString().slice(0, 10) : '—'}`);
+  console.log(`  ${source}/${series}: ${points.length} puntos, último ${last ? `${last.date.toISOString().slice(0, 10)} = ${last.value}` : '—'}`);
   if (DRY_RUN || !points.length) return;
   await prisma.$transaction([
     prisma.factPrice.deleteMany({ where: { source, series, date: { in: points.map((p) => p.date) } } }),
@@ -211,6 +215,64 @@ async function fuelPrices() {
   );
 }
 
+/* PRECIO DEL CRUDO LOCAL. La única serie pública mensual de Medanito y
+   Escalante vive dentro del Excel de regalías de la Secretaría: un ZIP con un
+   xlsx cuya hoja visible está filtrada por provincia. El dato por TIPO de crudo
+   está en el caché de la tabla dinámica (pivotCacheRecords): cada registro son
+   cinco índices a los ítems compartidos —concepto, zona, tipo, año, mes— y el
+   valor en USD/m3. El caché se reconoce por su último campo, «USD/m3»; el número
+   de archivo no es fijo.
+   · Son precios declarados para regalías, ponderados por volumen vendido —no
+     un precio de pizarra— y el Medanito cubre toda la cuenca Neuquina.
+   · MI + TSP = mercado interno; TOTAL = interno y exportación mezclados.
+   · Cero = sin dato (los meses futuros vienen en 0). Los dos últimos meses son
+     provisorios: cada corrida los pisa.
+   · El Brent sale del mismo archivo para que la comparación sea contra la misma
+     cuenta; el de FRED/EIA sigue en eia/brent. */
+async function crudoLocal() {
+  const outer = unzipSync(new Uint8Array(await (await get(REGALIAS_CRUDO_ZIP)).arrayBuffer()));
+  const xlsxName = Object.keys(outer).find((n) => n.toLowerCase().endsWith('.xlsx'));
+  if (!xlsxName) throw new Error('el ZIP de regalías no trae un xlsx');
+  const xlsx = unzipSync(outer[xlsxName], { filter: (f) => f.name.startsWith('xl/pivotCache/pivotCache') });
+
+  const items = (xml: string) =>
+    [...xml.matchAll(/<cacheField name="([^"]*)"[^>]*>([\s\S]*?)<\/cacheField>/g)].map((m) => ({
+      name: m[1],
+      values: [...m[2].matchAll(/<[sn] v="([^"]*)"/g)].map((v) => v[1]),
+    }));
+  const defName = Object.keys(xlsx).find(
+    (n) => /pivotCacheDefinition\d+\.xml$/.test(n) && items(strFromU8(xlsx[n])).at(-1)?.name === 'USD/m3',
+  );
+  if (!defName) throw new Error('no encontré el caché de precios (USD/m3) en el xlsx');
+  const fields = items(strFromU8(xlsx[defName]));
+  const records = strFromU8(xlsx[defName.replace('Definition', 'Records')]);
+  const idx = (field: string) => fields.findIndex((f) => f.name === field);
+  const [fConcepto, fTipo, fAnio, fMes] = ['CONCEPTO', 'CUENCA/PROVINCIA/TIPO DE CRUDO', 'AÑO', 'MES'].map(idx);
+
+  const QUIERO: Record<string, { series: string; name: string }> = {
+    'PRECIO TOTAL|MEDANITO': { series: 'medanito', name: 'Medanito (Cuenca Neuquina), precio total' },
+    'PRECIO MI + TSP|MEDANITO': { series: 'medanito_mi', name: 'Medanito, mercado interno' },
+    'PRECIO TOTAL|ESCALANTE': { series: 'escalante', name: 'Escalante (Golfo San Jorge), precio total' },
+    'PRECIO TOTAL|BRENT': { series: 'brent', name: 'Brent (Informe de Regalías SE)' },
+  };
+  const puntos = new Map<string, Point[]>();
+  for (const r of records.matchAll(/<r>([\s\S]*?)<\/r>/g)) {
+    const toks = [...r[1].matchAll(/<([xnm])(?: v="([^"]*)")?\/>/g)].map((t) => ({ kind: t[1], v: t[2] }));
+    const val = (i: number) => (toks[i].kind === 'x' ? fields[i].values[Number(toks[i].v)] : toks[i].v);
+    const q = QUIERO[`${val(fConcepto)}|${val(fTipo)}`];
+    const usdM3 = Number(toks.at(-1)?.v);
+    if (!q || !positive(usdM3)) continue; // 0 = sin dato
+    const list = puntos.get(q.series) ?? [];
+    list.push({ date: day(`${val(fAnio)}-${String(val(fMes)).padStart(2, '0')}-01`), value: Math.round((usdM3 / 6.2898) * 100) / 100 });
+    puntos.set(q.series, list);
+  }
+  if (!puntos.get('medanito')?.length) throw new Error('el caché no trajo Medanito');
+  for (const { series, name } of Object.values(QUIERO)) {
+    const pts = (puntos.get(series) ?? []).sort((a, b) => a.date.getTime() - b.date.getTime());
+    await replacePoints('se', series, name, 'USD/bbl', pts);
+  }
+}
+
 /* Pozos en perforación: el CSV trae una fila por empresa × área × yacimiento ×
    concepto (exploración, explotación…) y pesa ~70 MB; acá se suma por mes y
    provincia. La foto entera se reemplaza: la Secretaría corrige meses viejos. */
@@ -306,6 +368,7 @@ async function main() {
     ['combustibles', 'combustibles en surtidor (datos.energia.gob.ar)', fuelPrices],
     ['rigi', 'proyectos RIGI aprobados (Ministerio de Economía)', rigi],
     ['perforacion', 'pozos en perforación (datos.energia.gob.ar)', perforacion],
+    ['crudo', 'precio del crudo local: Medanito y Escalante (SE, regalías)', crudoLocal],
   ] as const;
   const unknown = only.filter((k) => !blocks.some(([key]) => key === k));
   if (unknown.length) throw new Error(`bloques desconocidos: ${unknown.join(', ')}`);
