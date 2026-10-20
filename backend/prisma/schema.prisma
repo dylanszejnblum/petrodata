@@ -182,7 +182,10 @@ model RigiProject {
   operator       String?
   province       String?
   investmentMusd Float?    @map("investment_musd")
-  approvalDate   DateTime? @map("approval_date") @db.Date
+  approvalDate   DateTime? @map("approval_date") @db.Date // publicación en el BO
+  resolution     String? // "Res. 1808/2026"
+  jobs           Int? // empleos directos e indirectos declarados
+  description    String?
   sourceLabel    String?   @map("source_label")
   sourceUrl      String?   @map("source_url")
 

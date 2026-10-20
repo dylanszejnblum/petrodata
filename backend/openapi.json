@@ -3148,6 +3148,22 @@
         ]
       }
     },
+    "/api/v2/inversiones/rigi": {
+      "get": {
+        "description": "Every project approved under the RIGI (Régimen de Incentivo para Grandes Inversiones): name, sector, companies, province, approved investment (US$ M), approval date and the resolution / source link, plus totals by sector and province. `as_of` is the newest approval date on file.",
+        "operationId": "InversionesController_rigi_v2",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Approved RIGI projects",
+        "tags": [
+          "inversiones"
+        ]
+      }
+    },
     "/api/v2/inversiones/trimestre": {
       "get": {
         "description": "Full /inversiones payload anchored to a calendar quarter: everything (KPIs, series, operator leaderboard, exports) is computed as of the latest complete month within `?trimestre` (YYYY-Qn). Omit the param for the latest complete month. The response lists `trimestresDisponibles` — the valid quarter values.",
