@@ -29,7 +29,7 @@ export class AppThrottlerGuard extends ThrottlerGuard {
 
   protected async getTracker(req: Record<string, any>): Promise<string> {
     const ip: string = req.ip || 'unknown';
-    const votante = String(req.path ?? req.url ?? '').includes('/directivos')
+    const votante = String(req.path ?? req.url ?? '').startsWith('/api/v2/directivos')
       ? votanteDe(req.headers?.['x-votante'])
       : null;
     return votante ? `${ip}:${votante}` : ip;

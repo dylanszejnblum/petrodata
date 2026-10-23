@@ -184,8 +184,10 @@ export class NewsService {
 
   /** Single document + its cluster siblings (other docs sharing `clusterId`). */
   async getOne(docId: string) {
-    const document = await this.prisma.newsDocument.findUnique({ where: { docId } });
-    if (!document) throw new NotFoundException(`news document not found: ${docId}`);
+    const row = await this.prisma.newsDocument.findUnique({ where: { docId } });
+    if (!row) throw new NotFoundException(`news document not found: ${docId}`);
+    // Las notas del editor son internas, igual que en digest.
+    const { createdAt: _c, updatedAt: _u, editorNotes: _e, ...document } = row;
 
     const cluster = document.clusterId
       ? await this.prisma.newsDocument.findMany({

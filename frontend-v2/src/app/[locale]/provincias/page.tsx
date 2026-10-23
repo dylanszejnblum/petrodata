@@ -7,6 +7,9 @@ import { loadNationalSeries } from '@/lib/data/production'
 import { serieProvincia } from '@/fixtures/production'
 import { getTranslations } from 'next-intl/server'
 import { formatCompactAR, formatDecimal, formatInteger, formatMonth } from '@/lib/format'
+import { pageMetadata } from '@/lib/metadata'
+
+export const generateMetadata = pageMetadata('/provincias')
 
 /* PROVINCIAS — pocas filas, así que acá SÍ va la barra en cada una: con ocho
    ítems la magnitud relativa es el mensaje, y una barra lo dice más rápido

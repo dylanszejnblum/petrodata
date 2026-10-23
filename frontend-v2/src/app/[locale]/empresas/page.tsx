@@ -8,6 +8,9 @@ import { loadCompanies } from '@/lib/data/companies'
 import { loadWells } from '@/lib/data/wells'
 import { formatDecimal, formatInteger } from '@/lib/format'
 import { getTranslations } from 'next-intl/server'
+import { pageMetadata } from '@/lib/metadata'
+
+export const generateMetadata = pageMetadata('/empresas')
 
 /* EMPRESAS — 52 registros.
 

@@ -49,6 +49,7 @@ export function toNewsItem(card: NewsCard, index: number): NewsItem {
     readingMin: card.readingMinutes ?? undefined,
     image: card.image ?? undefined,
     video: false,
+    sourceUrl: card.sourceUrl || undefined,
   }
 }
 
@@ -80,7 +81,7 @@ export async function loadNewsDoc(
 ): Promise<{ item: NewsItem; related: NewsItem[] } | null> {
   const live = await fetchNewsDoc(id).catch(() => null)
   if (live?.document) {
-    const item = toNewsItem(live.document, 0)
+    const item = { ...toNewsItem(live.document, 0), body: live.document.bodyText ?? undefined }
     const related = live.cluster.slice(0, 3).map((c, i) => toNewsItem(c, i + 1))
     return { item, related }
   }

@@ -12,10 +12,11 @@
  *   SINCE=2026-01 DRY_RUN=1 pnpm db:refresh:production
  *
  * Reglas sacadas de comparar el CSV fuente contra los meses ya cargados:
- * unidades a 30 días fijos, unconventional = NO CONVENCIONAL o SHALE/TIGHT,
+ * caudales con los días reales del mes, unconventional = NO CONVENCIONAL o SHALE/TIGHT,
  * vm_combined = formación vaca muerta o unconventional.
  */
 import { PrismaClient, Prisma } from '@prisma/client';
+import { rebuildAggByOperator } from './agg-operator';
 import { parse } from 'csv-parse';
 import { createReadStream, createWriteStream } from 'fs';
 import { tmpdir } from 'os';
@@ -37,13 +38,16 @@ const MIN_COVERAGE = Number(process.env.MIN_COVERAGE ?? 0.5);
 
 const BBL_PER_M3 = 6.28981;
 const MCF_PER_KM3 = 35.3147;
-const BOE_PER_KM3_GAS = 36.4809;
-const DAYS = 30;
+// 1 boe = 5,8 mcf. Antes era 6,29 × 5,8 = 36,48 (multiplicaba en vez de
+// dividir) y el gas pesaba ~6 veces de más en el boe.
+const BOE_PER_KM3_GAS = MCF_PER_KM3 / 5.8;
+const daysIn = (d: Date) => new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth() + 1, 0)).getUTCDate();
 
 const r2 = (n: number) => Math.round(n * 100) / 100;
 const r4 = (n: number) => Math.round(n * 10000) / 10000;
 
-function units(oilM3: number, gas: number) {
+function units(month: Date, oilM3: number, gas: number) {
+  const DAYS = daysIn(month);
   const oilBbl = oilM3 * BBL_PER_M3;
   const gasMcf = gas * MCF_PER_KM3;
   const gasBoe = gas * BOE_PER_KM3_GAS;
@@ -208,7 +212,7 @@ async function main() {
         tipoRecurso: r.tipo_de_recurso,
         coordX: null,
         coordY: null,
-        ...units(num(r.prod_pet), num(r.prod_gas)),
+        ...units(dateMonth, num(r.prod_pet), num(r.prod_gas)),
         formationVacaMuerta,
         unconventional,
         vmCombined: formationVacaMuerta || unconventional,
@@ -238,7 +242,7 @@ async function main() {
   for (const [k, list] of jumps) {
     if (list.length < MIN_WELLS) continue;
     for (const { f, oil, gas } of list) {
-      Object.assign(f, units(oil ? f.oilM3! / 1000 : f.oilM3!, gas ? f.gasThousandM3! / 1000 : f.gasThousandM3!));
+      Object.assign(f, units(f.dateMonth as Date, oil ? f.oilM3! / 1000 : f.oilM3!, gas ? f.gasThousandM3! / 1000 : f.gasThousandM3!));
     }
     console.log(`  corregido ×1000 (m3 en vez de miles de m3): ${k}, ${list.length} pozos`);
   }
@@ -276,23 +280,7 @@ async function main() {
         await tx.factProductionMonthly.createMany({ data: facts.slice(i, i + BATCH) });
       }
 
-      await tx.aggMonthlyByOperator.deleteMany({ where: { dateMonth: { gte: since } } });
-      await tx.$executeRaw`
-        INSERT INTO agg_monthly_by_operator
-          (date_month, operator_slug, operator_name, concession, yacimiento, province, formation_slug,
-           vm_combined, oil_m3, oil_bbl, oil_bbl_d, gas_thousand_m3, gas_mm3_d, gas_mcf, gas_mmcf_d,
-           boe, active_wells)
-        SELECT f.date_month, f.operator_slug, o.operator_name, f.concession, f.yacimiento, f.province,
-               f.formation_slug, f.vm_combined,
-               round(sum(f.oil_m3)::numeric, 2), round(sum(f.oil_bbl)::numeric, 2),
-               round(sum(f.oil_bbl_d)::numeric, 2), round(sum(f.gas_thousand_m3)::numeric, 2),
-               round(sum(f.gas_mm3_d)::numeric, 2), round(sum(f.gas_mcf)::numeric, 2),
-               round(sum(f.gas_mmcf_d)::numeric, 2), round(sum(f.boe)::numeric, 2),
-               count(*) FILTER (WHERE f.boe > 0) -- activo = produjo; un pozo que declaró cero no cuenta
-        FROM fact_production_monthly f
-        JOIN dim_operator o USING (operator_slug)
-        WHERE f.date_month >= ${since}
-        GROUP BY 1, 2, 3, 4, 5, 6, 7, 8`;
+      await rebuildAggByOperator(tx, since);
     },
     { timeout: 60 * 60 * 1000, maxWait: 60_000 },
   );

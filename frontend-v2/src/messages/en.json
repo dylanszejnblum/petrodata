@@ -1048,6 +1048,10 @@
       "requeridos": "Email and details required",
       "avisoDesc": "Correction to the role, name or photo of <b>{nombre}</b>, at {empresa}. The email is used to reply to the report.",
       "avisoOk": "Report about <b>{nombre}</b> recorded. Reply to <mono>{correo}</mono>."
+    },
+    "error": {
+      "titulo": "We couldn't load this page.",
+      "reintentar": "Try again"
     }
   }
 }

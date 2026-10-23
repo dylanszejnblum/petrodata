@@ -20,6 +20,10 @@ ENV NEXT_PUBLIC_API_BASE_URL=$NEXT_PUBLIC_API_BASE_URL
 # Google Analytics (G-XXXXXXX). Vacío = sin GA. También se inlinea en el build.
 ARG NEXT_PUBLIC_GA_MEASUREMENT_ID=
 ENV NEXT_PUBLIC_GA_MEASUREMENT_ID=$NEXT_PUBLIC_GA_MEASUREMENT_ID
+# Turnstile del voto. Va con TURNSTILE_SECRET en el backend: sin la key el
+# widget no carga y el backend rechaza el voto.
+ARG NEXT_PUBLIC_TURNSTILE_SITE_KEY=
+ENV NEXT_PUBLIC_TURNSTILE_SITE_KEY=$NEXT_PUBLIC_TURNSTILE_SITE_KEY
 ENV NEXT_TELEMETRY_DISABLED=1
 
 COPY package.json pnpm-lock.yaml ./

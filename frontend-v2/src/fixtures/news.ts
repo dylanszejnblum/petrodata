@@ -24,6 +24,10 @@ export type NewsItem = {
   image?: string
   /** la nota trae video (el pipeline marca esto; el player va en el rail derecho) */
   video?: boolean
+  /** link a la nota original */
+  sourceUrl?: string
+  /** texto completo, sólo si el pipeline lo trae (legal_mode lo permite) */
+  body?: string
 }
 
 export const CATEGORY_LABEL: Record<NewsItem['category'], string> = {

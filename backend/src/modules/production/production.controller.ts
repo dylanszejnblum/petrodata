@@ -41,7 +41,7 @@ export class ProductionController {
   @ApiOperation({
     summary: 'Latest-month summary',
     description:
-      'Single-row totals for the most recent month available, including BOE total, VM share of oil/gas/BOE, and the top 5 operators by BOE.',
+      'Single-row totals for the most recent fully reported month (the newest month on file is usually still partial), including BOE total, VM share of oil/gas/BOE, and the top 5 operators by BOE.',
   })
   @ApiOkEnvelope(LatestSummaryDto)
   latest() {
