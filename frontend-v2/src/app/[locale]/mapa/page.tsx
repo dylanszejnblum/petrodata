@@ -3,6 +3,9 @@ import { getTranslations } from 'next-intl/server'
 import { MapaV2 } from './MapaV2'
 import { loadHeadline, loadOperators } from '@/lib/data/production'
 import { loadWells } from '@/lib/data/wells'
+import { pageMetadata } from '@/lib/metadata'
+
+export const generateMetadata = pageMetadata('/mapa')
 
 /* MAPA — la única página que rompe la grilla.
 

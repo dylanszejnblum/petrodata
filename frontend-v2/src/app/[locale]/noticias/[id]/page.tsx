@@ -1,18 +1,12 @@
 import type { Metadata } from 'next'
 import { Link } from '@/i18n/navigation'
 import { notFound } from 'next/navigation'
-import {
-  Card,
-  CardPie,
-  FilaNoticia,
-  Seccion,
-  Tag,
-  colorCategoria,
-} from '../../_ui/kit'
-import { Cita, Compartir, Figura, Intertitulo, Video } from '../../_ui/BloquesNota'
+import { Card, CardPie, FilaNoticia, Seccion, Tag, colorCategoria } from '../../_ui/kit'
+import { Compartir } from '../../_ui/BloquesNota'
 import { CATEGORY_LABEL } from '@/fixtures/news'
 import { loadNewsDoc } from '@/lib/data/news'
 import { formatDate } from '@/lib/format'
+import { siteMetadata } from '@/lib/metadata'
 
 /* LA NOTA — el cuerpo del artículo, rederivado.
 
@@ -52,52 +46,21 @@ import { formatDate } from '@/lib/format'
      y el dashboard. Tres tratamientos para una noticia era el problema que ya
      se arregló en el listado; traer las cards de vuelta acá lo reabría.
 
-   El cuerpo sigue siendo SIMULADO, como en la ruta vieja, y sigue estando
-   declarado al pie. Lo real del fixture son el título, el resumen, la fuente,
-   la fecha, la categoría y el tiempo de lectura. */
+   SIN CUERPO SIMULADO. Antes se generaban párrafos, una cita y puntos clave
+   atribuidos a la fuente; en producción eso es inventar una nota con la firma
+   de un medio real. Va el resumen, el texto completo sólo si el pipeline lo
+   trae, y el link al original. */
 
-type Params = Promise<{ id: string }>
+type Params = Promise<{ id: string; locale: string }>
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
-  const { id } = await params
+  const { id, locale } = await params
   const doc = await loadNewsDoc(id)
-  return { title: doc?.item.title ?? 'Noticia', description: doc?.item.summary }
-}
-
-/* Cuerpo simulado: párrafos cortos, de dos a cuatro oraciones, que es la
-   práctica editorial del rubro. Se genera igual que en la ruta vieja —misma
-   forma y mismo ritmo— porque lo que se está probando acá es la composición,
-   no el texto. */
-function cuerpo(resumen: string, categoria: string, fuente: string): string[] {
-  return [
-    resumen,
-    `El dato consolida una tendencia que el sector venía anticipando desde comienzos de año. En los despachos de ${fuente} y de las operadoras de la cuenca, la lectura es la misma.`,
-    'La curva de aprendizaje del shale argentino sigue comprimiendo costos y tiempos de perforación. Y eso se traduce directamente en los números del mes.',
-    `Puertas adentro de la industria, el capítulo de ${categoria.toLowerCase()} concentra las conversaciones. Cada licitación y cada anuncio de inversión se sigue de cerca.`,
-    'Los equipos técnicos apuntan a tres cuellos de botella: disponibilidad de sets de fractura, capacidad de evacuación y logística de arena.',
-    'Hacia adelante, los analistas coinciden en que el ritmo dependerá menos de la geología —ya probada— y más de la macro: financiamiento, reglas estables e infraestructura terminada.',
-  ]
-}
-
-/* La frase de la cita se ESCRIBE acá, no se elige. La ruta vieja la sacaba con
-   un buscador que prefería la oración con un número, y con el cuerpo simulado
-   eso daba relleno: elegía «En los despachos de Shale24 y de las operadoras de
-   la cuenca, la lectura es la misma» —el «número» es el 24 de la marca— o caía
-   al título. Una cita es una decisión editorial, no el resultado de una
-   heurística; el día que el pipeline traiga el cuerpo real, la traerá marcada. */
-function frase(categoria: string): string {
-  return `La geología ya está probada. Lo que decide el ritmo de ${categoria.toLowerCase()} de acá en adelante es el financiamiento, las reglas y la infraestructura terminada.`
-}
-
-/* Los puntos clave NO incluyen el resumen. En la ruta vieja el primero era el
-   resumen tal cual, y el resumen es además la entradilla del cuerpo: la misma
-   frase aparecía dos veces con doscientos píxeles de distancia. Quedan los dos
-   derivados, que es lo que aporta algo distinto de la entradilla. */
-function puntosClave(categoria: string): string[] {
-  return [
-    `El capítulo de ${categoria.toLowerCase()} concentra la conversación del sector: sets de fractura, evacuación y logística de arena son los cuellos de botella a vigilar.`,
-    'El ritmo hacia adelante depende menos de la geología y más de la macro: financiamiento, reglas estables e infraestructura en marcha.',
-  ]
+  const title = doc?.item.title ?? 'Noticia'
+  return {
+    ...siteMetadata(locale, `/noticias/${id}`, doc?.item.summary || undefined, title),
+    title,
+  }
 }
 
 export const dynamic = 'force-dynamic'
@@ -105,23 +68,23 @@ export const dynamic = 'force-dynamic'
 export default async function V2Nota({ params }: { params: Params }) {
   const { id } = await params
   /* Doc real del backend (título, resumen, fuente, fecha, categoría, tiempo
-     de lectura); si no está, fixture. El cuerpo sigue siendo simulado, como
-     en la ruta vieja, y está declarado al pie. */
+     de lectura); si no está, fixture. */
   const doc = await loadNewsDoc(id)
   if (!doc) notFound()
   const { item, related } = doc
 
   const rot = CATEGORY_LABEL[item.category]
   const color = colorCategoria(item.category)
-  const cuerpos = cuerpo(item.summary, rot, item.source)
-  const puntos = puntosClave(rot)
+  const parrafos = (item.body ?? '')
+    .split(/\n\s*\n/)
+    .map((p) => p.trim())
+    .filter(Boolean)
 
   /* Primero las del mismo tema/cluster (backend) o categoría (fixture), y
      después cualquier otra, para que siempre haya tres. */
   const mismasCat = related.filter((n) => n.id !== item.id && n.category === item.category)
   const resto = related.filter((n) => n.id !== item.id && n.category !== item.category)
   const relacionadas = [...mismasCat, ...resto].slice(0, 3)
-
 
   return (
     <>
@@ -201,95 +164,58 @@ export default async function V2Nota({ params }: { params: Params }) {
             </CardPie>
           </Card>
 
-          {/* PUNTOS CLAVE — la receta de las Context Cards (§11): el rótulo y
-              su contador afuera de la card, y adentro un renglón por item.
-
-              Antes era el riel de desglose, que es la pieza para «esto se
-              desprende de aquello» y está pensada para colgar de una fila que
-              la ancla; acá no colgaba de nada. Y el ícono de lista repetido en
-              cada renglón no distinguía nada, porque todos los renglones son
-              items de una lista. */}
-          {/* Todo mide lo mismo —cabecera, puntos, párrafos, figuras, video y
-              pie— porque el ancho lo pone la sección. Antes el tope estaba en
-              .s-prosa y la nota tenía tres anchos: cards 584, párrafos 548,
-              figuras 540, con el salto justo entre la card de puntos y la foto
-              de abajo, que son vecinas. */}
-          <div className="mt-3">
-            <div className="s-clave-cab">
-              <span className="rot">Puntos clave</span>
-              <span className="s-contador">{puntos.length}</span>
-            </div>
-            <Card>
-              {puntos.map((p) => (
-                <div key={p} className="s-clave">
-                  <i style={{ background: color }} aria-hidden />
-                  <span className="s-cuerpo min-w-0 flex-1">{p}</span>
-                </div>
-              ))}
-            </Card>
-          </div>
-
           <div className="s-prosa mt-4">
-            <p className="entrada">{cuerpos[0]}</p>
-            <p>{cuerpos[1]}</p>
-
-            <Figura
-              src={`/images/news/${item.category === 'exportacion' ? 'news-gnl-buque' : 'news-produccion-rig'}.jpg`}
-              pie={`Imagen de archivo. El pipeline asigna una foto por tema cuando la nota no trae la suya — ${rot.toLowerCase()}.`}
-            />
-
-            <p>{cuerpos[2]}</p>
-
-            <Intertitulo>Los cuellos de botella</Intertitulo>
-            <p>{cuerpos[3]}</p>
-
-            <Cita>{frase(rot)}</Cita>
-
-            <p>{cuerpos[4]}</p>
-
-            {item.video && (
-              <Video
-                src={item.image ?? '/images/news/news-produccion-rig.jpg'}
-                fuente={item.source}
-              />
-            )}
-
-            <p>{cuerpos[5]}</p>
+            {item.summary && <p className="entrada">{item.summary}</p>}
+            {parrafos.map((p, i) => (
+              <p key={i}>{p}</p>
+            ))}
           </div>
 
-          {/* El pie de card medido —fondo --inset— pero SIN filete arriba: no
-              hay cuerpo de card encima del que separarlo, la card es sólo
-              este pie. Es la misma jugada que el reparto de la red de gas. */}
           <div className="s-card mt-4">
             <div className="s-pie-card" style={{ borderTop: 0 }}>
               <span className="s-micro" style={{ color: 'var(--ink-2)' }}>
-                {item.source} · {formatDate(item.date)} · el cuerpo de la nota está simulado;
-                del fixture salen el título, el resumen, la fuente, la fecha, la categoría y el
-                tiempo de lectura.
+                {item.source} · {formatDate(item.date)}
               </span>
+              {item.sourceUrl && (
+                <a
+                  href={item.sourceUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="s-pill ml-auto"
+                >
+                  Leer en {item.source} <span aria-hidden>↗</span>
+                </a>
+              )}
             </div>
           </div>
         </div>
       </section>
 
-      <Seccion n="01" titulo="Relacionadas" desc={`Otras notas de ${rot.toLowerCase()}.`} ancho="lectura">
-        <Card>
-          {relacionadas.map((n) => (
-            <FilaNoticia
-              key={n.id}
-              id={n.id}
-              href={`/noticias/${n.id}`}
-              titulo={n.title}
-              fuente={n.source}
-              fecha={n.date}
-              categoria={n.category}
-              rotulo={CATEGORY_LABEL[n.category]}
-              minutos={n.readingMin}
-              imagen={n.image}
-            />
-          ))}
-        </Card>
-      </Seccion>
+      {relacionadas.length > 0 && (
+        <Seccion
+          n="01"
+          titulo="Relacionadas"
+          desc={`Otras notas de ${rot.toLowerCase()}.`}
+          ancho="lectura"
+        >
+          <Card>
+            {relacionadas.map((n) => (
+              <FilaNoticia
+                key={n.id}
+                id={n.id}
+                href={`/noticias/${n.id}`}
+                titulo={n.title}
+                fuente={n.source}
+                fecha={n.date}
+                categoria={n.category}
+                rotulo={CATEGORY_LABEL[n.category]}
+                minutos={n.readingMin}
+                imagen={n.image}
+              />
+            ))}
+          </Card>
+        </Seccion>
+      )}
     </>
   )
 }

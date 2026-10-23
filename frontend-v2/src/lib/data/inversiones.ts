@@ -119,7 +119,9 @@ export async function loadInversiones(lang: string): Promise<InversionesPayload>
 /** Sólo la serie mensual VM (petróleo/gas) para el dashboard. */
 export async function loadVmSerie(lang: string): Promise<InvSerie> {
   const inv = await fetchInversiones(lang === 'en' ? 'en' : 'es').catch(() => null)
-  return inv?.serie ?? ({ id: 'rampa_produccion', ...SERIE } satisfies InvSerie)
+  // Sin un solo mes completo la portada no tiene corte (y tiraba un TypeError).
+  if (inv?.serie?.points.some((p) => !p.preliminary)) return inv.serie
+  return { id: 'rampa_produccion', ...SERIE } satisfies InvSerie
 }
 
 export { withFallback }
