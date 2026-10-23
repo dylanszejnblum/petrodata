@@ -1,4 +1,7 @@
 import { Ranking } from './Ranking'
+import { pageMetadata } from '@/lib/metadata'
+
+export const generateMetadata = pageMetadata('/directivos')
 
 /* DIRECTIVOS — quién dirige la cuenca, ordenado por un índice.
 

@@ -49,7 +49,7 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params
-  return siteMetadata(locale, '/', locale === 'en' ? 'Energy intelligence' : 'Inteligencia energética')
+  return siteMetadata(locale, '/')
 }
 
 /* Setea data-theme antes del primer paint. Sin el hack opacity:0 del sitio

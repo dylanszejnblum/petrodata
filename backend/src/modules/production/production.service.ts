@@ -156,9 +156,12 @@ export class ProductionService {
       };
     }
 
-    const month = latestRow.dateMonth;
+    // El titular es el último mes COMPLETO: el más nuevo suele venir parcial y
+    // se leía como una caída falsa del ~20%.
+    const complete = await latestCompleteMonth(this.prisma);
+    const month = complete ?? latestRow.dateMonth;
 
-    const [totalsAgg, activeWellsRows, vmAgg, topRows, complete] = await Promise.all([
+    const [totalsAgg, activeWellsRows, vmAgg, topRows] = await Promise.all([
       this.prisma.factProductionMonthly.aggregate({
         where: { dateMonth: month },
         _sum: { oilM3: true, oilBblD: true, gasThousandM3: true, gasMmcfD: true, boe: true },
@@ -179,7 +182,6 @@ export class ProductionService {
         orderBy: { _sum: { boe: 'desc' } },
         take: 5,
       }),
-      latestCompleteMonth(this.prisma),
     ]);
     const operatorNames = await this.prisma.dimOperator.findMany({
       where: { operatorSlug: { in: topRows.map((r) => r.operatorSlug) } },
@@ -193,7 +195,7 @@ export class ProductionService {
 
     return {
       date_month: this.formatMonth(month),
-      // newest month on file; when true its totals are still incomplete
+      // false salvo que no haya ningún mes completo en la ventana
       preliminary: isPreliminary(month, complete),
       latest_complete_month: complete ? this.formatMonth(complete) : null,
       oil_m3: totalOil,
