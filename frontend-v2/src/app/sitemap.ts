@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next'
-import { loadDirectivos } from '@/lib/data/directivos'
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://vacamuerta.io'
+// ponytail: /directivos oculto por ahora (ver directivos/layout.tsx); volver a sumarlo con sus fichas.
 const SECCIONES = [
   '',
   '/mapa',
@@ -9,16 +9,13 @@ const SECCIONES = [
   '/provincias',
   '/indicadores',
   '/noticias',
-  '/directivos',
 ]
 
 export const revalidate = 3600
 
 // ponytail: sin notas sueltas; entran por /noticias. Sumarlas si importa el SEO de cada nota.
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const { filas } = await loadDirectivos()
-  const paths = [...SECCIONES, ...filas.map((f) => `/directivos/${f.slug}`)]
-  return paths.map((p) => ({
+export default function sitemap(): MetadataRoute.Sitemap {
+  return SECCIONES.map((p) => ({
     url: `${siteUrl}${p}`,
     alternates: {
       languages: { es: `${siteUrl}${p}`, en: `${siteUrl}/en${p}` },
