@@ -170,13 +170,18 @@ export const PERIODOS = {
 } as const;
 export type Periodo = keyof typeof PERIODOS;
 
-/* TURNSTILE, opcional. Con TURNSTILE_SECRET seteada cada voto trae un token del
-   widget de Cloudflare y se verifica acá; sin ella el voto sigue como antes.
+/* TURNSTILE, obligatorio. Cada voto trae un token del widget de Cloudflare y se
+   verifica acá contra TURNSTILE_SECRET.
    No cambia que una IP no es una persona, pero deja afuera al script que
    recorre la lista votando desde un pool de IPs. */
 async function verificarTurnstile(token: string | undefined, ip: string): Promise<void> {
   const secret = process.env.TURNSTILE_SECRET;
-  if (!secret) return;
+  // Sin secreto el voto se cierra: abierto, un loop de curl con un x-votante
+  // nuevo por pedido rellenaba el ranking. TURNSTILE_DISABLED=1 sólo para local.
+  if (!secret) {
+    if (process.env.TURNSTILE_DISABLED === '1') return;
+    throw new ServiceUnavailableException('La votación no está habilitada.');
+  }
   if (!token) throw new ForbiddenException('Falta la verificación anti-bot.');
   const r = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
     method: 'POST',

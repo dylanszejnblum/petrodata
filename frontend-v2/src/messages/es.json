@@ -1048,6 +1048,10 @@
       "requeridos": "Correo y detalle requeridos",
       "avisoDesc": "Corrección sobre el cargo, el nombre o la foto de <b>{nombre}</b>, de {empresa}. El correo queda para responder el reporte.",
       "avisoOk": "Reporte sobre <b>{nombre}</b> registrado. Respuesta a <mono>{correo}</mono>."
+    },
+    "error": {
+      "titulo": "No pudimos cargar esta página.",
+      "reintentar": "Reintentar"
     }
   }
 }

@@ -45,7 +45,6 @@ const SECCIONES = [
   { href: '/empresas', n: '04', label: 'empresas' },
   { href: '/indicadores', n: '05', label: 'indicadores' },
   { href: '/noticias', n: '06', label: 'noticias' },
-  { href: '/directivos', n: '07', label: 'directivos' },
 ]
 
 export function Indice({ periodo }: { periodo: string }) {

@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
 
     if (!response.ok) {
       return Response.json(
-        { error: 'PetroData no pudo cargar los pozos.' },
+        { error: 'No se pudieron cargar los pozos.' },
         { status: response.status },
       )
     }
@@ -44,7 +44,7 @@ export async function GET(request: NextRequest) {
     })
   } catch {
     return Response.json(
-      { error: 'PetroData no está disponible.' },
+      { error: 'Los datos no están disponibles.' },
       { status: 502 },
     )
   }

@@ -5,6 +5,9 @@ import { CATEGORY_LABEL } from '@/fixtures/news'
 import { loadNews, loadNewsPills, loadNewsTotal } from '@/lib/data/news'
 import { formatInteger } from '@/lib/format'
 import { getTranslations } from 'next-intl/server'
+import { pageMetadata } from '@/lib/metadata'
+
+export const generateMetadata = pageMetadata('/noticias')
 
 /* NOTICIAS — el caso donde más se aparta de lo que teníamos.
 
