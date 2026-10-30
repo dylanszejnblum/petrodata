@@ -1,5 +1,6 @@
 import { ImageResponse } from 'next/og'
 import { loadDirectivos } from '@/lib/data/directivos'
+import { notFound } from 'next/navigation'
 
 /* La imagen del enlace compartido: puesto, nombre, cargo y puntos del día.
    SIN LA FOTO, a propósito: las caras de /directivos están generadas con IA y
@@ -17,6 +18,7 @@ const FONDO = '#141413'
 const ACENTO = '#d97757'
 
 export default async function Imagen({ params }: { params: Promise<{ locale: string; slug: string }> }) {
+  notFound() // ponytail: sección oculta (ver directivos/layout.tsx); sacar esta línea al publicarla
   const { locale, slug } = await params
   const en = locale === 'en'
   const { filas } = await loadDirectivos()
